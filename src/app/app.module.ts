@@ -5,12 +5,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginFormComponent } from './features/login/login-form/login-form.component';
 import { MainComponent } from './main/main/main.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { SearchbarComponent } from './components/searchbar/searchbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginFormComponent,
-    MainComponent
+    MainComponent,
+    SidebarComponent,
+    SearchbarComponent
   ],
   imports: [
     BrowserModule,
