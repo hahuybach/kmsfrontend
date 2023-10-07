@@ -1,1 +1,87 @@
-<p>sidebar works!</p>
+<div class="sidebar-content p-2 d-flex flex-column justify-content-between">
+  <div class="logo mt-2">
+    <div class="sidebar-logo">
+      <img src="../../../assets/img/PGD-logo.svg" />
+    </div>
+  </div>
+  <div>
+    <ul>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a routerLink="" [routerLink]="['/dashboard']">
+          <div>
+            <i class="fa-solid fa-dashboard"></i>
+            &nbsp; Dashboard
+          </div>
+        </a>
+      </li>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a class="" [routerLink]="['/school-list']">
+          <div>
+            <i class="fa-solid fa-school"></i>
+            &nbsp; Danh sách trường
+          </div>
+        </a>
+      </li>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a class="" [routerLink]="['/inspectionplan']">
+          <div>
+            <i class="fa-solid fa-school-circle-check"></i>
+            &nbsp; Thanh tra
+          </div>
+        </a>
+      </li>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a class="" [routerLink]="['/userlist']">
+          <div>
+            <i class="fa-solid fa-users-gear"></i>
+            &nbsp; Danh sách người dùng
+          </div>
+        </a>
+      </li>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a class="" [routerLink]="['/issuelist']">
+          <div>
+            <i class="fa-solid fa-calendar-check"></i>
+            &nbsp; Kế hoạch kiểm tra
+          </div>
+        </a>
+      </li>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a class="" [routerLink]="['/initiationplan']">
+          <div>
+            <i class="fa-solid fa-users-gear"></i>
+            &nbsp; Kế hoạch thực hiện
+          </div>
+        </a>
+      </li>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a class="" [routerLink]="['/report']">
+          <div>
+            <i class="fa-solid fa-users-gear"></i>
+            &nbsp; Báo cáo
+          </div>
+        </a>
+      </li>
+      <li class="p-2 rounded" routerLinkActive="active">
+        <a class="" [routerLink]="['/conclusion']">
+          <div>
+            <i class="fa-solid fa-users-gear"></i>
+            &nbsp; Kết luận
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <ul>
+      <li class="p-2 rounded">
+        <a class="" [routerLink]="['/logout']"  >
+          <div>
+            <i class="fa-solid fa-right-from-bracket"></i>
+            &nbsp; Đăng xuất
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

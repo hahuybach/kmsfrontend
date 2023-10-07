@@ -7,6 +7,8 @@ import { LoginFormComponent } from './features/login/login-form/login-form.compo
 import { MainComponent } from './main/main/main.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
+import { IssueListComponent } from './features/post-login/issue-list/issue-list.component';
+import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { SearchbarComponent } from './components/searchbar/searchbar.component';
     LoginFormComponent,
     MainComponent,
     SidebarComponent,
-    SearchbarComponent
+    SearchbarComponent,
+    IssueListComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
