@@ -1,0 +1,37 @@
+$primary: #4253F0;
+$base: #C8C8D0;
+
+.outer-box{
+  background-color: $base;
+}
+.inner-box{
+  width: 65%;
+  background-color: white;
+  form{
+    div{
+      margin-top: 40px;
+      label{
+        margin-bottom: 0;
+      }
+    }
+    a{
+      text-decoration: none;
+      color: $primary;
+    }
+  }
+  input{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border: 1px solid;
+    font-size: 12px;
+  }
+  button{
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-top: 40px;
+    background-color: $primary;
+  }
+}
+.right-inner-box{
+  background-color: $primary;
+}
