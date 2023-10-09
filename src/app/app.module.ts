@@ -9,7 +9,20 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { IssueListComponent } from './features/post-login/issue-list/issue-list.component';
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
-
+import { ToastModule } from 'primeng/toast';
+import { MenuModule } from 'primeng/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { BadgeModule } from 'primeng/badge';
+import {TableModule} from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { PaginatorModule } from 'primeng/paginator';
+import { HttpClientModule } from '@angular/common/http';
+import {DropdownModule} from 'primeng/dropdown'
+import { IssueService } from './services/issue.service';
+import { LoggerService } from './services/LoggerService';
+import { IssueDetailComponent } from './features/post-login/issue-list/issue-detail/issue-detail.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,13 +31,23 @@ import { DashboardComponent } from './features/post-login/dashboard/dashboard.co
     SidebarComponent,
     SearchbarComponent,
     IssueListComponent,
-    DashboardComponent
+    DashboardComponent,
+    IssueDetailComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MenuModule,
+    ToastModule,
+    BrowserAnimationsModule,
+    ButtonModule,
+    BadgeModule,
+    TableModule,
+    DropdownModule,
+    InputTextModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [ MessageService, IssueService, LoggerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

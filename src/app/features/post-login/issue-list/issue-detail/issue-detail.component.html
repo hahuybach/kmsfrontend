@@ -1,0 +1,42 @@
+<span>breadcumb here</span>
+<!-- {{ issue | json }} -->
+<h4>Chi tiết kế hoạch kiểm tra</h4>
+<br />
+<div class="row" *ngIf="issue">
+  <div class="row col-md-6">
+    <div class="col-6 mb-5">
+      <h5>Tên kế hoạch</h5>
+      <span class="text-black-50 mb-5">{{ issue.docName }}</span>
+    </div>
+    <div class="col-6 mb-5">
+      <h5>Người tạo</h5>
+      <span class="text-black-50 mb-5">{{ issue.createdBy }}</span>
+    </div>
+    <div class="col-6 mb-5">
+      <h5>Chi tiết</h5>
+      <span class="text-black-50">{{ issue.description }}</span>
+    </div>
+    <div class="col-6 mb-5">
+      <h5>Ngày tạo</h5>
+      <span class="text-black-50">{{ issue.createdDate }}</span>
+    </div>
+    <div class="mb-5">
+      <h5>Tài liệu liên quan</h5>
+      <div class="file">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span>Tên file.pdf</span>
+      </div>
+      <div class="file">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span>Tên file.pdf</span>
+      </div>
+      <div class="file">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span>Tên file.pdf</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h5>Danh sách ban kiểm tra nội bộ</h5>
+  </div>
+</div>

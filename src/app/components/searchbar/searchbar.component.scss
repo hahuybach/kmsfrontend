@@ -1,5 +1,34 @@
-.searchbar {
-    .notification{
-        
+@import "../../../assets/scss/base";
+.notification {
+    i {
+        color: $primary;
+        font-size: 30px;
+        padding: 10px;
+        border-radius: 50%;
+    }
+    &:hover {
+        i {
+            background-color: $primary-hover;
+            color: #fff;
+            transition: all 0.5s ease;
+        }
+    }
+    .primary-badge {
+        background-color: $primary;
+    }
+}
+.user {
+    &:hover {
+        i {
+            background-color: $primary-hover;
+            color: #fff;
+            transition: all 0.5s ease;
+        }
+    }
+    i {
+        color: $primary;
+        font-size: 30px;
+        padding: 10px;
+        border-radius: 50%;
     }
 }

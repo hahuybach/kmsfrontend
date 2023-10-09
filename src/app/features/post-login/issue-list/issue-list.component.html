@@ -1,1 +1,106 @@
-<p>issue-list works!</p>
+<h4>Danh sách văn bản triển khai kế hoạch năm học</h4>
+
+<div class="card">
+  <p-table
+    #dt
+    [value]="issues"
+    dataKey="id"
+    [rowHover]="true"
+    [rows]="5"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[5, 10, 15]"
+    [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [filterDelay]="0"
+    [globalFilterFields]="['name', 'representative.name', 'status']"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" placeholder="Tìm kiếm" />
+        </span>
+        <p-button class="btn-purple">Tạo mới</p-button>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>
+          <div class="flex justify-content-between align-items-center">Id</div>
+        </th>
+        <th pSortableColumn="docName">
+          <div class="flex justify-content-between align-items-center">
+            Tên văn bản
+            <p-sortIcon field="docName"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="createdBy">
+          <div class="flex justify-content-between align-items-center">
+            Người đăng
+            <p-sortIcon field="createdBy"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="createdDate">
+          <div class="flex justify-content-between align-items-center">
+            Ngày đăng
+            <p-sortIcon field="createdDate"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="docNum">
+          <div class="flex justify-content-between align-items-center">
+            Số lượng văn bản
+            <p-sortIcon field="docNum"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="inspectorNum">
+          <div class="flex justify-content-between align-items-center">
+            Số lượng BKTNB
+            <p-sortIcon field="inspectorNum"></p-sortIcon>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-issue>
+      <tr class="p-selectable-row">
+        <td>
+          <span class="p-column-title">Id</span>
+          {{ issue.id }}
+        </td>
+        <td>
+          <span class="p-column-title">Tên văn bản</span>
+          {{ issue.docName }}
+        </td>
+        <td class="td-createdby">
+          <span class="p-column-title">Người đăng</span>
+          {{ issue.createdBy }}
+        </td>
+        <td>
+          <span class="p-column-title">Date</span>
+          {{ issue.createdDate | date : "MM/dd/yyyy" }}
+        </td>
+        <td>
+          <span class="p-column-title">Số lượng văn bản</span>
+          {{ issue.docNum }}
+        </td>
+        <td>
+          <span class="p-column-title">Số lượng BKTNB</span>
+          {{ issue.inspectorNum }}
+        </td>
+        <td
+          style="text-align: center"
+          class="d-flex td-action justify-content-center align-items-center"
+        >
+          <p-button (click)="navigateToDetail(issue.id)">Chi tiết</p-button
+          >&nbsp;
+          <p-button (click)="navigateToUpdate(issue.id)">Cập nhật</p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">No customers found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
