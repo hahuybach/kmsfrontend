@@ -12,49 +12,56 @@
     [paginator]="true"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [filterDelay]="0"
-    [globalFilterFields]="['name', 'representative.name', 'status']"
+    [globalFilterFields]="['docName', 'inspectorNum']"
   >
     <ng-template pTemplate="caption">
       <div class="table-header">
         <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <input pInputText type="text" placeholder="Tìm kiếm" />
+          <i class="fa-solid fa-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+            placeholder="Tìm kiếm"
+          />
         </span>
-        <p-button class="btn-purple">Tạo mới</p-button>
+        <p-button (click)="navigateToCreateIssue()" class="btn-purple"
+          >Tạo mới</p-button
+        >
       </div>
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th>
-          <div class="flex justify-content-between align-items-center">Id</div>
+        <th class="col-small">
+          <div>Id</div>
         </th>
-        <th pSortableColumn="docName">
-          <div class="flex justify-content-between align-items-center">
-            Tên văn bản
+        <th class="col-large" pSortableColumn="docName">
+          <div>
+            Tên
             <p-sortIcon field="docName"></p-sortIcon>
           </div>
         </th>
         <th pSortableColumn="createdBy">
-          <div class="flex justify-content-between align-items-center">
+          <div>
             Người đăng
             <p-sortIcon field="createdBy"></p-sortIcon>
           </div>
         </th>
         <th pSortableColumn="createdDate">
-          <div class="flex justify-content-between align-items-center">
+          <div>
             Ngày đăng
             <p-sortIcon field="createdDate"></p-sortIcon>
           </div>
         </th>
-        <th pSortableColumn="docNum">
+        <!-- <th pSortableColumn="docNum">
           <div class="flex justify-content-between align-items-center">
-            Số lượng văn bản
+            Số văn bản
             <p-sortIcon field="docNum"></p-sortIcon>
           </div>
-        </th>
+        </th> -->
         <th pSortableColumn="inspectorNum">
-          <div class="flex justify-content-between align-items-center">
-            Số lượng BKTNB
+          <div>
+            Số người
             <p-sortIcon field="inspectorNum"></p-sortIcon>
           </div>
         </th>
@@ -79,27 +86,40 @@
           <span class="p-column-title">Date</span>
           {{ issue.createdDate | date : "MM/dd/yyyy" }}
         </td>
-        <td>
+        <!-- <td>
           <span class="p-column-title">Số lượng văn bản</span>
           {{ issue.docNum }}
-        </td>
+        </td> -->
         <td>
           <span class="p-column-title">Số lượng BKTNB</span>
           {{ issue.inspectorNum }}
         </td>
         <td
           style="text-align: center"
-          class="d-flex td-action justify-content-center align-items-center"
+          class="d-flex td-action justify-content-around align-items-center"
         >
-          <p-button (click)="navigateToDetail(issue.id)">Chi tiết</p-button
-          >&nbsp;
-          <p-button (click)="navigateToUpdate(issue.id)">Cập nhật</p-button>
+          <div
+            class="action-item d-flex justify-content-center align-items-center"
+          >
+            <i
+              class="fa-solid fa-circle-info"
+              (click)="navigateToDetail(issue.id)"
+            ></i>
+          </div>
+          <div
+            class="action-item d-flex justify-content-center align-items-center"
+          >
+            <i
+              class="fa-solid fa-pencil"
+              (click)="navigateToUpdate(issue.id)"
+            ></i>
+          </div>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="8">No customers found.</td>
+        <td colspan="8">Không tìm thấy kế hoạch nào</td>
       </tr>
     </ng-template>
   </p-table>

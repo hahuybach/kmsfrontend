@@ -18,10 +18,12 @@ export class IssueListComponent implements OnInit {
   this.issueService.getIssues().subscribe((data) => {
       // Handle the data here
       this.issues = data
-      console.log('Data from mock API:', data);
     });
   };
-    
+   
+  navigateToCreateIssue(){
+    this.router.navigate(['/createissue'])
+  }
   navigateToDetail(issueId: number){
     this.router.navigate(['/issuelist', issueId])
   }

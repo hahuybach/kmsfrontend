@@ -1,11 +1,32 @@
 @import "../../../../assets/scss/base";
 
 :host ::ng-deep {
-    th {
-        min-width: 20%;
+    table {
+        table-layout: fixed;
+        width: 100%;
     }
+    th,
     td {
-        height: 60px;
+        // width: 120px;
+        font-size: 16px;
+        white-space: wrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflowing text */
+        text-overflow: ellipsis; /* Display ellipsis for overflowing text */
+    }
+
+    .col-small {
+        width: 60px;
+    }
+    .col-large {
+        width: 400px;
+    }
+    //  {
+    //     width: 100px;
+    //     overflow: hidden;
+    //     font-size: 16px;
+    // }
+    .p-datatable > .p-datatable-wrapper {
+        overflow: hidden;
     }
     .p-paginator {
         .p-paginator-current {
@@ -25,6 +46,7 @@
             }
         }
         button {
+            width: 100px;
             font-size: 16px;
             background-color: $primary;
             border-radius: 8px;
@@ -44,20 +66,29 @@
     .p-datatable-customers .p-datatable-tbody > tr > td .p-column-title {
         display: none;
     }
-    .td-createdby {
-        width: 300px;
-    }
     .td-action {
-        width: 300px;
-        button {
+        // width: 100px;
+        .action-item {
+            width: 50px;
+            height: 50px;
             background-color: $primary;
             border-color: $primary;
-            border-radius: 8px;
+            border-radius: 50%;
             font-size: 16px;
             &:hover {
                 background-color: $primary-hover;
                 border-color: $primary-hover;
             }
+            i {
+                color: #fff;
+                align-items: center;
+            }
+        }
+    }
+    .p-highlight {
+        color: $primary;
+        .p-sortable-column-icon {
+            color: $primary;
         }
     }
     .p-paginator .p-paginator-pages .p-paginator-page {
@@ -66,6 +97,9 @@
     .p-paginator .p-paginator-pages .p-paginator-page .p-highlight {
         background-color: $primary;
         color: #fff;
+    }
+    ul {
+        padding: 0;
     }
 }
 

@@ -1,7 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {IssueService} from "../../../../services/issue.service";
-
+interface Inspector{
+  name: string,
+  school: string
+}
 @Component({
   selector: 'app-issue-detail',
   templateUrl: './issue-detail.component.html',
@@ -10,6 +13,7 @@ import {IssueService} from "../../../../services/issue.service";
 export class IssueDetailComponent implements OnInit{
   issueId: any;
   issue: any;
+
   constructor(private route: ActivatedRoute, private issueService: IssueService) {
   }
   ngOnInit(): void {
@@ -20,8 +24,8 @@ export class IssueDetailComponent implements OnInit{
       // Call the service method to fetch issue data
       this.issueService.getIssueById(this.issueId).subscribe((data) => {
         this.issue = data; // Store the fetched issue data
+        console.log(this.issue)
       });
-    });
+    })
   }
-
 }

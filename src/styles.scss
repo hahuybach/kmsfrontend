@@ -4,4 +4,26 @@
 /* Import PrimeNG styles */
 @import "primeng/resources/primeng.min.css";
 @import "primeng/resources/themes/saga-blue/theme.css"; /* Replace with your preferred theme */
-@import "primeicons/primeicons.css";
+
+//SCROLLBAR CSS
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(214, 214, 214);
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #4253f0;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #9aa3ff;
+}

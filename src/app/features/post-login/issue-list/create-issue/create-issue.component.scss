@@ -1,0 +1,56 @@
+@import "../../../../../assets/scss/base";
+
+.create-issue {
+    form {
+        font-size: 16px;
+    }
+}
+.p-inputtext,
+.p-inputtextarea {
+    border-radius: 8px;
+}
+.create-inspector {
+    background-color: $primary;
+    border-radius: 8px;
+    &:hover,
+    &:active {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+    }
+}
+.document-item {
+    .col-md-3 {
+        input {
+            width: 90%;
+        }
+    }
+    .input-file {
+        width: 100%;
+        .p-inputtext {
+            width: 70%;
+            border-radius: 8px 0 0 8px;
+        }
+        button {
+            background-color: $primary;
+            border-radius: 0px 8px 8px 0px;
+            &:hover,
+            &:active {
+                background-color: $primary-hover;
+                border-color: $primary-hover;
+            }
+        }
+    }
+}
+.save-button {
+    button {
+        font-size: 16px;
+        background-color: $primary;
+        border-radius: 8px;
+        padding: 10px 40px;
+        &:hover,
+        &:active {
+            background-color: $primary-hover;
+            border-color: $primary-hover;
+        }
+    }
+}

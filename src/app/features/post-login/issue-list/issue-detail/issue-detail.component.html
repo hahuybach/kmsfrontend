@@ -3,7 +3,7 @@
 <h4>Chi tiết kế hoạch kiểm tra</h4>
 <br />
 <div class="row" *ngIf="issue">
-  <div class="row col-md-6">
+  <div class="row col-md-8">
     <div class="col-6 mb-5">
       <h5>Tên kế hoạch</h5>
       <span class="text-black-50 mb-5">{{ issue.docName }}</span>
@@ -21,22 +21,54 @@
       <span class="text-black-50">{{ issue.createdDate }}</span>
     </div>
     <div class="mb-5">
-      <h5>Tài liệu liên quan</h5>
-      <div class="file">
-        <i class="fa-solid fa-file-pdf"></i>
-        <span>Tên file.pdf</span>
-      </div>
-      <div class="file">
-        <i class="fa-solid fa-file-pdf"></i>
-        <span>Tên file.pdf</span>
-      </div>
-      <div class="file">
-        <i class="fa-solid fa-file-pdf"></i>
-        <span>Tên file.pdf</span>
-      </div>
+      <h5 class="mb-3">Tài liệu công văn</h5>
+      <ng-container *ngFor="let item of issue.file">
+        <div class="file-item p-3 mb-2 d-flex">
+          <div class="file-item-icon">
+            <i class="fa-regular fa-file"></i>
+          </div>
+          <div class="file-item-content ps-3">
+            <h6>{{ item.name }}</h6>
+            {{ item.size }}
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
-  <div class="col-md-6">
-    <h5>Danh sách ban kiểm tra nội bộ</h5>
+  <div class="col-md-4">
+    <div class="list-inspector">
+      <div
+        class="list-inspector-header p-3 d-flex justify-content-center align-items-center"
+      >
+        <h5>Danh sách thanh tra</h5>
+      </div>
+
+      <div class="card flex justify-content-center">
+        <ng-template pTemplate="header">Header Content</ng-template>
+        <p-virtualScroller
+          [value]="issue.inspector"
+          class="border-1 surface-border border-round"
+          scrollHeight="540px"
+          [itemSize]="120"
+        >
+          <ng-template pTemplate="item" let-item>
+            <div
+              class="scrollview-item d-flex align-items-center mt-2 mx-4 p-3 h-full"
+            >
+              <div class="scrollview-item-icon">
+                <span class="index">{{
+                  issue.inspector.indexOf(item) + 1
+                }}</span>
+              </div>
+              <div class="scrollview-item-content ms-2">
+                <span class="font-weight-bold">{{ item.name }}</span>
+                <br />
+                <span>{{ item.role }} - {{ item.school }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </p-virtualScroller>
+      </div>
+    </div>
   </div>
 </div>

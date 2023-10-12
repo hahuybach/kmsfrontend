@@ -23,6 +23,10 @@ import {DropdownModule} from 'primeng/dropdown'
 import { IssueService } from './services/issue.service';
 import { LoggerService } from './services/LoggerService';
 import { IssueDetailComponent } from './features/post-login/issue-list/issue-detail/issue-detail.component';
+import { VirtualScrollerModule } from 'primeng/virtualscroller';
+import { CreateIssueComponent } from './features/post-login/issue-list/create-issue/create-issue.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FileUploadModule } from 'primeng/fileupload';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +36,8 @@ import { IssueDetailComponent } from './features/post-login/issue-list/issue-det
     SearchbarComponent,
     IssueListComponent,
     DashboardComponent,
-    IssueDetailComponent
+    IssueDetailComponent,
+    CreateIssueComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +51,9 @@ import { IssueDetailComponent } from './features/post-login/issue-list/issue-det
     DropdownModule,
     InputTextModule,
     HttpClientModule,
+    VirtualScrollerModule,
+    InputTextareaModule,
+    FileUploadModule
   ],
   providers: [ MessageService, IssueService, LoggerService],
   bootstrap: [AppComponent]
