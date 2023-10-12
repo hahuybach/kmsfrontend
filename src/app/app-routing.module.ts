@@ -7,6 +7,12 @@ import {ForgotPasswordComponent} from "./features/login/forgot-password/forgot-p
 const routes: Routes = [
   {
     path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  },
+
+  {
+    path: '',
     component: LoginBaseComponent,
     children: [
       {
@@ -18,12 +24,6 @@ const routes: Routes = [
         component: ForgotPasswordComponent
       }
     ]
-  },
-
-  {
-    path: '',
-    redirectTo: '/login',
-    pathMatch: 'full'
   },
 ];
 
