@@ -27,6 +27,9 @@ import { VirtualScrollerModule } from 'primeng/virtualscroller';
 import { CreateIssueComponent } from './features/post-login/issue-list/create-issue/create-issue.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
+import { LoginBaseComponent } from './features/login/login-base/login-base.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +40,9 @@ import { FileUploadModule } from 'primeng/fileupload';
     IssueListComponent,
     DashboardComponent,
     IssueDetailComponent,
-    CreateIssueComponent
+    CreateIssueComponent,
+    ForgotPasswordComponent,
+    LoginBaseComponent
   ],
   imports: [
     BrowserModule,
