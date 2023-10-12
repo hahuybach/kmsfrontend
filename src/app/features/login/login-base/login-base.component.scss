@@ -1,0 +1,13 @@
+$primary: #4253F0;
+$base: #C8C8D0;
+
+.outer-box{
+  background-color: $base;
+}
+.inner-box {
+  width: 65%;
+  background-color: white;
+}
+.right-inner-box{
+  background-color: $primary;
+}
