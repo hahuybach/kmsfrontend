@@ -29,6 +29,10 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
+import { InspectionPlanListComponent } from './features/post-login/inspection-plan-list/inspection-plan-list.component';
+import { InspectionPlanDetailComponent } from './features/post-login/inspection-plan-list/inspection-plan-detail/inspection-plan-detail.component';
+import { CreateInspectionPlanComponent } from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
+import { UpdateInspectionPlanComponent } from './features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,11 @@ import { LoginBaseComponent } from './features/login/login-base/login-base.compo
     IssueDetailComponent,
     CreateIssueComponent,
     ForgotPasswordComponent,
-    LoginBaseComponent
+    LoginBaseComponent,
+    InspectionPlanListComponent,
+    InspectionPlanDetailComponent,
+    CreateInspectionPlanComponent,
+    UpdateInspectionPlanComponent
   ],
   imports: [
     BrowserModule,

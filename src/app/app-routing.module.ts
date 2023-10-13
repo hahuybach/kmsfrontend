@@ -8,6 +8,8 @@ import { MainComponent } from './main/main/main.component';
 import { LoginFormComponent } from './features/login/login-form/login-form.component';
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
 import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
+import { InspectionPlanListComponent } from './features/post-login/inspection-plan-list/inspection-plan-list.component';
+import { CreateInspectionPlanComponent } from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
 
 const routes: Routes = [
   {
@@ -45,6 +47,11 @@ const routes: Routes = [
       {
         path: 'createissue',
         component: CreateIssueComponent,
+      },
+      { path: 'inspectionplan', component: InspectionPlanListComponent },
+      {
+        path: 'inspectionplan/create',
+        component: CreateInspectionPlanComponent,
       },
     ],
   },

@@ -1,9 +1,9 @@
-<h4>Danh sách văn bản triển khai kế hoạch năm học</h4>
+<h4>Danh sách kế hoạch thanh tra</h4>
 
 <div class="card">
   <p-table
     #dt
-    [value]="issues"
+    [value]="inspectionplanlist"
     dataKey="id"
     [rowHover]="true"
     [rows]="7"
@@ -25,7 +25,7 @@
             placeholder="Tìm kiếm"
           />
         </span>
-        <p-button (click)="navigateToCreateIssue()" class="btn-purple"
+        <p-button (click)="navigateToCreateInspectionPlan()" class="btn-purple"
           >Tạo mới</p-button
         >
       </div>
@@ -33,17 +33,29 @@
     <ng-template pTemplate="header">
       <tr>
         <th class="th-id">
-          <div>Id</div>
+          <div>STT</div>
         </th>
-        <th pSortableColumn="docName">
+        <th pSortableColumn="planName">
           <div>
             Tên
-            <p-sortIcon field="docName"></p-sortIcon>
+            <p-sortIcon field="planName"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="schoolName">
+          <div>
+            Trường
+            <p-sortIcon field="schoolName"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="inspectorChief">
+          <div>
+            Thủ trưởng
+            <p-sortIcon field="inspectorChief"></p-sortIcon>
           </div>
         </th>
         <th pSortableColumn="createdBy">
           <div>
-            Người đăng
+            Người tạo
             <p-sortIcon field="createdBy"></p-sortIcon>
           </div>
         </th>
@@ -53,38 +65,26 @@
             <p-sortIcon field="createdDate"></p-sortIcon>
           </div>
         </th>
-        <!-- <th pSortableColumn="docNum">
-          <div class="flex justify-content-between align-items-center">
-            Số văn bản
-            <p-sortIcon field="docNum"></p-sortIcon>
-          </div>
-        </th> -->
-        <th class="th-small" pSortableColumn="inspectorNum">
-          <div>
-            Số người
-            <p-sortIcon field="inspectorNum"></p-sortIcon>
-          </div>
-        </th>
         <th class="th-small"></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-issue>
+    <ng-template pTemplate="body" let-inspectionplan>
       <tr class="p-selectable-row">
         <td>
           <span class="p-column-title">Id</span>
-          {{ issue.id }}
+          <!-- {{ issue.id }} -->
         </td>
         <td>
           <span class="p-column-title">Tên văn bản</span>
-          {{ issue.docName }}
+          <!-- {{ issue.docName }} -->
         </td>
         <td class="td-createdby">
           <span class="p-column-title">Người đăng</span>
-          {{ issue.createdBy }}
+          <!-- {{ issue.createdBy }} -->
         </td>
         <td>
           <span class="p-column-title">Date</span>
-          {{ issue.createdDate | date : "MM/dd/yyyy" }}
+          <!-- {{ issue.createdDate | date : "MM/dd/yyyy" }} -->
         </td>
         <!-- <td>
           <span class="p-column-title">Số lượng văn bản</span>
@@ -92,7 +92,7 @@
         </td> -->
         <td>
           <span class="p-column-title">Số lượng BKTNB</span>
-          {{ issue.inspectorNum }}
+          <!-- {{ issue.inspectorNum }} -->
         </td>
         <td
           style="text-align: center"
@@ -103,7 +103,7 @@
           >
             <i
               class="fa-solid fa-circle-info"
-              (click)="navigateToDetail(issue.id)"
+              (click)="navigateToDetail(inspectionplan.id)"
             ></i>
           </div>
           <div
@@ -111,7 +111,7 @@
           >
             <i
               class="fa-solid fa-pencil"
-              (click)="navigateToUpdate(issue.id)"
+              (click)="navigateToUpdate(inspectionplan.id)"
             ></i>
           </div>
         </td>

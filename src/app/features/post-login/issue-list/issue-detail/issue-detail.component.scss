@@ -1,20 +1,29 @@
 @import "../../../../../assets/scss/base";
 
 .scrollview-item {
+    height: 100%;
     border-radius: 10px;
     // border: 0.8px solid $primary;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    .index {
+    // box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;
+    i {
         color: $primary;
         font-size: 30px;
     }
+    // .index {
+    //     color: $primary;
+    //     font-size: 30px;
+    // }
     &:hover {
         background-color: $primary-hover;
         transition: all 0.5s ease;
-        cursor: pointer;
-        .index {
+        // cursor: pointer;
+        color: #fff;
+        i {
             color: #fff;
         }
+        // .index {
+        //     color: #fff;
+        // }
     }
     .scrollview-item-content {
         font-size: 16px;
@@ -44,10 +53,9 @@
 }
 .list-inspector {
     border-radius: 10px;
-    border: 0.8px solid $primary;
+    // border: 0.8px solid $primary;
     box-shadow:
         rgba(9, 30, 66, 0.25) 0px 1px 1px,
         rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
     font-size: 16px;
 }
-

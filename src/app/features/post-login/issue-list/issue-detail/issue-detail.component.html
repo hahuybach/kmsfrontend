@@ -37,13 +37,16 @@
   </div>
   <div class="col-md-4">
     <div class="list-inspector">
-      <div
-        class="list-inspector-header p-3 d-flex justify-content-center align-items-center"
-      >
-        <h5>Danh sách thanh tra</h5>
+      <div class="list-inspector-header p-3 text-center">
+        <h5 class="mx-auto">Danh sách thanh tra</h5>
+        <div class="total">
+          <span class="text-secondary mx-auto"
+            >Tổng số: {{ issue.inspector.length }}</span
+          >
+        </div>
       </div>
 
-      <div class="card flex justify-content-center">
+      <div class="card">
         <ng-template pTemplate="header">Header Content</ng-template>
         <p-virtualScroller
           [value]="issue.inspector"
@@ -52,18 +55,22 @@
           [itemSize]="120"
         >
           <ng-template pTemplate="item" let-item>
-            <div
-              class="scrollview-item d-flex align-items-center mt-2 mx-4 p-3 h-full"
-            >
-              <div class="scrollview-item-icon">
-                <span class="index">{{
+            <div class="scrollview-item d-flex p-3 ms-2 h-full">
+              <div
+                class="scrollview-item-icon d-flex justify-content-center align-items-center"
+              >
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                <!-- <span class="index">{{
                   issue.inspector.indexOf(item) + 1
-                }}</span>
+                }}</span> -->
               </div>
-              <div class="scrollview-item-content ms-2">
+              <div class="scrollview-item-content ms-4">
                 <span class="font-weight-bold">{{ item.name }}</span>
                 <br />
-                <span>{{ item.role }} - {{ item.school }}</span>
+                <span
+                  >{{ item.role }}<br />
+                  {{ item.school }}</span
+                >
               </div>
             </div>
           </ng-template>

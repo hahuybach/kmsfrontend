@@ -1,4 +1,23 @@
 @import "../../../assets/scss/base";
+.searchbar {
+    .col-md-9 {
+        input {
+            padding: 20px 40px;
+            width: 800px;
+            border-radius: 40px;
+            border: none;
+            box-shadow:
+                rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+                rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        }
+        i {
+            font-size: 30px;
+            margin-right: 5%;
+            color: $primary;
+        }
+    }
+}
+
 .notification {
     i {
         color: $primary;
@@ -30,5 +49,6 @@
         font-size: 30px;
         padding: 10px;
         border-radius: 50%;
+        margin: 0 20px;
     }
 }
