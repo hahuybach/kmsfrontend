@@ -1,0 +1,151 @@
+<div class="row create-issue">
+  <h4 class="mb-3">Tạo mới kế hoạch triển khai</h4>
+  <form class="row">
+    <div class="form-content col-md-8">
+      <div class="issue-name mb-1">
+        <h6>Tên kế hoạch triển khai</h6>
+        <input
+          type="text"
+          pInputText
+          formControlName="issueName"
+          placeholder="Tên kế hoạch triển khai"
+          class="w-100"
+        />
+      </div>
+      <div class="issue-detail mb-1">
+        <h6>Chi tiết</h6>
+        <textarea
+          type="text"
+          pInputTextarea
+          formControlName="description"
+          placeholder="Chi tiết kế hoạch triển khai"
+          rows="5"
+          class="w-100"
+        ></textarea>
+      </div>
+    </div>
+    <div class="col-md-4 h-25 d-flex justify-content-center align-items-center">
+      <button pButton class="create-inspector">Tạo ban KTNB</button>
+    </div>
+    <div class="document">
+      <h6>Tài liệu công văn</h6>
+      <div class="row document-item mb-2" *ngFor="let docInput of docInputs ;let i = index">
+        <div id="i" class="d-flex flex-row">
+          <div class="col-md-3">
+            <label>Tên tài liệu</label><br/>
+            <input
+              pInputText
+              formControlName="docName"
+              placeholder="Điền tên tài liệu"
+            />
+          </div>
+          <div class="col-md-3">
+            <label>Mã tài liệu</label><br/>
+            <input
+              pInputText
+              formControlName="docName"
+              placeholder="Điền mã tài liệu"
+            />
+          </div>
+          <div class="col-md-6">
+            <label>Tài liệu</label><br/>
+            <div class="input-file">
+              <input
+                type="file"
+                #fileInput
+                style="display: none"
+                (change)="handleFileInputChange(fileInput)"
+              />
+              <input pInputText [value]="selectedFileName" readonly/>
+              <button
+                pButton
+                label="Chọn tệp"
+                (click)="fileInput.click()"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row document-item mb-2">
+        <div class="col-md-3">
+          <label for="">Tên tài liệu</label><br />
+          <input
+            pInputText
+            formControlName="docName"
+            placeholder="Điền tên tài liệu"
+          />
+        </div>
+        <div class="col-md-3">
+          <label for="">Mã tài liệu</label><br />
+          <input
+            pInputText
+            formControlName="docName"
+            placeholder="Điền mã tài liệu"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="">Tài liệu</label><br />
+          <div class="input-file">
+            <input
+              type="file"
+              #fileInput
+              style="display: none"
+              (change)="handleFileInputChange(fileInput)"
+            />
+            <input pInputText [value]="selectedFileName" readonly disabled />
+            <button
+              pButton
+              label="Chọn tệp"
+              (click)="fileInput.click()"
+            ></button>
+          </div>
+        </div>
+      </div>
+      <div class="row document-item mb-2">
+        <div class="col-md-3">
+          <label class="mb-1" for="">Tên tài liệu</label><br />
+          <input
+            pInputText
+            formControlName="docName"
+            placeholder="Điền tên tài liệu"
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="mb-1" for="">Mã tài liệu</label><br />
+          <input
+            pInputText
+            formControlName="docName"
+            placeholder="Điền mã tài liệu"
+          />
+        </div>
+        <div class="col-md-6">
+          <label class="mb-1" for="">Tài liệu</label><br />
+          <div class="input-file">
+            <input
+              type="file"
+              #fileInput
+              style="display: none"
+              (change)="handleFileInputChange(fileInput)"
+            />
+            <input pInputText [value]="selectedFileName" readonly disabled />
+            <button
+              pButton
+              label="Chọn tệp"
+              (click)="fileInput.click()"
+            ></button>
+          </div>
+        </div>
+      </div> -->
+      <div class="save-button d-flex align-items-end">
+        <div class="div">
+          <button pButton>Lưu</button>
+        </div>
+      </div>
+      <div class="save-button d-flex align-items-end">
+        <div class="div">
+          <button pButton type="button" (click)="appendDocInput()">Thêm</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

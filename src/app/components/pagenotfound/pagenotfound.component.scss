@@ -1,0 +1,18 @@
+$primary: #4253F0;
+$base: #C8C8D0;
+
+.outer-box{
+  *{
+    margin-top: 1rem;
+  }
+  .btn{
+    padding: 10px 35px;
+    background-color: $primary;
+    color: white;
+    font-size: large;
+    i{
+      margin-right: 10px;
+      font-size: larger;
+    }
+  }
+}

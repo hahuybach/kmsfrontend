@@ -1,8 +1,14 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {LoginFormComponent} from "./features/login/login-form/login-form.component";
-import {LoginBaseComponent} from "./features/login/login-base/login-base.component";
-import {ForgotPasswordComponent} from "./features/login/forgot-password/forgot-password.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { IssueListComponent } from './features/post-login/issue-list/issue-list.component';
+import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
+import { IssueDetailComponent } from './features/post-login/issue-list/issue-detail/issue-detail.component';
+import { CreateIssueComponent } from './features/post-login/issue-list/create-issue/create-issue.component';
+import { MainComponent } from './main/main/main.component';
+import { LoginFormComponent } from './features/login/login-form/login-form.component';
+import { LoginBaseComponent } from './features/login/login-base/login-base.component';
+import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
+import {PagenotfoundComponent} from "./components/pagenotfound/pagenotfound.component";
 
 const routes: Routes = [
   {
@@ -17,19 +23,41 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        component: LoginFormComponent
+        component: LoginFormComponent,
       },
       {
         path: 'forgot_password',
-        component: ForgotPasswordComponent
-      }
-    ]
+        component: ForgotPasswordComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: MainComponent,
+    children: [
+      { path: 'issuelist', component: IssueListComponent },
+      {
+        path: 'issuelist/:id',
+        component: IssueDetailComponent,
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      {
+        path: 'createissue',
+        component: CreateIssueComponent,
+      },
+    ],
+  },
+  {
+    path:'**',
+    component: PagenotfoundComponent
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}
