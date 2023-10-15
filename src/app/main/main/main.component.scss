@@ -1,9 +1,15 @@
+@import "../../../assets/scss/base";
 .no-gutter-row {
     margin-right: 0;
     margin-left: 0;
 }
+.side-bar{
+  border-right: 1px solid $primary;
+}
 .searchbar {
-    height: 120px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $primary;
 }
 .container {
     border: 1px solid;

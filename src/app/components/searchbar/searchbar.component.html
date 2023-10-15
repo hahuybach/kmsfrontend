@@ -1,19 +1,16 @@
 <div class="row searchbar">
   <div class="col-md-6">searchbox</div>
-  <div
-    class="col-md-3 notification d-flex justify-content-center align-items-center pt-3"
-  >
-    <i
-      class="fa-solid fa-bell"
-      pBadge
-      [value]="badgeValue"
-      severity="danger"
-      (click)="clearBadge()"
-    ></i>
-  </div>
-  <div
-    class="col-md-3 user d-flex justify-content-center align-items-center pt-3"
-  >
-    <i class="fa-solid fa-user-circle"></i>
+  <div class="col-md-6 d-flex flex-row justify-content-end align-items-center top-nav">
+    <a (click)="clearBadge()">
+      <i
+        class="bi bi-bell"
+        pBadge
+        [value]="badgeValue"
+        severity="danger"
+      ></i>
+    </a>
+    <a>
+      <i class="bi bi-person-circle"></i>
+    </a>
   </div>
 </div>
