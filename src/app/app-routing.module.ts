@@ -10,6 +10,7 @@ import { LoginBaseComponent } from './features/login/login-base/login-base.compo
 import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
 import { InspectionPlanListComponent } from './features/post-login/inspection-plan-list/inspection-plan-list.component';
 import { CreateInspectionPlanComponent } from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
+import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,10 @@ const routes: Routes = [
       {
         path: 'issuelist/:id',
         component: IssueDetailComponent,
+      },
+      {
+        path: 'issuelist/update/:id',
+        component: UpdateIssueComponent,
       },
       {
         path: 'dashboard',

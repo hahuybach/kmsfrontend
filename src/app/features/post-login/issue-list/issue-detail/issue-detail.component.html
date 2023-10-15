@@ -18,7 +18,9 @@
     </div>
     <div class="col-6 mb-5">
       <h5>Ngày tạo</h5>
-      <span class="text-black-50">{{ issue.createdDate }}</span>
+      <span class="text-black-50">{{
+        issue.createdDate | date : "MM/dd/yyyy"
+      }}</span>
     </div>
     <div class="mb-5">
       <h5 class="mb-3">Tài liệu công văn</h5>
@@ -28,8 +30,15 @@
             <i class="fa-regular fa-file"></i>
           </div>
           <div class="file-item-content ps-3">
-            <h6>{{ item.name }}</h6>
+            <h6>
+              {{ item.name }}
+            </h6>
             {{ item.size }}
+          </div>
+          <div class="mx-auto" *ngIf="item.status">
+            <p-tag class="status" severity="success" [rounded]="true">
+              {{ item.status }}
+            </p-tag>
           </div>
         </div>
       </ng-container>
@@ -69,8 +78,8 @@
                 <br />
                 <span
                   >{{ item.role }}<br />
-                  {{ item.school }}</span
-                >
+                  {{ item.school }}
+                </span>
               </div>
             </div>
           </ng-template>

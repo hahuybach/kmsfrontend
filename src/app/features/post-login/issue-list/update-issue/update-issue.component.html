@@ -1,0 +1,236 @@
+<span>breadcumb here</span>
+<!-- {{ issue | json }} -->
+<h4>Cập nhật kế hoạch kiểm tra</h4>
+<br />
+<div class="row issue-content" *ngIf="issue">
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
+  <p-dialog
+    header="Danh sách đoàn kiểm tra"
+    [(visible)]="popupVisible"
+    [modal]="true"
+    [style]="{ width: '80vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <p-table
+      #dt
+      [value]="inspectorList"
+      [(selection)]="selectedInspectors"
+      dataKey="id"
+      [rowHover]="true"
+      [rows]="5"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[5, 10, 15]"
+      [paginator]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [filterDelay]="0"
+      [globalFilterFields]="[]"
+    >
+      <ng-template pTemplate="caption">
+        <div class="table-header">
+          <span class="p-input-icon-left">
+            <i class="fa-solid fa-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Tìm kiếm"
+            />
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th class="th-id">
+            <div>Id</div>
+          </th>
+          <th pSortableColumn="docName">
+            <div>
+              Tên
+              <p-sortIcon field="docName"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="role">
+            <div>
+              Chức vụ
+              <p-sortIcon field="role"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="school">
+            <div>
+              Tên trường
+              <p-sortIcon field="school"></p-sortIcon>
+            </div>
+          </th>
+          <th class="th-small"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-inspector>
+        <tr class="p-selectable-row">
+          <td>
+            <p-tableCheckbox [value]="inspector"></p-tableCheckbox>
+          </td>
+          <td>
+            <span class="p-column-title">Id</span>
+            {{ inspector.id }}
+          </td>
+          <td>
+            <span class="p-column-title">Tên</span>
+            {{ inspector.name }}
+          </td>
+          <td>
+            <span class="p-column-title">Chức vụ</span>
+            {{ inspector.address.city }}
+          </td>
+          <td>
+            <span class="p-column-title">Đơn vị</span>
+            {{ inspector.company.name }}
+          </td>
+          <td
+            style="text-align: center"
+            class="d-flex td-action justify-content-center align-items-center"
+          >
+            <div
+              class="action-item d-flex justify-content-center align-items-center mx-2"
+            >
+              <i
+                class="fa-solid fa-circle-info"
+                (click)="navigateToDetail(inspector.id)"
+              ></i>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">Không tìm thấy kế hoạch nào</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <button
+      pButton
+      (click)="addInspector()"
+      [disabled]="!selectedInspectors || !selectedInspectors.length"
+    >
+      Lưu
+    </button>
+  </p-dialog>
+  <div class="col-md-8">
+    <div class="mb-2 issue-name">
+      <h5>Tên kế hoạch</h5>
+      <input
+        pInputText
+        class="text-black-50 w-100"
+        value="{{ issue.docName }}"
+      />
+    </div>
+    <div class="mb-2 issue-description">
+      <h5>Chi tiết</h5>
+      <textarea
+        pInputTextarea
+        class="text-black-50 w-100"
+        value="{{ issue.description }}"
+        rows="5"
+      ></textarea>
+    </div>
+    <div class="mb-5">
+      <h5 class="mb-3">Tài liệu công văn</h5>
+      <ng-container *ngFor="let item of issue.file">
+        <div class="file-item p-3 mb-2 d-flex">
+          <div class="file-item-icon">
+            <i class="fa-regular fa-file"></i>
+          </div>
+          <div class="file-item-content ps-3">
+            <p class="text-d">
+              {{ item.name }}
+            </p>
+            {{ item.size }}
+          </div>
+          <div class="mx-auto" *ngIf="item.status">
+            <p-tag class="status" severity="success" [rounded]="true">
+              {{ item.status }}
+            </p-tag>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="list-inspector">
+      <div class="list-inspector-header p-3 text-center">
+        <h5 class="mx-auto">Danh sách thanh tra</h5>
+        <div class="total">
+          <span class="text-secondary mx-auto"
+            >Tổng số: {{ issue.inspector.length }}</span
+          >
+          <div *ngIf="isChanged"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <ng-template pTemplate="header">Header Content</ng-template>
+        <p-virtualScroller
+          [value]="issue.inspector"
+          class="border-1 surface-border border-round"
+          scrollHeight="540px"
+          [itemSize]="120"
+        >
+          <ng-template pTemplate="item" let-item>
+            <div class="scrollview-item d-flex p-3 ms-2 h-full">
+              <div
+                class="scrollview-item-icon d-flex justify-content-center align-items-center"
+              >
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                <!-- <span class="index">{{
+                  issue.inspector.indexOf(item) + 1
+                }}</span> -->
+              </div>
+              <div class="scrollview-item-content ms-4">
+                <span class="font-weight-bold">{{ item.name }}</span>
+                <br />
+                <span
+                  >{{ item.role }}<br />
+                  {{ item.school }}
+                </span>
+              </div>
+
+              <div
+                class="trash-icon ml-5 d-flex justify-content-center align-items-center"
+              >
+                <i
+                  *ngIf="isChanged"
+                  class="fa-solid fa-trash"
+                  (click)="confirmDelete(item.id)"
+                ></i>
+              </div>
+            </div>
+          </ng-template>
+        </p-virtualScroller>
+      </div>
+      <div class="bottom">
+        <div *ngIf="!isChanged">
+          <button pButton (click)="toggleStatus()">Thay đổi</button>
+        </div>
+        <div *ngIf="isChanged">
+          <button pButton (click)="toggleCancel()">Hủy</button>
+          <button pButton (click)="showInspectorPopup()">Thêm mới</button>
+          <button pButton (click)="toggleStore()">Lưu</button>
+        </div>
+        <!-- <ng-template *ngIf="isChanged; else #Add">
+          <button pButton (click)="toggleStatus()">Thay đổi</button>
+        </ng-template>
+        <ng-template #Add>
+          <button pButton (click)="toggleStatus()">Hủy</button>
+          <button pButton (click)="toggleStore()">Lưu</button>
+          
+          </ng-template
+          
+        > -->
+      </div>
+    </div>
+  </div>
+</div>
