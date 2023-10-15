@@ -38,6 +38,7 @@ import { UpdateIssueComponent } from './features/post-login/issue-list/update-is
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { InspectorService } from './services/inspector.service';
+import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,6 +57,7 @@ import { InspectorService } from './services/inspector.service';
     CreateInspectionPlanComponent,
     UpdateInspectionPlanComponent,
     UpdateIssueComponent,
+    PagenotfoundComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +76,7 @@ import { InspectorService } from './services/inspector.service';
     FileUploadModule,
     TagModule,
     ConfirmDialogModule,
-    DialogModule,
+    DialogModule
   ],
   providers: [
     MessageService,

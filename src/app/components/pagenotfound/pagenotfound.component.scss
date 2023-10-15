@@ -1,0 +1,18 @@
+$primary: #4253f0;
+$base: #c8c8d0;
+$primary-hover: #9aa3ff;
+.outer-box {
+  .btn {
+    padding: 10px 35px;
+    background-color: $primary;
+    color: white;
+    font-size: large;
+    i {
+      margin-right: 10px;
+      font-size: larger;
+    }
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+}

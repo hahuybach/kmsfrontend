@@ -47,6 +47,7 @@
         background-color: $primary;
         border-radius: 8px;
         padding: 10px 40px;
+        border: none;
         &:hover,
         &:active {
             background-color: $primary-hover;

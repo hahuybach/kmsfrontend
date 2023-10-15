@@ -1,22 +1,18 @@
 <div class="row searchbar">
-  <div class="col-md-9 d-flex align-items-center">
+  <div class="col-md-6">
     <span class="p-input-icon-right">
       <input pInputText type="text" />
       <i class="fa fa-search" aria-hidden="true"></i>
     </span>
   </div>
-  <div class="col-md-3 d-flex justify-content-center align-items-center pt-3">
-    <div class="notification">
-      <i
-        class="fa-solid fa-bell"
-        pBadge
-        [value]="badgeValue"
-        severity="danger"
-        (click)="clearBadge()"
-      ></i>
-    </div>
-    <div class="user">
-      <i class="fa-solid fa-user-circle"></i>
-    </div>
+  <div
+    class="col-md-6 d-flex flex-row justify-content-end align-items-center top-nav"
+  >
+    <a (click)="clearBadge()">
+      <i class="bi bi-bell" pBadge [value]="badgeValue" severity="danger"></i>
+    </a>
+    <a>
+      <i class="bi bi-person-circle"></i>
+    </a>
   </div>
 </div>

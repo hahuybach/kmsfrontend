@@ -7,7 +7,9 @@ import { Component } from '@angular/core';
 })
 export class CreateIssueComponent {
   selectedFileName = "";
-
+  docInputs: any = [
+    {id: 1}
+    ];
   handleFileInputChange(fileInput: any): void {
     const files = fileInput.files;
     if (files.length > 0) {
@@ -18,5 +20,8 @@ export class CreateIssueComponent {
       this.selectedFileName = '';
     }
   }
-    
+  appendDocInput(){
+    const newDocInput = {id:1};
+    this.docInputs.push(newDocInput);
+  }
 }

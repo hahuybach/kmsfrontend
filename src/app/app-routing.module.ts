@@ -11,13 +11,15 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { InspectionPlanListComponent } from './features/post-login/inspection-plan-list/inspection-plan-list.component';
 import { CreateInspectionPlanComponent } from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
 import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
+import {PagenotfoundComponent} from "./components/pagenotfound/pagenotfound.component";
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',
-    pathMatch: 'full',
+    pathMatch: 'full'
   },
+
   {
     path: '',
     component: LoginBaseComponent,
@@ -59,6 +61,10 @@ const routes: Routes = [
         component: CreateInspectionPlanComponent,
       },
     ],
+  },
+  {
+    path:'**',
+    component: PagenotfoundComponent
   },
 ];
 

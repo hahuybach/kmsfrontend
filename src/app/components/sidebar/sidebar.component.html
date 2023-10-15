@@ -1,83 +1,85 @@
-<div class="sidebar-content p-2 d-flex flex-column justify-content-between">
-  <div class="logo mt-2">
-    <div class="sidebar-logo">
-      <img src="../../../assets/img/PGD-logo.svg" />
+<div class="sidebar-content d-flex flex-column justify-content-between">
+  <div class="sidebar-content-top">
+    <div class="logo mt-2 mb-3">
+      <div class="sidebar-logo">
+        <img src="../../../assets/img/PGD-logo.svg" />
+      </div>
     </div>
-  </div>
-  <div>
-    <ul>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a routerLink="" [routerLink]="['/dashboard']">
-          <div>
-            <i class="fa-solid fa-dashboard"></i>
-            &nbsp; Dashboard
-          </div>
-        </a>
-      </li>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a class="" [routerLink]="['/school-list']">
-          <div>
-            <i class="fa-solid fa-school"></i>
-            &nbsp; Danh sách trường
-          </div>
-        </a>
-      </li>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a class="" [routerLink]="['/inspectionplan']">
-          <div>
-            <i class="fa-solid fa-school-circle-check"></i>
-            &nbsp; Thanh tra
-          </div>
-        </a>
-      </li>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a class="" [routerLink]="['/userlist']">
-          <div>
-            <i class="fa-solid fa-users"></i>
-            &nbsp; Danh sách người dùng
-          </div>
-        </a>
-      </li>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a class="" [routerLink]="['/issuelist']">
-          <div>
-            <i class="fa-solid fa-calendar-check"></i>
-            &nbsp; Kế hoạch kiểm tra
-          </div>
-        </a>
-      </li>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a class="" [routerLink]="['/initiationplan']">
-          <div>
-            <i class="fa-solid fa-calendar-days"></i>
-            &nbsp; Kế hoạch thực hiện
-          </div>
-        </a>
-      </li>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a class="" [routerLink]="['/report']">
-          <div>
-            <i class="fa-solid fa-file-import"></i>
-            &nbsp; Báo cáo
-          </div>
-        </a>
-      </li>
-      <li class="p-2 rounded" routerLinkActive="active">
-        <a class="" [routerLink]="['/conclusion']">
-          <div>
-            <i class="fa-solid fa-file-circle-check"></i>
-            &nbsp; Kết luận
-          </div>
-        </a>
-      </li>
-    </ul>
+    <div>
+      <ul>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a routerLink="" [routerLink]="['/dashboard']">
+            <div>
+              <i class="bi bi-bar-chart"></i>
+              &nbsp; Dashboard
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a class="" [routerLink]="['/school-list']">
+            <div>
+              <i class="bi bi-building"></i>
+              &nbsp; Danh sách trường
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a class="" [routerLink]="['/inspectionplan']">
+            <div>
+              <i class="bi bi-file-earmark-person"></i>
+              &nbsp; Thanh tra
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a class="" [routerLink]="['/userlist']">
+            <div>
+              <i class="bi bi-people"></i>
+              &nbsp; Danh sách người dùng
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a class="" [routerLink]="['/issuelist']">
+            <div>
+              <i class="bi bi-list-check"></i>
+              &nbsp; Kế hoạch kiểm tra
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a class="" [routerLink]="['/initiationplan']">
+            <div>
+              <i class="bi bi-clock"></i>
+              &nbsp; Kế hoạch thực hiện
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a class="" [routerLink]="['/report']">
+            <div>
+              <i class="bi bi-graph-up-arrow"></i>
+              &nbsp; Báo cáo
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active">
+          <a class="" [routerLink]="['/conclusion']">
+            <div>
+              <i class="bi bi-clipboard2-check"></i>
+              &nbsp; Kết luận
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
   <div>
     <ul>
       <li class="p-2 rounded">
         <a class="" [routerLink]="['/logout']">
           <div>
-            <i class="fa-solid fa-right-from-bracket"></i>
+            <i class="bi bi-box-arrow-left"></i>
             &nbsp; Đăng xuất
           </div>
         </a>
