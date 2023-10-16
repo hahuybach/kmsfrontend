@@ -39,6 +39,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { InspectorService } from './services/inspector.service';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,7 +77,7 @@ import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.co
     FileUploadModule,
     TagModule,
     ConfirmDialogModule,
-    DialogModule
+    DialogModule,
   ],
   providers: [
     MessageService,

@@ -1,8 +1,8 @@
-<span>breadcumb here</span>
+<!-- <span>breadcrumb here</span> -->
 <!-- {{ issue | json }} -->
 <h4>Cập nhật kế hoạch kiểm tra</h4>
 <br />
-<div class="row issue-content" *ngIf="issue">
+<form class="row issue-content no-gutter-row" *ngIf="issue">
   <p-toast></p-toast>
   <p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
   <p-dialog
@@ -15,17 +15,16 @@
   >
     <p-table
       #dt
-      [value]="inspectorList"
+      [value]="inspectorLeftList"
       [(selection)]="selectedInspectors"
       dataKey="id"
       [rowHover]="true"
       [rows]="5"
       [showCurrentPageReport]="true"
-      [rowsPerPageOptions]="[5, 10, 15]"
       [paginator]="true"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
       [filterDelay]="0"
-      [globalFilterFields]="[]"
+      [globalFilterFields]="['name', 'role', 'school']"
     >
       <ng-template pTemplate="caption">
         <div class="table-header">
@@ -48,10 +47,10 @@
           <th class="th-id">
             <div>Id</div>
           </th>
-          <th pSortableColumn="docName">
+          <th pSortableColumn="name">
             <div>
               Tên
-              <p-sortIcon field="docName"></p-sortIcon>
+              <p-sortIcon field="name"></p-sortIcon>
             </div>
           </th>
           <th pSortableColumn="role">
@@ -66,7 +65,7 @@
               <p-sortIcon field="school"></p-sortIcon>
             </div>
           </th>
-          <th class="th-small"></th>
+          <!-- <th class="th-small"></th> -->
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-inspector>
@@ -90,24 +89,11 @@
             <span class="p-column-title">Đơn vị</span>
             {{ inspector.company.name }}
           </td>
-          <td
-            style="text-align: center"
-            class="d-flex td-action justify-content-center align-items-center"
-          >
-            <div
-              class="action-item d-flex justify-content-center align-items-center mx-2"
-            >
-              <i
-                class="fa-solid fa-circle-info"
-                (click)="navigateToDetail(inspector.id)"
-              ></i>
-            </div>
-          </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="8">Không tìm thấy kế hoạch nào</td>
+          <td colspan="8">Không tìm thấy người nào</td>
         </tr>
       </ng-template>
     </p-table>
@@ -119,6 +105,30 @@
       Lưu
     </button>
   </p-dialog>
+  <p-dialog
+    header="Cập nhật tài liệu"
+    [(visible)]="uploadFileVisible"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <p-fileUpload
+      name="demo[]"
+      url="https://www.primefaces.org/cdn/api/upload.php"
+      (onUpload)="onUpload($any($event))"
+      [multiple]="false"
+      accept="application/pdf"
+    >
+      <ng-template pTemplate="content" class="file-upload-content">
+        <ul *ngIf="uploadedFiles.length">
+          <li *ngFor="let file of uploadedFiles">
+            {{ file.name }} - {{ file.size }} bytes
+          </li>
+        </ul>
+      </ng-template>
+    </p-fileUpload>
+  </p-dialog>
   <div class="col-md-8">
     <div class="mb-2 issue-name">
       <h5>Tên kế hoạch</h5>
@@ -126,6 +136,7 @@
         pInputText
         class="text-black-50 w-100"
         value="{{ issue.docName }}"
+        formControlName="name"
       />
     </div>
     <div class="mb-2 issue-description">
@@ -134,29 +145,52 @@
         pInputTextarea
         class="text-black-50 w-100"
         value="{{ issue.description }}"
-        rows="5"
+        rows="3"
+        formControlName="description"
       ></textarea>
     </div>
     <div class="mb-5">
       <h5 class="mb-3">Tài liệu công văn</h5>
       <ng-container *ngFor="let item of issue.file">
-        <div class="file-item p-3 mb-2 d-flex">
-          <div class="file-item-icon">
-            <i class="fa-regular fa-file"></i>
-          </div>
-          <div class="file-item-content ps-3">
-            <p class="text-d">
-              {{ item.name }}
-            </p>
-            {{ item.size }}
-          </div>
-          <div class="mx-auto" *ngIf="item.status">
-            <p-tag class="status" severity="success" [rounded]="true">
-              {{ item.status }}
-            </p-tag>
+        <div class="mb-2">
+          <div class="file-item p-3 d-flex">
+            <div
+              class="file-item-icon d-flex justify-content-center align-items-center"
+            >
+              <i class="fa-regular fa-file"></i>
+            </div>
+            <div class="file-item-content ps-3">
+              <p class="text-d">
+                {{ item.name }}
+              </p>
+              {{ item.size }}
+            </div>
+            <div
+              class="mx-auto d-flex justify-content-center align-items-center"
+            >
+              <p-tag
+                class="status"
+                [severity]="item.status ? 'success' : 'danger'"
+                [rounded]="true"
+              >
+                {{ item.status ? "Có hiệu lực" : "Không có hiệu lực" }}
+              </p-tag>
+            </div>
+
+            <div
+              class="update-icon d-flex justify-content-center align-items-center"
+            >
+              <i
+                class="bi bi-pencil-square"
+                (click)="togglePopupFileUpload()"
+              ></i>
+            </div>
           </div>
         </div>
       </ng-container>
+      <!-- <button type="button" pButton>Thêm mới</button> -->
+      <!-- <br /> -->
+      <button pButton>Lưu</button>
     </div>
   </div>
   <div class="col-md-4">
@@ -204,33 +238,31 @@
                 <i
                   *ngIf="isChanged"
                   class="fa-solid fa-trash"
-                  (click)="confirmDelete(item.id)"
+                  (click)="confirmDelete(item)"
                 ></i>
               </div>
             </div>
           </ng-template>
         </p-virtualScroller>
       </div>
-      <div class="bottom">
-        <div *ngIf="!isChanged">
+      <div class="bottom p-2">
+        <div
+          class="bottom-item d-flex justify-content-center"
+          *ngIf="!isChanged"
+        >
           <button pButton (click)="toggleStatus()">Thay đổi</button>
         </div>
-        <div *ngIf="isChanged">
-          <button pButton (click)="toggleCancel()">Hủy</button>
-          <button pButton (click)="showInspectorPopup()">Thêm mới</button>
+        <div
+          class="bottom-item d-flex justify-content-between"
+          *ngIf="isChanged"
+        >
+          <button pButton class="cancel" (click)="toggleCancel()">Hủy</button>
+          <button pButton type="button" (click)="showInspectorPopup()">
+            <i class="bi bi-plus-lg"></i>
+          </button>
           <button pButton (click)="toggleStore()">Lưu</button>
         </div>
-        <!-- <ng-template *ngIf="isChanged; else #Add">
-          <button pButton (click)="toggleStatus()">Thay đổi</button>
-        </ng-template>
-        <ng-template #Add>
-          <button pButton (click)="toggleStatus()">Hủy</button>
-          <button pButton (click)="toggleStore()">Lưu</button>
-          
-          </ng-template
-          
-        > -->
       </div>
     </div>
   </div>
-</div>
+</form>

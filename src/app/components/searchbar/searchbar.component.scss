@@ -1,9 +1,8 @@
 @import "../../../assets/scss/base";
 .searchbar {
-    .col-md-9 {
+    .search {
         input {
-            padding: 20px 40px;
-            width: 800px;
+            width: 600px;
             border-radius: 40px;
             border: none;
             box-shadow:
@@ -11,7 +10,7 @@
                 rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
         }
         i {
-            margin-right: 5%;
+            margin-right: 2%;
             color: $primary;
         }
     }
@@ -52,22 +51,21 @@
     }
 }
 .top-nav {
-  a {
-    padding: 0 20px;
-  }
-
-  i {
-    color: $primary;
-    font-size: 30px;
-    border-radius: 100%;
-
-    &:hover {
-      color: $primary-hover;
+    a {
+        padding: 0 20px;
     }
-  }
 
-  .primary-badge {
-    background-color: $primary;
-  }
+    i {
+        color: $primary;
+        font-size: 30px;
+        border-radius: 100%;
+
+        &:hover {
+            color: $primary-hover;
+        }
+    }
+
+    .primary-badge {
+        background-color: $primary;
+    }
 }
-

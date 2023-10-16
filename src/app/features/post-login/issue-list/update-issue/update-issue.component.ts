@@ -9,18 +9,26 @@ import {
   ConfirmEventType,
 } from 'primeng/api';
 import { InspectorService } from 'src/app/services/inspector.service';
+
+interface UploadEvent {
+  originalEvent: Event;
+  files: File[];
+}
 @Component({
   selector: 'app-update-issue',
   templateUrl: './update-issue.component.html',
   styleUrls: ['./update-issue.component.scss'],
 })
 export class UpdateIssueComponent implements OnInit {
+  uploadedFiles: any[] = [];
   issueId: any;
   issue: any;
-  inspector: any; //list ban dau tranh phai goi lai service
-  inspectorList!: any[]; // list in popup
+  inspectorBeforeList: any; //list history
+  inspectorLeftBeforeList: any; // list left history
+  inspectorLeftList!: any[]; // list in popup
   isChanged = false;
   popupVisible = false;
+  uploadFileVisible = false;
   selectedInspectors!: any[];
   constructor(
     private route: ActivatedRoute,
@@ -39,30 +47,37 @@ export class UpdateIssueComponent implements OnInit {
       )
       .subscribe((data) => {
         this.issue = data;
-        this.inspector = this.issue.inspector;
-        console.log(this.issue);
+        this.inspectorBeforeList = this.issue.inspector;
       });
     this.inspectorService.getInspectors().subscribe((data) => {
-      console.log(data);
-      this.inspectorList = data;
+      this.inspectorLeftList = data;
+      this.inspectorLeftBeforeList = data;
     });
   }
+  //toggle status in scrollview
   toggleStatus() {
     this.isChanged = !this.isChanged;
   }
+  // store button in scrollview
   toggleStore() {
     this.isChanged = !this.isChanged;
+    this.inspectorBeforeList = this.issue.inspector;
+    this.inspectorLeftBeforeList = this.inspectorLeftList;
   }
-  confirmDelete(id: number) {
-    console.log('click icon');
+  // click trash icon event in scrollview
+  confirmDelete(inspector: any) {
     this.confirmationService.confirm({
       message: 'Do you want to delete this record?',
       header: 'Delete Confirmation',
       // icon: 'pi pi-info-circle',
       accept: () => {
+        this.inspectorBeforeList = this.issue.inspector;
         this.issue.inspector = this.issue.inspector.filter(
-          (item: any) => item.id != id
+          (item: any) => item.id != inspector.id
         );
+        // add lại vào danh sách trong popup
+        this.inspectorLeftBeforeList = this.inspectorLeftList;
+        this.inspectorLeftList = [...this.inspectorLeftList, inspector];
         this.messageService.add({
           severity: 'info',
           summary: 'Confirmed',
@@ -92,23 +107,53 @@ export class UpdateIssueComponent implements OnInit {
       },
     });
   }
+  //toggle inspector group popup
   showInspectorPopup() {
     this.popupVisible = true;
   }
+  //toggle cancel button scrollview
   toggleCancel() {
     this.isChanged = false;
-    this.issue.inspector = this.inspector;
+    this.issue.inspector = this.inspectorBeforeList;
+    this.inspectorLeftList = this.inspectorLeftBeforeList;
   }
-  navigateToDetail(inspectorId: number) {
-    console.log(inspectorId);
-  }
+
+  // navigateToDetail(inspectorId: number) {
+  //   console.log(inspectorId);
+  // }
+
+  //click plus icon event scrollview
   addInspector() {
     this.isChanged = false;
-    this.inspectorList = this.inspectorList.filter(
+    this.inspectorLeftBeforeList = this.inspectorLeftList;
+    this.inspectorLeftList = this.inspectorLeftList.filter(
       (val) => !this.selectedInspectors?.includes(val)
     );
+    this.inspectorBeforeList = this.issue.inspector;
     this.issue.inspector.push(...this.selectedInspectors);
-    console.log(this.issue.inspector);
+    this.selectedInspectors = [];
     this.popupVisible = false;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Confirmed',
+      detail: 'Thêm thành công',
+    });
+    // scroll to first
+  }
+  // update new doc
+  onUpload(event: UploadEvent) {
+    console.log('upload');
+    for (let file of event.files) {
+      this.uploadedFiles.push(file);
+    }
+    // console.log(this.uploadedFiles);
+    this.messageService.add({
+      severity: 'info',
+      summary: 'File Uploaded',
+      detail: '',
+    });
+  }
+  togglePopupFileUpload() {
+    this.uploadFileVisible = true;
   }
 }
