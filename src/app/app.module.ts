@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { Moment } from 'moment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginFormComponent } from './features/login/login-form/login-form.component';
@@ -31,6 +31,7 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
+import {ReactiveFormsModule} from "@angular/forms";
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +62,8 @@ import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.co
     VirtualScrollerModule,
     InputTextareaModule,
     FileUploadModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ReactiveFormsModule
   ],
   providers: [ MessageService, IssueService, LoggerService],
   bootstrap: [AppComponent]
