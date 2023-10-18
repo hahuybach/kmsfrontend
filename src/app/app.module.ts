@@ -39,7 +39,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { InspectorService } from './services/inspector.service';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +58,7 @@ import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.co
     CreateInspectionPlanComponent,
     UpdateInspectionPlanComponent,
     UpdateIssueComponent,
-    PagenotfoundComponent
+    PagenotfoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,6 +78,7 @@ import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.co
     TagModule,
     ConfirmDialogModule,
     DialogModule,
+    ReactiveFormsModule,
   ],
   providers: [
     MessageService,

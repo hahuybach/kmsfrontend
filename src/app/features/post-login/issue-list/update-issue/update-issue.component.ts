@@ -9,6 +9,8 @@ import {
   ConfirmEventType,
 } from 'primeng/api';
 import { InspectorService } from 'src/app/services/inspector.service';
+import { FormBuilder, Validators } from '@angular/forms';
+import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -27,15 +29,28 @@ export class UpdateIssueComponent implements OnInit {
   inspectorLeftBeforeList: any; // list left history
   inspectorLeftList!: any[]; // list in popup
   isChanged = false;
-  popupVisible = false;
+  popupInspectorVisible = false;
   uploadFileVisible = false;
   selectedInspectors!: any[];
+  popupInvalidDocVisible = false;
+  invalidDoc!: any[];
+  issueForm = this.fb.group({
+    name: [
+      '',
+      // Validators.required,
+      NoWhitespaceValidator(),
+    ],
+    description: ['', NoWhitespaceValidator()],
+    inspector: [''],
+    file: [Validators.required],
+  });
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private inspectorService: InspectorService
+    private inspectorService: InspectorService,
+    private fb: FormBuilder
   ) {}
   ngOnInit(): void {
     this.route.params
@@ -48,6 +63,11 @@ export class UpdateIssueComponent implements OnInit {
       .subscribe((data) => {
         this.issue = data;
         this.inspectorBeforeList = this.issue.inspector;
+        this.issueForm.patchValue({
+          name: this.issue.docName,
+          description: this.issue.description,
+          inspector: this.issue.inspector,
+        });
       });
     this.inspectorService.getInspectors().subscribe((data) => {
       this.inspectorLeftList = data;
@@ -63,6 +83,9 @@ export class UpdateIssueComponent implements OnInit {
     this.isChanged = !this.isChanged;
     this.inspectorBeforeList = this.issue.inspector;
     this.inspectorLeftBeforeList = this.inspectorLeftList;
+    this.issueForm.patchValue({
+      inspector: this.issue.inspector,
+    });
   }
   // click trash icon event in scrollview
   confirmDelete(inspector: any) {
@@ -109,7 +132,7 @@ export class UpdateIssueComponent implements OnInit {
   }
   //toggle inspector group popup
   showInspectorPopup() {
-    this.popupVisible = true;
+    this.popupInspectorVisible = true;
   }
   //toggle cancel button scrollview
   toggleCancel() {
@@ -132,7 +155,7 @@ export class UpdateIssueComponent implements OnInit {
     this.inspectorBeforeList = this.issue.inspector;
     this.issue.inspector.push(...this.selectedInspectors);
     this.selectedInspectors = [];
-    this.popupVisible = false;
+    this.popupInspectorVisible = false;
     this.messageService.add({
       severity: 'success',
       summary: 'Confirmed',
@@ -155,5 +178,32 @@ export class UpdateIssueComponent implements OnInit {
   }
   togglePopupFileUpload() {
     this.uploadFileVisible = true;
+  }
+  togglePopupInvalidDoc() {
+    this.invalidDoc = this.issue.file.filter(
+      (item: { status: boolean }) => !item.status
+    );
+    console.log(this.invalidDoc);
+
+    this.popupInvalidDocVisible = true;
+  }
+  onSubmit() {
+    console.log(this.issue.inspector.length);
+    // if (this.issue.inspector.length == 0) {
+    //   this.messageService.add({
+    //     severity: 'Error',
+    //     summary: 'Alert',
+    //     detail: 'Inspector trống',
+    //   });
+    //   return;
+    // }
+    const inspectorFormAttr = this.issueForm.get('inspector');
+    if (inspectorFormAttr !== null) {
+      inspectorFormAttr.patchValue(this.issue.inspector);
+    }
+    const fileFormAttr = this.issueForm.get('file');
+    if (fileFormAttr !== null) {
+      fileFormAttr.patchValue(this.issue.file);
+    }
   }
 }

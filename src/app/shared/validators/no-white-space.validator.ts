@@ -1,7 +1,13 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
-export function NowhiteSpaceValidator(control: AbstractControl) {
-  const { value: controlVal } = control;
-  const isWhiteSpaceOnly = (controlVal || '').trim().length === 0;
-  return isWhiteSpaceOnly ? { whitespace: 'Value is only whitespace' } : null;
+export function NoWhitespaceValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    let controlVal = control.value;
+    if (typeof controlVal === 'number') {
+      controlVal = `${controlVal}`;
+    }
+    let isWhitespace = (controlVal || '').trim().length === 0;
+    let isValid = !isWhitespace;
+    return isValid ? null : { whitespace: 'value is only whitespace' };
+  };
 }

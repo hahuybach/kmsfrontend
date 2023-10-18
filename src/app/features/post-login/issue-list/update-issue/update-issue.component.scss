@@ -77,6 +77,9 @@ textarea {
     border-radius: 10px;
     font-size: 16px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    .file-item-content {
+        width: 400px;
+    }
     .file-item-icon {
         i {
             color: $primary;
@@ -139,4 +142,8 @@ textarea {
             border-color: $primary-hover;
         }
     }
+}
+.overflow-auto {
+    height: 540px;
+    overflow: auto;
 }
