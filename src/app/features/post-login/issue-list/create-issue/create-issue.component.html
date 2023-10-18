@@ -1,15 +1,15 @@
 <div class="row create-issue">
   <h4 class="mb-3">Tạo mới kế hoạch triển khai</h4>
-  <form class="row">
+  <form class="row" [formGroup]="issueForm" (ngSubmit)="createIssue()">
     <div class="form-content col-md-8">
       <div class="issue-name mb-1">
         <h6>Tên kế hoạch triển khai</h6>
         <input
           type="text"
           pInputText
-          formControlName="issueName"
           placeholder="Tên kế hoạch triển khai"
           class="w-100"
+          formControlName="issueName"
         />
       </div>
       <div class="issue-detail mb-1">
@@ -17,66 +17,68 @@
         <textarea
           type="text"
           pInputTextarea
-          formControlName="description"
           placeholder="Chi tiết kế hoạch triển khai"
           rows="5"
           class="w-100"
+          formControlName="issueDetail"
         ></textarea>
       </div>
     </div>
     <div class="col-md-4 h-25 d-flex justify-content-center align-items-center">
       <button pButton class="create-inspector">Tạo ban KTNB</button>
     </div>
-    <div class="document">
+    <div class="document" formArrayName="issueDocument">
       <h6>Tài liệu công văn</h6>
-      <div class="row document-item mb-2" *ngFor="let docInput of docInputs ;let i = index">
-        <div id="i" class="d-flex flex-row">
+      <div class="row document-item mb-2" *ngFor="let issueDoc of issueDocumentFormGroup.controls ;let i = index">
+        <div [formGroupName]="i" class="d-flex flex-row">
           <div class="col-md-3">
             <label>Tên tài liệu</label><br/>
             <input
               pInputText
-              formControlName="docName"
               placeholder="Điền tên tài liệu"
+              formControlName="docName"
             />
           </div>
           <div class="col-md-3">
             <label>Mã tài liệu</label><br/>
             <input
               pInputText
-              formControlName="docName"
               placeholder="Điền mã tài liệu"
+              formControlName="docCode"
             />
           </div>
           <div class="col-md-6">
             <label>Tài liệu</label><br/>
-            <div class="input-file">
+            <div class="input-file row">
               <input
                 type="file"
                 #fileInput
                 style="display: none"
-                (change)="handleFileInputChange(fileInput)"
+                (change)="handleFileInputChange(fileInput, i)"
               />
-              <input pInputText [value]="selectedFileName" readonly/>
+              <input pInputText readonly class="col-md-8" placeholder="{{fileInputPlaceholders[i] ? fileInputPlaceholders[i] : ''}}"/>
               <button
+                type="button"
                 pButton
                 label="Chọn tệp"
                 (click)="fileInput.click()"
+                class="col-md-2"
               ></button>
+              <button *ngIf="i != 0" type="button" class="col-md-2 delete-button" (click)="removeIssueDoc(i)">
+                <i class="bi bi-trash3 "></i>
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <div class="d-flex flex-row justify-content-between">
-      <div class="save-button d-flex align-items-end">
-        <div class="div">
-          <button pButton>Lưu</button>
+      <div class="mt-5 row w-100">
+        <div class="col-12 save-button d-flex justify-content-end w-100 pe-0">
+          <button type="button" class="btn text-white" (click)="addIssueDoc()">Thêm</button>
+          <div class="col-md-1"></div>
         </div>
-      </div>
-      <div class="save-button d-flex align-items-end">
-        <div class="div">
-          <button pButton type="button" (click)="appendDocInput()">Thêm</button>
+        <div class="col-12 save-button d-flex w-100">
+          <button class="btn text-white">Lưu</button>
         </div>
-      </div>
       </div>
     </div>
   </form>

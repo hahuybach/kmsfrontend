@@ -2,7 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
-import * as moment  from 'moment';
+import * as moment from 'moment';
+
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
@@ -21,27 +22,26 @@ export class LoginFormComponent implements OnInit {
   login() {
     const val = this.signInForm.value;
     console.log(val);
-    if (val.username && val.password) {
-      this.auth.login(val.username, val.password)
-        .subscribe(
-          res => {
-            const d = JSON.parse(res);
-            console.log("Đăng nhập thành công ", res);
-            console.log(d.token);
-            this.router.navigateByUrl('/dashboard');
+    if (val.email && val.password) {
+      this.auth.login(val.email, val.password)
+        .subscribe({
+          next: (response) => {
+            const data = JSON.parse(response);
+            console.log(data.token);
+            this.router.navigateByUrl("/dashboard");
           },
-          error => {
-            console.log('oops', error);
-            this.router.navigateByUrl('/login');
+          error: (err) => {
+            console.log("Error: " +  err);
+            this.router.navigateByUrl("/login");
           }
-        );
+        });
     }
   }
 
   ngOnInit(): void {
     this.signInForm = this.fb.group(
       {
-        username: '',
+        email: '',
         password: ''
       });
   }
