@@ -1,0 +1,14 @@
+@import "base";
+.p-input {
+    border-radius: 8px;
+}
+.p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+    }
+}

@@ -40,6 +40,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InspectorService } from './services/inspector.service';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +60,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     UpdateInspectionPlanComponent,
     UpdateIssueComponent,
     PagenotfoundComponent,
+    SchoolInitiationPlanDetailComponent,
   ],
   imports: [
     BrowserModule,

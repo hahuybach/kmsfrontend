@@ -1,0 +1,66 @@
+<span>breadcrumb</span>
+<h4 class="mb-4">Kế hoạch thực hiện nhiệm vụ năm học</h4>
+<div class="row">
+  <div class="col-md-7 plan">
+    <div class="plan-content row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <h6 class="mb-2">Tên kế hoạch</h6>
+          <p>{{ schoolinitiationplan.name }}</p>
+        </div>
+        <div class="mb-3">
+          <h6 class="mb-2">Trường</h6>
+          <p>{{ schoolinitiationplan.school }}</p>
+        </div>
+        <div class="mb-3">
+          <h6 class="mb-2">Ngày tạo</h6>
+          <p>{{ schoolinitiationplan.createdDate }}</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="mb-3">
+          <h6 class="mb-2">Người tạo</h6>
+          <p>{{ schoolinitiationplan.createdBy }}</p>
+        </div>
+        <div class="mb-3">
+          <h6 class="mb-2">Trạng thái</h6>
+          <p-tag class="status" [severity]="'warning'" [rounded]="true">
+            Đang chờ
+          </p-tag>
+        </div>
+      </div>
+    </div>
+    <div class="plan-file mt-4">
+      <h6>Tài liệu</h6>
+      <div class="plan-file-item d-flex">
+        <div class="plan-file-item-img"></div>
+        <div class="plan-file-item-content"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="upload">
+      <div class="pt-4">
+        <h4 class="d-flex justify-content-center">Xác nhận kế hoạch</h4>
+      </div>
+      <div class="input-file d-flex justify-content-center align-items-center">
+        <div class="input-file-content">
+          <p-fileUpload
+            mode="advanced"
+            chooseLabel="Tải lên"
+            name="demo[]"
+            url="https://www.primefaces.org/cdn/api/upload.php"
+            accept="image/*"
+            (onUpload)="onUpload($any($event))"
+          ></p-fileUpload>
+        </div>
+      </div>
+      <div
+        class="button-bottom d-flex justify-content-around align-items-center"
+      >
+        <button class="p-tag p-tag-danger">Không phê duyệt</button>
+        <button class="p-tag p-tag-success">Phê duyệt</button>
+      </div>
+    </div>
+  </div>
+</div>

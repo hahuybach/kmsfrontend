@@ -1,20 +1,14 @@
 @import "../../../../../assets/scss/base";
-.p-button {
-    background-color: $primary;
-    border-radius: 8px;
-    border: solid 1px $primary;
-    transition: all 0.5s ease;
-    &:hover {
-        background-color: $primary-hover;
-        border-color: $primary-hover;
-    }
-}
+@import "../../../../../assets/scss/prime-custom";
 .no-gutter-row {
     margin-right: 0;
     margin-left: 0;
 }
 .col {
     margin: 0;
+}
+.col-md-8 {
+    padding: 0;
 }
 input,
 textarea {
@@ -105,13 +99,6 @@ textarea {
 }
 .bottom-item {
     button {
-        background-color: $primary;
-        border-radius: 8px;
-        transition: all 0.5s ease;
-        &:hover {
-            background-color: $primary-hover;
-            border-color: $primary-hover;
-        }
         &.cancel {
             background-color: white;
             color: $primary;

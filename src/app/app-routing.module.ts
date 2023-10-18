@@ -11,13 +11,14 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { InspectionPlanListComponent } from './features/post-login/inspection-plan-list/inspection-plan-list.component';
 import { CreateInspectionPlanComponent } from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
 import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
-import {PagenotfoundComponent} from "./components/pagenotfound/pagenotfound.component";
+import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
+import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
 
 const routes: Routes = [
   {
     path: '',
     redirectTo: '/login',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
 
   {
@@ -38,6 +39,7 @@ const routes: Routes = [
     path: '',
     component: MainComponent,
     children: [
+      // issue
       { path: 'issuelist', component: IssueListComponent },
       {
         path: 'issuelist/:id',
@@ -48,23 +50,30 @@ const routes: Routes = [
         component: UpdateIssueComponent,
       },
       {
-        path: 'dashboard',
-        component: DashboardComponent,
-      },
-      {
         path: 'createissue',
         component: CreateIssueComponent,
       },
+      // dashboard
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      // initiationplan
       { path: 'inspectionplan', component: InspectionPlanListComponent },
       {
         path: 'inspectionplan/create',
         component: CreateInspectionPlanComponent,
       },
+      // school initiation plan
+      {
+        path: 'schoolinitiationplan/:id',
+        component: SchoolInitiationPlanDetailComponent,
+      },
     ],
   },
   {
-    path:'**',
-    component: PagenotfoundComponent
+    path: '**',
+    component: PagenotfoundComponent,
   },
 ];
 

@@ -30,3 +30,21 @@
 :root {
     $primary: #4253f0;
 }
+
+// Tag
+.p-tag.p-tag-success {
+    background-color: #e6f8ef;
+    color: #3b9871;
+    padding: 5px 20px;
+}
+.p-tag.p-tag-danger {
+    color: #b42318;
+    background-color: #fef3f2;
+    padding: 5px 20px;
+}
+.p-tag.p-tag-warning {
+    color: #b54708;
+    background-color: #fffaeb;
+    padding: 5px 20px;
+}
+//

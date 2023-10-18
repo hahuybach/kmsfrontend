@@ -138,7 +138,7 @@
               {{ item.date | date : "MM/dd/yyyy" }}
             </p>
           </div>
-          <div class="mx-auto">
+          <div class="mx-auto d-flex justify-content-center align-items-center">
             <p-tag class="status" [severity]="'danger'" [rounded]="true">
               Không có hiệu lực
             </p-tag>
@@ -159,17 +159,17 @@
     <p-fileUpload
       name="demo[]"
       url="https://www.primefaces.org/cdn/api/upload.php"
-      (onUpload)="onUpload($any($event))"
+      (onUpload)="onUpload($any($event), documentTypeId, documentId)"
       [multiple]="false"
       accept="application/pdf"
     >
-      <ng-template pTemplate="content" class="file-upload-content">
-        <ul *ngIf="uploadedFiles.length">
-          <li *ngFor="let file of uploadedFiles">
-            {{ file.name }} - {{ file.size }} bytes
+      <!-- <ng-template pTemplate="content" class="file-upload-content">
+        <ul *ngIf="addedDocumentIssues.length">
+          <li *ngFor="let file of addedDocumentIssues">
+            {{ file[0] | json }}
           </li>
         </ul>
-      </ng-template>
+      </ng-template> -->
     </p-fileUpload>
   </p-dialog>
 
@@ -180,10 +180,10 @@
         pInputText
         class="text-black-50 w-100"
         value="{{ issue.docName }}"
-        formControlName="name"
+        formControlName="issueName"
       />
       <span
-        *ngIf="issueForm.controls.name.errors?.['whitespace']"
+        *ngIf="issueForm.controls.issueName.errors?.['whitespace']"
         class="p-error"
         >Vui lòng điền tên kế hoạch</span
       >
@@ -214,8 +214,8 @@
       >
         Xem tài liệu không có hiệu lực
       </button>
-      <ng-container *ngFor="let item of issue.file">
-        <div *ngIf="item.status" class="mb-2">
+      <ng-container *ngFor="let item of issue.documentDtos">
+        <div *ngIf="item.status.statusId == 1" class="mb-2">
           <div class="file-item p-3 d-flex">
             <div
               class="file-item-icon d-flex justify-content-center align-items-center"
@@ -224,14 +224,16 @@
             </div>
             <div class="file-item-content ps-3">
               <p class="text-d">
-                {{ item.name }}<br />
-                {{ item.size }}<br />
-                {{ item.date | date : "MM/dd/yyyy" }}
+                {{ item.documentName }}<br />
+                {{ item.sizeFormat }}<br />
+                {{ item.uploadedDate | date : "MM/dd/yyyy" }}
               </p>
             </div>
-            <div class="mx-auto">
+            <div
+              class="mx-auto d-flex justify-content-center align-items-center"
+            >
               <p-tag class="status" [severity]="'success'" [rounded]="true">
-                Có hiệu lực
+                {{ item.status.statusName }}
               </p-tag>
             </div>
 
@@ -240,7 +242,12 @@
             >
               <i
                 class="bi bi-pencil-square"
-                (click)="togglePopupFileUpload()"
+                (click)="
+                  togglePopupFileUpload(
+                    item.documentType.documentTypeId,
+                    item.documentId
+                  )
+                "
               ></i>
             </div>
           </div>

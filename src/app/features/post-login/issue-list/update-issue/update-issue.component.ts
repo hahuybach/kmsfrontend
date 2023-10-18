@@ -22,7 +22,7 @@ interface UploadEvent {
   styleUrls: ['./update-issue.component.scss'],
 })
 export class UpdateIssueComponent implements OnInit {
-  uploadedFiles: any[] = [];
+  addedDocumentIssues = new Map<number, File>();
   issueId: any;
   issue: any;
   inspectorBeforeList: any; //list history
@@ -34,15 +34,20 @@ export class UpdateIssueComponent implements OnInit {
   selectedInspectors!: any[];
   popupInvalidDocVisible = false;
   invalidDoc!: any[];
+  documentTypeId: any;
+  documentId = 0;
+  inEffectiveDocumentIds = new Map<number, number>();
   issueForm = this.fb.group({
-    name: [
+    issueName: [
       '',
       // Validators.required,
       NoWhitespaceValidator(),
     ],
     description: ['', NoWhitespaceValidator()],
-    inspector: [''],
+    inspectorId: [''],
     file: [Validators.required],
+    // addedDocumentIssues: [],
+    // inEffectiveDocumentIds: [],
   });
   constructor(
     private route: ActivatedRoute,
@@ -64,9 +69,9 @@ export class UpdateIssueComponent implements OnInit {
         this.issue = data;
         this.inspectorBeforeList = this.issue.inspector;
         this.issueForm.patchValue({
-          name: this.issue.docName,
+          issueName: this.issue.docName,
           description: this.issue.description,
-          inspector: this.issue.inspector,
+          inspectorId: this.issue.inspector.map((item: any) => item.id),
         });
       });
     this.inspectorService.getInspectors().subscribe((data) => {
@@ -84,7 +89,7 @@ export class UpdateIssueComponent implements OnInit {
     this.inspectorBeforeList = this.issue.inspector;
     this.inspectorLeftBeforeList = this.inspectorLeftList;
     this.issueForm.patchValue({
-      inspector: this.issue.inspector,
+      inspectorId: this.issue.inspector.map((item: any) => item.id),
     });
   }
   // click trash icon event in scrollview
@@ -164,20 +169,24 @@ export class UpdateIssueComponent implements OnInit {
     // scroll to first
   }
   // update new doc
-  onUpload(event: UploadEvent) {
-    console.log('upload');
+  onUpload(event: UploadEvent, documentTypeId: number, documentId: number) {
     for (let file of event.files) {
-      this.uploadedFiles.push(file);
+      this.addedDocumentIssues.set(documentTypeId, file);
     }
-    // console.log(this.uploadedFiles);
+    this.inEffectiveDocumentIds.set(documentTypeId, documentId);
+    console.log(this.addedDocumentIssues);
+    this.uploadFileVisible = false;
     this.messageService.add({
       severity: 'info',
       summary: 'File Uploaded',
       detail: '',
     });
   }
-  togglePopupFileUpload() {
+  togglePopupFileUpload(documentTypeId: number, documentId: number) {
     this.uploadFileVisible = true;
+    console.log(documentTypeId, documentId);
+    this.documentTypeId = documentTypeId;
+    this.documentId = documentId;
   }
   togglePopupInvalidDoc() {
     this.invalidDoc = this.issue.file.filter(
@@ -189,21 +198,44 @@ export class UpdateIssueComponent implements OnInit {
   }
   onSubmit() {
     console.log(this.issue.inspector.length);
-    // if (this.issue.inspector.length == 0) {
-    //   this.messageService.add({
-    //     severity: 'Error',
-    //     summary: 'Alert',
-    //     detail: 'Inspector trống',
-    //   });
-    //   return;
-    // }
-    const inspectorFormAttr = this.issueForm.get('inspector');
+    const inspectorFormAttr = this.issueForm.get('inspectorId');
     if (inspectorFormAttr !== null) {
-      inspectorFormAttr.patchValue(this.issue.inspector);
+      inspectorFormAttr.patchValue(
+        this.issue.inspector.map((item: any) => item.id)
+      );
     }
     const fileFormAttr = this.issueForm.get('file');
     if (fileFormAttr !== null) {
       fileFormAttr.patchValue(this.issue.file);
     }
+    // console.log(this.issueForm.value);
+    const fileArray = Array.from(this.addedDocumentIssues, ([key, value]) => ({
+      documentTypeId: key,
+      file: value,
+    }));
+    console.log(fileArray);
+    // XỬ LÝ FORM ARRAY
+    // const addedDocumentIssuesAttr = this.issueForm.get('addedDocumentIssues');
+    // if (addedDocumentIssuesAttr !== null) {
+    //   addedDocumentIssuesAttr.patchValue(fileArray.map((item: any) => item))
+    // }
+    const docIdArray = Array.from(
+      this.inEffectiveDocumentIds,
+      ([key, value]) => ({
+        documentTypeId: key,
+        documentId: value,
+      })
+    );
+    const documentIdsWithSameType = docIdArray
+      .filter((doc) =>
+        fileArray.some((file) => file.documentTypeId === doc.documentTypeId)
+      )
+      .map((doc) => doc.documentId);
+    const data = {
+      ...this.issueForm.value,
+      addedDocumentIssuesAttr: fileArray,
+      inEffectiveDocumentIds: documentIdsWithSameType,
+    };
+    console.log(data);
   }
 }

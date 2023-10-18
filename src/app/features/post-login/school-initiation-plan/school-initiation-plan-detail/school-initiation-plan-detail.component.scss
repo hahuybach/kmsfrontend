@@ -1,0 +1,80 @@
+@import "../../../../../assets/scss/base";
+@import "../../../../../assets/scss/prime-custom";
+
+.plan {
+    border-right: solid 1px $primary;
+    height: 100%;
+}
+.right {
+    float: right;
+}
+.plan-content {
+    // border-bottom: solid 1px $primary;
+}
+.plan-file-item {
+    width: 800px;
+    height: 200px;
+    border-radius: 15px;
+    box-shadow:
+        rgba(0, 0, 0, 0.16) 0px 3px 6px,
+        rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    .plan-file-item-img {
+        width: 30%;
+        background-color: #cdf8e3;
+        border-radius: 15px 0 0 15px;
+    }
+    .plan-file-item-content {
+        width: 70%;
+        background-color: #ffd4cf;
+        border-radius: 0px 15px 15px 0px;
+    }
+}
+.upload {
+    box-shadow:
+        rgba(0, 0, 0, 0.16) 0px 3px 6px,
+        rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    width: 100%;
+    border-radius: 15px;
+}
+p {
+    font-size: 16px;
+}
+.input-file {
+    height: 200px;
+    border-bottom: 1px solid $primary;
+    width: 100%;
+    .p-inputtext {
+        width: 70%;
+        border-radius: 8px 0 0 8px;
+    }
+    button {
+        background-color: $primary;
+        border-radius: 0px 8px 8px 0px;
+        &:hover,
+        &:active {
+            background-color: $primary-hover;
+            border-color: $primary-hover;
+        }
+    }
+}
+.button-bottom {
+    height: 200px;
+    button {
+        font-size: 16px;
+        padding: 15px 20px;
+        border-radius: 30px;
+        border: none;
+        width: 200px;
+        transition: all 0.5s ease;
+        &.p-tag-danger {
+            &:hover {
+                background-color: #ffd4cf;
+            }
+        }
+        &.p-tag-success {
+            &:hover {
+                background-color: #cdf8e3;
+            }
+        }
+    }
+}
