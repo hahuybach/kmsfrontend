@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../../../services/auth.service";
 import {Router} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({
   selector: 'app-create-issue',
@@ -88,6 +88,7 @@ export class CreateIssueComponent implements OnInit {
     this.issueForm = this.fb.group({
       issueName: [null, Validators.compose([Validators.required])],
       issueDetail: [null, Validators.compose([Validators.required])],
+      inspectorId: [null, Validators.compose([Validators.required])],
       issueDocList: this.fb.group({
         issueDoc_1: this.fb.group({
           documentName: [null, Validators.compose([Validators.required])],
@@ -139,40 +140,51 @@ export class CreateIssueComponent implements OnInit {
 
   onSubmit() {
     const formData = new FormData();
-    formData.append("issueName", this.issueForm.get("issueName")?.value);
-    formData.append("description", this.issueForm.get("issueDetail")?.value);
-
-    const documentIssues: any = [];
+    const issue = {
+      issueName: this.issueForm.get('issueName')?.value,
+      inspectorId: [1, 2, 3, 4, 5],
+      description: this.issueForm.get('issueDetail')?.value,
+      documentIssues: [],
+    }
 
     for (let i = 1; i <= 3; i++) {
-      const docFileControl = this.issueForm.get(`issueDocList.issueDoc_${i}.docFile`);
+      const docFileControl = this.issueForm.get(`issueDocList.issueDoc_${i}.documentFile`);
+      console.log(docFileControl?.value.name);
       if (docFileControl?.value) {
         const docFile = docFileControl.value;
-        formData.append(`documentIssues[${i - 1}].documentFile`, docFile, docFile.name);
+        formData.append(`files`, docFile, docFile.name);
 
-        const documentName = this.issueForm.get(`issueDocList.issueDoc_${i}.docName`)?.value;
-        const documentType = this.issueForm.get(`issueDocList.issueDoc_${i}.docType`)?.value;
-        const documentCode = this.issueForm.get(`issueDocList.issueDoc_${i}.docCode`)?.value;
+        const documentName = this.issueForm.get(`issueDocList.issueDoc_${i}.documentName`)?.value;
+        const documentTypeId = this.issueForm.get(`issueDocList.issueDoc_${i}.documentTypeId`)?.value;
+        const documentCode = this.issueForm.get(`issueDocList.issueDoc_${i}.documentCode`)?.value;
 
-        documentIssues.push({
+        console.log(documentName, documentTypeId, documentCode)
+
+        // @ts-ignore
+        issue.documentIssues.push({
           documentName,
-          documentType,
+          documentTypeId,
           documentCode,
         });
       }
-
-      formData.append('documentIssues', JSON.stringify(documentIssues));
-
-
-      this.http.post('http://localhost:8080/api/v1/document/upload/file', formData).subscribe(
-        (response) => {
-          console.log('Form data sent to the backend:', response);
-        },
-        (error) => {
-          console.error('Error while sending form data:', error);
-        }
-      );
     }
+
+    formData.append("issue",new Blob([JSON.stringify(issue)], {type:"application/json"}));
+
+    console.log(formData.getAll("issue"))
+    console.log(formData.getAll("files"))
+
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+
+    this.http.post('http://localhost:8080/api/v1/issue/save', formData, {headers}).subscribe(
+      (response) => {
+        console.log('Form data sent to the backend:', response);
+      },
+      (error) => {
+        console.error('Error while sending form data:', error);
+      }
+    );
   }
 }
 
