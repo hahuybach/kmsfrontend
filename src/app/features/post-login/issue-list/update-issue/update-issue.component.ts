@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import {
   ConfirmationService,
   MessageService,
@@ -22,7 +21,7 @@ interface UploadEvent {
   styleUrls: ['./update-issue.component.scss'],
 })
 export class UpdateIssueComponent implements OnInit {
-  addedDocumentIssues = new Map<number, File>();
+  addedDocumentIssues = new Map<number, object>();
   issueId: any;
   issue: any;
   inspectorBeforeList: any; //list history
@@ -37,6 +36,7 @@ export class UpdateIssueComponent implements OnInit {
   documentTypeId: any;
   documentId = 0;
   inEffectiveDocumentIds = new Map<number, number>();
+  uploadFileName = 'sad';
   issueForm = this.fb.group({
     issueName: [
       '',
@@ -170,9 +170,9 @@ export class UpdateIssueComponent implements OnInit {
   }
   // update new doc
   onUpload(event: UploadEvent, documentTypeId: number, documentId: number) {
-    for (let file of event.files) {
-      this.addedDocumentIssues.set(documentTypeId, file);
-    }
+    this.addedDocumentIssues.set(documentTypeId, event.files[0]);
+    this.uploadFileName = event.files[0].name;
+    console.log(this.uploadFileName);
     this.inEffectiveDocumentIds.set(documentTypeId, documentId);
     console.log(this.addedDocumentIssues);
     this.uploadFileVisible = false;

@@ -156,20 +156,20 @@
     [draggable]="false"
     [resizable]="false"
   >
+    <label for="">Tên tài liệu</label>
+    <br />
+    <input pInputText type="text" placeholder="Tên tài liệu" />
+    <br />
+    <label for="">Mã tài liệu</label>
+    <br />
+    <input pInputText type="text" placeholder="Mã tài liệu" />
     <p-fileUpload
       name="demo[]"
       url="https://www.primefaces.org/cdn/api/upload.php"
       (onUpload)="onUpload($any($event), documentTypeId, documentId)"
       [multiple]="false"
-      accept="application/pdf"
+      accept="application/pdf"s
     >
-      <!-- <ng-template pTemplate="content" class="file-upload-content">
-        <ul *ngIf="addedDocumentIssues.length">
-          <li *ngFor="let file of addedDocumentIssues">
-            {{ file[0] | json }}
-          </li>
-        </ul>
-      </ng-template> -->
     </p-fileUpload>
   </p-dialog>
 
