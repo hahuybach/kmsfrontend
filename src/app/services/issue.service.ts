@@ -3,9 +3,11 @@ import { Issue } from "../models/issue.model";
 import { LoggerService } from "./LoggerService";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {FormGroup} from "@angular/forms";
 @Injectable()
 export class IssueService{
     private mockApiUrl = 'https://636b1436b10125b78feac415.mockapi.io'
+    private issueApiUrl = "localhost:8080/api/v1/issue";
     constructor(private loggerService: LoggerService,private http: HttpClient){
         this.loggerService.log("Product service constructed")
     }
@@ -20,4 +22,5 @@ export class IssueService{
       const url  = `${this.mockApiUrl}/issue/${issueId}`;
       return this.http.get(url);
     }
+
 }

@@ -27,7 +27,7 @@ export class LoginFormComponent implements OnInit {
         .subscribe({
           next: (response) => {
             const data = JSON.parse(response);
-            console.log(data.token);
+            this.setJwtInCookie(data.token);
             this.router.navigateByUrl("/dashboard");
           },
           error: (err) => {
@@ -36,6 +36,10 @@ export class LoginFormComponent implements OnInit {
           }
         });
     }
+  }
+
+  setJwtInCookie(jwt: string){
+    document.cookie = `jwtToken=${jwt}`;
   }
 
   ngOnInit(): void {

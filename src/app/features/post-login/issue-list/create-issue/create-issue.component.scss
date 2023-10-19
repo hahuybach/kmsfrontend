@@ -23,15 +23,19 @@
 }
 
 .document-item {
-  .col-md-3 {
-    input {
-      width: 90%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  .col-md-6, .col-md-3{
+    input{
+      width: 100%;
+    }
+    select{
+      padding-top: 8px;
+      padding-bottom: 8px;
+      width: 100%;
     }
   }
 
   .input-file {
-    width: 100%;
-
     .p-inputtext {
       border-radius: 8px 0 0 8px;
     }
