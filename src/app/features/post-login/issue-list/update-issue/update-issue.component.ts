@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import {
   ConfirmationService,
   MessageService,

@@ -6,11 +6,11 @@
   <div class="row col-md-8">
     <div class="col-6 mb-5">
       <h5>Tên kế hoạch</h5>
-      <span class="text-black-50 mb-5">{{ issue.docName }}</span>
+      <span class="text-black-50 mb-5">{{ issue.issueName }}</span>
     </div>
     <div class="col-6 mb-5">
       <h5>Người tạo</h5>
-      <span class="text-black-50 mb-5">{{ issue.createdBy }}</span>
+      <span class="text-black-50 mb-5">{{ issue.account.user.fullName }}</span>
     </div>
     <div class="col-6 mb-5">
       <h5>Chi tiết</h5>
@@ -24,20 +24,21 @@
     </div>
     <div class="mb-5">
       <h5 class="mb-3">Tài liệu công văn</h5>
-      <ng-container *ngFor="let item of issue.file">
+      <ng-container *ngFor="let item of issue.documentDtos">
         <div class="file-item p-3 mb-2 d-flex">
           <div class="file-item-icon">
-            <i class="fa-regular fa-file"></i>
+            <i class="bi bi-file-earmark"></i>
           </div>
           <div class="file-item-content ps-3">
-            <h6>
-              {{ item.name }}
-            </h6>
-            {{ item.size }}
+            <p class="text-d">
+              {{ item.documentName }}<br />
+              {{ item.sizeFormat }}<br />
+              {{ item.uploadedDate | date : "MM/dd/yyyy" }}
+            </p>
           </div>
           <div class="mx-auto" *ngIf="item.status">
             <p-tag class="status" severity="success" [rounded]="true">
-              {{ item.status }}
+              {{ item.status.statusName }}
             </p-tag>
           </div>
         </div>
