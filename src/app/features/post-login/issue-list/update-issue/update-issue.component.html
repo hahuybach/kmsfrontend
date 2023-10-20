@@ -155,22 +155,51 @@
     [style]="{ width: '50vw' }"
     [draggable]="false"
     [resizable]="false"
+    (onHide)="onHideEvent()"
   >
     <label for="">Tên tài liệu</label>
     <br />
-    <input pInputText type="text" placeholder="Tên tài liệu" />
+    <input
+      pInputText
+      formControlName="documentName"
+      type="text"
+      placeholder="Tên tài liệu"
+    />
     <br />
     <label for="">Mã tài liệu</label>
     <br />
-    <input pInputText type="text" placeholder="Mã tài liệu" />
-    <p-fileUpload
-      name="demo[]"
-      url="https://www.primefaces.org/cdn/api/upload.php"
-      (onUpload)="onUpload($any($event), documentTypeId, documentId)"
-      [multiple]="false"
-      accept="application/pdf"
-    >
-    </p-fileUpload>
+    <input
+      pInputText
+      formControlName="documentCode"
+      type="text"
+      placeholder="Mã tài liệu"
+    />
+    <br />
+    <label for="">Tài liệu</label>
+    <div class="input-file">
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        (change)="handleFileInputChange(fileInput)"
+      />
+      <input
+        pInputText
+        readonly
+        class="col-md-9"
+        placeholder="{{
+          fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'
+        }}"
+      />
+      <button
+        type="button"
+        pButton
+        label="Chọn tệp"
+        (click)="fileInput.click()"
+        class="col-md-3"
+      ></button>
+      <button type="button" pButton (click)="upload()">Lưu thay đổi</button>
+    </div>
   </p-dialog>
 
   <div class="col-md-8">
@@ -220,7 +249,7 @@
             <div
               class="file-item-icon d-flex justify-content-center align-items-center"
             >
-            <i class="bi bi-file-earmark"></i>
+              <i class="bi bi-file-earmark"></i>
             </div>
             <div class="file-item-content ps-3">
               <p class="text-d">

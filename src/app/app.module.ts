@@ -41,7 +41,7 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
@@ -86,7 +86,7 @@ import { ConfirmationService } from 'primeng/api';
     DialogModule,
     ReactiveFormsModule,
     FontAwesomeModule,
-    ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [
     MessageService,

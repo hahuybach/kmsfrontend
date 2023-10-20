@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -11,10 +11,13 @@ import {
 import { InspectorService } from 'src/app/services/inspector.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
+import { AuthService } from 'src/app/services/auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-interface UploadEvent {
-  originalEvent: Event;
-  files: File[];
+interface DocumentIssue {
+  documentName: string;
+  documentCode: string;
+  file: any; // Update the type of 'file' as per your requirements
 }
 @Component({
   selector: 'app-update-issue',
@@ -22,7 +25,10 @@ interface UploadEvent {
   styleUrls: ['./update-issue.component.scss'],
 })
 export class UpdateIssueComponent implements OnInit {
+  @ViewChild('fileInput', { static: false }) fileInputRef!: ElementRef;
   addedDocumentIssues = new Map<number, object>();
+  file: File;
+  fileInputPlaceholders: string;
   issueId: any;
   issue: any;
   inspectorBeforeList: any; //list history
@@ -36,7 +42,7 @@ export class UpdateIssueComponent implements OnInit {
   invalidDoc!: any[];
   documentTypeId: any;
   documentId = 0;
-  inEffectiveDocumentIds = new Map<number, number>();
+  inEffectiveDocumentIds: number[] = [];
   uploadFileName = 'sad';
   issueForm = this.fb.group({
     issueName: [
@@ -47,6 +53,8 @@ export class UpdateIssueComponent implements OnInit {
     description: ['', NoWhitespaceValidator()],
     inspectorId: [''],
     file: [Validators.required],
+    documentName: [''],
+    documentCode: [''],
     // addedDocumentIssues: [],
     // inEffectiveDocumentIds: [],
   });
@@ -56,7 +64,10 @@ export class UpdateIssueComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private inspectorService: InspectorService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router,
+    protected http: HttpClient
   ) {}
   ngOnInit(): void {
     this.route.params
@@ -147,10 +158,6 @@ export class UpdateIssueComponent implements OnInit {
     this.inspectorLeftList = this.inspectorLeftBeforeList;
   }
 
-  // navigateToDetail(inspectorId: number) {
-  //   console.log(inspectorId);
-  // }
-
   //click plus icon event scrollview
   addInspector() {
     this.isChanged = false;
@@ -169,20 +176,48 @@ export class UpdateIssueComponent implements OnInit {
     });
     // scroll to first
   }
-  // update new doc
-  onUpload(event: UploadEvent, documentTypeId: number, documentId: number) {
-    this.addedDocumentIssues.set(documentTypeId, event.files[0]);
-    this.uploadFileName = event.files[0].name;
-    console.log(this.uploadFileName);
-    this.inEffectiveDocumentIds.set(documentTypeId, documentId);
+  resetFileInput() {
+    if (this.fileInputRef) {
+      this.fileInputRef.nativeElement.value = null;
+    }
+  }
+  handleFileInputChange(fileInput: any): void {
+    const files = fileInput.files;
+    if (files.length > 0) {
+      const file = files[0];
+      this.file = file;
+      this.fileInputPlaceholders = file.name;
+    }
+  }
+  upload() {
+    const dataObject = {
+      documentName: this.issueForm.get('documentName')?.value,
+      documentCode: this.issueForm.get('documentCode')?.value,
+      file: this.file,
+    };
+    this.addedDocumentIssues.set(this.documentTypeId, dataObject);
+    this.inEffectiveDocumentIds.push(this.documentId);
     console.log(this.addedDocumentIssues);
-    this.uploadFileVisible = false;
+    // reset dialog
+    this.issueForm.get('documentName')?.setValue('');
+    this.issueForm.get('documentCode')?.setValue('');
+    this.fileInputPlaceholders = '';
+    if (this.fileInputRef) {
+      this.fileInputRef.nativeElement.value = null;
+    }
     this.messageService.add({
       severity: 'info',
       summary: 'File Uploaded',
       detail: '',
     });
+    this.uploadFileVisible = false;
   }
+  onHideEvent() {
+    this.issueForm.get('documentName')?.setValue('');
+    this.issueForm.get('documentCode')?.setValue('');
+    this.fileInputPlaceholders = '';
+  }
+
   togglePopupFileUpload(documentTypeId: number, documentId: number) {
     this.uploadFileVisible = true;
     console.log(documentTypeId, documentId);
@@ -205,39 +240,54 @@ export class UpdateIssueComponent implements OnInit {
         this.issue.inspector.map((item: any) => item.id)
       );
     }
-    const fileFormAttr = this.issueForm.get('file');
-    if (fileFormAttr !== null) {
-      fileFormAttr.patchValue(this.issue.file);
-    }
-    // console.log(this.issueForm.value);
-    const fileArray = Array.from(this.addedDocumentIssues, ([key, value]) => ({
-      documentTypeId: key,
-      file: value,
-    }));
-    console.log(fileArray);
-    // XỬ LÝ FORM ARRAY
-    // const addedDocumentIssuesAttr = this.issueForm.get('addedDocumentIssues');
-    // if (addedDocumentIssuesAttr !== null) {
-    //   addedDocumentIssuesAttr.patchValue(fileArray.map((item: any) => item))
-    // }
-    const docIdArray = Array.from(
-      this.inEffectiveDocumentIds,
-      ([key, value]) => ({
+    console.log(this.addedDocumentIssues);
+
+    const addedDocumentIssues: DocumentIssue[] = Array.from(
+      this.addedDocumentIssues.entries()
+    ).map(([key, value]: [number, Record<string, any>]) => {
+      return {
+        documentName: value['documentName'],
+        documentCode: value['documentCode'],
         documentTypeId: key,
-        documentId: value,
-      })
+        file: value['file'],
+      };
+    });
+
+    const files = addedDocumentIssues.map((item) => item.file);
+    const addedDocumentIssuesFinal = addedDocumentIssues.map(
+      ({ file, ...rest }) => rest
     );
-    const documentIdsWithSameType = docIdArray
-      .filter((doc) =>
-        fileArray.some((file) => file.documentTypeId === doc.documentTypeId)
-      )
-      .map((doc) => doc.documentId);
-    const data = {
-      ...this.issueForm.value,
-      addedDocumentIssuesAttr: fileArray,
-      inEffectiveDocumentIds: documentIdsWithSameType,
+    const formData = new FormData();
+    const issue = {
+      issueId: this.issue.issueId,
+      issueName: this.issueForm.get('issueName')?.value,
+      description: this.issueForm.get('description')?.value,
+      inspectorId: this.issueForm.get('inspectorId')?.value,
+      addedDocumentIssues: addedDocumentIssuesFinal,
+      inEffectiveDocumentIds: this.inEffectiveDocumentIds,
+      status: this.issue.status,
     };
-    const sentData = { issue: data };
-    console.log(sentData);
+    formData.append(
+      'issue',
+      new Blob([JSON.stringify(issue)], { type: 'application/json' })
+    );
+    for (let file in files) {
+      formData.append('files', file);
+    }
+    console.log(formData.getAll("issue"))
+    console.log(formData.getAll("files"))   
+
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+    this.http
+      .put('http://localhost:8080/api/v1/issue', formData, { headers })
+      .subscribe(
+        (response) => {
+          console.log('Form data sent to the backend:', response);
+        },
+        (error) => {
+          console.error('Error while sending form data:', error);
+        }
+      );
   }
 }
