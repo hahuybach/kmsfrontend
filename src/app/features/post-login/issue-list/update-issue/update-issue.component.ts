@@ -237,6 +237,7 @@ export class UpdateIssueComponent implements OnInit {
       addedDocumentIssuesAttr: fileArray,
       inEffectiveDocumentIds: documentIdsWithSameType,
     };
-    console.log(data);
+    const sentData = { issue: data };
+    console.log(sentData);
   }
 }

@@ -43,7 +43,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './auth.interceptor';
-// import {ConfirmationService} from "primeng/confirmdialog"
+import { FormDataService } from './services/formdata.service';
+import { ConfirmationService } from 'primeng/api';
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,8 +92,9 @@ import { AuthInterceptor } from './auth.interceptor';
     MessageService,
     IssueService,
     LoggerService,
-    // ConfirmationService,
+    ConfirmationService,
     InspectorService,
+    FormDataService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
