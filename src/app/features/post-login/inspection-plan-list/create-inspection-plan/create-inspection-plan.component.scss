@@ -1,0 +1,79 @@
+@import "../../../../../assets/scss/base";
+
+.create-inspection-plan {
+  form {
+    font-size: 16px;
+  }
+}
+
+.p-inputtext,
+.p-inputtextarea {
+  border-radius: 8px;
+}
+
+.create-inspector {
+  background-color: $primary;
+  border-radius: 8px;
+
+  &:hover,
+  &:active {
+    background-color: $primary-hover;
+    border-color: $primary-hover;
+  }
+}
+
+.document-item {
+  .col-md-2, .col-md-4{
+    input{
+      width: 100%;
+    }
+  }
+  .input-file {
+    .p-inputtext {
+      border-radius: 8px 0 0 8px;
+    }
+
+    button {
+      background-color: $primary;
+      border-radius: 0 8px 8px 0;
+
+      &:hover,
+      &:active {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+      }
+    }
+
+    .delete-button {
+      background: none;
+      border: none;
+
+      &:hover,
+      &:active {
+        background: none;
+        border: none;
+      }
+
+      i {
+        font-size: 1.3rem;
+        color: red;
+      }
+    }
+  }
+}
+
+.save-button {
+  button {
+    font-size: 16px;
+    background-color: $primary;
+    border-radius: 8px;
+    padding: 10px 40px;
+    border: none;
+
+    &:hover,
+    &:active {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}

@@ -1,1 +1,102 @@
-<p>create-inspection-plan works!</p>
+<div class="row create-inspection-plan">
+  <h4 class="mb-3">Tạo mới quyết định kiểm tra</h4>
+  <form class="row" [formGroup]="inspectionPlanForm">
+    <div class="form-content col-md-8">
+      <div class="inspection-plan-name mb-1">
+        <h6>Tên quyết định kiểm tra</h6>
+        <input
+          type="text"
+          pInputText
+          placeholder="Tên quyết định kiểm tra"
+          class="w-100"
+          formControlName="inspectionPlanName"
+        />
+      </div>
+      <div class="inspection-plan-description mb-1">
+        <h6>Chi tiết</h6>
+        <textarea
+          type="text"
+          pInputTextarea
+          placeholder="Chi tiết về kế hoạch quyết định kiểm tra"
+          rows="5"
+          class="w-100"
+          formControlName="inspectionPlanDescription"
+        ></textarea>
+      </div>
+      <div class="inspection-plan-school mb-1 col-md-6 pe-3">
+        <h6>Trường kiểm tra</h6>
+        <select title="schoolList" class="form-select" formControlName="schoolId">
+          <option selected value="0">Chọn trường kiểm tra</option>
+          <option>Trường Mầm Non Ngọc Hùng</option>
+          <option>Trường Mầm Non Hoa Hồng</option>
+          <option>Trường Mầm Non Ánh Sao</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="startDate" class="fw-medium">Ngày bắt đầu</label>
+          <input id="startDate" class="form-control" type="date" formControlName="startDate"/>
+          <span id="startDateSelected"></span>
+        </div>
+        <div class="col-md-3">
+          <label for="endDate" class="fw-medium">Ngày kết thúc</label>
+          <input id="endDate" class="form-control" type="date"  formControlName="endDate"/>
+          <span id="endDateSelected"></span>
+        </div>
+      </div>
+    </div>
+    <div class="document mt-3">
+      <h6>Tài liệu công văn</h6>
+      <div class="row document-item mb-2" *ngFor="let inspectionPlanDoc of inspectionPlanDocumentFormArray.controls; let i = index">
+        <div class="d-flex flex-row">
+          <div class="col-md-4 pe-3">
+            <label>Tên tài liệu</label><br/>
+            <input
+              pInputText
+              placeholder="Điền tên tài liệu"
+            />
+          </div>
+          <div class="col-md-2 pe-3">
+            <label>Mã tài liệu</label><br/>
+            <input
+              pInputText
+              placeholder="Điền mã tài liệu"
+            />
+          </div>
+          <div class="col-md-6">
+            <label>Tài liệu</label><br/>
+            <div class="input-file">
+              <input
+                type="file"
+                #fileInput
+                style="display: none"
+                (change)="handleFileInputChange(fileInput, i)"
+              />
+              <input pInputText readonly class="col-md-8"
+              placeholder="{{fileInputPlaceholders[i] ? fileInputPlaceholders[i] : 'Chọn file để tải lên'}}"/>
+              <button
+                type="button"
+                pButton
+                label="Chọn tệp"
+                (click)="fileInput.click()"
+                class="col-md-2"
+              ></button>
+              <button *ngIf="i != 0" type="button" class="col-md-2 delete-button" (click)="removeIssueDoc(i)">
+                <i class="bi bi-trash3 "></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 row w-100">
+      <div class="col-12 save-button d-flex justify-content-end w-100 pe-0">
+        <button type="button" class="btn text-white" (click)="addIssueDoc()">Thêm</button>
+        <div class="col-md-1"></div>
+      </div>
+      <div class="col-12 save-button d-flex w-100">
+        <button class="btn text-white">Lưu</button>
+      </div>
+    </div>
+  </form>
+</div>
