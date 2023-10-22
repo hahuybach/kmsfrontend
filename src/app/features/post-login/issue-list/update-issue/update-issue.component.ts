@@ -13,6 +13,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FileService } from 'src/app/services/file.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 interface DocumentIssue {
   documentName: string;
@@ -59,6 +61,9 @@ export class UpdateIssueComponent implements OnInit {
     // addedDocumentIssues: [],
     // inEffectiveDocumentIds: [],
   });
+  pdfUrl: string | undefined;
+  pdfLoaded: boolean = false;
+  safePdfUrl: SafeResourceUrl | undefined;
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
@@ -68,7 +73,9 @@ export class UpdateIssueComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    protected http: HttpClient
+    protected http: HttpClient,
+    private fileService: FileService,
+    private sanitizer: DomSanitizer
   ) {}
   ngOnInit(): void {
     this.route.params
@@ -242,8 +249,14 @@ export class UpdateIssueComponent implements OnInit {
 
     this.popupInvalidDocVisible = true;
   }
-  openNewTab() {
-    window.open('https://vnexpress.net/', '_blank');
+  openNewTab(documentLink: string) {
+    console.log(documentLink);
+    this.fileService.downloadPdf(documentLink).subscribe((response) => {
+      const blobUrl = window.URL.createObjectURL(response.body as Blob);
+      this.pdfUrl = blobUrl;
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      this.pdfLoaded = true;
+    });
   }
   onSubmit() {
     // console.log(this.issue.inspector.length);

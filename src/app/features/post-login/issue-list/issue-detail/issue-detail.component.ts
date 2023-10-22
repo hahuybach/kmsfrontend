@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
+import { FileService } from 'src/app/services/file.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-issue-detail',
@@ -11,10 +13,15 @@ import { switchMap } from 'rxjs';
 export class IssueDetailComponent implements OnInit {
   issueId: any;
   issue: any;
+  pdfUrl: string | undefined;
+  pdfLoaded: boolean = false;
+  safePdfUrl: SafeResourceUrl | undefined;
 
   constructor(
     private route: ActivatedRoute,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private fileService: FileService,
+    private sanitizer: DomSanitizer
   ) {}
   ngOnInit(): void {
     this.route.params
@@ -25,8 +32,17 @@ export class IssueDetailComponent implements OnInit {
         })
       )
       .subscribe((data) => {
-        this.issue = data;
+        this.issue = data.issue;
         console.log(this.issue);
       });
+  }
+  openNewTab(documentLink: string) {
+    console.log(documentLink);
+    this.fileService.downloadPdf(documentLink).subscribe((response) => {
+      const blobUrl = window.URL.createObjectURL(response.body as Blob);
+      this.pdfUrl = blobUrl;
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      this.pdfLoaded = true;
+    });
   }
 }
