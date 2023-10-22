@@ -9,13 +9,17 @@ import { IssueService } from 'src/app/services/issue.service';
   styleUrls: ['./issue-list.component.scss'],
 })
 export class IssueListComponent implements OnInit {
-  issues!: Issue[];
+  data: any;
+  issues!: any[];
   loading: boolean = true;
   constructor(private issueService: IssueService, private router: Router) {}
   ngOnInit() {
     this.issueService.getIssues().subscribe((data) => {
       // Handle the data here
-      this.issues = data;
+      // this.issues = data.issueTableRow as any[];
+      this.data = data;
+      this.issues = this.data.issueTableRow;
+      
     });
   }
 

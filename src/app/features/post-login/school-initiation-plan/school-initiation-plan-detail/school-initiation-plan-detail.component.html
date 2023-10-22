@@ -3,7 +3,7 @@
 <div class="row">
   <div class="col-md-7 plan">
     <div class="plan-content row">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <div class="mb-3">
           <h6 class="mb-2">Tên kế hoạch</h6>
           <p>{{ schoolinitiationplan.name }}</p>
@@ -17,15 +17,36 @@
           <p>{{ schoolinitiationplan.createdDate }}</p>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="mb-3">
           <h6 class="mb-2">Người tạo</h6>
           <p>{{ schoolinitiationplan.createdBy }}</p>
         </div>
         <div class="mb-3">
           <h6 class="mb-2">Trạng thái</h6>
-          <p-tag class="status" [severity]="'warning'" [rounded]="true">
-            Đang chờ
+          <p-tag
+            *ngIf="schoolinitiationplan.status.statusId == 3"
+            class="status"
+            [severity]="'warning'"
+            [rounded]="true"
+          >
+            {{ schoolinitiationplan.status.statusName }}
+          </p-tag>
+          <p-tag
+            *ngIf="schoolinitiationplan.status.statusId == 1"
+            class="status"
+            [severity]="'success'"
+            [rounded]="true"
+          >
+            {{ schoolinitiationplan.status.statusName }}
+          </p-tag>
+          <p-tag
+            *ngIf="schoolinitiationplan.status.statusId == 2"
+            class="status"
+            [severity]="'danger'"
+            [rounded]="true"
+          >
+            {{ schoolinitiationplan.status.statusName }}
           </p-tag>
         </div>
       </div>
@@ -43,23 +64,61 @@
       <div class="pt-4">
         <h4 class="d-flex justify-content-center">Xác nhận kế hoạch</h4>
       </div>
-      <div class="input-file d-flex justify-content-center align-items-center">
-        <div class="input-file-content">
-          <p-fileUpload
-            mode="advanced"
-            chooseLabel="Tải lên"
-            name="demo[]"
-            url="https://www.primefaces.org/cdn/api/upload.php"
-            accept="image/*"
-            (onUpload)="onUpload($any($event))"
-          ></p-fileUpload>
+      <!-- <form [formGroup]="inputFileForm"></form> -->
+      <div
+        *ngIf="!fileStatus"
+        class="input-file d-flex justify-content-center align-items-center"
+      >
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          (change)="handleFileInputChange(fileInput)"
+        />
+        <input
+          pInputText
+          readonly
+          class="col-md-9"
+          placeholder="{{
+            fileInputPlaceholders
+              ? fileInputPlaceholders
+              : 'Chọn file để tải lên'
+          }}"
+        />
+        <button
+          type="button"
+          pButton
+          label="Chọn tệp"
+          (click)="fileInput.click()"
+          class="col-md-3"
+        ></button>
+      </div>
+      <div *ngIf="fileStatus" class="plan-file-item d-flex">
+        <div class="plan-file-item-img"></div>
+        <div class="plan-file-item-content row">
+          <div class="col-md-10 p-2">
+            <p>{{ fileInputPlaceholders }}</p>
+          </div>
+          <div
+            class="col-md-2 d-flex justify-content-center align-items-center"
+          >
+            <div
+              class="delete-icon d-flex justify-content-center align-items-center"
+            >
+              <i class="bi bi-x-lg"></i>
+            </div>
+          </div>
         </div>
       </div>
       <div
         class="button-bottom d-flex justify-content-around align-items-center"
       >
-        <button class="p-tag p-tag-danger">Không phê duyệt</button>
-        <button class="p-tag p-tag-success">Phê duyệt</button>
+        <button type="button" class="p-tag p-tag-danger" (click)="reject()">
+          Không phê duyệt
+        </button>
+        <button type="button" class="p-tag p-tag-success" (click)="approve()">
+          Phê duyệt
+        </button>
       </div>
     </div>
   </div>

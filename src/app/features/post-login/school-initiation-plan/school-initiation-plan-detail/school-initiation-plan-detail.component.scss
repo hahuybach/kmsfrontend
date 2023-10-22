@@ -5,19 +5,16 @@
     border-right: solid 1px $primary;
     height: 100%;
 }
-.right {
-    float: right;
-}
 .plan-content {
     // border-bottom: solid 1px $primary;
 }
 .plan-file-item {
-    width: 800px;
-    height: 200px;
+    height: 180px;
     border-radius: 15px;
     box-shadow:
         rgba(0, 0, 0, 0.16) 0px 3px 6px,
         rgba(0, 0, 0, 0.23) 0px 3px 6px;
+
     .plan-file-item-img {
         width: 30%;
         background-color: #cdf8e3;
@@ -25,8 +22,18 @@
     }
     .plan-file-item-content {
         width: 70%;
-        background-color: #ffd4cf;
+        // background-color: #ffd4cf;
         border-radius: 0px 15px 15px 0px;
+        margin: 0;
+        .delete-icon {
+            width: 40px;
+            height: 40px;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            &:hover {
+                background-color: rgb(231, 231, 231);
+            }
+        }
     }
 }
 .upload {

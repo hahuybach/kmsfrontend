@@ -21,7 +21,7 @@
       #dt
       [value]="inspectorLeftList"
       [(selection)]="selectedInspectors"
-      dataKey="id"
+      dataKey="accountId"
       [rowHover]="true"
       [rows]="5"
       [showCurrentPageReport]="true"
@@ -79,19 +79,19 @@
           </td>
           <td>
             <span class="p-column-title">Id</span>
-            {{ inspector.id }}
+            {{ inspector.accountId }}
           </td>
           <td>
             <span class="p-column-title">Tên</span>
-            {{ inspector.name }}
+            {{ inspector.fullName || inspector.user.fullName }}
           </td>
           <td>
             <span class="p-column-title">Chức vụ</span>
-            {{ inspector.address.city || inspector.role }}
+            {{ inspector.roles[0].roleName }}
           </td>
           <td>
             <span class="p-column-title">Đơn vị</span>
-            {{ inspector.company.name || inspector.school }}
+            {{ inspector.school.schoolName }}
           </td>
         </tr>
       </ng-template>
@@ -129,13 +129,13 @@
           <div
             class="file-item-icon d-flex justify-content-center align-items-center"
           >
-            <i class="fa-regular fa-file"></i>
+            <i class="bi bi-file-earmark"></i>
           </div>
           <div class="file-item-content ps-3">
             <p class="text-d">
-              {{ item.name }}<br />
-              {{ item.size }}<br />
-              {{ item.date | date : "MM/dd/yyyy" }}
+              {{ item.documentName }}<br />
+              {{ item.sizeFormat }}<br />
+              {{ item.uploadedDate | date : "MM/dd/yyyy" }}
             </p>
           </div>
           <div class="mx-auto d-flex justify-content-center align-items-center">
@@ -176,7 +176,7 @@
     />
     <br />
     <label for="">Tài liệu</label>
-    <div class="input-file">
+    <div class="input-file mb-3">
       <input
         type="file"
         #fileInput
@@ -198,8 +198,8 @@
         (click)="fileInput.click()"
         class="col-md-3"
       ></button>
-      <button type="button" pButton (click)="upload()">Lưu thay đổi</button>
     </div>
+    <button type="button" pButton (click)="upload()">Lưu thay đổi</button>
   </p-dialog>
 
   <div class="col-md-8">
@@ -208,7 +208,7 @@
       <input
         pInputText
         class="text-black-50 w-100"
-        value="{{ issue.docName }}"
+        value="{{ issue.issueName }}"
         formControlName="issueName"
       />
       <span
@@ -244,7 +244,11 @@
         Xem tài liệu không có hiệu lực
       </button>
       <ng-container *ngFor="let item of issue.documentDtos">
-        <div *ngIf="item.status.statusId == 1" class="mb-2">
+        <div
+          *ngIf="item.status.statusId == 1"
+          class="mb-2"
+          (click)="openNewTab()"
+        >
           <div class="file-item p-3 d-flex">
             <div
               class="file-item-icon d-flex justify-content-center align-items-center"
@@ -273,6 +277,7 @@
                 class="bi bi-pencil-square"
                 (click)="
                   togglePopupFileUpload(
+                    $event,
                     item.documentType.documentTypeId,
                     item.documentId
                   )
@@ -286,7 +291,7 @@
       <!-- <br /> -->
       <button
         pButton
-        [disabled]="issueForm.invalid || issue.inspector.length == 0"
+        [disabled]="issueForm.invalid || issue.inspectors.length == 0"
       >
         Lưu
       </button>
@@ -298,7 +303,7 @@
         <h5 class="mx-auto">Danh sách thanh tra</h5>
         <div class="total">
           <span class="text-secondary mx-auto"
-            >Tổng số: {{ issue.inspector.length }}</span
+            >Tổng số: {{ issue.inspectors.length }}</span
           >
           <div *ngIf="isChanged"></div>
         </div>
@@ -314,23 +319,24 @@
           [numToleratedItems]="5"
         > -->
         <div class="overflow-auto">
-          <ng-container *ngFor="let item of issue.inspector">
-            <div *ngIf="issue.inspector" class="mb-2">
+          <ng-container *ngFor="let item of issue.inspectors">
+            <div *ngIf="issue.inspectors" class="mb-2">
               <div class="scrollview-item d-flex p-3 ms-2 h-full">
                 <div
                   class="scrollview-item-icon d-flex justify-content-center align-items-center"
                 >
-                  <i class="fa fa-user-circle" aria-hidden="true"></i>
+                  <i class="bi bi-person-circle"></i>
                   <!-- <span class="index">{{
                   issue.inspector.indexOf(item) + 1
                 }}</span> -->
                 </div>
                 <div class="scrollview-item-content ms-4">
-                  <span class="font-weight-bold">{{ item.name }}</span>
+                  <span class="font-weight-bold">{{ item.user.fullName }}</span>
                   <br />
-                  <span
-                    >{{ item.role }}<br />
-                    {{ item.school }}
+                  <span>
+                    {{ item.roles[0].roleName }}
+                    <br />
+                    {{ item.school.schoolName }}
                   </span>
                 </div>
 
@@ -339,7 +345,7 @@
                 >
                   <i
                     *ngIf="isChanged"
-                    class="fa-solid fa-trash"
+                    class="bi bi-trash-fill"
                     (click)="confirmDelete(item)"
                   ></i>
                 </div>
@@ -347,10 +353,10 @@
             </div>
           </ng-container>
           <div
-            class="d-flex justify-content-center align-items-center"
-            *ngIf="issue.inspector.length == 0"
+            class="d-flex justify-content-center align-items-center p-error"
+            *ngIf="issue.inspectors.length == 0"
           >
-            Danh sách ban kiểm tra không được để trống
+            <h6>Danh sách ban kiểm tra không được để trống</h6>
           </div>
         </div>
 

@@ -55,6 +55,7 @@ export class UpdateIssueComponent implements OnInit {
     file: [Validators.required],
     documentName: [''],
     documentCode: [''],
+    inspector: [''],
     // addedDocumentIssues: [],
     // inEffectiveDocumentIds: [],
   });
@@ -78,16 +79,19 @@ export class UpdateIssueComponent implements OnInit {
         })
       )
       .subscribe((data) => {
-        this.issue = data;
-        this.inspectorBeforeList = this.issue.inspector;
+        this.issue = data.issue;
+        console.log(this.issue);
+        this.inspectorBeforeList = this.issue.inspectors;
         this.issueForm.patchValue({
-          issueName: this.issue.docName,
+          issueName: this.issue.issueName,
           description: this.issue.description,
-          inspectorId: this.issue.inspector.map((item: any) => item.id),
+          inspectorId: this.issue.inspectors.map((item: any) => item.accountId),
         });
+        console.log(this.issueForm.value);
       });
-    this.inspectorService.getInspectors().subscribe((data) => {
+    this.inspectorService.getNoneInspectors().subscribe((data) => {
       this.inspectorLeftList = data;
+      console.log(this.inspectorLeftList);
       this.inspectorLeftBeforeList = data;
     });
   }
@@ -101,7 +105,7 @@ export class UpdateIssueComponent implements OnInit {
     this.inspectorBeforeList = this.issue.inspector;
     this.inspectorLeftBeforeList = this.inspectorLeftList;
     this.issueForm.patchValue({
-      inspectorId: this.issue.inspector.map((item: any) => item.id),
+      inspectorId: this.issue.inspectors.map((item: any) => item.accountId),
     });
   }
   // click trash icon event in scrollview
@@ -111,13 +115,15 @@ export class UpdateIssueComponent implements OnInit {
       header: 'Delete Confirmation',
       // icon: 'pi pi-info-circle',
       accept: () => {
-        this.inspectorBeforeList = this.issue.inspector;
-        this.issue.inspector = this.issue.inspector.filter(
-          (item: any) => item.id != inspector.id
+        this.inspectorBeforeList = this.issue.inspectors;
+        this.issue.inspectors = this.issue.inspectors.filter(
+          (item: any) => item.accountId != inspector.accountId
         );
         // add lại vào danh sách trong popup
         this.inspectorLeftBeforeList = this.inspectorLeftList;
-        this.inspectorLeftList = [...this.inspectorLeftList, inspector];
+        this.inspectorLeftList.push(inspector);
+        this.inspectorLeftList = [...this.inspectorLeftList];
+        console.log(this.inspectorLeftList);
         this.messageService.add({
           severity: 'info',
           summary: 'Confirmed',
@@ -154,7 +160,7 @@ export class UpdateIssueComponent implements OnInit {
   //toggle cancel button scrollview
   toggleCancel() {
     this.isChanged = false;
-    this.issue.inspector = this.inspectorBeforeList;
+    this.issue.inspectors = this.inspectorBeforeList;
     this.inspectorLeftList = this.inspectorLeftBeforeList;
   }
 
@@ -165,8 +171,8 @@ export class UpdateIssueComponent implements OnInit {
     this.inspectorLeftList = this.inspectorLeftList.filter(
       (val) => !this.selectedInspectors?.includes(val)
     );
-    this.inspectorBeforeList = this.issue.inspector;
-    this.issue.inspector.push(...this.selectedInspectors);
+    this.inspectorBeforeList = this.issue.inspectors;
+    this.issue.inspectors.push(...this.selectedInspectors);
     this.selectedInspectors = [];
     this.popupInspectorVisible = false;
     this.messageService.add({
@@ -218,26 +224,33 @@ export class UpdateIssueComponent implements OnInit {
     this.fileInputPlaceholders = '';
   }
 
-  togglePopupFileUpload(documentTypeId: number, documentId: number) {
+  togglePopupFileUpload(
+    event: MouseEvent,
+    documentTypeId: number,
+    documentId: number
+  ) {
+    event.stopPropagation();
     this.uploadFileVisible = true;
     console.log(documentTypeId, documentId);
     this.documentTypeId = documentTypeId;
     this.documentId = documentId;
   }
   togglePopupInvalidDoc() {
-    this.invalidDoc = this.issue.file.filter(
-      (item: { status: boolean }) => !item.status
+    this.invalidDoc = this.issue.documentDtos.filter(
+      (document: any) => document.status.statusId === 2
     );
-    console.log(this.invalidDoc);
 
     this.popupInvalidDocVisible = true;
   }
+  openNewTab() {
+    window.open('https://vnexpress.net/', '_blank');
+  }
   onSubmit() {
-    console.log(this.issue.inspector.length);
+    // console.log(this.issue.inspector.length);
     const inspectorFormAttr = this.issueForm.get('inspectorId');
     if (inspectorFormAttr !== null) {
       inspectorFormAttr.patchValue(
-        this.issue.inspector.map((item: any) => item.id)
+        this.issue.inspectors.map((item: any) => item.accountId)
       );
     }
     console.log(this.addedDocumentIssues);
@@ -254,6 +267,7 @@ export class UpdateIssueComponent implements OnInit {
     });
 
     const files = addedDocumentIssues.map((item) => item.file);
+    console.log(files);
     const addedDocumentIssuesFinal = addedDocumentIssues.map(
       ({ file, ...rest }) => rest
     );
@@ -267,20 +281,24 @@ export class UpdateIssueComponent implements OnInit {
       inEffectiveDocumentIds: this.inEffectiveDocumentIds,
       status: this.issue.status,
     };
+    console.log(issue);
     formData.append(
       'issue',
       new Blob([JSON.stringify(issue)], { type: 'application/json' })
     );
-    for (let file in files) {
-      formData.append('files', file);
-    }
-    console.log(formData.getAll("issue"))
-    console.log(formData.getAll("files"))   
+    files.forEach((item) => {
+      const file: File = item; // Assuming the file property is of type File
+      console.log(file);
+      // Append each file to the FormData object
+      formData.append('files', file, file['name']);
+    });
+    console.log(formData.getAll('issue'));
+    console.log(formData.getAll('files'));
 
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'undefined');
     this.http
-      .put('http://localhost:8080/api/v1/issue', formData, { headers })
+      .put('http://localhost:8080/api/v1/issue/', formData, { headers })
       .subscribe(
         (response) => {
           console.log('Form data sent to the backend:', response);
