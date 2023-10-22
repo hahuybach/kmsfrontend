@@ -27,19 +27,15 @@ export class LoginFormComponent implements OnInit {
         .subscribe({
           next: (response) => {
             const data = JSON.parse(response);
-            this.setJwtInCookie(data.token);
+            this.auth.setJwtInCookie(data.token);
             this.router.navigateByUrl("/dashboard");
           },
           error: (err) => {
-            console.log("Error: " +  err);
+            console.log("Error: " + err);
             this.router.navigateByUrl("/login");
           }
         });
     }
-  }
-
-  setJwtInCookie(jwt: string){
-    document.cookie = `jwtToken=${jwt}`;
   }
 
   ngOnInit(): void {

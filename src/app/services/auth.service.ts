@@ -1,18 +1,50 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import jwt_decode from 'jwt-decode';
+import * as moment from 'moment';
 
-@Injectable({ providedIn: 'root'})
+@Injectable({providedIn: 'root'})
 export class AuthService {
-  constructor( private http:HttpClient) { }
-  login(email:string, password:string){
-    const userInfo = { email:email, password:password }
-    const headers = new HttpHeaders().set('Content-Type', 'application/json') ;
+  constructor(private http: HttpClient) {
+  }
+
+  login(email: string, password: string) {
+    const userInfo = {email: email, password: password}
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post('http://localhost:8080/api/v1/auth/authenticate'
       , JSON.stringify(userInfo)
-      , {headers:headers, responseType: 'text'}
+      , {headers: headers, responseType: 'text'}
     )
   }
 
+  logout() {
+    const jwtCookie = document.cookie;
+    document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  isLoggedIn(): boolean {
+    const jwt = this.getJwtFromCookie();
+    const exp: any = this.getExpireFromCookie();
+    if (jwt == null || exp == "") {
+      return false;
+    }
+    const expireAt = JSON.parse(exp) * 1000;
+    return moment().isBefore(moment(expireAt));
+  }
+
+  getDecodedJWT(jwt: string): any {
+    try {
+      return jwt_decode(jwt);
+    } catch (Error) {
+      return null;
+    }
+  }
+
+  setJwtInCookie(jwt: string) {
+    const decodedToken = this.getDecodedJWT(jwt);
+    document.cookie = `exp=${decodedToken.exp}`;
+    document.cookie = `jwtToken=${jwt}`;
+  }
 
   getJwtFromCookie(): string | null {
     const cookieValue = document.cookie
@@ -20,5 +52,13 @@ export class AuthService {
       .find((row) => row.startsWith('jwtToken='));
 
     return cookieValue ? cookieValue.split('=')[1] : null;
+  }
+
+  getExpireFromCookie(): string | null {
+    const exp = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('exp='));
+
+    return exp ? exp.split('=')[1] : null;
   }
 }

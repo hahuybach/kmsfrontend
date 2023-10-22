@@ -45,6 +45,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
+import {AuthGuard} from "./shared/guards/AuthGuard/auth.guard";
 @NgModule({
   declarations: [
     AppComponent,
@@ -95,6 +96,7 @@ import { ConfirmationService } from 'primeng/api';
     ConfirmationService,
     InspectorService,
     FormDataService,
+    AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
