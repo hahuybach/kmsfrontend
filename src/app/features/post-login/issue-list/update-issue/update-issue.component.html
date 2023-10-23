@@ -1,4 +1,4 @@
-<!-- <span>breadcrumb here</span> -->
+<span>breadcrumb here</span>
 <!-- {{ issue | json }} -->
 <h4>Cập nhật kế hoạch kiểm tra</h4>
 <form
@@ -112,7 +112,7 @@
   <!-- invalid doc popup -->
   <p-dialog
     header="Tài liệu không có hiệu lực"
-    [modal]="true"
+    [modal]="true"  
     [(visible)]="popupInvalidDocVisible"
     [style]="{ width: '80vw' }"
     [draggable]="false"
@@ -204,6 +204,7 @@
     </div>
     <button type="button" pButton (click)="upload()">Lưu thay đổi</button>
   </p-dialog>
+  <!-- file preview -->
   <p-dialog
     [(visible)]="pdfLoaded"
     [style]="{ width: '80vw' }"

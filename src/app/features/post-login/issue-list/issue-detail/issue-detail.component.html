@@ -1,57 +1,139 @@
 <span>breadcumb here</span>
 <!-- {{ issue | json }} -->
 <h4>Chi tiết kế hoạch kiểm tra</h4>
-<br />
-<p-dialog
-  [(visible)]="pdfLoaded"
-  [style]="{ width: '80vw' }"
-  [draggable]="false"
-  [resizable]="false"
->
-  <div *ngIf="pdfLoaded">
-    <iframe [src]="safePdfUrl" width="100%" height="600px"></iframe>
-  </div>
-</p-dialog>
-<div class="row" *ngIf="issue">
+<div class="row issue-detail" *ngIf="issue">
+  <p-dialog
+    header="Xem tài liệu"
+    [(visible)]="pdfLoaded"
+    [style]="{ width: '90vw', height: '100vh' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="pdfLoaded">
+      <iframe [src]="safePdfUrl" width="100%" height="680px"></iframe>
+    </div>
+  </p-dialog>
+  <p-dialog
+    header="Tài liệu không có hiệu lực"
+    [modal]="true"
+    [(visible)]="popupInvalidDocVisible"
+    [style]="{ width: '80vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <ng-container *ngFor="let item of issue.documentDtos">
+      <div
+        *ngIf="item.status.statusId == 2"
+        class="mb-3"
+        (click)="openNewTab(item.documentLink)"
+      >
+        <div class="file-item p-2 d-flex">
+          <div
+            class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
+          >
+            <img src="../../../../../assets/img/pdf.png" alt="" />
+          </div>
+          <div class="file-item-content">
+            <div class="row ms-5">
+              <div class="col-md-10">
+                <span class="font-weight-bold font-size-18"
+                  >{{ item.documentName }}.pdf</span
+                >
+                <br />
+                <span>
+                  <span class="font-weight-bold">Loại TL:</span>
+                  {{ item.documentType.documentTypeName }}</span
+                >
+                <br />
+                <span
+                  ><span class="font-weight-bold">Mã:</span>
+                  {{ item.documentCode }}</span
+                >
+              </div>
+              <div class="col-md-2">
+                <span>{{ item.sizeFormat }}</span>
+                <br />
+                <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="mx-auto d-flex justify-content-center align-items-center">
+            <p-tag class="status" [severity]="'danger'" [rounded]="true">
+              {{ item.status.statusName }}
+            </p-tag>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </p-dialog>
   <div class="row col-md-8">
-    <div class="col-6 mb-5">
-      <h5>Tên kế hoạch</h5>
-      <span class="text-black-50 mb-5">{{ issue.issueName }}</span>
+    <div class="col-6 mb-4">
+      <span class="text-black-50">Tên kế hoạch</span>
+      <br />
+      <span class="font-weight-bold">{{ issue.issueName }}</span>
     </div>
-    <div class="col-6 mb-5">
-      <h5>Người tạo</h5>
-      <span class="text-black-50 mb-5">{{ issue.account.user.fullName }}</span>
+    <div class="col-6 mb-4">
+      <span class="text-black-50">Người tạo</span>
+      <br />
+      <span class="font-weight-bold">{{ issue.account.user.fullName }}</span>
     </div>
-    <div class="col-6 mb-5">
-      <h5>Chi tiết</h5>
-      <span class="text-black-50">{{ issue.description }}</span>
+    <div class="col-6 mb-4">
+      <span class="text-black-50">Chi tiết</span>
+      <br />
+      <span class="font-weight-bold">{{ issue.description }}</span>
     </div>
-    <div class="col-6 mb-5">
-      <h5>Ngày tạo</h5>
-      <span class="text-black-50">{{
+    <div class="col-6 mb-4">
+      <span class="text-black-50">Ngày tạo</span>
+      <br />
+      <span class="font-weight-bold">{{
         issue.createdDate | date : "MM/dd/yyyy"
       }}</span>
     </div>
     <div class="mb-5">
       <h5 class="mb-3">Tài liệu công văn</h5>
+      <button
+        class="mb-2"
+        type="button"
+        pButton
+        (click)="togglePopupInvalidDoc()"
+      >
+        Xem tài liệu không có hiệu lực
+      </button>
       <ng-container *ngFor="let item of issue.documentDtos">
         <div
           *ngIf="item.status.statusId == 1"
-          class="mb-2"
+          class="mb-3"
           (click)="openNewTab(item.documentLink)"
         >
-          <div class="file-item p-3 d-flex">
+          <div class="file-item p-2 d-flex">
             <div
-              class="file-item-icon d-flex justify-content-center align-items-center"
+              class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
             >
-              <i class="bi bi-file-earmark"></i>
+              <img src="../../../../../assets/img/pdf.png" alt="" />
             </div>
-            <div class="file-item-content ps-3">
-              <p class="text-d ms-5">
-                {{ item.documentName }}<br />
-                {{ item.sizeFormat }}<br />
-                {{ item.uploadedDate | date : "MM/dd/yyyy" }}
-              </p>
+            <div class="file-item-content">
+              <div class="row ms-5">
+                <div class="col-md-10">
+                  <span class="font-weight-bold font-size-18"
+                    >{{ item.documentName }}.pdf</span
+                  >
+                  <br />
+                  <span>
+                    <span class="font-weight-bold">Loại TL:</span>
+                    {{ item.documentType.documentTypeName }}</span
+                  >
+                  <br />
+                  <span
+                    ><span class="font-weight-bold">Mã:</span>
+                    {{ item.documentCode }}</span
+                  >
+                </div>
+                <div class="col-md-2">
+                  <span>{{ item.sizeFormat }}</span>
+                  <br />
+                  <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
+                </div>
+              </div>
             </div>
             <div
               class="mx-auto d-flex justify-content-center align-items-center"
@@ -70,21 +152,11 @@
       <div class="list-inspector-header p-3 text-center">
         <h5 class="mx-auto">Danh sách thanh tra</h5>
         <div class="total">
-          <span class="text-secondary mx-auto"
-            >Tổng số: {{ issue.inspectors.length }}</span
-          >
+          <span class="mx-auto">Tổng số: {{ issue.inspectors.length }}</span>
         </div>
       </div>
 
       <div class="card">
-        <!-- <ng-template pTemplate="header">Header Content</ng-template>
-        <p-virtualScroller
-          [value]="issue.inspector"
-          class="border-1 surface-border border-round"
-          scrollHeight="540px"
-          [itemSize]="120"
-          [numToleratedItems]="5"
-        > -->
         <div class="overflow-auto">
           <ng-container *ngFor="let item of issue.inspectors">
             <div *ngIf="issue.inspectors" class="mb-2">
@@ -92,17 +164,15 @@
                 <div
                   class="scrollview-item-icon d-flex justify-content-center align-items-center"
                 >
-                  <i class="bi bi-person-circle"></i>
-                  <!-- <span class="index">{{
-                  issue.inspector.indexOf(item) + 1
-                }}</span> -->
+                  <img src="../../../../../assets/img/user_icon.svg" alt="" />
                 </div>
                 <div class="scrollview-item-content ms-5">
-                  <span class="font-weight-bold">{{ item.user.fullName }}</span>
+                  <span class="font-weight-bold font-size-18">{{
+                    item.user.fullName
+                  }}</span>
                   <br />
                   <span>
-                    {{ item.roles[0].roleName }}
-                    <br />
+                    {{ item.roles[0].roleName }}-
                     {{ item.school.schoolName }}
                   </span>
                 </div>

@@ -1,18 +1,16 @@
 @import "../../../../../assets/scss/base";
 
+.issue-detail {
+    margin-left: 10px;
+    font-size: 16px;
+}
 .scrollview-item {
     height: 100%;
     border-radius: 10px;
-    // border: 0.8px solid $primary;
-    // box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;
-    i {
-        color: $primary;
-        font-size: 30px;
+    img {
+        width: 60px;
+        height: 60px;
     }
-    // .index {
-    //     color: $primary;
-    //     font-size: 30px;
-    // }
     &:hover {
         background-color: $primary-hover;
         transition: all 0.5s ease;
@@ -40,13 +38,12 @@
     font-size: 16px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     .file-item-content {
-        width: 400px;
+        width: 600px;
     }
     .file-item-icon {
-        i {
-            color: $primary;
-            font-size: 30px;
-            padding: 10px;
+        img {
+            width: 50px;
+            height: 50px;
         }
     }
     &:hover {
@@ -61,6 +58,11 @@
         rgba(9, 30, 66, 0.25) 0px 1px 1px,
         rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
     font-size: 16px;
+    .list-inspector-header {
+        background-color: $primary;
+        color: #fff;
+        border-radius: 10px 10px 0 0;
+    }
 }
 .p-tag {
     padding: 20px;
@@ -68,4 +70,21 @@
 .overflow-auto {
     height: 540px;
     overflow: auto;
+}
+.p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    margin-right: 20px;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+    }
+}
+.font-weight-bold {
+    font-weight: 500;
+}
+.font-size-18 {
+    font-size: 18px;
 }

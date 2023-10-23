@@ -98,7 +98,6 @@ export class UpdateIssueComponent implements OnInit {
       });
     this.inspectorService.getNoneInspectors().subscribe((data) => {
       this.inspectorLeftList = data;
-      console.log(this.inspectorLeftList);
       this.inspectorLeftBeforeList = data;
     });
   }

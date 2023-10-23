@@ -16,7 +16,8 @@ export class IssueDetailComponent implements OnInit {
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
-
+  invalidDoc: any[];
+  popupInvalidDocVisible = false;
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
@@ -44,5 +45,12 @@ export class IssueDetailComponent implements OnInit {
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
     });
+  }
+  togglePopupInvalidDoc() {
+    this.invalidDoc = this.issue.documentDtos.filter(
+      (document: any) => document.status.statusId === 2
+    );
+
+    this.popupInvalidDocVisible = true;
   }
 }
