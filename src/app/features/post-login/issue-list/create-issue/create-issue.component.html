@@ -1,5 +1,9 @@
 <div class="row create-issue">
   <h4 class="mb-3">Tạo mới kế hoạch triển khai</h4>
+  <app-issue-list-pop-up
+    (popupInspectorVisibleChange)="changeInspectorVisible()"
+    [popupInspectorVisible]="popupInspectorVisible"
+  ></app-issue-list-pop-up>
   <form class="row" [formGroup]="issueForm" (ngSubmit)="onSubmit()">
     <div class="form-content col-md-8">
       <div class="issue-name mb-1">
@@ -40,7 +44,8 @@
               <select title="docType" formControlName="documentTypeId" class="form-select" (change)="onChange1($event)">
                 <option value="0" selected>Chọn loại tài liệu</option>
                 <ng-container *ngFor="let type of docTypes_select_1">
-                  <option [value]="type.id" *ngIf="type.id != selectedValue_2 && type.id != selectedValue_3">{{type.name}}</option>
+                  <option [value]="type.id"
+                          *ngIf="type.id != selectedValue_2 && type.id != selectedValue_3">{{type.name}}</option>
                 </ng-container>
               </select>
             </div>
@@ -63,7 +68,7 @@
                 (change)="handleFileInputChange(fileInput_1, 1)"
               />
               <input pInputText readonly class="col-md-9"
-              placeholder="{{fileInputPlaceholders[0] ? fileInputPlaceholders[0] : 'Chọn file để tải lên'}}"/>
+                     placeholder="{{fileInputPlaceholders[0] ? fileInputPlaceholders[0] : 'Chọn file để tải lên'}}"/>
               <button
                 type="button"
                 pButton
@@ -89,7 +94,8 @@
               <select title="docType" formControlName="documentTypeId" class="form-select" (change)="onChange2($event)">
                 <option value="0" selected>Chọn loại tài liệu</option>
                 <ng-container *ngFor="let type of docTypes_select_2">
-                  <option [value]="type.id" *ngIf="type.id != selectedValue_1 && type.id != selectedValue_3">{{type.name}}</option>
+                  <option [value]="type.id"
+                          *ngIf="type.id != selectedValue_1 && type.id != selectedValue_3">{{type.name}}</option>
                 </ng-container>
               </select>
             </div>
@@ -138,7 +144,8 @@
               <select title="docType" formControlName="documentTypeId" class="form-select" (change)="onChange3($event)">
                 <option value="0" selected>Chọn loại tài liệu</option>
                 <ng-container *ngFor="let type of docTypes_select_3">
-                  <option [value]="type.id" *ngIf="type.id != selectedValue_1 && type.id != selectedValue_2">{{type.name}}</option>
+                  <option [value]="type.id"
+                          *ngIf="type.id != selectedValue_1 && type.id != selectedValue_2">{{type.name}}</option>
                 </ng-container>
               </select>
             </div>
@@ -178,7 +185,7 @@
       </div>
     </div>
     <div class="col-md-4 h-25 d-flex justify-content-center align-items-center">
-      <button pButton class="create-inspector">Tạo ban KTNB</button>
+      <app-issue-list-right-side (toggleIssueListPopup)="changeInspectorVisible()"></app-issue-list-right-side>
     </div>
   </form>
 </div>

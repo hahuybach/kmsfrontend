@@ -113,6 +113,15 @@ export class CreateIssueComponent implements OnInit {
     this.fileInputPlaceholders = ['', '', ''];
   }
 
+  popupInspectorVisible:boolean = false;
+  inspectorLeftList:any= [];
+  selectedInspectors: any = [];
+  addInspector(){}
+
+  changeInspectorVisible(){
+    this.popupInspectorVisible = !this.popupInspectorVisible;
+  }
+
   fileInputPlaceholders: string[] = [];
 
   handleFileInputChange(fileInput: any, position: number): void {

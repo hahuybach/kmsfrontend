@@ -46,6 +46,8 @@ import { AuthInterceptor } from './auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
 import {AuthGuard} from "./shared/guards/AuthGuard/auth.guard";
+import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
+import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +68,8 @@ import {AuthGuard} from "./shared/guards/AuthGuard/auth.guard";
     UpdateIssueComponent,
     PagenotfoundComponent,
     SchoolInitiationPlanDetailComponent,
+    IssueListPopUpComponent,
+    IssueListRightSideComponent,
   ],
   imports: [
     BrowserModule,
