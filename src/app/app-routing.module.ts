@@ -1,23 +1,19 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {IssueListComponent} from './features/post-login/issue-list/issue-list.component';
-import {DashboardComponent} from './features/post-login/dashboard/dashboard.component';
-import {IssueDetailComponent} from './features/post-login/issue-list/issue-detail/issue-detail.component';
-import {CreateIssueComponent} from './features/post-login/issue-list/create-issue/create-issue.component';
-import {MainComponent} from './main/main/main.component';
-import {LoginFormComponent} from './features/login/login-form/login-form.component';
-import {LoginBaseComponent} from './features/login/login-base/login-base.component';
-import {ForgotPasswordComponent} from './features/login/forgot-password/forgot-password.component';
-import {InspectionPlanListComponent} from './features/post-login/inspection-plan-list/inspection-plan-list.component';
-import {
-  CreateInspectionPlanComponent
-} from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
-import {UpdateIssueComponent} from './features/post-login/issue-list/update-issue/update-issue.component';
-import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
-import {
-  SchoolInitiationPlanDetailComponent
-} from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
-import {AuthGuard} from "./shared/guards/AuthGuard/auth.guard";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { IssueListComponent } from './features/post-login/issue-list/issue-list.component';
+import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
+import { IssueDetailComponent } from './features/post-login/issue-list/issue-detail/issue-detail.component';
+import { CreateIssueComponent } from './features/post-login/issue-list/create-issue/create-issue.component';
+import { MainComponent } from './main/main/main.component';
+import { LoginFormComponent } from './features/login/login-form/login-form.component';
+import { LoginBaseComponent } from './features/login/login-base/login-base.component';
+import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
+import { InspectionPlanListComponent } from './features/post-login/inspection-plan-list/inspection-plan-list.component';
+import { CreateInspectionPlanComponent } from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
+import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
+import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
+import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
+import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 
 const routes: Routes = [
   {
@@ -27,11 +23,11 @@ const routes: Routes = [
   },
   {
     path: '',
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: MainComponent,
     children: [
       // issue
-      {path: 'issuelist', component: IssueListComponent},
+      { path: 'issuelist', component: IssueListComponent },
       {
         path: 'issuelist/:id',
         component: IssueDetailComponent,
@@ -50,7 +46,7 @@ const routes: Routes = [
         component: DashboardComponent,
       },
       // initiationplan
-      {path: 'inspectionplan', component: InspectionPlanListComponent},
+      { path: 'inspectionplan', component: InspectionPlanListComponent },
       {
         path: 'inspectionplan/create',
         component: CreateInspectionPlanComponent,
@@ -86,5 +82,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

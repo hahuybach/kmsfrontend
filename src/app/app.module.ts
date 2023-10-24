@@ -48,6 +48,7 @@ import { ConfirmationService } from 'primeng/api';
 import {AuthGuard} from "./shared/guards/AuthGuard/auth.guard";
 import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
 import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
+import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,6 +71,7 @@ import { IssueListRightSideComponent } from './features/post-login/issue-list/cr
     SchoolInitiationPlanDetailComponent,
     IssueListPopUpComponent,
     IssueListRightSideComponent,
+    SortByIdPipe
   ],
   imports: [
     BrowserModule,
@@ -92,6 +94,7 @@ import { IssueListRightSideComponent } from './features/post-login/issue-list/cr
     ReactiveFormsModule,
     FontAwesomeModule,
     FormsModule,
+    
   ],
   providers: [
     MessageService,
