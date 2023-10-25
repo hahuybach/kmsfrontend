@@ -11,7 +11,7 @@ export class InspectorService {
     this.loggerService.log('Inspector service constructed');
   }
   public getInspectors(): Observable<any[]> {
-    const url = `${this.mockApiUrl}/users`;
+    const url = `${this.issueApiUrl}/list`;
     return this.http.get<any[]>(url);
   }
   public getInspectorById(id: number): Observable<any> {

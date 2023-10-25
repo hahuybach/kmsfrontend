@@ -1,7 +1,3 @@
-import { InspectionPlanListComponent } from './features/post-login/inspection-plan-list/inspection-plan-list.component';
-import { InspectionPlanDetailComponent } from './features/post-login/inspection-plan-list/inspection-plan-detail/inspection-plan-detail.component';
-import { CreateInspectionPlanComponent } from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
-import { UpdateInspectionPlanComponent } from './features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component';
 import { TagModule } from 'primeng/tag';
 import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -10,7 +6,6 @@ import { InspectorService } from './services/inspector.service';
 import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Moment } from 'moment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginFormComponent } from './features/login/login-form/login-form.component';
@@ -21,13 +16,10 @@ import { IssueListComponent } from './features/post-login/issue-list/issue-list.
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
+import {AgGridModule} from "ag-grid-angular";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
-import { TableModule } from 'primeng/table';
-import { InputTextModule } from 'primeng/inputtext';
-import { PaginatorModule } from 'primeng/paginator';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DropdownModule } from 'primeng/dropdown';
 import { IssueService } from './services/issue.service';
@@ -35,7 +27,6 @@ import { LoggerService } from './services/LoggerService';
 import { IssueDetailComponent } from './features/post-login/issue-list/issue-detail/issue-detail.component';
 import { VirtualScrollerModule } from 'primeng/virtualscroller';
 import { CreateIssueComponent } from './features/post-login/issue-list/create-issue/create-issue.component';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
@@ -49,6 +40,10 @@ import {AuthGuard} from "./shared/guards/AuthGuard/auth.guard";
 import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
 import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
 import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe';
+import { InspectionPlanInspectorPopupComponent } from './features/post-login/inspection-plan-list/component/inspection-plan-inspector-popup/inspection-plan-inspector-popup.component';
+import { InspectionPlanInspectorListComponent } from './features/post-login/inspection-plan-list/component/inspection-plan-inspector-list/inspection-plan-inspector-list.component';
+import {InspectionPlanModule} from "./features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module";
+import {SharedModule} from "./shared/shared.module";
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,16 +57,14 @@ import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe'
     CreateIssueComponent,
     ForgotPasswordComponent,
     LoginBaseComponent,
-    InspectionPlanListComponent,
-    InspectionPlanDetailComponent,
-    CreateInspectionPlanComponent,
-    UpdateInspectionPlanComponent,
     UpdateIssueComponent,
     PagenotfoundComponent,
     SchoolInitiationPlanDetailComponent,
     IssueListPopUpComponent,
     IssueListRightSideComponent,
-    SortByIdPipe
+    SortByIdPipe,
+    InspectionPlanInspectorPopupComponent,
+    InspectionPlanInspectorListComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,22 +72,19 @@ import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe'
     MenuModule,
     ToastModule,
     BrowserAnimationsModule,
-    ButtonModule,
     BadgeModule,
-    TableModule,
     DropdownModule,
-    InputTextModule,
     HttpClientModule,
     VirtualScrollerModule,
-    InputTextareaModule,
     FileUploadModule,
     TagModule,
     ConfirmDialogModule,
     DialogModule,
-    ReactiveFormsModule,
     FontAwesomeModule,
     FormsModule,
-    
+    AgGridModule,
+    InspectionPlanModule,
+    SharedModule
   ],
   providers: [
     MessageService,

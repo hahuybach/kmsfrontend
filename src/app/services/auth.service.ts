@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
-import * as moment from 'moment';
+import dayjs from 'dayjs'
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -29,7 +29,7 @@ export class AuthService {
       return false;
     }
     const expireAt = JSON.parse(exp) * 1000;
-    return moment().isBefore(moment(expireAt));
+    return dayjs().isBefore(dayjs(expireAt));
   }
 
   getDecodedJWT(jwt: string): any {
