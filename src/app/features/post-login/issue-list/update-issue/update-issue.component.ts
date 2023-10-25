@@ -394,5 +394,13 @@ export class UpdateIssueComponent implements OnInit {
           console.error('Error while sending form data:', error);
         }
       );
+    // this.issueService.updateIssue(formData).subscribe(
+    //   (response) => {
+    //     location.reload;
+    //   },
+    //   (error) => {
+    //     console.error('Error while sending form data:', error);
+    //   }
+    // );
   }
 }

@@ -1,31 +1,43 @@
 <span>breadcrumb</span>
 <h4 class="mb-4">Kế hoạch thực hiện nhiệm vụ năm học</h4>
+<p-toast></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Đồng ý"
+  rejectLabel="Hủy"
+></p-confirmDialog>
+<p-dialog
+
+>
+
+</p-dialog>
 <div class="row">
   <div class="col-md-7 plan">
     <div class="plan-content row">
       <div class="col-md-8">
         <div class="mb-3">
-          <h6 class="mb-2">Tên kế hoạch</h6>
-          <p>{{ schoolinitiationplan.name }}</p>
+          <span class="mb-2 text-black-50">Tên kế hoạch</span>
+          <p class="font-weight-bold">{{ schoolinitiationplan.name }}</p>
         </div>
         <div class="mb-3">
-          <h6 class="mb-2">Trường</h6>
-          <p>{{ schoolinitiationplan.school }}</p>
+          <span class="mb-2 text-black-50">Trường</span>
+          <p class="font-weight-bold">{{ schoolinitiationplan.school }}</p>
         </div>
         <div class="mb-3">
-          <h6 class="mb-2">Ngày tạo</h6>
-          <p>{{ schoolinitiationplan.createdDate }}</p>
+          <span class="mb-2 text-black-50">Ngày tạo</span>
+          <p class="font-weight-bold">{{ schoolinitiationplan.createdDate }}</p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="mb-3">
-          <h6 class="mb-2">Người tạo</h6>
-          <p>{{ schoolinitiationplan.createdBy }}</p>
+          <span class="mb-2 text-black-50">Người tạo</span>
+          <p class="font-weight-bold">{{ schoolinitiationplan.createdBy }}</p>
         </div>
         <div class="mb-3">
-          <h6 class="mb-2">Trạng thái</h6>
+          <span class="mb-2 text-black-50">Trạng thái</span>
+          <br />
           <p-tag
-            *ngIf="schoolinitiationplan.status.statusId == 3"
+            *ngIf="schoolinitiationplan.status.statusId == 1"
             class="status"
             [severity]="'warning'"
             [rounded]="true"
@@ -33,7 +45,15 @@
             {{ schoolinitiationplan.status.statusName }}
           </p-tag>
           <p-tag
-            *ngIf="schoolinitiationplan.status.statusId == 1"
+            *ngIf="schoolinitiationplan.status.statusId == 2"
+            class="status"
+            [severity]="'info'"
+            [rounded]="true"
+          >
+            {{ schoolinitiationplan.status.statusName }}
+          </p-tag>
+          <p-tag
+            *ngIf="schoolinitiationplan.status.statusId == 3"
             class="status"
             [severity]="'success'"
             [rounded]="true"
@@ -41,7 +61,7 @@
             {{ schoolinitiationplan.status.statusName }}
           </p-tag>
           <p-tag
-            *ngIf="schoolinitiationplan.status.statusId == 2"
+            *ngIf="schoolinitiationplan.status.statusId == 4"
             class="status"
             [severity]="'danger'"
             [rounded]="true"
@@ -51,8 +71,10 @@
         </div>
       </div>
     </div>
-    <div class="plan-file mt-4">
-      <h6>Tài liệu</h6>
+    <div class="plan-file mt-3">
+      <span class="text-black-50">Tài liệu</span>
+      <br />
+      <button pButton class="mb-2">Xem lịch sử phê duyệt tài liệu</button>
       <div class="plan-file-item d-flex">
         <div class="plan-file-item-img"></div>
         <div class="plan-file-item-content"></div>
@@ -61,8 +83,8 @@
   </div>
   <div class="col-md-5">
     <div class="upload">
-      <div class="pt-4">
-        <h4 class="d-flex justify-content-center">Xác nhận kế hoạch</h4>
+      <div class="py-4 header text-center">
+        <h4>Xác nhận kế hoạch</h4>
       </div>
       <!-- <form [formGroup]="inputFileForm"></form> -->
       <div
@@ -75,7 +97,7 @@
           style="display: none"
           (change)="handleFileInputChange(fileInput)"
         />
-        <input
+        <!-- <input
           pInputText
           readonly
           class="col-md-9"
@@ -84,34 +106,38 @@
               ? fileInputPlaceholders
               : 'Chọn file để tải lên'
           }}"
-        />
+        /> -->
         <button
           type="button"
           pButton
-          label="Chọn tệp"
+          label="Chọn tệp tải lên"
           (click)="fileInput.click()"
           class="col-md-3"
         ></button>
       </div>
-      <div *ngIf="fileStatus" class="plan-file-item d-flex">
-        <div class="plan-file-item-img"></div>
-        <div class="plan-file-item-content row">
-          <div class="col-md-10 p-2">
-            <p>{{ fileInputPlaceholders }}</p>
-          </div>
-          <div
-            class="col-md-2 d-flex justify-content-center align-items-center"
-          >
+
+      <div *ngIf="fileStatus" class="px-4 my-4">
+        <div class="plan-file-item d-flex">
+          <div class="plan-file-item-img"></div>
+          <div class="plan-file-item-content row">
+            <div class="col-md-10 p-2">
+              <p>{{ fileInputPlaceholders }}</p>
+            </div>
             <div
-              class="delete-icon d-flex justify-content-center align-items-center"
+              class="col-md-2 d-flex justify-content-center align-items-center"
             >
-              <i class="bi bi-x-lg"></i>
+              <div
+                class="delete-icon d-flex justify-content-center align-items-center"
+              >
+                <i class="bi bi-x-lg"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="button-bottom d-flex justify-content-around align-items-center"
+        *ngIf="fileStatus"
+        class="button-bottom py-4 d-flex justify-content-around align-items-center"
       >
         <button type="button" class="p-tag p-tag-danger" (click)="reject()">
           Không phê duyệt

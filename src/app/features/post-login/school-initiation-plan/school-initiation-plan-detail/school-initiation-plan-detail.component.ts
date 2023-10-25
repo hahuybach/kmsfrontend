@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import {
+  ConfirmEventType,
+  ConfirmationService,
+  MessageService,
+} from 'primeng/api';
 interface UploadEvent {
   originalEvent: Event;
   files: File[];
@@ -21,7 +26,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       createdBy: 'Hà Ngọc Hùng',
       createdDate: '10/1/2022',
       status: {
-        statusId: 3,
+        statusId: 1,
         statusName: 'Đang chờ',
       },
     };
@@ -29,20 +34,57 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
 
   selectedFilename: any;
   fileInputPlaceholders: string;
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
   inputFileForm = this.fb.group({
     file: [''],
   });
   approve() {
     console.log('123');
-    this.schoolinitiationplan.status.statusId = 1;
+    this.schoolinitiationplan.status.statusId = 3;
     this.schoolinitiationplan.status.statusName = 'Phê duyệt';
     console.log(this.schoolinitiationplan.status.statusId);
   }
   reject() {
     console.log(1234);
-    this.schoolinitiationplan.status.statusId = 2;
-    this.schoolinitiationplan.status.statusName = 'Không phê duyệt';
+    this.confirmationService.confirm({
+      message: 'Bạn có chắc chắn không phê duyệt kế hoạch này?',
+      header: 'Xác nhận không phê duyệt',
+      icon: 'bi bi-exclamation-triangle-fill',
+      accept: () => {
+        this.schoolinitiationplan.status.statusId = 4;
+        this.schoolinitiationplan.status.statusName = 'Không phê duyệt';
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Không phê duyệt',
+          detail: 'Không phê duyệt thành công',
+        });
+      },
+      reject: (type: any) => {
+        // switch (type) {
+        //   case ConfirmEventType.REJECT:
+        //     this.messageService.add({
+        //       severity: 'error',
+        //       summary: 'Rejected',
+        //       detail: 'You have rejected',
+        //     });
+        //     break;
+        //   case ConfirmEventType.CANCEL:
+        //     this.messageService.add({
+        //       severity: 'warn',
+        //       summary: 'Cancelled',
+        //       detail: 'You have cancelled',
+        //     });
+        //     break;
+        //   default:
+        //     // Handle other cases, if necessary
+        //     break;
+        // }
+      },
+    });
   }
   handleFileInputChange(fileInput: any) {
     const files = fileInput.files;

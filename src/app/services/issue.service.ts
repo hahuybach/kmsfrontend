@@ -26,4 +26,8 @@ export class IssueService {
     const url = `${this.issueApiUrl}/${documentLink}`;
     return this.http.get(url, { headers });
   }
+  public updateIssue(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders().append('Content-Type', 'undefined');
+    return this.http.put(this.issueApiUrl, formData, { headers });
+  }
 }
