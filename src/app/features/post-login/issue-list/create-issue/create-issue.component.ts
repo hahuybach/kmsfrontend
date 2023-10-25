@@ -78,8 +78,6 @@ export class CreateIssueComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router,
     protected http: HttpClient
   ) {
   }
