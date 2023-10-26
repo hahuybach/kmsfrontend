@@ -6,26 +6,165 @@
   acceptLabel="Đồng ý"
   rejectLabel="Hủy"
 ></p-confirmDialog>
+<!--doc history -->
 <p-dialog
-
+  header="Lịch sử phê duyệt"
+  [(visible)]="docHistoryVisible"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
 >
+  <p-table
+    [value]="schoolinitiationplan.documents"
+    [tableStyle]="{ 'min-width': '50rem' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Id</th>
+        <th>Tài liệu</th>
+        <th>Trạng thái</th>
+        <th>Ngày phê duyệt</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-plan>
+      <tr>
+        <td>{{ plan.id }}</td>
+        <td>{{ plan.schoolDocument.documentName }}</td>
+        <td>
+          <p-tag
+            *ngIf="
+              plan.schoolDocument.status.statusId >= 1 &&
+              plan.schoolDocument.status.statusId <= 4
+            "
+            class="status"
+            [severity]="getStatusSeverity(plan.schoolDocument.status.statusId)"
+            [rounded]="true"
+          >
+            {{ plan.schoolDocument.status.statusName }}
+          </p-tag>
+        </td>
 
+        <td>{{ plan.createdDate }}</td>
+        <td><a href="">Chi tiết đánh giá</a></td>
+      </tr>
+    </ng-template>
+  </p-table>
 </p-dialog>
+<!-- reset deadline -->
+
+<form [formGroup]="inputFileForm">
+  <p-dialog
+    header="Chỉnh sửa hạn nộp"
+    [(visible)]="resetDeadlineVisible"
+    [modal]="true"
+    [style]="{ width: '40vw', height: '800px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div>
+      <p-calendar
+        formControlName="deadline"
+        [minDate]="minDate"
+        [inline]="true"
+        [style]="{ width: '100%' }"
+      ></p-calendar>
+    </div>
+    <button pButton (click)="resetDeadline()">Thay đổi hạn nộp</button>
+  </p-dialog>
+  <p-dialog
+    header="Đánh giá tài liệu"
+    [(visible)]="uploadFileVisible"
+    [modal]="true"
+    [style]="{ width: '50vw', height: '800px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <label for="">Tên tài liệu</label>
+    <br />
+    <input
+      pInputText
+      formControlName="documentName"
+      type="text"
+      placeholder="Tên tài liệu"
+    />
+    <br />
+    <label for="">Mã tài liệu</label>
+    <br />
+    <input
+      pInputText
+      formControlName="documentCode"
+      type="text"
+      placeholder="Mã tài liệu"
+    />
+    <br />
+    <label for="">Tài liệu</label>
+    <div class="mb-3">
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        (change)="handleFileInputChange(fileInput)"
+      />
+      <input
+        pInputText
+        readonly
+        class="col-md-9"
+        placeholder="{{
+          fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'
+        }}"
+      />
+      <button
+        type="button"
+        pButton
+        label="Chọn tệp"
+        (click)="fileInput.click()"
+        class="col-md-3"
+      ></button>
+    </div>
+    <!-- <div class="plan-status">
+      <label for="">Kết quả đánh giá</label>
+      <br />
+      <p-dropdown
+        [options]="dropdownOptions"
+        formControlName="statusPlan"
+        optionLabel="label"
+      >
+        <ng-template let-option pTemplate="item">
+          <p-tag [severity]="option.severity">{{ option.label }}</p-tag>
+        </ng-template>
+      </p-dropdown>
+      {{ inputFileForm.get("statusPlan")?.value | json }}
+      <div *ngIf="inputFileForm.get('statusPlan')?.value == '4'">
+        New div content
+      </div>
+    </div> -->
+    <button type="button" pButton (click)="upload()">Tải tài liệu</button>
+  </p-dialog>
+</form>
+
 <div class="row">
   <div class="col-md-7 plan">
     <div class="plan-content row">
       <div class="col-md-8">
         <div class="mb-3">
           <span class="mb-2 text-black-50">Tên kế hoạch</span>
-          <p class="font-weight-bold">{{ schoolinitiationplan.name }}</p>
+          <p class="font-weight-bold">
+            {{ schoolinitiationplan.initiationPLanName }}
+          </p>
         </div>
         <div class="mb-3">
           <span class="mb-2 text-black-50">Trường</span>
-          <p class="font-weight-bold">{{ schoolinitiationplan.school }}</p>
+          <p class="font-weight-bold">
+            {{ schoolinitiationplan.school.schoolName }}
+          </p>
         </div>
         <div class="mb-3">
           <span class="mb-2 text-black-50">Ngày tạo</span>
-          <p class="font-weight-bold">{{ schoolinitiationplan.createdDate }}</p>
+          <p class="font-weight-bold">
+            {{ schoolinitiationplan.createdDate | date : "MM/dd/yyyy" }}
+          </p>
         </div>
       </div>
       <div class="col-md-4">
@@ -37,33 +176,12 @@
           <span class="mb-2 text-black-50">Trạng thái</span>
           <br />
           <p-tag
-            *ngIf="schoolinitiationplan.status.statusId == 1"
+            *ngIf="
+              schoolinitiationplan.status.statusId >= 1 &&
+              schoolinitiationplan.status.statusId <= 4
+            "
             class="status"
-            [severity]="'warning'"
-            [rounded]="true"
-          >
-            {{ schoolinitiationplan.status.statusName }}
-          </p-tag>
-          <p-tag
-            *ngIf="schoolinitiationplan.status.statusId == 2"
-            class="status"
-            [severity]="'info'"
-            [rounded]="true"
-          >
-            {{ schoolinitiationplan.status.statusName }}
-          </p-tag>
-          <p-tag
-            *ngIf="schoolinitiationplan.status.statusId == 3"
-            class="status"
-            [severity]="'success'"
-            [rounded]="true"
-          >
-            {{ schoolinitiationplan.status.statusName }}
-          </p-tag>
-          <p-tag
-            *ngIf="schoolinitiationplan.status.statusId == 4"
-            class="status"
-            [severity]="'danger'"
+            [severity]="getStatusSeverity(schoolinitiationplan.status.statusId)"
             [rounded]="true"
           >
             {{ schoolinitiationplan.status.statusName }}
@@ -74,7 +192,9 @@
     <div class="plan-file mt-3">
       <span class="text-black-50">Tài liệu</span>
       <br />
-      <button pButton class="mb-2">Xem lịch sử phê duyệt tài liệu</button>
+      <button pButton class="mb-2" (click)="docHistoryVisible = true">
+        Xem lịch sử phê duyệt tài liệu
+      </button>
       <div class="plan-file-item d-flex">
         <div class="plan-file-item-img"></div>
         <div class="plan-file-item-content"></div>
@@ -84,19 +204,19 @@
   <div class="col-md-5">
     <div class="upload">
       <div class="py-4 header text-center">
-        <h4>Xác nhận kế hoạch</h4>
+        <h4>Đánh giá kế hoạch</h4>
       </div>
       <!-- <form [formGroup]="inputFileForm"></form> -->
       <div
         *ngIf="!fileStatus"
         class="input-file d-flex justify-content-center align-items-center"
       >
-        <input
+        <!-- <input
           type="file"
           #fileInput
           style="display: none"
           (change)="handleFileInputChange(fileInput)"
-        />
+        /> -->
         <!-- <input
           pInputText
           readonly
@@ -110,8 +230,8 @@
         <button
           type="button"
           pButton
-          label="Chọn tệp tải lên"
-          (click)="fileInput.click()"
+          label="Đánh giá"
+          (click)="uploadFileVisible = true"
           class="col-md-3"
         ></button>
       </div>
@@ -121,13 +241,20 @@
           <div class="plan-file-item-img"></div>
           <div class="plan-file-item-content row">
             <div class="col-md-10 p-2">
-              <p>{{ fileInputPlaceholders }}</p>
+              <span class="font-weight-bold">
+                {{ inputFileForm.get("documentName")?.value }}
+              </span>
+              <br />
+              <span class="font-weight-bold">Mã: </span
+              ><span>{{ inputFileForm.get("documentCode")?.value }}</span>
             </div>
             <div
               class="col-md-2 d-flex justify-content-center align-items-center"
             >
               <div
+                *ngIf="iconStatus"
                 class="delete-icon d-flex justify-content-center align-items-center"
+                (click)="deleteFile()"
               >
                 <i class="bi bi-x-lg"></i>
               </div>
