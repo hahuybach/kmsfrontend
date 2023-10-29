@@ -15,6 +15,8 @@ import {
 import {
   InspectionPlanInspectorPopupComponent
 } from "../component/inspection-plan-inspector-popup/inspection-plan-inspector-popup.component";
+import {InspectorService} from "../../../../services/inspector.service";
+import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 
 @NgModule({
   declarations: [
@@ -27,13 +29,12 @@ import {
   ],
   imports: [
     CommonModule,
-    TableModule,
-    ButtonModule,
-    ReactiveFormsModule,
-    InputTextareaModule,
-    SharedModule
+    SharedModule,
   ],
   exports:[
+  ],
+  providers:[
+    inspectionPlanService
   ]
 })
 export class InspectionPlanModule { }

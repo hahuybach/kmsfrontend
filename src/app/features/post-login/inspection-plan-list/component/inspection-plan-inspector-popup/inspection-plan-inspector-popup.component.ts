@@ -33,7 +33,6 @@ export class InspectionPlanInspectorPopupComponent {
     this.issueService.getCurrentActiveIssue().subscribe({
         next: (data) => {
           this.inspectorList = data.issueDto.inspectors;
-          console.log(data.issueDto.inspectors)
         },
         error: (error): any => {
           console.log(error);

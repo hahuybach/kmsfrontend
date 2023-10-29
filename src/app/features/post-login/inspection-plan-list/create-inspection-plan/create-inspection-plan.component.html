@@ -5,7 +5,7 @@
     [popupInspectorVisible]="popupInspectorVisible"
     (inspectorSelectChange)="getInspectorList($event)"
   ></app-inspection-plan-inspector-popup>
-  <form class="row" [formGroup]="inspectionPlanForm">
+  <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
     <div class="form-content col-md-8">
       <div class="inspection-plan-name mb-1">
         <h6>Tên quyết định kiểm tra</h6>
@@ -25,16 +25,16 @@
           placeholder="Chi tiết về kế hoạch quyết định kiểm tra"
           rows="5"
           class="w-100"
-          formControlName="inspectionPlanDescription"
+          formControlName="description"
         ></textarea>
       </div>
       <div class="inspection-plan-school mb-1 col-md-6 pe-3">
         <h6>Trường kiểm tra</h6>
         <select title="schoolList" class="form-select" formControlName="schoolId">
           <option selected value="0">Chọn trường kiểm tra</option>
-          <option>Trường Mầm Non Ngọc Hùng</option>
-          <option>Trường Mầm Non Hoa Hồng</option>
-          <option>Trường Mầm Non Ánh Sao</option>
+          <option value="1">Trường Mầm Non Ngọc Hùng</option>
+          <option value="2">Trường Mầm Non Hoa Hồng</option>
+          <option value="3">Trường Mầm Non Ánh Sao</option>
         </select>
       </div>
       <div class="row">
@@ -50,8 +50,8 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4 h-25 d-flex justify-content-center align-items-center" style="">
-      <app-inspection-plan-inspector-list [selectedInspectors]="tempInspectorList" (toggleIssueListPopup)="changeInspectorVisible()"></app-inspection-plan-inspector-list>
+    <div class="col-md-4 d-flex justify-content-center">
+      <app-inspection-plan-inspector-list class="w-100" [selectedInspectors]="tempInspectorList" (toggleIssueListPopup)="changeInspectorVisible()"></app-inspection-plan-inspector-list>
     </div>
     <div class="document mt-3" formGroupName="documentInspectionPlanDto">
       <h6>Tài liệu công văn</h6>

@@ -11,14 +11,23 @@ export class inspectionPlanService {
     this.loggerService.log('Inspection plan service constructed');
   }
 
+  public saveInspectionPlan(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+
+    const url = `${this.inspectionApiUrl}/save`;
+    return this.http.post(url, formData, {headers});
+  }
+
   public getInspectionPlans(): Observable<any[]> {
     let headers = new HttpHeaders();
     const url = `${this.inspectionApiUrl}/list`;
-    return this.http.get<any[]>(url, { headers });
+    return this.http.get<any[]>(url, {headers});
   }
+
   public getInspectionPlanById(inspectionPlanId: number): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.inspectionApiUrl}/detail/${inspectionPlanId}`;
-    return this.http.get(url, { headers });
+    return this.http.get(url, {headers});
   }
 }
