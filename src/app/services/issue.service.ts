@@ -26,11 +26,11 @@ export class IssueService {
     const url = `${this.issueApiUrl}/${documentLink}`;
     return this.http.get(url, { headers });
   }
-  // public updateIssue(formData: FormData): Observable<any> {
-  //   let headers = new HttpHeaders().append('Content-Type', 'undefined');
-  //   const url = `${this.issueApiUrl}/`;
-  //   return this.http.put(url, formData, { headers });
-  // }
+  public updateIssue(formData: FormData): Observable<any> {
+    let headers = new HttpHeaders().append('Content-Type', 'undefined');
+    const url = `${this.issueApiUrl}/`;
+    return this.http.put(url, formData, { headers });
+  }
 
   public getCurrentActiveIssue(): Observable<any> {
     let headers = new HttpHeaders();

@@ -384,23 +384,23 @@ export class UpdateIssueComponent implements OnInit {
 
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'undefined');
-    this.http
-      .put('http://localhost:8080/api/v1/issue/', formData, { headers })
-      .subscribe(
-        (response) => {
-          console.log('Form data sent to the backend:', response);
-        },
-        (error) => {
-          console.error('Error while sending form data:', error);
-        }
-      );
-    // this.issueService.updateIssue(formData).subscribe(
-    //   (response) => {
-    //     location.reload();
-    //   },
-    //   (error) => {
-    //     console.error('Error while sending form data:', error);
-    //   }
-    // );
+    // this.http
+    //   .put('http://localhost:8080/api/v1/issue/', formData, { headers })
+    //   .subscribe(
+    //     (response) => {
+    //       console.log('Form data sent to the backend:', response);
+    //     },
+    //     (error) => {
+    //       console.error('Error while sending form data:', error);
+    //     }
+    //   );
+    this.issueService.updateIssue(formData).subscribe(
+      (response) => {
+        location.reload();
+      },
+      (error) => {
+        console.error('Error while sending form data:', error);
+      }
+    );
   }
 }
