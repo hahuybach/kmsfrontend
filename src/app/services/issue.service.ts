@@ -26,9 +26,18 @@ export class IssueService {
     const url = `${this.issueApiUrl}/${documentLink}`;
     return this.http.get(url, { headers });
   }
+<<<<<<< HEAD
   // public updateIssue(formData: FormData): Observable<any> {
   //   let headers = new HttpHeaders().append('Content-Type', 'undefined');
   //   const url = `${this.issueApiUrl}/`;
   //   return this.http.put(url, formData, { headers });
   // }
+=======
+
+  public getCurrentActiveIssue(): Observable<any>{
+    let headers = new HttpHeaders();
+    const url = `${this.issueApiUrl}/current`;
+    return this.http.get<any>(url, { headers });
+  }
+>>>>>>> da23019be747f5da2724f44e16ade0f57474b7f3
 }

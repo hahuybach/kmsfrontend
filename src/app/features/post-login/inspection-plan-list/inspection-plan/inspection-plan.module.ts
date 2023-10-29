@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {InspectionPlanListComponent} from "../inspection-plan-list.component";
-import {InspectionPlanDetailComponent} from "../inspection-plan-detail/inspection-plan-detail.component";
-import {CreateInspectionPlanComponent} from "../create-inspection-plan/create-inspection-plan.component";
-import {UpdateInspectionPlanComponent} from "../update-inspection-plan/update-inspection-plan.component";
-import {ReactiveFormsModule} from "@angular/forms";
-import {SharedModule} from "../../../../shared/shared.module";
+import { InspectionPlanListComponent } from '../inspection-plan-list.component';
+import { InspectionPlanDetailComponent } from '../inspection-plan-detail/inspection-plan-detail.component';
+import { CreateInspectionPlanComponent } from '../create-inspection-plan/create-inspection-plan.component';
+import { UpdateInspectionPlanComponent } from '../update-inspection-plan/update-inspection-plan.component';
+import { SharedModule } from '../../../../shared/shared.module';
+import { InspectionPlanInspectorListComponent } from '../component/inspection-plan-inspector-list/inspection-plan-inspector-list.component';
+import { InspectionPlanInspectorPopupComponent } from '../component/inspection-plan-inspector-popup/inspection-plan-inspector-popup.component';
 
 @NgModule({
   declarations: [
@@ -13,12 +14,10 @@ import {SharedModule} from "../../../../shared/shared.module";
     InspectionPlanDetailComponent,
     CreateInspectionPlanComponent,
     UpdateInspectionPlanComponent,
+    InspectionPlanInspectorListComponent,
+    InspectionPlanInspectorPopupComponent,
   ],
-  imports: [
-    CommonModule,
-    SharedModule
-  ],
-  exports:[
-  ]
+  imports: [CommonModule, SharedModule],
+  exports: [],
 })
-export class InspectionPlanModule { }
+export class InspectionPlanModule {}

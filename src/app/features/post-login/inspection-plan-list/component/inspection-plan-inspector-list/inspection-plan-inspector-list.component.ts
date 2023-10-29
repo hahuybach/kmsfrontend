@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-inspection-plan-inspector-list',
@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./inspection-plan-inspector-list.component.scss']
 })
 export class InspectionPlanInspectorListComponent {
+  @Input()  selectedInspectors:any[] = [];
+  @Output() toggleIssueListPopup = new EventEmitter<void>();
 
+  changeInspectorVisible() {
+    this.toggleIssueListPopup.emit();
+  }
 }

@@ -1,7 +1,5 @@
 // import { TagModule } from 'primeng/tag';
 import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
-// import { ConfirmDialogModule } from 'primeng/confirmdialog';
-// import { DialogModule } from 'primeng/dialog';
 import { InspectorService } from './services/inspector.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -30,8 +28,8 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { AuthInterceptor } from './auth.interceptor';
+import { FormsModule } from '@angular/forms';
+import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
@@ -44,6 +42,7 @@ import { InspectionPlanModule } from './features/post-login/inspection-plan-list
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
+import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,8 +61,6 @@ import { SchoolInitiationPlanModule } from './features/post-login/school-initiat
     IssueListPopUpComponent,
     IssueListRightSideComponent,
     SortByIdPipe,
-    InspectionPlanInspectorPopupComponent,
-    InspectionPlanInspectorListComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,9 +72,6 @@ import { SchoolInitiationPlanModule } from './features/post-login/school-initiat
     HttpClientModule,
     VirtualScrollerModule,
     FileUploadModule,
-    // TagModule,
-    // ConfirmDialogModule,
-    // DialogModule,
     FontAwesomeModule,
     FormsModule,
     AgGridModule,
@@ -97,6 +91,11 @@ import { SchoolInitiationPlanModule } from './features/post-login/school-initiat
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenExpirationInterceptor,
       multi: true,
     },
   ],

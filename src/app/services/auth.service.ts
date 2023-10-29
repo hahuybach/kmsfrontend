@@ -20,6 +20,8 @@ export class AuthService {
   logout() {
     const jwtCookie = document.cookie;
     document.cookie = "jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    console.log("logout")
+    console.log(this.getJwtFromCookie())
   }
 
   isLoggedIn(): boolean {
@@ -29,7 +31,12 @@ export class AuthService {
       return false;
     }
     const expireAt = JSON.parse(exp) * 1000;
+    this.onTokenExpiration(expireAt);
     return dayjs().isBefore(dayjs(expireAt));
+  }
+
+  onTokenExpiration(expireAt:any){
+    setTimeout(() => this.logout(), expireAt);
   }
 
   getDecodedJWT(jwt: string): any {
