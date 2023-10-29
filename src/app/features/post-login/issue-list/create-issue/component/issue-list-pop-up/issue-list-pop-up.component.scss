@@ -1,7 +1,15 @@
-html, body {
-  height: 100%;
-  width: 100%;
-  padding: 5px;
-  box-sizing: border-box;
-  -webkit-overflow-scrolling: touch;
+@import "../../../../../../../assets/scss/base";
+@import "../../../../../../../assets/scss/prime-custom";
+:host ::ng-deep {
+  .p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    margin-right: 20px;
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
 }

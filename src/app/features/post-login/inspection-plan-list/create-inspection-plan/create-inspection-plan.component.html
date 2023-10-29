@@ -1,5 +1,10 @@
 <div class="row create-inspection-plan">
   <h4 class="mb-3">Tạo mới quyết định kiểm tra</h4>
+  <app-inspection-plan-inspector-popup
+    (popupInspectorVisibleChange)="changeInspectorVisible()"
+    [popupInspectorVisible]="popupInspectorVisible"
+    (inspectorSelectChange)="getInspectorList($event)"
+  ></app-inspection-plan-inspector-popup>
   <form class="row" [formGroup]="inspectionPlanForm">
     <div class="form-content col-md-8">
       <div class="inspection-plan-name mb-1">
@@ -45,17 +50,19 @@
         </div>
       </div>
     </div>
-
-
-    <div class="document mt-3">
+    <div class="col-md-4 h-25 d-flex justify-content-center align-items-center" style="">
+      <app-inspection-plan-inspector-list [selectedInspectors]="tempInspectorList" (toggleIssueListPopup)="changeInspectorVisible()"></app-inspection-plan-inspector-list>
+    </div>
+    <div class="document mt-3" formGroupName="documentInspectionPlanDto">
       <h6>Tài liệu công văn</h6>
-      <div class="row document-item mb-2" *ngFor="let inspectionPlanDoc of inspectionPlanDocumentFormArray.controls; let i = index">
+      <div class="row document-item mb-2">
         <div class="d-flex flex-row">
           <div class="col-md-4 pe-3">
             <label>Tên tài liệu</label><br/>
             <input
               pInputText
               placeholder="Điền tên tài liệu"
+              formControlName="documentName"
             />
           </div>
           <div class="col-md-2 pe-3">
@@ -63,6 +70,7 @@
             <input
               pInputText
               placeholder="Điền mã tài liệu"
+              formControlName="documentCode"
             />
           </div>
           <div class="col-md-6">
@@ -72,10 +80,10 @@
                 type="file"
                 #fileInput
                 style="display: none"
-                (change)="handleFileInputChange(fileInput, i)"
+                (change)="handleFileInputChange(fileInput)"
               />
               <input pInputText readonly class="col-md-8"
-              placeholder="{{fileInputPlaceholders[i] ? fileInputPlaceholders[i] : 'Chọn file để tải lên'}}"/>
+              placeholder="{{fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'}}"/>
               <button
                 type="button"
                 pButton
@@ -83,19 +91,12 @@
                 (click)="fileInput.click()"
                 class="col-md-2"
               ></button>
-              <button *ngIf="i != 0" type="button" class="col-md-2 delete-button" (click)="removeIssueDoc(i)">
-                <i class="bi bi-trash3 "></i>
-              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="mt-5 row w-100">
-      <div class="col-12 save-button d-flex justify-content-end w-100 pe-0">
-        <button type="button" class="btn text-white" (click)="addIssueDoc()">Thêm</button>
-        <div class="col-md-1"></div>
-      </div>
       <div class="col-12 save-button d-flex w-100">
         <button class="btn text-white">Lưu</button>
       </div>

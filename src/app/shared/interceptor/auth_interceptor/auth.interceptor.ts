@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AuthService} from "./services/auth.service";
+import {AuthService} from "../../../services/auth.service";
 
 import {
   HttpRequest,
@@ -24,7 +24,6 @@ export class AuthInterceptor implements HttpInterceptor {
         headers: request.headers.set("Authorization",
           "Bearer " + jwt)
       });
-
       return next.handle(cloned);
     }
     else {
