@@ -317,7 +317,7 @@ export class UpdateIssueComponent implements OnInit {
   }
   openNewTab(documentLink: string) {
     console.log(documentLink);
-    this.fileService.downloadPdf(documentLink).subscribe((response) => {
+    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
@@ -396,7 +396,7 @@ export class UpdateIssueComponent implements OnInit {
       );
     // this.issueService.updateIssue(formData).subscribe(
     //   (response) => {
-    //     location.reload;
+    //     location.reload();
     //   },
     //   (error) => {
     //     console.error('Error while sending form data:', error);

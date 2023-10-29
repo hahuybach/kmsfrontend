@@ -5,6 +5,11 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CalendarModule } from 'primeng/calendar';
+import { TagModule } from 'primeng/tag';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [],
@@ -15,6 +20,11 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ButtonModule,
     ReactiveFormsModule,
     InputTextareaModule,
+    CalendarModule,
+    TagModule,
+    ConfirmDialogModule,
+    DialogModule,
+    ToastModule,
   ],
   exports: [
     InputTextModule,
@@ -22,6 +32,11 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ButtonModule,
     ReactiveFormsModule,
     InputTextareaModule,
+    CalendarModule,
+    TagModule,
+    ConfirmDialogModule,
+    DialogModule,
+    ToastModule,
   ],
 })
 export class SharedModule {}

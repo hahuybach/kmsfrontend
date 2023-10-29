@@ -1,9 +1,8 @@
-import { TagModule } from 'primeng/tag';
+// import { TagModule } from 'primeng/tag';
 import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DialogModule } from 'primeng/dialog';
+// import { ConfirmDialogModule } from 'primeng/confirmdialog';
+// import { DialogModule } from 'primeng/dialog';
 import { InspectorService } from './services/inspector.service';
-import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -14,7 +13,6 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { IssueListComponent } from './features/post-login/issue-list/issue-list.component';
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
-import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
 import { AgGridModule } from 'ag-grid-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -44,8 +42,8 @@ import { InspectionPlanInspectorPopupComponent } from './features/post-login/ins
 import { InspectionPlanInspectorListComponent } from './features/post-login/inspection-plan-list/component/inspection-plan-inspector-list/inspection-plan-inspector-list.component';
 import { InspectionPlanModule } from './features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
-import { CalendarModule } from 'primeng/calendar';
 import { DatePipe } from '@angular/common';
+import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +59,6 @@ import { DatePipe } from '@angular/common';
     LoginBaseComponent,
     UpdateIssueComponent,
     PagenotfoundComponent,
-    SchoolInitiationPlanDetailComponent,
     IssueListPopUpComponent,
     IssueListRightSideComponent,
     SortByIdPipe,
@@ -72,22 +69,21 @@ import { DatePipe } from '@angular/common';
     BrowserModule,
     AppRoutingModule,
     MenuModule,
-    ToastModule,
     BrowserAnimationsModule,
     BadgeModule,
     DropdownModule,
     HttpClientModule,
     VirtualScrollerModule,
     FileUploadModule,
-    TagModule,
-    ConfirmDialogModule,
-    DialogModule,
+    // TagModule,
+    // ConfirmDialogModule,
+    // DialogModule,
     FontAwesomeModule,
     FormsModule,
     AgGridModule,
     InspectionPlanModule,
     SharedModule,
-    CalendarModule,
+    SchoolInitiationPlanModule,
   ],
   providers: [
     MessageService,
