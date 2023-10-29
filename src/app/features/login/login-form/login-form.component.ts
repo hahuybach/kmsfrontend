@@ -40,14 +40,8 @@ export class LoginFormComponent implements OnInit {
   }
 
   // login(){
-<<<<<<< HEAD
-  //   this.auth.logout;
-  // }
-
-=======
   //   this.auth.logout()
   // }
->>>>>>> da23019be747f5da2724f44e16ade0f57474b7f3
   ngOnInit(): void {
     this.signInForm = this.fb.group(
       {
