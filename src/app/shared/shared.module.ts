@@ -5,6 +5,7 @@ import {TableModule} from "primeng/table";
 import {ButtonModule} from "primeng/button";
 import {ReactiveFormsModule} from "@angular/forms";
 import {InputTextareaModule} from "primeng/inputtextarea";
+import {DialogModule} from "primeng/dialog";
 
 
 
@@ -16,14 +17,16 @@ import {InputTextareaModule} from "primeng/inputtextarea";
     TableModule,
     ButtonModule,
     ReactiveFormsModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DialogModule
   ],
   exports:[
     InputTextModule,
     TableModule,
     ButtonModule,
     ReactiveFormsModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DialogModule
   ]
 })
 export class SharedModule { }

@@ -26,4 +26,10 @@ export class IssueService {
     const url = `${this.issueApiUrl}/${documentLink}`;
     return this.http.get(url, { headers });
   }
+
+  public getCurrentActiveIssue(): Observable<any>{
+    let headers = new HttpHeaders();
+    const url = `${this.issueApiUrl}/current`;
+    return this.http.get<any>(url, { headers });
+  }
 }

@@ -9,6 +9,12 @@ import {UpdateInspectionPlanComponent} from "../update-inspection-plan/update-in
 import {ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../../../../shared/shared.module";
 import {InputTextareaModule} from "primeng/inputtextarea";
+import {
+  InspectionPlanInspectorListComponent
+} from "../component/inspection-plan-inspector-list/inspection-plan-inspector-list.component";
+import {
+  InspectionPlanInspectorPopupComponent
+} from "../component/inspection-plan-inspector-popup/inspection-plan-inspector-popup.component";
 
 @NgModule({
   declarations: [
@@ -16,6 +22,8 @@ import {InputTextareaModule} from "primeng/inputtextarea";
     InspectionPlanDetailComponent,
     CreateInspectionPlanComponent,
     UpdateInspectionPlanComponent,
+    InspectionPlanInspectorListComponent,
+    InspectionPlanInspectorPopupComponent
   ],
   imports: [
     CommonModule,

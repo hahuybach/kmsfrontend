@@ -1,1 +1,103 @@
-<p>update-inspection-plan works!</p>
+<div class="row create-inspection-plan">
+  <h4 class="mb-3">Tạo mới quyết định kiểm tra</h4>
+  <app-inspection-plan-inspector-popup
+    (popupInspectorVisibleChange)="changeInspectorVisible()"
+    [popupInspectorVisible]="popupInspectorVisible"
+  ></app-inspection-plan-inspector-popup>
+  <form class="row" [formGroup]="inspectionPlanForm">
+    <div class="form-content col-md-8">
+      <div class="inspection-plan-name mb-1">
+        <h6>Tên quyết định kiểm tra</h6>
+        <input
+          type="text"
+          pInputText
+          placeholder="Tên quyết định kiểm tra"
+          class="w-100"
+          formControlName="inspectionPlanName"
+        />
+      </div>
+      <div class="inspection-plan-description mb-1">
+        <h6>Chi tiết</h6>
+        <textarea
+          type="text"
+          pInputTextarea
+          placeholder="Chi tiết về kế hoạch quyết định kiểm tra"
+          rows="5"
+          class="w-100"
+          formControlName="inspectionPlanDescription"
+        ></textarea>
+      </div>
+      <div class="inspection-plan-school mb-1 col-md-6 pe-3">
+        <h6>Trường kiểm tra</h6>
+        <select title="schoolList" class="form-select" formControlName="schoolId">
+          <option selected value="0">Chọn trường kiểm tra</option>
+          <option>Trường Mầm Non Ngọc Hùng</option>
+          <option>Trường Mầm Non Hoa Hồng</option>
+          <option>Trường Mầm Non Ánh Sao</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="startDate" class="fw-medium">Ngày bắt đầu</label>
+          <input id="startDate" class="form-control" type="date" formControlName="startDate"/>
+          <span id="startDateSelected"></span>
+        </div>
+        <div class="col-md-3">
+          <label for="endDate" class="fw-medium">Ngày kết thúc</label>
+          <input id="endDate" class="form-control" type="date"  formControlName="endDate"/>
+          <span id="endDateSelected"></span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 h-25 d-flex justify-content-center align-items-center">
+      <app-inspection-plan-inspector-list (toggleIssueListPopup)="changeInspectorVisible()"></app-inspection-plan-inspector-list>
+    </div>
+    <div class="document mt-3" formGroupName="documentInspectionPlanDto">
+      <h6>Tài liệu công văn</h6>
+      <div class="row document-item mb-2">
+        <div class="d-flex flex-row">
+          <div class="col-md-4 pe-3">
+            <label>Tên tài liệu</label><br/>
+            <input
+              pInputText
+              placeholder="Điền tên tài liệu"
+              formControlName="documentName"
+            />
+          </div>
+          <div class="col-md-2 pe-3">
+            <label>Mã tài liệu</label><br/>
+            <input
+              pInputText
+              placeholder="Điền mã tài liệu"
+              formControlName="documentCode"
+            />
+          </div>
+          <div class="col-md-6">
+            <label>Tài liệu</label><br/>
+            <div class="input-file">
+              <input
+                type="file"
+                #fileInput
+                style="display: none"
+                (change)="handleFileInputChange(fileInput)"
+              />
+              <input pInputText readonly class="col-md-8"/>
+              <button
+                type="button"
+                pButton
+                label="Chọn tệp"
+                (click)="fileInput.click()"
+                class="col-md-2"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 row w-100">
+      <div class="col-12 save-button d-flex w-100">
+        <button class="btn text-white">Lưu</button>
+      </div>
+    </div>
+  </form>
+</div>

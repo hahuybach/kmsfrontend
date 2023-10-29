@@ -31,6 +31,7 @@ export class LoginFormComponent implements OnInit {
             this.router.navigateByUrl("/dashboard");
           },
           error: (err) => {
+            console.log(this.auth.getJwtFromCookie())
             console.log("Error: " + err);
             this.router.navigateByUrl("/login");
           }
@@ -38,6 +39,9 @@ export class LoginFormComponent implements OnInit {
     }
   }
 
+  // login(){
+  //   this.auth.logout()
+  // }
   ngOnInit(): void {
     this.signInForm = this.fb.group(
       {

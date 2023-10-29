@@ -178,9 +178,6 @@ export class CreateIssueComponent implements OnInit {
 
     formData.append("issue",new Blob([JSON.stringify(issue)], {type:"application/json"}));
 
-    console.log(formData.getAll("issue"))
-    console.log(formData.getAll("files"))
-
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'undefined');
 
