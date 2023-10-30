@@ -25,7 +25,7 @@ import {inspectionPlanService} from "../../../../services/inspectionplan.service
     CreateInspectionPlanComponent,
     UpdateInspectionPlanComponent,
     InspectionPlanInspectorListComponent,
-    InspectionPlanInspectorPopupComponent
+    InspectionPlanInspectorPopupComponent,
   ],
   imports: [
     CommonModule,
@@ -37,4 +37,4 @@ import {inspectionPlanService} from "../../../../services/inspectionplan.service
     inspectionPlanService
   ]
 })
-export class InspectionPlanModule { }
+export class InspectionPlanModule {}

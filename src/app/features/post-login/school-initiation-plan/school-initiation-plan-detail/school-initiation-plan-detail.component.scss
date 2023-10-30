@@ -4,12 +4,13 @@
 .plan {
     border-right: solid 1px $primary;
     height: 100%;
+    font-size: 16px;
 }
 .plan-content {
     // border-bottom: solid 1px $primary;
 }
 .plan-file-item {
-    height: 180px;
+    height: 160px;
     border-radius: 15px;
     box-shadow:
         rgba(0, 0, 0, 0.16) 0px 3px 6px,
@@ -26,12 +27,15 @@
         border-radius: 0px 15px 15px 0px;
         margin: 0;
         .delete-icon {
-            width: 40px;
-            height: 40px;
-            transition: all 0.3s ease;
-            border-radius: 50%;
+            i {
+                font-size: 30px;
+                color: rgb(172, 172, 172);
+            }
             &:hover {
-                background-color: rgb(231, 231, 231);
+                i {
+                    transition: all 0.3s ease;
+                    color: rgb(220, 220, 220);
+                }
             }
         }
     }
@@ -42,21 +46,23 @@
         rgba(0, 0, 0, 0.23) 0px 3px 6px;
     width: 100%;
     border-radius: 15px;
+    height: 100%;
+    .header {
+        background-color: $primary;
+        color: #fff;
+        border-radius: 15px 15px 0px 0px;
+    }
 }
 p {
     font-size: 16px;
 }
 .input-file {
-    height: 200px;
-    border-bottom: 1px solid $primary;
+    height: 100%;
     width: 100%;
-    .p-inputtext {
-        width: 70%;
-        border-radius: 8px 0 0 8px;
-    }
     button {
+        width: 200px;
         background-color: $primary;
-        border-radius: 0px 8px 8px 0px;
+        border-radius: 8px;
         &:hover,
         &:active {
             background-color: $primary-hover;
@@ -65,7 +71,6 @@ p {
     }
 }
 .button-bottom {
-    height: 200px;
     button {
         font-size: 16px;
         padding: 15px 20px;
@@ -84,4 +89,10 @@ p {
             }
         }
     }
+}
+.font-weight-bold {
+    font-weight: 500;
+}
+p-calendar.p-calendar-inline {
+    width: 300px; /* Adjust the width as needed */
 }

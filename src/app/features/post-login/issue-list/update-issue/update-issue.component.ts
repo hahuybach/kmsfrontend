@@ -44,6 +44,7 @@ export class UpdateIssueComponent implements OnInit {
   invalidDoc!: any[];
   documentTypeId: any;
   documentId = 0;
+  documentTypeName = '';
   inEffectiveDocumentIds: number[] = [];
   uploadFileName = 'sad';
   issueForm = this.fb.group({
@@ -108,8 +109,8 @@ export class UpdateIssueComponent implements OnInit {
   // store button in scrollview
   toggleStore() {
     this.isChanged = !this.isChanged;
-    this.inspectorBeforeList = this.issue.inspector;
-    this.inspectorLeftBeforeList = this.inspectorLeftList;
+    this.inspectorBeforeList = this.issue.inspector.slice();
+    this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
     this.issueForm.patchValue({
       inspectorId: this.issue.inspectors.map((item: any) => item.accountId),
     });
@@ -121,15 +122,13 @@ export class UpdateIssueComponent implements OnInit {
       header: 'Delete Confirmation',
       // icon: 'pi pi-info-circle',
       accept: () => {
-        this.inspectorBeforeList = this.issue.inspectors;
+        this.inspectorBeforeList = this.issue.inspectors.slice();
         this.issue.inspectors = this.issue.inspectors.filter(
           (item: any) => item.accountId != inspector.accountId
         );
         // add lại vào danh sách trong popup
-        this.inspectorLeftBeforeList = this.inspectorLeftList;
+        this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
         this.inspectorLeftList.push(inspector);
-        this.inspectorLeftList = [...this.inspectorLeftList];
-        console.log(this.inspectorLeftList);
         this.messageService.add({
           severity: 'info',
           summary: 'Confirmed',
@@ -166,18 +165,18 @@ export class UpdateIssueComponent implements OnInit {
   //toggle cancel button scrollview
   toggleCancel() {
     this.isChanged = false;
-    this.issue.inspectors = this.inspectorBeforeList;
-    this.inspectorLeftList = this.inspectorLeftBeforeList;
+    this.issue.inspectors = this.inspectorBeforeList.slice();
+    this.inspectorLeftList = this.inspectorLeftBeforeList.slice();
   }
 
   //click plus icon event scrollview
   addInspector() {
     this.isChanged = false;
-    this.inspectorLeftBeforeList = this.inspectorLeftList;
+    this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
     this.inspectorLeftList = this.inspectorLeftList.filter(
       (val) => !this.selectedInspectors?.includes(val)
     );
-    this.inspectorBeforeList = this.issue.inspectors;
+    this.inspectorBeforeList = this.issue.inspectors.slice();
     this.issue.inspectors.push(...this.selectedInspectors);
     this.selectedInspectors = [];
     this.popupInspectorVisible = false;
@@ -208,7 +207,40 @@ export class UpdateIssueComponent implements OnInit {
       file: this.file,
     };
     this.addedDocumentIssues.set(this.documentTypeId, dataObject);
-    this.inEffectiveDocumentIds.push(this.documentId);
+
+    // inactive old document
+    console.log(this.documentId);
+    if (this.documentId != null) {
+      const filteredDocuments = this.issue.documentDtos.find(
+        (doc: any) => doc.documentId === this.documentId
+      );
+      filteredDocuments.status.statusId = 2;
+      filteredDocuments.status.statusName = 'Mất hiệu lực';
+      this.inEffectiveDocumentIds.push(this.documentId);
+    } else {
+      this.issue.documentDtos = this.issue.documentDtos.filter(
+        (item: any) =>
+          item.documentType.documentTypeId !== this.documentTypeId ||
+          item.documentId !== undefined
+      );
+      console.log(this.issue.documentDtos);
+    }
+
+    this.issue.documentDtos.push({
+      documentName: this.file.name,
+      documentType: {
+        documentTypeName: this.documentTypeName,
+        documentTypeId: this.documentTypeId,
+      },
+      documentCode: this.issueForm.get('documentCode')?.value,
+      uploadedDate: new Date(this.file.lastModified),
+      sizeFormat: this.file.size,
+      status: {
+        statusId: 1,
+        statusName: 'Hiệu lực',
+      },
+      file: this.file,
+    });
     console.log(this.addedDocumentIssues);
     // reset dialog
     this.issueForm.get('documentName')?.setValue('');
@@ -233,13 +265,48 @@ export class UpdateIssueComponent implements OnInit {
   togglePopupFileUpload(
     event: MouseEvent,
     documentTypeId: number,
-    documentId: number
+    documentId: number,
+    documentName: string,
+    documentTypeName: string
   ) {
+    console.log(documentId);
+
     event.stopPropagation();
-    this.uploadFileVisible = true;
-    console.log(documentTypeId, documentId);
+    this.documentTypeName = documentTypeName;
     this.documentTypeId = documentTypeId;
     this.documentId = documentId;
+    this.confirmationService.confirm({
+      message:
+        'Bạn có muốn cập nhật tài liệu mới và vô hiệu hóa tài liệu ' +
+        documentName +
+        ' ?',
+      header: 'Xác nhận cập nhật',
+      // icon: 'pi pi-info-circle',
+      accept: () => {
+        this.uploadFileVisible = true;
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Rejected',
+              detail: 'You have rejected',
+            });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Cancelled',
+              detail: 'You have cancelled',
+            });
+            break;
+          default:
+            // Handle other cases, if necessary
+            break;
+        }
+      },
+    });
   }
   togglePopupInvalidDoc() {
     this.invalidDoc = this.issue.documentDtos.filter(
@@ -250,15 +317,20 @@ export class UpdateIssueComponent implements OnInit {
   }
   openNewTab(documentLink: string) {
     console.log(documentLink);
-    this.fileService.downloadPdf(documentLink).subscribe((response) => {
+    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
     });
   }
+  displayNewFileUpload(file: File) {
+    const blobUrl = window.URL.createObjectURL(file as Blob);
+    this.pdfUrl = blobUrl;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+    this.pdfLoaded = true;
+  }
   onSubmit() {
-    // console.log(this.issue.inspector.length);
     const inspectorFormAttr = this.issueForm.get('inspectorId');
     if (inspectorFormAttr !== null) {
       inspectorFormAttr.patchValue(
@@ -277,7 +349,10 @@ export class UpdateIssueComponent implements OnInit {
         file: value['file'],
       };
     });
-
+    addedDocumentIssues.sort(
+      (a: any, b: any) => a.documentTypeId - b.documentTypeId
+    );
+    console.log(addedDocumentIssues);
     const files = addedDocumentIssues.map((item) => item.file);
     console.log(files);
     const addedDocumentIssuesFinal = addedDocumentIssues.map(
@@ -319,5 +394,13 @@ export class UpdateIssueComponent implements OnInit {
           console.error('Error while sending form data:', error);
         }
       );
+    // this.issueService.updateIssue(formData).subscribe(
+    //   (response) => {
+    //     location.reload();
+    //   },
+    //   (error) => {
+    //     console.error('Error while sending form data:', error);
+    //   }
+    // );
   }
 }

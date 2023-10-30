@@ -39,7 +39,7 @@ export class IssueDetailComponent implements OnInit {
   }
   openNewTab(documentLink: string) {
     console.log(documentLink);
-    this.fileService.downloadPdf(documentLink).subscribe((response) => {
+    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);

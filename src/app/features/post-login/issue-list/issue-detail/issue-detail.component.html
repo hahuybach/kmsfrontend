@@ -27,7 +27,7 @@
         class="mb-3"
         (click)="openNewTab(item.documentLink)"
       >
-        <div class="file-item p-2 d-flex">
+        <div class="file-item px-3 py-1 d-flex">
           <div
             class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
           >
@@ -36,9 +36,9 @@
           <div class="file-item-content">
             <div class="row ms-5">
               <div class="col-md-10">
-                <span class="font-weight-bold font-size-18"
-                  >{{ item.documentName }}.pdf</span
-                >
+                <span class="font-weight-bold font-size-18">
+                  {{ item.documentName }}.pdf
+                </span>
                 <br />
                 <span>
                   <span class="font-weight-bold">Loại TL:</span>
@@ -90,9 +90,9 @@
       }}</span>
     </div>
     <div class="mb-5">
-      <h5 class="mb-3">Tài liệu công văn</h5>
+      <h5 class="mb-2">Tài liệu công văn</h5>
       <button
-        class="mb-2"
+        class="mb-3"
         type="button"
         pButton
         (click)="togglePopupInvalidDoc()"
@@ -105,7 +105,7 @@
           class="mb-3"
           (click)="openNewTab(item.documentLink)"
         >
-          <div class="file-item p-2 d-flex">
+          <div class="file-item px-3 py-1 d-flex">
             <div
               class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
             >
@@ -160,13 +160,13 @@
         <div class="overflow-auto">
           <ng-container *ngFor="let item of issue.inspectors">
             <div *ngIf="issue.inspectors" class="mb-2">
-              <div class="scrollview-item d-flex p-3 h-full">
+              <div class="scrollview-item d-flex px-3 py-2 h-full">
                 <div
                   class="scrollview-item-icon d-flex justify-content-center align-items-center"
                 >
                   <img src="../../../../../assets/img/user_icon.svg" alt="" />
                 </div>
-                <div class="scrollview-item-content ms-5">
+                <div class="scrollview-item-content ms-3">
                   <span class="font-weight-bold font-size-18">{{
                     item.user.fullName
                   }}</span>

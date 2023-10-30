@@ -7,7 +7,7 @@
   ></app-inspection-plan-inspector-popup>
   <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
     <div class="form-content col-md-8">
-      <div class="inspection-plan-name mb-1">
+      <div class="inspection-plan-name mb-3">
         <h6>Tên quyết định kiểm tra</h6>
         <input
           type="text"
@@ -17,7 +17,7 @@
           formControlName="inspectionPlanName"
         />
       </div>
-      <div class="inspection-plan-description mb-1">
+      <div class="inspection-plan-description mb-3">
         <h6>Chi tiết</h6>
         <textarea
           type="text"
@@ -28,7 +28,7 @@
           formControlName="description"
         ></textarea>
       </div>
-      <div class="inspection-plan-school mb-1 col-md-6 pe-3">
+      <div class="inspection-plan-school mb-3 col-md-6 pe-3">
         <h6>Trường kiểm tra</h6>
         <select title="schoolList" class="form-select" formControlName="schoolId">
           <option selected value="0">Chọn trường kiểm tra</option>
@@ -37,7 +37,7 @@
           <option value="3">Trường Mầm Non Ánh Sao</option>
         </select>
       </div>
-      <div class="row">
+      <div class="row mb-3">
         <div class="col-md-3">
           <label for="startDate" class="fw-medium">Ngày bắt đầu</label>
           <input id="startDate" class="form-control" type="date" formControlName="startDate"/>
@@ -82,7 +82,7 @@
                 style="display: none"
                 (change)="handleFileInputChange(fileInput)"
               />
-              <input pInputText readonly class="col-md-8"
+              <input pInputText readonly class="col-md-10"
               placeholder="{{fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'}}"/>
               <button
                 type="button"
@@ -96,9 +96,9 @@
         </div>
       </div>
     </div>
-    <div class="mt-5 row w-100">
-      <div class="col-12 save-button d-flex w-100">
-        <button class="btn text-white">Lưu</button>
+    <div class="mt-5 mb-3 row w-100">
+      <div class="col-12 save-button d-flex w-100 justify-content-center">
+        <button class="btn text-white">Lưu quyết định</button>
       </div>
     </div>
   </form>

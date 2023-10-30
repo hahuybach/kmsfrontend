@@ -1,8 +1,5 @@
-import { TagModule } from 'primeng/tag';
 import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InspectorService } from './services/inspector.service';
-import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -13,9 +10,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { IssueListComponent } from './features/post-login/issue-list/issue-list.component';
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
-import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
-import {AgGridModule} from "ag-grid-angular";
+import { AgGridModule } from 'ag-grid-angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
@@ -35,12 +31,15 @@ import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
-import {AuthGuard} from "./shared/guards/AuthGuard/auth.guard";
+import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
 import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
-import {InspectionPlanModule} from "./features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module";
-import {SharedModule} from "./shared/shared.module";
-import {TokenExpirationInterceptor} from "./shared/interceptor/token_expiration_inceptor/token-expiration.interceptor";
+import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe';
+import { InspectionPlanModule } from './features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module';
+import { SharedModule } from './shared/shared.module';
+import { DatePipe } from '@angular/common';
+import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
+import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,28 +55,26 @@ import {TokenExpirationInterceptor} from "./shared/interceptor/token_expiration_
     LoginBaseComponent,
     UpdateIssueComponent,
     PagenotfoundComponent,
-    SchoolInitiationPlanDetailComponent,
     IssueListPopUpComponent,
     IssueListRightSideComponent,
+    SortByIdPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     MenuModule,
-    ToastModule,
     BrowserAnimationsModule,
     BadgeModule,
     DropdownModule,
     HttpClientModule,
     VirtualScrollerModule,
     FileUploadModule,
-    TagModule,
-    ConfirmDialogModule,
     FontAwesomeModule,
     FormsModule,
     AgGridModule,
     InspectionPlanModule,
-    SharedModule
+    SharedModule,
+    SchoolInitiationPlanModule,
   ],
   providers: [
     MessageService,
@@ -87,16 +84,17 @@ import {TokenExpirationInterceptor} from "./shared/interceptor/token_expiration_
     InspectorService,
     FormDataService,
     AuthGuard,
+    DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
     },
     {
-      provide:HTTP_INTERCEPTORS,
-      useClass:TokenExpirationInterceptor,
-      multi: true
-    }
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenExpirationInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

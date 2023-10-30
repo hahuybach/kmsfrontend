@@ -34,7 +34,7 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       // issue
-      {path: 'issuelist', component: IssueListComponent},
+      { path: 'issuelist', component: IssueListComponent },
       {
         path: 'issuelist/:id',
         component: IssueDetailComponent,
@@ -93,5 +93,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

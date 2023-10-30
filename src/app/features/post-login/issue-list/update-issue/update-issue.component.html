@@ -87,7 +87,7 @@
           </td>
           <td>
             <span class="p-column-title">Chức vụ</span>
-            {{ inspector.roles[0].roleName }}
+            <!-- {{ inspector.roles[0].roleName }} -->
           </td>
           <td>
             <span class="p-column-title">Đơn vị</span>
@@ -112,43 +112,56 @@
   <!-- invalid doc popup -->
   <p-dialog
     header="Tài liệu không có hiệu lực"
-    [modal]="true"  
+    [modal]="true"
     [(visible)]="popupInvalidDocVisible"
     [style]="{ width: '80vw' }"
     [draggable]="false"
     [resizable]="false"
   >
-    <p-virtualScroller
-      [value]="invalidDoc"
-      class="border-1 surface-border border-round"
-      scrollHeight="400px"
-      [itemSize]="100"
-    >
-      <ng-template pTemplate="item" let-item>
-        <div
-          class="file-item p-3 d-flex"
-          (click)="openNewTab(item.documentLink)"
-        >
+    <ng-container *ngFor="let item of issue.documentDtos">
+      <div
+        *ngIf="item.status.statusId == 2"
+        class="mb-3"
+        (click)="openNewTab(item.documentLink)"
+      >
+        <div class="file-item px-3 py-1 d-flex">
           <div
-            class="file-item-icon d-flex justify-content-center align-items-center"
+            class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
           >
-            <i class="bi bi-file-earmark"></i>
+            <img src="../../../../../assets/img/pdf.png" alt="" />
           </div>
-          <div class="file-item-content ps-3">
-            <p class="text-d">
-              {{ item.documentName }}<br />
-              {{ item.sizeFormat }}<br />
-              {{ item.uploadedDate | date : "MM/dd/yyyy" }}
-            </p>
+          <div class="file-item-content">
+            <div class="row ms-5">
+              <div class="col-md-10">
+                <span class="font-weight-bold font-size-18"
+                  >{{ item.documentName }}.pdf</span
+                >
+                <br />
+                <span>
+                  <span class="font-weight-bold">Loại TL:</span>
+                  {{ item.documentType.documentTypeName }}</span
+                >
+                <br />
+                <span
+                  ><span class="font-weight-bold">Mã:</span>
+                  {{ item.documentCode }}</span
+                >
+              </div>
+              <div class="col-md-2">
+                <span>{{ item.sizeFormat }}</span>
+                <br />
+                <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
+              </div>
+            </div>
           </div>
           <div class="mx-auto d-flex justify-content-center align-items-center">
             <p-tag class="status" [severity]="'danger'" [rounded]="true">
-              Không có hiệu lực
+              {{ item.status.statusName }}
             </p-tag>
           </div>
         </div>
-      </ng-template>
-    </p-virtualScroller>
+      </div>
+    </ng-container>
   </p-dialog>
   <!-- file upload popup -->
   <p-dialog
@@ -247,33 +260,54 @@
       >
     </div>
     <div class="mb-2">
-      <h5>Tài liệu công văn</h5>
+      <h5 class="mb-2">Tài liệu công văn</h5>
       <button
-        class="mb-2"
+        class="mb-3"
         type="button"
         pButton
         (click)="togglePopupInvalidDoc()"
       >
         Xem tài liệu không có hiệu lực
       </button>
-      <ng-container *ngFor="let item of issue.documentDtos">
+      <ng-container *ngFor="let item of issue.documentDtos | sortById">
         <div
           *ngIf="item.status.statusId == 1"
-          class="mb-2"
-          (click)="openNewTab(item.documentLink)"
+          class="mb-3"
+          (click)="
+            item.documentLink
+              ? openNewTab(item.documentLink)
+              : displayNewFileUpload(item.file)
+          "
         >
-          <div class="file-item p-3 d-flex">
+          <div class="file-item px-3 py-1 d-flex">
             <div
-              class="file-item-icon d-flex justify-content-center align-items-center"
+              class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
             >
-              <i class="bi bi-file-earmark"></i>
+              <img src="../../../../../assets/img/pdf.png" alt="" />
             </div>
-            <div class="file-item-content ps-3">
-              <p class="text-d">
-                {{ item.documentName }}<br />
-                {{ item.sizeFormat }}<br />
-                {{ item.uploadedDate | date : "MM/dd/yyyy" }}
-              </p>
+            <div class="file-item-content">
+              <div class="row ms-5">
+                <div class="col-md-10">
+                  <span class="font-weight-bold font-size-18">{{
+                    item.documentName
+                  }}</span>
+                  <br />
+                  <span>
+                    <span class="font-weight-bold">Loại TL:</span>
+                    {{ item.documentType.documentTypeName }}</span
+                  >
+                  <br />
+                  <span
+                    ><span class="font-weight-bold">Mã:</span>
+                    {{ item.documentCode }}</span
+                  >
+                </div>
+                <div class="col-md-2">
+                  <span>{{ item.sizeFormat }}</span>
+                  <br />
+                  <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
+                </div>
+              </div>
             </div>
             <div
               class="mx-auto d-flex justify-content-center align-items-center"
@@ -282,7 +316,6 @@
                 {{ item.status.statusName }}
               </p-tag>
             </div>
-
             <div
               class="update-icon d-flex justify-content-center align-items-center"
             >
@@ -292,7 +325,9 @@
                   togglePopupFileUpload(
                     $event,
                     item.documentType.documentTypeId,
-                    item.documentId
+                    item.documentId,
+                    item.documentName,
+                    item.documentType.documentTypeName
                   )
                 "
               ></i>
@@ -315,9 +350,7 @@
       <div class="list-inspector-header p-3 text-center">
         <h5 class="mx-auto">Danh sách thanh tra</h5>
         <div class="total">
-          <span class="text-secondary mx-auto"
-            >Tổng số: {{ issue.inspectors.length }}</span
-          >
+          <span class="mx-auto">Tổng số: {{ issue.inspectors.length }}</span>
           <div *ngIf="isChanged"></div>
         </div>
       </div>
@@ -326,24 +359,24 @@
         <div class="overflow-auto">
           <ng-container *ngFor="let item of issue.inspectors">
             <div *ngIf="issue.inspectors" class="mb-2">
-              <div class="scrollview-item d-flex p-3 h-full">
+              <div class="scrollview-item d-flex px-3 py-2 h-full">
                 <div
                   class="scrollview-item-icon d-flex justify-content-center align-items-center"
                 >
-                  <i class="bi bi-person-circle"></i>
+                  <img src="../../../../../assets/img/user_icon.svg" alt="" />
                 </div>
-                <div class="scrollview-item-content ms-5">
-                  <span class="font-weight-bold">{{ item.user.fullName }}</span>
+                <div class="scrollview-item-content ms-3">
+                  <span class="font-weight-bold font-size-18">{{
+                    item.user.fullName
+                  }}</span>
                   <br />
                   <span>
-                    {{ item.roles[0].roleName }}
-                    <br />
+                    {{ item.roles[0].roleName }}-
                     {{ item.school.schoolName }}
                   </span>
                 </div>
-
                 <div
-                  class="trash-icon ml-5 d-flex justify-content-center align-items-center"
+                  class="trash-icon d-flex justify-content-center align-items-center"
                 >
                   <i
                     *ngIf="isChanged"
