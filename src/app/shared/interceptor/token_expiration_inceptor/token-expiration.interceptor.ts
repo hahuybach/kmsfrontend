@@ -19,6 +19,7 @@ export class TokenExpirationInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error) => {
         if (error.status === 401) {
+          console.log("401");
           const customError = new Error('Token has expired');
           // Include the error message in the route parameters
           this.router.navigate(['/login'], {
