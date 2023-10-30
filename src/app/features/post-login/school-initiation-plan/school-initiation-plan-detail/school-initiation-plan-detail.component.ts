@@ -93,9 +93,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   deleteFile() {
     this.fileStatus = false;
     this.buttonApproveStatus = false;
-    this.inputFileForm.get('documentName')?.setValue('');
-    this.inputFileForm.get('documentCode')?.setValue('');
-    this.inputFileForm.get('file')?.setValue('');
+    this.inputFileForm.reset();
     this.fileInputPlaceholders = '';
   }
   approve() {
@@ -128,28 +126,20 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
           formData.append('files', pdfFile);
         }
         //
-        const headers = new HttpHeaders();
-        headers.append('Content-Type', 'undefined');
-        this.http
-          .put(
-            'http://localhost:8080/api/v1/initiation_plan/evaluate_school_document',
-            formData,
-            { headers }
-          )
-          .subscribe(
-            (response) => {
-              console.log('Form data sent to the backend:', response);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Phê duyệt',
-                detail: 'Phê duyệt thành công',
-              });
-              window.location.reload();
-            },
-            (error) => {
-              console.error('Error while sending form data:', error);
-            }
-          );
+        this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
+          next: (response) => {
+            console.log('Form data sent to the backend:', response);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Phê duyệt',
+              detail: 'Đã phê duyệt thành công',
+            });
+            window.location.reload();
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        });
       },
       reject: (type: any) => {},
     });
@@ -210,29 +200,43 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
           const pdfFile = fileControl.value;
           formData.append('files', pdfFile);
         }
+        this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
+          next: (response) => {
+            console.log('Form data sent to the backend:', response);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Đã gửi đánh giá',
+              detail: 'Đã gửi đánh giá thành công',
+            });
+            window.location.reload();
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        });
         //
-        const headers = new HttpHeaders();
-        headers.append('Content-Type', 'undefined');
-        this.http
-          .put(
-            'http://localhost:8080/api/v1/initiation_plan/evaluate_school_document',
-            formData,
-            { headers }
-          )
-          .subscribe(
-            (response) => {
-              console.log('Form data sent to the backend:', response);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Đã gửi đánh giá',
-                detail: 'Đã gửi đánh giá thành công',
-              });
-              window.location.reload();
-            },
-            (error) => {
-              console.error('Error while sending form data:', error);
-            }
-          );
+        // const headers = new HttpHeaders();
+        // headers.append('Content-Type', 'undefined');
+        // this.http
+        //   .put(
+        //     'http://localhost:8080/api/v1/initiation_plan/evaluate_school_document',
+        //     formData,
+        //     { headers }
+        //   )
+        //   .subscribe(
+        //     (response) => {
+        //       console.log('Form data sent to the backend:', response);
+        //       this.messageService.add({
+        //         severity: 'success',
+        //         summary: 'Đã gửi đánh giá',
+        //         detail: 'Đã gửi đánh giá thành công',
+        //       });
+        //       window.location.reload();
+        //     },
+        //     (error) => {
+        //       console.error('Error while sending form data:', error);
+        //     }
+        //   );
       },
       reject: (type: any) => {},
     });

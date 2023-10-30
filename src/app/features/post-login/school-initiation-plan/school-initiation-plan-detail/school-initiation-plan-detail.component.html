@@ -44,9 +44,9 @@
           <th></th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-plan>
+      <ng-template pTemplate="body" let-plan let-i="rowIndex">
         <tr>
-          <td>{{ plan.id }}</td>
+          <td>{{ i + 1 }}</td>
           <td>{{ plan.schoolDocument.documentName }}</td>
           <td>{{ plan.schoolDocument.documentCode }}</td>
           <td>{{ plan.schoolDocument.uploadedDate | date : "dd/MM/yyyy" }}</td>
@@ -203,7 +203,7 @@
       </div>
       <div class="col-md-4">
         <div class="mb-3">
-          <span class="mb-2 text-black-50">Người giao việc</span>
+          <span class="mb-2 text-black-50">Người lên kế hoạch</span>
           <p class="font-weight-bold">{{ schoolinitiationplan.createdBy }}</p>
         </div>
         <div class="mb-3">
@@ -250,7 +250,11 @@
         class="plan-file-item d-flex"
         (click)="openNewTab(lastDocs.schoolDocument.documentLink)"
       >
-        <div class="plan-file-item-img"></div>
+        <div
+          class="plan-file-item-img d-flex justify-content-center align-items-center"
+        >
+          <img src="../../../../../assets/img/pdf.png" alt="" />
+        </div>
         <div class="plan-file-item-content">
           <div class="col-md-10 p-2">
             <span class="font-weight-bold">
@@ -317,7 +321,11 @@
           (click)="displayNewFileUpload(newFile)"
         >
           <div class="plan-file-item d-flex">
-            <div class="plan-file-item-img"></div>
+            <div
+              class="plan-file-item-img d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../assets/img/pdf.png" alt="" />
+            </div>
             <div class="plan-file-item-content row">
               <div class="col-md-10 p-2">
                 <span class="font-weight-bold">
@@ -364,7 +372,11 @@
           (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
         >
           <div class="plan-file-item d-flex">
-            <div class="plan-file-item-img"></div>
+            <div
+              class="plan-file-item-img d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../assets/img/pdf.png" alt="" />
+            </div>
             <div class="plan-file-item-content row">
               <div class="col-md-10 p-2">
                 <span class="font-weight-bold">

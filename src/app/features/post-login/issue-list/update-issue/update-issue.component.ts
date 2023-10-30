@@ -200,6 +200,28 @@ export class UpdateIssueComponent implements OnInit {
       this.fileInputPlaceholders = file.name;
     }
   }
+  getSize(size: number): string {
+    const n: number = 1024;
+    let s: string = '';
+    const kb: number = size / n;
+    const mb: number = kb / n;
+    const gb: number = mb / n;
+    const tb: number = gb / n;
+
+    if (size < n) {
+      s = size + ' Bytes';
+    } else if (size >= n && size < n * n) {
+      s = kb.toFixed(1) + ' KB';
+    } else if (size >= n * n && size < n * n * n) {
+      s = mb.toFixed(1) + ' MB';
+    } else if (size >= n * n * n && size < n * n * n * n) {
+      s = gb.toFixed(2) + ' GB';
+    } else if (size >= n * n * n * n) {
+      s = tb.toFixed(2) + ' TB';
+    }
+
+    return s;
+  }
   upload() {
     const dataObject = {
       documentName: this.issueForm.get('documentName')?.value,
@@ -233,12 +255,13 @@ export class UpdateIssueComponent implements OnInit {
         documentTypeId: this.documentTypeId,
       },
       documentCode: this.issueForm.get('documentCode')?.value,
-      uploadedDate: new Date(this.file.lastModified),
-      sizeFormat: this.file.size,
+      uploadedDate: new Date(),
+      sizeFormat: this.getSize(this.file.size),
       status: {
         statusId: 1,
         statusName: 'Hiệu lực',
       },
+      fileExtension: 'pdf',
       file: this.file,
     });
     console.log(this.addedDocumentIssues);
@@ -379,28 +402,13 @@ export class UpdateIssueComponent implements OnInit {
       // Append each file to the FormData object
       formData.append('files', file, file['name']);
     });
-    console.log(formData.getAll('issue'));
-    console.log(formData.getAll('files'));
-
-    const headers = new HttpHeaders();
-    headers.append('Content-Type', 'undefined');
-    this.http
-      .put('http://localhost:8080/api/v1/issue/', formData, { headers })
-      .subscribe(
-        (response) => {
-          console.log('Form data sent to the backend:', response);
-        },
-        (error) => {
-          console.error('Error while sending form data:', error);
-        }
-      );
-    // this.issueService.updateIssue(formData).subscribe(
-    //   (response) => {
-    //     location.reload();
-    //   },
-    //   (error) => {
-    //     console.error('Error while sending form data:', error);
-    //   }
-    // );
+    this.issueService.updateIssue(formData).subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
 }

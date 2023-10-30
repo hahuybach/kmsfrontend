@@ -18,7 +18,7 @@
 
     .plan-file-item-img {
         width: 30%;
-        background-color: #cdf8e3;
+        // background-color: #cdf8e3;
         border-radius: 15px 0 0 15px;
     }
     .plan-file-item-content {
@@ -63,6 +63,7 @@ p {
         width: 200px;
         background-color: $primary;
         border-radius: 8px;
+        margin: 0;
         &:hover,
         &:active {
             background-color: $primary-hover;
@@ -78,6 +79,7 @@ p {
         border: none;
         width: 200px;
         transition: all 0.5s ease;
+        margin: 0;
         &.p-tag-danger {
             &:hover {
                 background-color: #ffd4cf;
