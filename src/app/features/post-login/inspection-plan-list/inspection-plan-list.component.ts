@@ -10,7 +10,7 @@ export class InspectionPlanListComponent {
   inspectionplanlist!: any[];
   constructor(private router: Router) {}
   navigateToCreateInspectionPlan() {
-    this.router.navigate(['/inspectionplan/create']);
+    this.router.navigate(['/inspection_plan/create']);
   }
   navigateToDetail(inspectionplanId: number) {}
   navigateToUpdate(inspectionplanId: number) {}

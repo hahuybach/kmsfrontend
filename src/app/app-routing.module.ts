@@ -14,6 +14,7 @@ import { UpdateIssueComponent } from './features/post-login/issue-list/update-is
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
 import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
+import { InspectionPlanDetailComponent } from './features/post-login/inspection-plan-list/inspection-plan-detail/inspection-plan-detail.component';
 import { InitiationPlanDetailComponent } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
 
 const routes: Routes = [
@@ -47,10 +48,14 @@ const routes: Routes = [
         component: DashboardComponent,
       },
       // initiationplan
-      { path: 'inspectionplan', component: InspectionPlanListComponent },
+      { path: 'inspection_plan', component: InspectionPlanListComponent },
       {
-        path: 'inspectionplan/create',
+        path: 'inspection_plan/create',
         component: CreateInspectionPlanComponent,
+      },
+      {
+        path: 'inspection_plan/:id',
+        component: InspectionPlanDetailComponent,
       },
       // school initiation plan
       {

@@ -1,0 +1,26 @@
+@import "../../../../../assets/scss/base";
+
+.inspection-plan-detail {
+    font-size: 16px;
+}
+
+.p-inputtextarea {
+  border-radius: 8px;
+}
+
+
+.save-button {
+  button {
+    font-size: 16px;
+    background-color: $primary;
+    border-radius: 8px;
+    padding: 10px 40px;
+    border: none;
+
+    &:hover,
+    &:active {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}
