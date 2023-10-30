@@ -133,9 +133,9 @@
           <div class="file-item-content">
             <div class="row ms-5">
               <div class="col-md-10">
-                <span class="font-weight-bold font-size-18"
-                  >{{ item.documentName }}.pdf</span
-                >
+                <span class="font-weight-bold font-size-18">{{
+                  item.documentName
+                }}</span>
                 <br />
                 <span>
                   <span class="font-weight-bold">Loại TL:</span>
@@ -148,7 +148,7 @@
                 >
               </div>
               <div class="col-md-2">
-                <span>{{ item.sizeFormat }}</span>
+                <span class="text-black-50">{{ item.sizeFormat }}</span>
                 <br />
                 <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
               </div>
@@ -303,7 +303,7 @@
                   >
                 </div>
                 <div class="col-md-2">
-                  <span>{{ item.sizeFormat }}</span>
+                  <span class="text-black-50">{{ item.sizeFormat }}</span>
                   <br />
                   <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
                 </div>

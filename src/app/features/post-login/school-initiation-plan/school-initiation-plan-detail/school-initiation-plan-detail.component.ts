@@ -18,12 +18,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./school-initiation-plan-detail.component.scss'],
 })
 export class SchoolInitiationPlanDetailComponent implements OnInit {
-  uploadedFiles: any[] = [];
+  // uploadedFiles: any[] = [];
   schoolinitiationplan: any;
   docHistoryVisible = false;
   uploadFileVisible = false;
   resetDeadlineVisible = false;
-  file: File;
+  newFile: any;
   fileStatus = false;
   iconStatus = true;
   buttonApproveStatus = false;
@@ -36,64 +36,6 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   lastDocs: any;
   ngOnInit(): void {
     this.minDate = new Date();
-    // th1,2
-    // this.schoolinitiationplan = {
-    //   initiationPlanId: 1,
-    //   initiationPLanName:
-    //     'Kế hoạch thực hiện nhiệm vụ năm học năm 2023 trường Ánh Sao',
-    //   deadline: '2023-10-26T02:36:28',
-    //   createdDate: '2023-10-26T02:36:41.529556',
-    //   createdBy: 'Trần Lê Hải',
-    //   status: {
-    //     statusId: 2,
-    //     statusName: 'Chờ phê duyệt',
-    //     statusType: 'Kế hoạch thực hiện năm học',
-    //   },
-    //   school: {
-    //     schoolId: 1,
-    //     schoolName: 'Ánh Sao',
-    //     exactAddress: '123 Cầu Giấy',
-    //   },
-    //   issueId: 1,
-    //   documents: [
-    //     {
-    //       id: 1,
-    //       schoolDocument: {
-    //         documentId: 4,
-    //         documentName: 'School Doc1',
-    //         account: {
-    //           accountId: 7,
-    //           email: 'hieutruong@gmail.com',
-    //           user: {
-    //             userId: 7,
-    //             fullName: 'Hiệu Thị Trưởng',
-    //             dob: '1999-03-01',
-    //             gender: 'MALE',
-    //             phoneNumber: '0394335205',
-    //           },
-    //           school: {
-    //             schoolId: 1,
-    //             schoolName: 'Ánh Sao',
-    //             exactAddress: '123 Cầu Giấy',
-    //           },
-    //         },
-    //         documentCode: 'DOC001',
-    //         documentLink: '1q_NtIqhLI1tP4g19h9dC-4R8LSIWMRG7',
-    //         uploadedDate: '2023-10-26T02:36:53.89875',
-    //         size: 617677,
-    //         status: {
-    //           statusId: 2,
-    //           statusName: 'Mất hiệu lực',
-    //           statusType: 'Chung',
-    //         },
-    //         sizeFormat: null,
-    //         documentTypeId: 4,
-    //       },
-    //       departmentDocument: 'a',
-    //     },
-    //   ],
-    // };
-    // th3,4
     this.route.params
       .pipe(
         switchMap((params) => {
@@ -113,20 +55,10 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
           ];
         console.log(this.lastDocs);
       });
-
-    // console.log(
-    //   this.schoolinitiationplan.documents[
-    //     this.schoolinitiationplan.documents.length - 1
-    //   ].departmentDocument
-    // );
   }
 
   selectedFilename: any;
   fileInputPlaceholders: string;
-  // dropdownOptions: any[] = [
-  //   { label: 'Phê duyệt', value: '3', severity: 'success' },
-  //   { label: 'Không phê duyệt', value: '4', severity: 'danger' },
-  // ];
   selectedOption: string;
   constructor(
     private fb: FormBuilder,
@@ -212,6 +144,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
                 summary: 'Phê duyệt',
                 detail: 'Phê duyệt thành công',
               });
+              window.location.reload();
             },
             (error) => {
               console.error('Error while sending form data:', error);
@@ -232,6 +165,10 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     this.fileStatus = true;
     this.buttonApproveStatus = true;
     this.schoolinitiationplan.documents.departmentDocument = '';
+    const fileControl = this.inputFileForm.get('file');
+    if (fileControl?.value) {
+      this.newFile = fileControl.value;
+    }
   }
   handleFileInputChange(fileInput: any): void {
     const files = fileInput.files;
@@ -252,18 +189,16 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       header: 'Xác nhận không phê duyệt',
       icon: 'bi bi-exclamation-triangle-fill',
       accept: () => {
-        this.inputFileForm.get('isPasssed')?.setValue(false);
         const formData = new FormData();
         const initiationplan = {
-          initiationplanId: this.schoolinitiationplan.initiationPlanId,
-          isPassed: true,
+          initiationPlanId: this.schoolinitiationplan.initiationPlanId,
+          isPassed: false,
           deadline: this.inputFileForm.get('deadline')?.value,
-          deparmentDocument: {
+          departmentDocument: {
             documentName: this.inputFileForm.get('documentName')?.value,
             documentCode: this.inputFileForm.get('documentCode')?.value,
           },
         };
-        console.log(initiationplan);
         formData.append(
           'initiation_plan',
           new Blob([JSON.stringify(initiationplan)], {
@@ -292,6 +227,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
                 summary: 'Đã gửi đánh giá',
                 detail: 'Đã gửi đánh giá thành công',
               });
+              window.location.reload();
             },
             (error) => {
               console.error('Error while sending form data:', error);
@@ -301,12 +237,12 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       reject: (type: any) => {},
     });
   }
-  // displayNewFileUpload(file: File) {
-  //   const blobUrl = window.URL.createObjectURL(file as Blob);
-  //   this.pdfUrl = blobUrl;
-  //   this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-  //   this.pdfLoaded = true;
-  // }
+  displayNewFileUpload(file: File) {
+    const blobUrl = window.URL.createObjectURL(file as Blob);
+    this.pdfUrl = blobUrl;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+    this.pdfLoaded = true;
+  }
   openNewTab(documentLink: string) {
     console.log(documentLink);
     this.fileService
@@ -320,6 +256,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       });
   }
   redirectToIssue() {
+    // const url = '/issuelist/' + this.initiationplan.issueId;
     this.router.navigateByUrl('/issuelist/1');
   }
 }

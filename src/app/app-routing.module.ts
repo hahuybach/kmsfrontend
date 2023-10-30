@@ -14,6 +14,7 @@ import { UpdateIssueComponent } from './features/post-login/issue-list/update-is
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
 import { SchoolInitiationPlanDetailComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-detail/school-initiation-plan-detail.component';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
+import { InitiationPlanDetailComponent } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,10 @@ const routes: Routes = [
       {
         path: 'schoolinitiationplan/:id',
         component: SchoolInitiationPlanDetailComponent,
+      },
+      {
+        path: 'initiationplan/:id',
+        component: InitiationPlanDetailComponent,
       },
     ],
   },
