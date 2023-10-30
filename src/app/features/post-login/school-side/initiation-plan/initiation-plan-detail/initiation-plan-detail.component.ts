@@ -50,7 +50,24 @@ export class InitiationPlanDetailComponent implements OnInit {
           this.schoolinitiationplan.documents[
             this.schoolinitiationplan.documents.length - 1
           ];
-        if (this.lastDocs.schoolDocument != null) {
+        // if (
+        //   this.schoolinitiationplan.documents.length >= 2 &&
+        //   this.schoolinitiationplan.status.statusId == 7
+        // ) {
+        //   console.log(
+        //     this.schoolinitiationplan.documents[
+        //       this.schoolinitiationplan.documents.length - 2
+        //     ].departmentDocument
+        //   );
+        //   // this.lastDocs.departmentDocument =
+        //   //   this.schoolinitiationplan.documents[
+        //   //     this.schoolinitiationplan.documents.length - 2
+        //   //   ].departmentDocument.slice();
+        // }
+        if (
+          this.lastDocs.schoolDocument != null &&
+          this.schoolinitiationplan.status.statusId != 9
+        ) {
           this.fileStatus = true;
         }
       });
@@ -148,6 +165,7 @@ export class InitiationPlanDetailComponent implements OnInit {
             documentCode: this.inputFileForm.get('documentCode')?.value,
           },
         };
+        // đoạn này là tạo object gửi về cho b nhé
         console.log(initiationplan);
         formData.append(
           'initiation_plan',
@@ -160,7 +178,7 @@ export class InitiationPlanDetailComponent implements OnInit {
           const pdfFile = fileControl.value;
           formData.append('files', pdfFile);
         }
-        //
+        //còn đây là nhét thêm file tiếp đi cái đoạn lấy cái initi t gửi về cơ
         const headers = new HttpHeaders();
         headers.append('Content-Type', 'undefined');
         this.http

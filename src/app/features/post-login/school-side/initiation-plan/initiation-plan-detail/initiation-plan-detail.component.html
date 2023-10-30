@@ -228,10 +228,7 @@
       </div>
 
       <div
-        *ngIf="
-          schoolinitiationplan.status.statusId == 8 ||
-          schoolinitiationplan.status.statusId == 9
-        "
+        *ngIf="schoolinitiationplan.status.statusId != 6"
         class="plan-file-item d-flex"
       >
         <div class="plan-file-item-img"></div>
