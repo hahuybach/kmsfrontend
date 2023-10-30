@@ -43,6 +43,9 @@ import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
 import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
+import { GuidanceDocumentListComponent } from './features/post-login/guidance-document-list/guidance-document-list.component';
+import { GuidanceDocumentDetailComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component';
+import { GuidanceDocumentFilesComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-files/guidance-document-files.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,6 +64,9 @@ import { TokenExpirationInterceptor } from './shared/interceptor/token_expiratio
     IssueListPopUpComponent,
     IssueListRightSideComponent,
     SortByIdPipe,
+    GuidanceDocumentListComponent,
+    GuidanceDocumentDetailComponent,
+    GuidanceDocumentFilesComponent,
   ],
   imports: [
     BrowserModule,

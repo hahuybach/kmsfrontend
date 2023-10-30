@@ -1,0 +1,29 @@
+<h2>Văn bản chỉ đạo</h2>
+
+<div class="card">
+  <p-table [value]="guidanceDocuments" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Mã</th>
+        <th>Về việc</th>
+        <th>Ngày tạo</th>
+        <th>Người tạo</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-doc >
+      <tr>
+        <td>{{ doc.guidanceDocumentId}}</td>
+        <td>{{ doc.guidanceDocumentName }}</td>
+        <td>{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
+        <td>{{ doc.accountDto.user.fullName}}</td>
+        <td>
+          <button pButton (click)="onDetail(doc.guidanceDocumentId)">
+            Chi tiết
+          </button>
+
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
