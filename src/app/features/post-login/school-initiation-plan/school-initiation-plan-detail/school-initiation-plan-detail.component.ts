@@ -263,4 +263,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     // const url = '/issuelist/' + this.initiationplan.issueId;
     this.router.navigateByUrl('/issuelist/1');
   }
+  hideUploadPopup() {
+    this.inputFileForm.reset(this.inputFileForm.value);
+  }
 }

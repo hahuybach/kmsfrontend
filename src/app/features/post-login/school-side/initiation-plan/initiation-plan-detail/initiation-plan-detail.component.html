@@ -9,12 +9,12 @@
 <!-- file preview -->
 <p-dialog
   [(visible)]="pdfLoaded"
-  [style]="{ width: '80vw' }"
+  [style]="{ width: '90vw', height: '1080px' }"
   [draggable]="false"
   [resizable]="false"
 >
   <div *ngIf="pdfLoaded">
-    <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
+    <iframe [src]="safePdfUrl" width="100%" height="600px"></iframe>
   </div>
 </p-dialog>
 <!--doc history -->
@@ -113,8 +113,9 @@
     [style]="{ width: '50vw', height: '600px' }"
     [draggable]="false"
     [resizable]="false"
+    (onHide)="hideUploadPopup()"
   >
-    <label for="">Tên tài liệu</label>
+    <label class="mb-1" for="">Tên tài liệu</label>
     <br />
     <input
       pInputText
@@ -122,8 +123,13 @@
       type="text"
       placeholder="Tên tài liệu"
     />
+    <span
+      *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
+      class="p-error"
+      >Vui lòng điền mã tài liệu</span
+    >
     <br />
-    <label for="">Mã tài liệu</label>
+    <label class="mb-1 mt-1" for="">Mã tài liệu</label>
     <br />
     <input
       pInputText
@@ -131,8 +137,13 @@
       type="text"
       placeholder="Mã tài liệu"
     />
+    <span
+      *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
+      class="p-error"
+      >Vui lòng điền mã tài liệu</span
+    >
     <br />
-    <label for="">Tài liệu</label>
+    <label class="mb-1 mt-1" for="">Tài liệu</label>
     <div class="mb-3 input-file-popup">
       <input
         type="file"
@@ -155,8 +166,18 @@
         (click)="fileInput.click()"
         class="col-md-3"
       ></button>
+      <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
+        >Vui lòng chọn tài liệu</span
+      > -->
     </div>
-    <button type="button" pButton (click)="upload()">Tải tài liệu</button>
+    <button
+      type="button"
+      pButton
+      (click)="upload()"
+      [disabled]="inputFileForm.get('file')?.value == '' || inputFileForm.controls.documentName.errors?.['whitespace'] || inputFileForm.controls.documentCode.errors?.['whitespace'] "
+    >
+      Tải tài liệu
+    </button>
   </p-dialog>
 </form>
 
@@ -230,6 +251,7 @@
       <div
         *ngIf="schoolinitiationplan.status.statusId != 6"
         class="plan-file-item d-flex"
+        (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
       >
         <div
           class="plan-file-item-img d-flex justify-content-center align-items-center"
@@ -238,12 +260,14 @@
         </div>
         <div class="plan-file-item-content">
           <div class="col-md-10 p-2">
-            <span class="font-weight-bold">
+            <span class="font-weight-bold font-size-20">
               {{ lastDocs.departmentDocument.documentName }}
             </span>
             <br />
             <span class="font-weight-bold">Mã: </span>
-            <span>{{ lastDocs.departmentDocument.documentCode }}</span>
+            <span class="text-black-50">{{
+              lastDocs.departmentDocument.documentCode
+            }}</span>
             <br />
             <span class="text-black-50">{{
               lastDocs.departmentDocument.sizeFormat
@@ -283,7 +307,11 @@
 
         <div *ngIf="fileStatus" class="px-4 my-4">
           <div class="plan-file-item d-flex">
-            <div class="plan-file-item-img"></div>
+            <div
+              class="plan-file-item-img d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../assets/img/pdf.png" alt="" />
+            </div>
             <div
               class="plan-file-item-content row"
               (click)="displayNewFileUpload(newFile)"
@@ -294,7 +322,10 @@
                 </span>
                 <br />
                 <span class="font-weight-bold">Mã: </span
-                ><span>{{ inputFileForm.get("documentCode")?.value }}</span>
+                ><span class="text-black-50">{{
+                  inputFileForm.get("documentCode")?.value
+                }}</span>
+                <br />
               </div>
               <div
                 class="col-md-2 d-flex justify-content-center align-items-center"

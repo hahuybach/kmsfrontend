@@ -8,6 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { FileService } from 'src/app/services/file.service';
 import { InitiationplanService } from 'src/app/services/initiationplan.service';
+import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 
 @Component({
   selector: 'app-initiation-plan-detail',
@@ -99,12 +100,12 @@ export class InitiationPlanDetailComponent implements OnInit {
     protected http: HttpClient
   ) {}
   inputFileForm = this.fb.group({
-    documentName: ['', Validators.required],
-    documentCode: ['', Validators.required],
+    documentName: ['', NoWhitespaceValidator()],
+    documentCode: ['', NoWhitespaceValidator()],
     documentTypeId: 4,
     deadline: [this.today, Validators.required],
     isPasssed: [false, Validators.required],
-    file: [''],
+    file: ['', Validators.required],
   });
   displayNewFileUpload(file: File) {
     const blobUrl = window.URL.createObjectURL(file as Blob);
@@ -163,6 +164,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.inputFileForm.get('documentCode')?.setValue('');
     this.inputFileForm.get('file')?.setValue('');
     this.fileInputPlaceholders = '';
+    this.buttonApproveStatus = false;
   }
   confirmUpload() {
     this.confirmationService.confirm({
@@ -233,5 +235,8 @@ export class InitiationPlanDetailComponent implements OnInit {
   }
   visibleIcon() {
     this.iconStatus = true;
+  }
+  hideUploadPopup() {
+    this.inputFileForm.reset(this.inputFileForm.value);
   }
 }
