@@ -1,5 +1,5 @@
-@import "../../../../../assets/scss/base";
-@import "../../../../../assets/scss/prime-custom";
+@import "../../../../../../assets/scss/base";
+@import "../../../../../../assets/scss/prime-custom";
 
 .plan {
     border-right: solid 1px $primary;
@@ -10,15 +10,13 @@
     // border-bottom: solid 1px $primary;
 }
 .plan-file-item {
+    cursor: pointer;
     height: 160px;
     border-radius: 15px;
-    box-shadow:
-        rgba(0, 0, 0, 0.16) 0px 3px 6px,
-        rgba(0, 0, 0, 0.23) 0px 3px 6px;
-
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: #f8f8f8;
     .plan-file-item-img {
         width: 30%;
-        background-color: #cdf8e3;
         border-radius: 15px 0 0 15px;
     }
     .plan-file-item-content {
@@ -41,9 +39,7 @@
     }
 }
 .upload {
-    box-shadow:
-        rgba(0, 0, 0, 0.16) 0px 3px 6px,
-        rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     width: 100%;
     border-radius: 15px;
     height: 100%;
@@ -68,6 +64,12 @@ p {
             background-color: $primary-hover;
             border-color: $primary-hover;
         }
+    }
+}
+.btn-upload {
+    button {
+        width: 200px;
+        margin: 0;
     }
 }
 .button-bottom {

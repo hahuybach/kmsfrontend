@@ -99,7 +99,7 @@
       >
         Xem tài liệu không có hiệu lực
       </button>
-      <ng-container *ngFor="let item of issue.documentDtos">
+      <ng-container *ngFor="let item of issue.documentDtos | sortById">
         <div
           *ngIf="item.status.statusId == 1"
           class="mb-3"

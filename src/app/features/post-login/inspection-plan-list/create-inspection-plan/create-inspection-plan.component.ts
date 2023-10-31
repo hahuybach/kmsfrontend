@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {HttpHeaders} from "@angular/common/http";
+import {InspectorService} from "../../../../services/inspector.service";
+import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 
 @Component({
   selector: 'app-create-inspection-plan',
@@ -8,19 +11,21 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 })
 export class CreateInspectionPlanComponent {
   inspectionPlanForm: FormGroup;
-  tempInspectorList:any[] = [];
+  tempInspectorList: any[] = [];
+  tempInspectorIds: number[] = [];
   defaultEndDate: Date = new Date();
   defaultStartDate: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
+    private readonly inspectionPlanService: inspectionPlanService
   ) {
   }
 
   ngOnInit() {
     this.inspectionPlanForm = this.fb.group({
       inspectionPlanName: [null, Validators.compose([Validators.required])],
-      inspectionPlanDescription: [null, Validators.compose([Validators.required])],
+      description: [null, Validators.compose([Validators.required])],
       chiefId: [0, Validators.compose([Validators.required])],
       inspectorIds: [[], Validators.compose([Validators.required])],
       startDate: [null, Validators.compose([Validators.required])],
@@ -46,7 +51,8 @@ export class CreateInspectionPlanComponent {
 
   getInspectorList(data: any) {
     this.tempInspectorList = data;
-    console.log(this.tempInspectorList)
+    this.tempInspectorIds = this.tempInspectorList.map(inspector => inspector.accountId);
+    this.inspectionPlanForm.get('inspectorIds')?.setValue(this.tempInspectorIds);
   }
 
   fileInputPlaceholders: string;
@@ -55,12 +61,42 @@ export class CreateInspectionPlanComponent {
     const files = fileInput.files;
     if (files.length > 0) {
       const file = files[0];
-      console.log(file.name);
       this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.setValue(file);
-
       this.fileInputPlaceholders = file.name;
     } else {
       this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.setValue(null);
     }
+  }
+
+  onSubmit() {
+    const formData = new FormData();
+    const inspectionPlan = {
+      inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
+      description: this.inspectionPlanForm.get('description')?.value,
+      chiefId: 1,
+      inspectorIds: this.inspectionPlanForm.get('inspectorIds')?.value,
+      startDate: new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString(),
+      endDate: new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString(),
+      schoolId: this.inspectionPlanForm.get('schoolId')?.value,
+      documentInspectionPlanDto: {
+        documentName: this.inspectionPlanForm.get('documentInspectionPlanDto.documentName')?.value,
+        documentCode: this.inspectionPlanForm.get('documentInspectionPlanDto.documentCode')?.value
+      }
+    }
+
+    formData.append("request", new Blob([JSON.stringify(inspectionPlan)], {type: "application/json"}))
+    const file = this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.value
+    formData.append(`file`, file, file.name);
+
+    console.log(inspectionPlan)
+
+    this.inspectionPlanService.saveInspectionPlan(formData).subscribe({
+      next: (response) => {
+        console.log(response)
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    })
   }
 }

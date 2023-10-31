@@ -1,29 +1,196 @@
 <h2>Văn bản chỉ đạo</h2>
 
-<div class="card">
-  <p-table [value]="guidanceDocuments" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Mã</th>
-        <th>Về việc</th>
-        <th>Ngày tạo</th>
-        <th>Người tạo</th>
-        <th></th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-doc >
-      <tr>
-        <td>{{ doc.guidanceDocumentId}}</td>
-        <td>{{ doc.guidanceDocumentName }}</td>
-        <td>{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
-        <td>{{ doc.accountDto.user.fullName}}</td>
-        <td>
-          <button pButton (click)="onDetail(doc.guidanceDocumentId)">
-            Chi tiết
-          </button>
-
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+<div class="form-group" *ngIf="!advanceSearch">
+  <label for="globalSearch" >Tra cứu nhanh: </label>
+  <input type="text" [(ngModel)]="globalSearch" name="globalSearch" id="globalSearch"
+         class="form-control small-input"
+          (keyup)="loadGuidanceDocuments()"
+  >
 </div>
+
+<button (click)="onAdvanceSearch()" class="btn btn-primary">{{advanceSearchButtonText}}</button>
+<div *ngIf="advanceSearch">
+  <p-dropdown [options]="issueDropDowns"
+              [(ngModel)]="currentIssueSelected"
+              optionLabel="issueName" [filter]="true"
+              filterBy="issueName"
+              [showClear]="true"
+              placeholder="Chọn 1 kế hoạch kiểm tra"
+              (onChange)="loadGuidanceDocuments()"
+  >
+    <ng-template pTemplate="selectedItem">
+      <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
+        <div>{{ currentIssueSelected.issueName }}</div>
+      </div>
+    </ng-template>
+    <ng-template let-issue pTemplate="item">
+      <div class="flex align-items-center gap-2">
+        <div>{{ issue.issueName }}</div>
+      </div>
+    </ng-template>
+  </p-dropdown>
+  <div class="row m-3">
+    <div class="col-md-3">
+      <label>Người tạo</label>
+      <input class="form-control"
+             [(ngModel)]="fullName"
+             name="fullName"
+             id="fullName"
+             (keyup)="loadGuidanceDocuments()"
+      >
+    </div>
+    <div class="col-md-3">
+      <label>Về việc</label>
+      <input class="form-control"
+             [(ngModel)]="guidanceDocumentName"
+             name="guidanceDocumentName"
+             id="guidanceDocumentName"
+             (keyup)="loadGuidanceDocuments()"
+      >
+    </div>
+    <div class="col-md-3">
+      <label>Ngày bắt đầu</label>
+      <input class="form-control"
+             [(ngModel)]="startDateTime"
+             name="startDateTime"
+             id="startDateTime"
+             type="date"
+             (change)="loadGuidanceDocuments()"
+
+      >
+    </div>
+    <div class="col-md-3">
+      <label>Ngày kết thúc</label>
+      <input class="form-control"
+             [(ngModel)]="endDateTime"
+             name="endDateTime"
+             id="endDateTime"
+             type="date"
+             (change)="loadGuidanceDocuments()"
+
+      >
+      <span class="p-error" *ngIf="dateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div class="container">
+  <table class="table">
+    <thead>
+    <tr>
+      <th (click)="onSort('guidanceDocumentId')">
+        <i class="bi bi-arrow-up" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'asc'"></i>
+        <i class="bi bi-arrow-down" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'desc'"></i>
+        Mã
+      </th>
+      <th (click)="onSort('guidanceDocumentName')">Về việc
+        <i class="bi bi-arrow-up" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'asc'"></i>
+        <i class="bi bi-arrow-down" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'desc'"></i>
+
+      </th>
+      <th (click)="onSort('createdDate')">Ngày tạo
+        <i class="bi bi-arrow-up" *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"></i>
+        <i class="bi bi-arrow-down" *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"></i>
+
+      </th>
+      <th (click)="onSort('account.user.fullName')">Người tạo
+        <i class="bi bi-arrow-up" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'asc'"></i>
+        <i class="bi bi-arrow-down" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'desc'"></i>
+      </th>
+
+      <th></th>
+    </tr>
+    <span *ngIf="allGuidanceDocument == 0">Không tìm thấy bản ghi nào phù hợp</span>
+
+    </thead>
+    <tbody *ngIf="guidanceDocuments.length > 0">
+    <tr
+      *ngFor="
+          let doc of guidanceDocuments
+            | paginate
+              : {
+                  itemsPerPage: pageSize,
+                  currentPage: pageNo,
+                  totalItems: allGuidanceDocument
+                };
+          let i = index
+        "
+    >
+      <td>{{ doc.guidanceDocumentId}}</td>
+      <td>{{ doc.guidanceDocumentName }}</td>
+      <td>{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
+      <td>{{ doc.accountDto?.user?.fullName}}</td>
+      <td>
+        <button pButton (click)="onDetail(doc.guidanceDocumentId)">
+          Chi tiết
+        </button>
+
+      </td>
+    </tr>
+    </tbody>
+
+  </table>
+  <div class="d-flex justify-content-center" *ngIf="guidanceDocuments.length > 0">
+    <pagination-controls
+      previousLabel="Trước"
+      nextLabel="Sau"
+      (pageChange)="onTableDataChange($event)"
+    >
+    </pagination-controls>
+  </div>
+</div>
+
+<!--<div class="card">-->
+<!--  <p-table [value]="guidanceDocuments" [tableStyle]="{ 'min-width': '50rem' }">-->
+<!--    <ng-template pTemplate="header">-->
+<!--      <tr>-->
+<!--        <th (click)="onSort('guidanceDocumentId')">-->
+<!--          <i class="bi bi-arrow-up" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'asc'"></i>-->
+<!--          <i class="bi bi-arrow-down" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'desc'"></i>-->
+<!--          Mã</th>-->
+<!--        <th (click)="onSort('guidanceDocumentName')">Về việc-->
+<!--          <i class="bi bi-arrow-up" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'asc'"></i>-->
+<!--          <i class="bi bi-arrow-down" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'desc'"></i>-->
+
+<!--        </th>-->
+<!--        <th (click)="onSort('createdDate')">Ngày tạo-->
+<!--          <i class="bi bi-arrow-up" *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"></i>-->
+<!--          <i class="bi bi-arrow-down" *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"></i>-->
+
+<!--        </th>-->
+<!--        <th (click)="onSort('account.user.fullName')">Người tạo-->
+<!--          <i class="bi bi-arrow-up" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'asc'"></i>-->
+<!--          <i class="bi bi-arrow-down" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'desc'"></i>-->
+<!--        </th>-->
+
+<!--        <th></th>-->
+<!--      </tr>-->
+<!--    </ng-template>-->
+<!--    <ng-template pTemplate="body" let-doc >-->
+
+<!--      <tr>-->
+<!--        <td>{{ doc.guidanceDocumentId}}</td>-->
+<!--        <td>{{ doc.guidanceDocumentName }}</td>-->
+<!--        <td>{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>-->
+<!--        <td>{{ doc.accountDto.user.fullName}}</td>-->
+<!--        <td>-->
+<!--          <button pButton (click)="onDetail(doc.guidanceDocumentId)">-->
+<!--            Chi tiết-->
+<!--          </button>-->
+
+<!--        </td>-->
+<!--      </tr>-->
+<!--    </ng-template>-->
+<!--  </p-table>-->
+<!--</div>-->
+<!--<div class="d-flex justify-content-center">-->
+<!--  <pagination-controls-->
+<!--    previousLabel="Prev"-->
+<!--    nextLabel="Next"-->
+<!--    (pageChange)="onTableDataChange($event)"-->
+<!--  >-->
+<!--  </pagination-controls>-->
+<!--</div>-->

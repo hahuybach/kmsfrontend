@@ -26,17 +26,19 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     const jwt = this.getJwtFromCookie();
+    const iat: any = this.getIatFromCookie();
     const exp: any = this.getExpireFromCookie();
     if (jwt == null || exp == "") {
       return false;
     }
-    const expireAt = JSON.parse(exp) * 1000;
-    this.onTokenExpiration(expireAt);
-    return dayjs().isBefore(dayjs(expireAt));
+    const expireAfter = JSON.parse(exp) - JSON.parse(iat);
+    const expireAt = JSON.parse(exp);
+    this.onTokenExpiration(expireAfter);
+    return dayjs().isBefore(dayjs(expireAt * 1000));
   }
 
-  onTokenExpiration(expireAt:any){
-    setTimeout(() => this.logout(), expireAt);
+  onTokenExpiration(expireAfter: any) {
+    setTimeout(() => this.logout(), expireAfter * 1000);
   }
 
   getDecodedJWT(jwt: string): any {
@@ -50,6 +52,7 @@ export class AuthService {
   setJwtInCookie(jwt: string) {
     const decodedToken = this.getDecodedJWT(jwt);
     document.cookie = `exp=${decodedToken.exp}`;
+    document.cookie = `iat=${decodedToken.iat}`;
     document.cookie = `jwtToken=${jwt}`;
   }
 
@@ -65,7 +68,13 @@ export class AuthService {
     const exp = document.cookie
       .split('; ')
       .find((row) => row.startsWith('exp='));
-
     return exp ? exp.split('=')[1] : null;
+  }
+
+  getIatFromCookie(): string | null {
+    const iat = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('iat='));
+    return iat ? iat.split('=')[1] : null;
   }
 }

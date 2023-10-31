@@ -1,4 +1,3 @@
-// import { TagModule } from 'primeng/tag';
 import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
 import { InspectorService } from './services/inspector.service';
 import { NgModule } from '@angular/core';
@@ -36,8 +35,6 @@ import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
 import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
 import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe';
-import { InspectionPlanInspectorPopupComponent } from './features/post-login/inspection-plan-list/component/inspection-plan-inspector-popup/inspection-plan-inspector-popup.component';
-import { InspectionPlanInspectorListComponent } from './features/post-login/inspection-plan-list/component/inspection-plan-inspector-list/inspection-plan-inspector-list.component';
 import { InspectionPlanModule } from './features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
@@ -46,6 +43,8 @@ import { TokenExpirationInterceptor } from './shared/interceptor/token_expiratio
 import { GuidanceDocumentListComponent } from './features/post-login/guidance-document-list/guidance-document-list.component';
 import { GuidanceDocumentDetailComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component';
 import { GuidanceDocumentFilesComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-files/guidance-document-files.component';
+import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
+import {NgxPaginationModule} from "ngx-pagination";
 @NgModule({
   declarations: [
     AppComponent,
@@ -84,6 +83,9 @@ import { GuidanceDocumentFilesComponent } from './features/post-login/guidance-d
     InspectionPlanModule,
     SharedModule,
     SchoolInitiationPlanModule,
+    InitiationPlanModule,
+    NgxPaginationModule,
+    
   ],
   providers: [
     MessageService,
