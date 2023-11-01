@@ -1,66 +1,107 @@
-<div class="row inspection-plan-detail" *ngIf="inspectionPlan">
-  <h4 class="mb-3">Tạo mới quyết định kiểm tra</h4>
+<div class="row inspection-plan-detail container-fluid">
+  <p-dialog
+    header="Xem tài liệu"
+    [(visible)]="pdfPreviewVisibility"
+    [style]="{ width: '90vw', height: '100vh' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+      <div class="spinner-border text-center" role="status"></div>
+      <p>Đang tải...</p>
+    </div>
+    <ng-template #pdfIsLoaded>
+      <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
+    </ng-template>
+  </p-dialog>
+  <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
   <div class="row">
-    <div class="form-content col-md-8">
-      <div class="row">
+    <div class="form-content col-md-8" *ngIf="inspectionPlanDetail">
+      <div class="row mb-2">
         <div class="col-md-9">
           <div class="inspection-plan-name mb-1">
             <span>Tên quyết định kiểm tra</span>
-            <p>{{inspectionPlan.inspectionPlanName}}</p>
+            <p class="fw-bolder">{{inspectionPlanDetail.inspectionPlan.inspectionPlanName}}</p>
           </div>
         </div>
         <div class="col-md-3">
           <span>Ngày bắt đầu</span>
-          <p>{{inspectionPlan.startDate | date:"dd/MM/yyyy"}}</p>
+          <p class="fw-bolder">{{inspectionPlanDetail.inspectionPlan.startDate | date:"dd/MM/yyyy"}}</p>
         </div>
       </div>
-      <div class="row">
+      <div class="row mb-2">
         <div class="col-md-9">
           <div class="inspection-plan-name mb-1">
             <span>Tên trường</span>
-            <p>{{inspectionPlan.school.schoolName}}</p>
+            <p class="fw-bolder">{{inspectionPlanDetail.inspectionPlan.school.schoolName}}</p>
           </div>
         </div>
         <div class="col-md-3">
           <span>Ngày kết thúc</span>
-          <p>{{inspectionPlan.endDate | date:"dd/MM/yyyy"}}</p>
+          <p class="fw-bolder">{{inspectionPlanDetail.inspectionPlan.endDate | date:"dd/MM/yyyy"}}</p>
         </div>
       </div>
-      <div class="row">
+      <div class="row mb-2">
         <div class="col-md-9">
           <div class="inspection-plan-name mb-1">
             <span>Chi tiết</span>
-            <textarea pInputTextarea class="w-100" readonly>{{inspectionPlan.description}}</textarea>
+            <textarea pInputTextarea class="w-100 fw-bolder"
+                      readonly>{{inspectionPlanDetail.inspectionPlan.description}}</textarea>
           </div>
         </div>
         <div class="col-md-3">
           <span>Trạng thái</span>
-<!--          <p-tag-->
-<!--            *ngIf="-->
-<!--              inspectionPlan.status.statusId >= 6 &&-->
-<!--              schoolinitiationplan.status.statusId <= 9-->
-<!--            "-->
-<!--            class="status"-->
-<!--            [severity]="getStatusSeverity(schoolinitiationplan.status.statusId)"-->
-<!--            [rounded]="true"-->
-<!--          >-->
-<!--            {{ schoolinitiationplan.status.statusName }}-->
-<!--          </p-tag>-->
+          <p-tag
+            class="status"
+            [severity]="getStatusSeverity(inspectionPlanDetail.inspectionPlan.status.statusName)"
+            [rounded]="true"
+          >
+            {{ inspectionPlanDetail.inspectionPlan.status.statusName }}
+          </p-tag>
+        </div>
+      </div>
+      <h5 class="mb-2">Tài liệu công văn</h5>
+      <div class="file-item row mb-2 py-3"
+           (click)="openNewTab(inspectionPlanDetail.inspectionPlan.documents[0]?.documentLink)">
+        <div class="file-item-icon col-md-2 d-flex justify-content-center align-items-center">
+          <img src="assets/img/pdf_logo.svg" alt=""/>
+        </div>
+        <div class="row col-md-10 d-flex align-items-end mb-3">
+          <div class="col-md-8">
+            <p class="mb-0">
+              <span>Tên tài liệu: </span>
+              <span class="fw-bold">{{ inspectionPlanDetail.inspectionPlan.documents[0]?.documentName}}</span>
+            </p>
+            <p class="mb-0">
+              <span>Loại tài liệu: </span>
+              <span
+                class="fw-bold">{{ inspectionPlanDetail.inspectionPlan.documents[0]?.documentType.documentTypeName}}</span>
+            </p>
+            <p class="mb-0">
+              <span>Mã tài liệu: </span>
+              <span class="fw-bold">{{ inspectionPlanDetail.inspectionPlan.documents[0]?.documentCode}}</span>
+            </p>
+          </div>
+          <div class="col-md-4 text-end">
+            <p class="mb-0">
+              <span>Kích thước: </span>
+              <span class="fw-bold">{{ inspectionPlanDetail.inspectionPlan.documents[0]?.size  | fileSizePipe:'MB' }}</span>
+            </p>
+            <p class="mb-0">
+              <span>Ngày tạo: </span>
+              <span
+                class="fw-bold">{{ inspectionPlanDetail.inspectionPlan.documents[0]?.uploadedDate | date : "MM/dd/yyyy" }}</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md-4 d-flex justify-content-center">
-      <app-inspection-plan-inspector-list class="w-100" [selectedInspectors]="inspectionPlan.inspectorTeams"
+    <div class="col-md-4 d-flex justify-content-center h-100">
+      <app-inspection-plan-inspector-list class="w-100 h-100" [selectedInspectors]="inspectionPlanDetail.inspectors"
       ></app-inspection-plan-inspector-list>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-6">
-
-    </div>
-  </div>
   <div class="mt-5 row w-100">
-    <div class="col-12 save-button d-flex w-100">
+    <div class="col-12 save-button w-100 text-center">
       <button pButton class="btn text-white">Xác nhận</button>
     </div>
   </div>

@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="col-md-4 d-flex justify-content-center">
-      <app-inspection-plan-inspector-list class="w-100" [selectedInspectors]="tempInspectorList" (toggleIssueListPopup)="changeInspectorVisible()"></app-inspection-plan-inspector-list>
+      <app-inspection-plan-inspector-list class="w-100" [listEditable]="true" [selectedInspectors]="tempInspectorList" (toggleIssueListPopup)="changeInspectorVisible()"></app-inspection-plan-inspector-list>
     </div>
     <div class="document mt-3" formGroupName="documentInspectionPlanDto">
       <h6>Tài liệu công văn</h6>

@@ -10,9 +10,12 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
+import { FileSizePipePipe } from './pipes/file-size-pipe.pipe';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    FileSizePipePipe
+  ],
   imports: [
     CommonModule,
     InputTextModule,
@@ -26,17 +29,18 @@ import { ToastModule } from 'primeng/toast';
     DialogModule,
     ToastModule,
   ],
-  exports: [
-    InputTextModule,
-    TableModule,
-    ButtonModule,
-    ReactiveFormsModule,
-    InputTextareaModule,
-    CalendarModule,
-    TagModule,
-    ConfirmDialogModule,
-    DialogModule,
-    ToastModule,
-  ],
+    exports: [
+        InputTextModule,
+        TableModule,
+        ButtonModule,
+        ReactiveFormsModule,
+        InputTextareaModule,
+        CalendarModule,
+        TagModule,
+        ConfirmDialogModule,
+        DialogModule,
+        ToastModule,
+        FileSizePipePipe,
+    ],
 })
 export class SharedModule {}
