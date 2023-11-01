@@ -103,7 +103,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     documentName: ['', NoWhitespaceValidator()],
     documentCode: ['', NoWhitespaceValidator()],
     documentTypeId: 4,
-    deadline: [this.today, Validators.required],
+    // deadline: [this.today, Validators.required],
     isPasssed: [false, Validators.required],
     file: ['', Validators.required],
   });
@@ -238,5 +238,9 @@ export class InitiationPlanDetailComponent implements OnInit {
   }
   hideUploadPopup() {
     this.inputFileForm.reset(this.inputFileForm.value);
+  }
+  checkCanEdit() {
+    const deadline = new Date(this.schoolinitiationplan.deadline);
+    return Date.now() <= deadline.getTime();
   }
 }

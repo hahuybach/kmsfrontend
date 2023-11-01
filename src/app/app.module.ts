@@ -41,6 +41,7 @@ import { DatePipe } from '@angular/common';
 import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
 import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
+import { AssignmentModule } from './features/post-login/assignment/assignment.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,6 +78,7 @@ import { InitiationPlanModule } from './features/post-login/school-side/initiati
     SharedModule,
     SchoolInitiationPlanModule,
     InitiationPlanModule,
+    AssignmentModule,
   ],
   providers: [
     MessageService,

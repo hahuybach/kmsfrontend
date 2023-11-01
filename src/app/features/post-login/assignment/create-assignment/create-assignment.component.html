@@ -1,0 +1,37 @@
+<!-- <div class="card flex justify-content-center">
+  <p-dialog
+    [(visible)]="visibleNewNode"
+    [style]="{ width: '90vw', height: '1080px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <h6>Thêm node mới</h6>
+    <h6>Tên</h6>
+    <form [formGroup]="newNodeForm">
+      <input type="text" formControlName="nodeName" />
+      <button pButton (click)="addNewNode()">Thêm</button>
+    </form>
+  </p-dialog>
+  <p-tree
+    class="w-full md:w-30rem"
+    [value]="files"
+    selectionMode="single"
+    [(selection)]="selectedFile"
+    [contextMenu]="cm"
+  ></p-tree>
+  <p-contextMenu #cm [model]="items"></p-contextMenu>
+</div> -->
+<div class="row" *ngFor="let item of files">
+  <div class="col-md-4">
+    <button pButton (click)="showArr(item)">
+      {{ item.key }} - {{ item.label }}
+    </button>
+  </div>
+  <div class="col-md-4" *ngIf="item.children && item.showChildren">
+    <app-create-assignment
+      [files]="item.children"
+      [firstTime]="false"
+    ></app-create-assignment>
+  </div>
+</div>
+<br />

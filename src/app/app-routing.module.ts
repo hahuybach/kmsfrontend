@@ -16,6 +16,8 @@ import { SchoolInitiationPlanDetailComponent } from './features/post-login/schoo
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { InspectionPlanDetailComponent } from './features/post-login/inspection-plan-list/inspection-plan-detail/inspection-plan-detail.component';
 import { InitiationPlanDetailComponent } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
+import { CreateAssignmentComponent } from './features/post-login/assignment/create-assignment/create-assignment.component';
+import { SchoolInitiationPlanListComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-list/school-initiation-plan-list.component';
 
 const routes: Routes = [
   {
@@ -63,8 +65,16 @@ const routes: Routes = [
         component: SchoolInitiationPlanDetailComponent,
       },
       {
+        path: 'schoolinitiationplan',
+        component: SchoolInitiationPlanListComponent,
+      },
+      {
         path: 'initiationplan/:id',
         component: InitiationPlanDetailComponent,
+      },
+      {
+        path: 'assignment/create',
+        component: CreateAssignmentComponent,
       },
     ],
   },
