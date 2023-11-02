@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { TreeModule } from 'primeng/tree';
 import { ContextMenuModule } from 'primeng/contextmenu';
+import { TreeTableModule } from 'primeng/treetable';
 @NgModule({
   declarations: [],
   imports: [
@@ -28,6 +29,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
     ToastModule,
     TreeModule,
     ContextMenuModule,
+    TreeTableModule,
   ],
   exports: [
     InputTextModule,
@@ -42,6 +44,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
     ToastModule,
     TreeModule,
     ContextMenuModule,
+    TreeTableModule,
   ],
 })
 export class SharedModule {}

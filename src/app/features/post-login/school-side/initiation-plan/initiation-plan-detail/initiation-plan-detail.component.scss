@@ -2,7 +2,6 @@
 @import "../../../../../../assets/scss/prime-custom";
 
 .plan {
-    border-right: solid 1px $primary;
     height: 100%;
     font-size: 16px;
 }
@@ -30,6 +29,7 @@
         width: 70%;
         // background-color: #ffd4cf;
         border-radius: 0px 15px 15px 0px;
+        font-size: 16px;
         margin: 0;
         .delete-icon {
             i {
@@ -46,7 +46,9 @@
     }
 }
 .upload {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow:
+        rgba(0, 0, 0, 0.25) 0px 14px 28px,
+        rgba(0, 0, 0, 0.22) 0px 10px 10px;
     width: 100%;
     border-radius: 15px;
     height: 100%;

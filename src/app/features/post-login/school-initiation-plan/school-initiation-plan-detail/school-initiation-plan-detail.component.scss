@@ -2,7 +2,6 @@
 @import "../../../../../assets/scss/prime-custom";
 
 .plan {
-    // border-right: solid 1px $primary;
     height: 100%;
     font-size: 16px;
 }
@@ -14,8 +13,6 @@
     height: 160px;
     border-radius: 15px;
     background-color: #f0f3f5;
-    // background-color: #f0f0f0;
-    // border: 1px solid #b0b0b0;
     transition: all 0.6s ease;
     .font-weight-bold {
         color: #686f73;
@@ -29,10 +26,9 @@
         border-radius: 15px 0 0 15px;
     }
     .plan-file-item-content {
-        font-size: 16px;
-
         width: 70%;
         // background-color: #ffd4cf;
+        font-size: 16px;
         border-radius: 0px 15px 15px 0px;
         margin: 0;
         .delete-icon {
@@ -50,10 +46,9 @@
     }
 }
 .upload {
-    // box-shadow:
-    //     rgba(0, 0, 0, 0.16) 0px 3px 6px,
-    //     rgba(0, 0, 0, 0.23) 0px 3px 6px;
-    border: 0.5px solid $primary;
+    box-shadow:
+        rgba(0, 0, 0, 0.25) 0px 14px 28px,
+        rgba(0, 0, 0, 0.22) 0px 10px 10px;
     width: 100%;
     border-radius: 15px;
     height: 100%;
@@ -73,7 +68,6 @@ p {
         width: 200px;
         background-color: $primary;
         border-radius: 8px;
-        margin: 0;
         &:hover,
         &:active {
             background-color: $primary-hover;
@@ -81,15 +75,19 @@ p {
         }
     }
 }
+.btn-upload {
+    button {
+        width: 200px;
+        margin: 0;
+    }
+}
 .button-bottom {
     button {
         font-size: 16px;
-        padding: 15px 20px;
-        border-radius: 30px;
-        border: none;
         width: 200px;
         transition: all 0.5s ease;
         margin: 0;
+
         &.p-tag-danger {
             &:hover {
                 background-color: #ffd4cf;
@@ -110,16 +108,17 @@ p-calendar.p-calendar-inline {
 }
 input {
     border-radius: 8px;
-    width: 400px;
+    width: 800px;
 }
 .input-file-popup {
-    width: 100%;
+    width: 800px;
     input {
-        width: 60%;
+        width: 600px;
         border-radius: 8px 0 0 8px;
     }
     button {
         border-radius: 0 8px 8px 0;
+        margin: 0px;
     }
 }
 :host ::ng-deep {
@@ -141,4 +140,7 @@ input {
     //         color: #fff;
     //     }
     // }
+}
+.font-size-20 {
+    font-size: 20px;
 }

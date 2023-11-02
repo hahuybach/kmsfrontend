@@ -14,7 +14,7 @@
   [resizable]="false"
 >
   <div *ngIf="pdfLoaded">
-    <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
+    <iframe [src]="safePdfUrl" width="100%" height="600px"></iframe>
   </div>
 </p-dialog>
 <!--doc history -->
@@ -133,7 +133,7 @@
     [resizable]="false"
     (onHide)="hideUploadPopup()"
   >
-    <label for="">Tên tài liệu</label>
+    <label class="mb-1" for="">Tên tài liệu</label>
     <br />
     <input
       pInputText
@@ -141,8 +141,13 @@
       type="text"
       placeholder="Tên tài liệu"
     />
+    <span
+      *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
+      class="p-error"
+      >Vui lòng điền tên tài liệu</span
+    >
     <br />
-    <label for="">Mã tài liệu</label>
+    <label class="mb-1 mt-1" for="">Mã tài liệu</label>
     <br />
     <input
       pInputText
@@ -150,8 +155,13 @@
       type="text"
       placeholder="Mã tài liệu"
     />
+    <span
+      *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
+      class="p-error"
+      >Vui lòng điền mã tài liệu</span
+    >
     <br />
-    <label for="">Tài liệu</label>
+    <label class="mb-1 mt-1" for="">Tài liệu</label>
     <div class="mb-3 input-file-popup">
       <input
         type="file"
@@ -174,8 +184,18 @@
         (click)="fileInput.click()"
         class="col-md-3"
       ></button>
+      <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
+        >Vui lòng chọn tài liệu</span
+      > -->
     </div>
-    <button type="button" pButton (click)="upload()">Tải tài liệu</button>
+    <button
+      type="button"
+      pButton
+      (click)="upload()"
+      [disabled]="inputFileForm.get('file')?.value == '' || inputFileForm.controls.documentName.errors?.['whitespace'] || inputFileForm.controls.documentCode.errors?.['whitespace'] "
+    >
+      Tải tài liệu
+    </button>
   </p-dialog>
 </form>
 

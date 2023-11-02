@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InitiationplanService } from 'src/app/services/initiationplan.service';
 import { switchMap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 @Component({
   selector: 'app-school-initiation-plan-detail',
   templateUrl: './school-initiation-plan-detail.component.html',
@@ -73,8 +74,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     protected http: HttpClient
   ) {}
   inputFileForm = this.fb.group({
-    documentName: ['', Validators.required],
-    documentCode: ['', Validators.required],
+    documentName: ['', NoWhitespaceValidator()],
+    documentCode: ['', NoWhitespaceValidator()],
     documentTypeId: 4,
     deadline: [this.today, Validators.required],
     isPasssed: [false, Validators.required],

@@ -1,13 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MenuItem, MessageService } from 'primeng/api';
-interface TreeNode<T> {
-  key: string;
-  label: string;
-  data?: T;
-  icon?: string;
-  children?: TreeNode<T>[];
-  showChildren?: boolean; // New property
+interface TreeNode {
+  assignmentId: number;
+  assignmentName: string;
+  deadline: string;
+  createdDate: string | null;
+  parentId: number | null;
+  issueId: number;
+  description: string;
+  assigner: object | null;
+  assignee?: object | null;
+  children: TreeNode[];
+  status: object;
+  task: boolean;
 }
 @Component({
   selector: 'app-create-assignment',
@@ -15,158 +21,321 @@ interface TreeNode<T> {
   styleUrls: ['./create-assignment.component.scss'],
 })
 export class CreateAssignmentComponent {
-  @Input() files!: TreeNode<string>[] | undefined;
-  nodeHeightMap: { [height: number]: TreeNode<string>[] } = {};
-  @Input() firstTime = true;
-  lastNode: TreeNode<any> | undefined;
+  assignments!: TreeNode[];
   items!: MenuItem[];
-  selectedFile: any;
+  selectedAssignment: any;
   visibleNewNode = false;
+  assignmentVisible = false;
+  date = JSON.stringify(new Date());
   constructor(
     private messageService: MessageService,
     private fb: FormBuilder
   ) {}
-  newNodeForm = this.fb.group({
-    nodeName: ['', Validators.required],
+  // newNodeForm = this.fb.group({
+  //   nodeName: ['', Validators.required],
+  // });
+  assignmentForm = this.fb.group({
+    assignmentName: ['', Validators.required],
+    description: ['', Validators.required],
+    date: ['', Validators.required],
   });
   ngOnInit() {
-    if (this.firstTime) {
-      this.files = [
-        {
-          key: '0',
-          label: 'Documents',
-          data: 'Documents Folder',
-          icon: 'pi pi-fw pi-inbox',
-          showChildren: false,
-          children: [
+    this.assignments = [
+      {
+        assignmentId: 1,
+        assignmentName: 'Assignment 1',
+        assigner: {
+          accountId: 2,
+          email: 'hunglengoc2109@gmail.com',
+          user: {
+            userId: 2,
+            fullName: 'Trần Lê Hải',
+            dob: '1999-03-01',
+            gender: 'MALE',
+            phoneNumber: '0394335205',
+          },
+          school: {
+            schoolId: 1,
+            schoolName: 'PGD VÀ ĐÀO TẠO',
+            exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+            isActive: true,
+          },
+          roles: [
             {
-              key: '0-0',
-              label: 'Work',
-              data: 'Work Folder',
-              icon: 'pi pi-fw pi-cog',
-              showChildren: false,
-              children: [
-                {
-                  key: '0-0-0',
-                  label: 'Expenses.doc',
-                  icon: 'pi pi-fw pi-file',
-                  data: 'Expenses Document',
-                  showChildren: false,
-                },
-                {
-                  key: '0-0-1',
-                  label: 'Resume.doc',
-                  icon: 'pi pi-fw pi-file',
-                  data: 'Resume Document',
-                  showChildren: false,
-                },
-              ],
-            },
-            {
-              key: '0-1',
-              label: 'Home',
-              data: 'Home Folder',
-              icon: 'pi pi-fw pi-home',
-              showChildren: false,
-              children: [
-                {
-                  key: '0-1-0',
-                  label: 'Invoices.txt',
-                  icon: 'pi pi-fw pi-file',
-                  data: 'Invoices for this month',
-                  showChildren: false,
-                },
-              ],
+              roleId: 2,
+              roleName: 'Trưởng Phòng',
+              isSchoolEmployee: false,
             },
           ],
         },
-        {
-          key: '1',
-          label: 'Events',
-          data: 'Events Folder',
-          icon: 'pi pi-fw pi-calendar',
-          showChildren: false,
-          children: [
-            {
-              key: '1-0',
-              label: 'Meeting',
-              icon: 'pi pi-fw pi-calendar-plus',
-              data: 'Meeting',
-              showChildren: false,
-            },
-            {
-              key: '1-1',
-              label: 'Product Launch',
-              icon: 'pi pi-fw pi-calendar-plus',
-              data: 'Product Launch',
-              showChildren: false,
-            },
-            {
-              key: '1-2',
-              label: 'Report Review',
-              icon: 'pi pi-fw pi-calendar-plus',
-              data: 'Report Review',
-              showChildren: false,
-            },
-          ],
-        },
-        {
-          key: '2',
-          label: 'Movies',
-          data: 'Movies Folder',
-          icon: 'pi pi-fw pi-star-fill',
-          showChildren: false,
-          children: [
-            {
-              key: '2-0',
-              icon: 'pi pi-fw pi-star-fill',
-              label: 'Al Pacino',
-              data: 'Pacino Movies',
-              showChildren: false,
-              children: [
+        assignee: null,
+        deadline: '2023-10-31T18:00:00',
+        createdDate: '2023-11-02T19:55:33.375485',
+        children: [
+          {
+            assignmentId: 2,
+            assignmentName: 'Child Assignment 1',
+            assigner: {
+              accountId: 2,
+              email: 'hunglengoc2109@gmail.com',
+              user: {
+                userId: 2,
+                fullName: 'Trần Lê Hải',
+                dob: '1999-03-01',
+                gender: 'MALE',
+                phoneNumber: '0394335205',
+              },
+              school: {
+                schoolId: 1,
+                schoolName: 'PGD VÀ ĐÀO TẠO',
+                exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+                isActive: true,
+              },
+              roles: [
                 {
-                  key: '2-0-0',
-                  label: 'Scarface',
-                  icon: 'pi pi-fw pi-video',
-                  data: 'Scarface Movie',
-                  showChildren: false,
-                },
-                {
-                  key: '2-0-1',
-                  label: 'Serpico',
-                  icon: 'pi pi-fw pi-video',
-                  data: 'Serpico Movie',
-                  showChildren: false,
+                  roleId: 2,
+                  roleName: 'Trưởng Phòng',
+                  isSchoolEmployee: false,
                 },
               ],
             },
-            {
-              key: '2-1',
-              label: 'Robert De Niro',
-              icon: 'pi pi-fw pi-star-fill',
-              data: 'De Niro Movies',
-              showChildren: false,
-              children: [
-                {
-                  key: '2-1-0',
-                  label: 'Goodfellas',
-                  icon: 'pi pi-fw pi-video',
-                  data: 'Goodfellas Movie',
-                  showChildren: false,
+            assignee: null,
+            deadline: '2023-11-05T10:00:00',
+            createdDate: '2023-11-02T19:55:33.390971',
+            children: [
+              {
+                assignmentId: 3,
+                assignmentName: 'Assignment Grand ',
+                assigner: {
+                  accountId: 2,
+                  email: 'hunglengoc2109@gmail.com',
+                  user: {
+                    userId: 2,
+                    fullName: 'Trần Lê Hải',
+                    dob: '1999-03-01',
+                    gender: 'MALE',
+                    phoneNumber: '0394335205',
+                  },
+                  school: {
+                    schoolId: 1,
+                    schoolName: 'PGD VÀ ĐÀO TẠO',
+                    exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+                    isActive: true,
+                  },
+                  roles: [
+                    {
+                      roleId: 2,
+                      roleName: 'Trưởng Phòng',
+                      isSchoolEmployee: false,
+                    },
+                  ],
                 },
+                assignee: null,
+                deadline: '2023-11-10T12:00:00',
+                createdDate: '2023-11-02T19:55:33.393377',
+                children: [],
+                issueId: 1,
+                description: 'This is Grand',
+                status: {
+                  statusId: 13,
+                  statusName: 'Chưa bắt đầu',
+                  statusType: 'Đầu công việc',
+                },
+                parentId: 2,
+                task: false,
+              },
+            ],
+            issueId: 1,
+            description: 'This is child assignment 1',
+            status: {
+              statusId: 13,
+              statusName: 'Chưa bắt đầu',
+              statusType: 'Đầu công việc',
+            },
+            parentId: 1,
+            task: false,
+          },
+          {
+            assignmentId: 4,
+            assignmentName: 'Assignment 1.2',
+            assigner: {
+              accountId: 2,
+              email: 'hunglengoc2109@gmail.com',
+              user: {
+                userId: 2,
+                fullName: 'Trần Lê Hải',
+                dob: '1999-03-01',
+                gender: 'MALE',
+                phoneNumber: '0394335205',
+              },
+              school: {
+                schoolId: 1,
+                schoolName: 'PGD VÀ ĐÀO TẠO',
+                exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+                isActive: true,
+              },
+              roles: [
                 {
-                  key: '2-1-1',
-                  label: 'Untouchables',
-                  icon: 'pi pi-fw pi-video',
-                  data: 'Untouchables Movie',
-                  showChildren: false,
+                  roleId: 2,
+                  roleName: 'Trưởng Phòng',
+                  isSchoolEmployee: false,
                 },
               ],
             },
-          ],
+            assignee: null,
+            deadline: '2023-10-31T18:00:00',
+            createdDate: '2023-11-02T20:01:33.664583',
+            children: [
+              {
+                assignmentId: 5,
+                assignmentName: 'Child Assignment 1.2.1',
+                assigner: {
+                  accountId: 2,
+                  email: 'hunglengoc2109@gmail.com',
+                  user: {
+                    userId: 2,
+                    fullName: 'Trần Lê Hải',
+                    dob: '1999-03-01',
+                    gender: 'MALE',
+                    phoneNumber: '0394335205',
+                  },
+                  school: {
+                    schoolId: 1,
+                    schoolName: 'PGD VÀ ĐÀO TẠO',
+                    exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+                    isActive: true,
+                  },
+                  roles: [
+                    {
+                      roleId: 2,
+                      roleName: 'Trưởng Phòng',
+                      isSchoolEmployee: false,
+                    },
+                  ],
+                },
+                assignee: null,
+                deadline: '2023-11-05T10:00:00',
+                createdDate: '2023-11-02T20:01:33.677221',
+                children: [
+                  {
+                    assignmentId: 6,
+                    assignmentName: 'Assignment grandchild 1.2 editted edtiion',
+                    assigner: {
+                      accountId: 2,
+                      email: 'hunglengoc2109@gmail.com',
+                      user: {
+                        userId: 2,
+                        fullName: 'Trần Lê Hải',
+                        dob: '1999-03-01',
+                        gender: 'MALE',
+                        phoneNumber: '0394335205',
+                      },
+                      school: {
+                        schoolId: 1,
+                        schoolName: 'PGD VÀ ĐÀO TẠO',
+                        exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+                        isActive: true,
+                      },
+                      roles: [
+                        {
+                          roleId: 2,
+                          roleName: 'Trưởng Phòng',
+                          isSchoolEmployee: false,
+                        },
+                      ],
+                    },
+                    assignee: null,
+                    deadline: '2023-11-30T18:00:00',
+                    createdDate: null,
+                    children: [],
+                    issueId: 1,
+                    description:
+                      'This is Assignment grandchild 1.2 editted edtiion',
+                    status: {
+                      statusId: 13,
+                      statusName: 'Chưa bắt đầu',
+                      statusType: 'Đầu công việc',
+                    },
+                    parentId: 5,
+                    task: false,
+                  },
+                  {
+                    assignmentId: 9,
+                    assignmentName: 'Assignment grandchild 1.2 editted edtiion',
+                    assigner: {
+                      accountId: 2,
+                      email: 'hunglengoc2109@gmail.com',
+                      user: {
+                        userId: 2,
+                        fullName: 'Trần Lê Hải',
+                        dob: '1999-03-01',
+                        gender: 'MALE',
+                        phoneNumber: '0394335205',
+                      },
+                      school: {
+                        schoolId: 1,
+                        schoolName: 'PGD VÀ ĐÀO TẠO',
+                        exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+                        isActive: true,
+                      },
+                      roles: [
+                        {
+                          roleId: 2,
+                          roleName: 'Trưởng Phòng',
+                          isSchoolEmployee: false,
+                        },
+                      ],
+                    },
+                    assignee: null,
+                    deadline: '2023-11-30T18:00:00',
+                    createdDate: '2023-11-02T20:06:19.710791',
+                    children: [],
+                    issueId: 1,
+                    description:
+                      'This is Assignment grandchild 1.2 editted edtiion',
+                    status: {
+                      statusId: 13,
+                      statusName: 'Chưa bắt đầu',
+                      statusType: 'Đầu công việc',
+                    },
+                    parentId: 5,
+                    task: false,
+                  },
+                ],
+                issueId: 1,
+                description: 'This is child assignment 1.2.1',
+                status: {
+                  statusId: 13,
+                  statusName: 'Chưa bắt đầu',
+                  statusType: 'Đầu công việc',
+                },
+                parentId: 4,
+                task: false,
+              },
+            ],
+            issueId: 1,
+            description: 'This is assignment 1.2',
+            status: {
+              statusId: 13,
+              statusName: 'Chưa bắt đầu',
+              statusType: 'Đầu công việc',
+            },
+            parentId: 1,
+            task: false,
+          },
+        ],
+        issueId: 1,
+        description: 'This is assignment 1',
+        status: {
+          statusId: 13,
+          statusName: 'Chưa bắt đầu',
+          statusType: 'Đầu công việc',
         },
-      ];
-    }
+        parentId: null,
+        task: false,
+      },
+    ];
+    console.log(this.assignments);
 
     // this.items = [
     //   {
@@ -180,33 +349,44 @@ export class CreateAssignmentComponent {
     //     command: (event) => this.deleteContextMenu(),
     //   },
     // ];
-    // this.splitDataByNodeHeight(this.files);
   }
 
-  // viewFile(file: TreeNode) {
-  //   // this.messageService.add({
-  //   //   severity: 'info',
-  //   //   summary: 'Node Details',
-  //   //   detail: file.label,
-  //   // });
-  //   this.visibleNewNode = true;
-  //   console.log(file.children?.length);
-  // }
+  viewFile(file: TreeNode) {
+    // this.messageService.add({
+    //   severity: 'info',
+    //   summary: 'Node Details',
+    //   detail: file.label,
+    // });
+    this.visibleNewNode = true;
+    console.log(file.children?.length);
+  }
   // addNewNode() {
-  //   const newNode: TreeNode = {
-  //     key:
-  //       this.selectedFile.children == null
-  //         ? this.selectedFile.key + '-0'
-  //         : this.selectedFile.key + '-' + this.selectedFile?.children.length,
-  //     label: this.newNodeForm.get('nodeName')?.value + '',
-  //     data: this.newNodeForm.get('nodeName')?.value,
-  //     icon: 'pi pi-fw pi-cog',
-  //     children: [],
-  //   };
-  //   console.log(newNode);
-  //   for (const item of this.files) {
-  //     this.addNodeToParent(item, newNode);
+  //   if (this.selectedFile == null) {
+  //     const newNode: TreeNode = {
+  //       key: this.files.length + '',
+  //       label: this.newNodeForm.get('nodeName')?.value + '',
+  //       data: this.newNodeForm.get('nodeName')?.value,
+  //       icon: 'pi pi-fw pi-cog',
+  //       children: [],
+  //     };
+  //     this.files.push(newNode);
+  //   } else {
+  //     const newNode: TreeNode = {
+  //       key:
+  //         this.selectedFile.children == null
+  //           ? this.selectedFile.key + '-0'
+  //           : this.selectedFile.key + '-' + this.selectedFile?.children.length,
+  //       label: this.newNodeForm.get('nodeName')?.value + '',
+  //       data: this.newNodeForm.get('nodeName')?.value,
+  //       icon: 'pi pi-fw pi-cog',
+  //       children: [],
+  //     };
+  //     console.log(newNode);
+  //     for (const item of this.files) {
+  //       this.addNodeToParent(item, newNode);
+  //     }
   //   }
+
   //   console.log(this.files);
   //   this.visibleNewNode = false;
   // }
@@ -242,42 +422,18 @@ export class CreateAssignmentComponent {
   //     this.deleteNodeByKey(child, key);
   //   }
   // }
-  getNodeHeight(node: TreeNode<string> | undefined): number {
-    if (!node || !node.children || node.children.length === 0) {
-      return 1; // Leaf node has a height of 1
-    }
-
-    let maxHeight = 0;
-    for (const child of node.children) {
-      const childHeight = this.getNodeHeight(child);
-      maxHeight = Math.max(maxHeight, childHeight);
-    }
-
-    return maxHeight + 1; // Adding 1 to account for the current node
+  openDetail(assignment: any) {
+    this.assignmentVisible = true;
+    this.selectedAssignment = assignment;
+    this.assignmentForm
+      .get('assignmentName')
+      ?.setValue(this.selectedAssignment.assignmentName);
+    this.assignmentForm
+      .get('description')
+      ?.setValue(this.selectedAssignment.description);
+    this.assignmentForm.get('date')?.setValue(this.selectedAssignment.deadline);
   }
-
-  splitDataByNodeHeight(nodes: TreeNode<any>[]) {
-    for (const node of nodes) {
-      const height = this.getNodeHeight(node);
-      if (!this.nodeHeightMap[height]) {
-        this.nodeHeightMap[height] = [];
-      }
-      this.nodeHeightMap[height].push(node);
-    }
-    // console.log(this.nodeHeightMap);
-  }
-  // showArr(arr: TreeNode<any>[] | undefined) {
-  //   console.log(arr);
-  // }
-  //  files: TreeNode<string>[];
-
-  showArr(item: TreeNode<any> | undefined): void {
-    if (this.lastNode != undefined) {
-      this.lastNode.showChildren = false;
-    }
-    this.lastNode = item;
-    if (item != undefined) {
-      item.showChildren = true;
-    }
+  update() {
+    this.assignmentVisible = false;
   }
 }
