@@ -1,96 +1,17 @@
-<!-- <button pButton (click)="visibleNewNode = true">Add</button>
-<button pButton>Delete</button>
-
-<div class="card flex justify-content-center">
-  <p-dialog
-    [(visible)]="visibleNewNode"
-    [style]="{ width: '90vw', height: '1080px' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
-    <h6>Thêm node mới</h6>
-    <h6>Tên</h6>
-    <form [formGroup]="newNodeForm">
-      <input type="text" formControlName="nodeName" />
-      <button pButton (click)="addNewNode()">Thêm</button>
-    </form>
-  </p-dialog>
-  <p-tree
-    class="w-full"
-    [value]="files"
-    selectionMode="single"
-    [(selection)]="selectedFile"
-    [contextMenu]="cm"
-  >
-  </p-tree>
-  <p-contextMenu #cm [model]="items"></p-contextMenu>
-</div> -->
-<!-- <div class="row" *ngFor="let item of files">
-  <div class="col-md-4">
-    <button pButton (click)="showArr(item)">
-      {{ item.key }} - {{ item.label }}
-    </button>
-  </div>
-  <div class="col-md-4" *ngIf="item.children && item.showChildren">
-    <app-create-assignment
-      [lastNode]="item"
-      [files]="item.children"
-      [firstTime]="false"
-    ></app-create-assignment>
-  </div>
-</div>
-<br /> -->
-<!-- <ng-template pTemplate="body" let-rowData>
-    {{ rowData.node | json }}
-    <tr>
-      <td>{{ rowData.node.assignmentName }}</td>
-      <td>{{ rowData.node.deadline }}</td>
-      <td>{{ rowData.node.description }}</td>
-    </tr>
-    <ng-container *ngIf="rowData.node.children && rowData.node.children.length > 0">
-      <tr *ngFor="let child of rowData.node.children">
-        <td>{{ child.assignmentName }}</td>
-        <td>{{ child.deadline }}</td>
-        <td>{{ child.description }}</td>
-      </tr>
-    </ng-container>
-  </ng-template> -->
-<!-- {{ assignments | json }}
-<p-treeTable
-  [value]="assignments"
-  [scrollable]="true"
-  [style]="{ 'min-width': '50rem' }"
->
-  <ng-template pTemplate="header">
-    <tr>
-      <th>Assignment</th>
-      <th>Deadline</th>
-      <th>Description</th>
-    </tr>
-  </ng-template>
-
-  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-    {{ rowNode | json }}
-    <br />
-    {{ rowData | json }}
-    <tr [ttRow]="rowNode">
-      <td>
-        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-        {{ rowData.assignmentName }}
-      </td>
-      <td>{{ rowData.deadline }}</td>
-      <td>{{ rowData.description }}</td>
-    </tr>
-  </ng-template>
-</p-treeTable> -->
 <p-dialog
   header="Chi tiết công việc"
   [(visible)]="assignmentVisible"
-  [style]="{ width: '70vw', height: '700px' }"
+  [style]="{ width: '70vw', height: '760px' }"
   [draggable]="false"
   [resizable]="false"
+  (onHide)="assignmentPopuptHideEvent()"
 >
   <form [formGroup]="assignmentForm">
+    <div *ngIf="selectedAssignment && action == 'addchild'" class="mb-2">
+      <span class="mb-1">Thuộc</span>
+      <br />
+      <span class="text-black-50">{{ selectedAssignment.assignmentName }}</span>
+    </div>
     <div class="mb-2">
       <span class="mb-1">Tên công việc</span>
       <br />
@@ -113,19 +34,44 @@
     </div>
     <div class="mb-5">
       <span class="mb-1">Hạn nộp</span><br />
-      <input type="date" formControlName="date"/>
+      <!-- <p-calendar formControlName="deadline" [showIcon]="true"></p-calendar> -->
+      <input pInputText type="date" formControlName="deadline" />
     </div>
-    <button pButton (click)="update()">Lưu thay đổi</button>
+    <button *ngIf="action == 'update'" pButton (click)="update()">
+      Cập nhật
+    </button>
+    <button
+      *ngIf="action == 'addroot' || action == 'addchild'"
+      pButton
+      (click)="add()"
+    >
+      Thêm mới
+    </button>
   </form>
 </p-dialog>
-
+<p-toast></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Đồng ý"
+  rejectLabel="Hủy"
+></p-confirmDialog>
+<h4>Tạo template công việc cho các trường mầm non</h4>
 <p-treeTable
   [value]="assignments"
   [scrollable]="true"
   [style]="{ 'min-width': '50rem' }"
+  [scrollable]="true"
+  scrollHeight="600px"
 >
   <ng-template pTemplate="caption">
-    <button pButton>Tạo mới</button>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h6>Danh sách công việc</h6>
+      </div>
+      <div>
+        <button pButton (click)="openDetail(null, 'addroot')">Tạo mới</button>
+      </div>
+    </div>
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
@@ -143,12 +89,25 @@
       </td>
       <td>{{ rowData.node.assigner.user.fullName }}</td>
       <td>{{ rowData.node.deadline | date }}</td>
-      <td>
-        <button pButton><i class="bi bi-plus-circle-fill"></i></button>
-        <button pButton (click)="openDetail(rowData.node)">
+      <td class="d-flex">
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="openDetail(rowData.node, 'addchild')"
+        >
+          <i class="bi bi-plus-circle-fill"></i>
+        </div>
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="openDetail(rowData.node, 'update')"
+        >
           <i class="bi bi-pencil-fill"></i>
-        </button>
-        <button pButton><i class="bi bi-x-circle-fill"></i></button>
+        </div>
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="deleteNode(rowData.node)"
+        >
+          <i class="bi bi-x-circle-fill"></i>
+        </div>
       </td>
     </tr>
   </ng-template>

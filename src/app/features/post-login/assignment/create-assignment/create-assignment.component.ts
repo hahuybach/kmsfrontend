@@ -1,6 +1,16 @@
+import { error } from '@angular/compiler-cli/src/transformers/util';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MenuItem, MessageService } from 'primeng/api';
+import {
+  ConfirmEventType,
+  ConfirmationService,
+  MenuItem,
+  MessageService,
+} from 'primeng/api';
+import { switchMap } from 'rxjs';
+import { Issue } from 'src/app/models/issue.model';
+import { AssignmentService } from 'src/app/services/assignment.service';
+import { IssueService } from 'src/app/services/issue.service';
 interface TreeNode {
   assignmentId: number;
   assignmentName: string;
@@ -21,15 +31,20 @@ interface TreeNode {
   styleUrls: ['./create-assignment.component.scss'],
 })
 export class CreateAssignmentComponent {
-  assignments!: TreeNode[];
+  assignments!: any[];
   items!: MenuItem[];
   selectedAssignment: any;
   visibleNewNode = false;
   assignmentVisible = false;
   date = JSON.stringify(new Date());
+  action: string | undefined;
+  issueId: number;
   constructor(
     private messageService: MessageService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService,
+    private assignmentService: AssignmentService,
+    private issueService: IssueService
   ) {}
   // newNodeForm = this.fb.group({
   //   nodeName: ['', Validators.required],
@@ -37,320 +52,34 @@ export class CreateAssignmentComponent {
   assignmentForm = this.fb.group({
     assignmentName: ['', Validators.required],
     description: ['', Validators.required],
-    date: ['', Validators.required],
+    deadline: ['', Validators.required],
+    parentId: ['', Validators.required],
   });
   ngOnInit() {
-    this.assignments = [
-      {
-        assignmentId: 1,
-        assignmentName: 'Assignment 1',
-        assigner: {
-          accountId: 2,
-          email: 'hunglengoc2109@gmail.com',
-          user: {
-            userId: 2,
-            fullName: 'Trần Lê Hải',
-            dob: '1999-03-01',
-            gender: 'MALE',
-            phoneNumber: '0394335205',
-          },
-          school: {
-            schoolId: 1,
-            schoolName: 'PGD VÀ ĐÀO TẠO',
-            exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
-            isActive: true,
-          },
-          roles: [
-            {
-              roleId: 2,
-              roleName: 'Trưởng Phòng',
-              isSchoolEmployee: false,
-            },
-          ],
-        },
-        assignee: null,
-        deadline: '2023-10-31T18:00:00',
-        createdDate: '2023-11-02T19:55:33.375485',
-        children: [
-          {
-            assignmentId: 2,
-            assignmentName: 'Child Assignment 1',
-            assigner: {
-              accountId: 2,
-              email: 'hunglengoc2109@gmail.com',
-              user: {
-                userId: 2,
-                fullName: 'Trần Lê Hải',
-                dob: '1999-03-01',
-                gender: 'MALE',
-                phoneNumber: '0394335205',
-              },
-              school: {
-                schoolId: 1,
-                schoolName: 'PGD VÀ ĐÀO TẠO',
-                exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
-                isActive: true,
-              },
-              roles: [
-                {
-                  roleId: 2,
-                  roleName: 'Trưởng Phòng',
-                  isSchoolEmployee: false,
-                },
-              ],
-            },
-            assignee: null,
-            deadline: '2023-11-05T10:00:00',
-            createdDate: '2023-11-02T19:55:33.390971',
-            children: [
-              {
-                assignmentId: 3,
-                assignmentName: 'Assignment Grand ',
-                assigner: {
-                  accountId: 2,
-                  email: 'hunglengoc2109@gmail.com',
-                  user: {
-                    userId: 2,
-                    fullName: 'Trần Lê Hải',
-                    dob: '1999-03-01',
-                    gender: 'MALE',
-                    phoneNumber: '0394335205',
-                  },
-                  school: {
-                    schoolId: 1,
-                    schoolName: 'PGD VÀ ĐÀO TẠO',
-                    exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
-                    isActive: true,
-                  },
-                  roles: [
-                    {
-                      roleId: 2,
-                      roleName: 'Trưởng Phòng',
-                      isSchoolEmployee: false,
-                    },
-                  ],
-                },
-                assignee: null,
-                deadline: '2023-11-10T12:00:00',
-                createdDate: '2023-11-02T19:55:33.393377',
-                children: [],
-                issueId: 1,
-                description: 'This is Grand',
-                status: {
-                  statusId: 13,
-                  statusName: 'Chưa bắt đầu',
-                  statusType: 'Đầu công việc',
-                },
-                parentId: 2,
-                task: false,
-              },
-            ],
-            issueId: 1,
-            description: 'This is child assignment 1',
-            status: {
-              statusId: 13,
-              statusName: 'Chưa bắt đầu',
-              statusType: 'Đầu công việc',
-            },
-            parentId: 1,
-            task: false,
-          },
-          {
-            assignmentId: 4,
-            assignmentName: 'Assignment 1.2',
-            assigner: {
-              accountId: 2,
-              email: 'hunglengoc2109@gmail.com',
-              user: {
-                userId: 2,
-                fullName: 'Trần Lê Hải',
-                dob: '1999-03-01',
-                gender: 'MALE',
-                phoneNumber: '0394335205',
-              },
-              school: {
-                schoolId: 1,
-                schoolName: 'PGD VÀ ĐÀO TẠO',
-                exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
-                isActive: true,
-              },
-              roles: [
-                {
-                  roleId: 2,
-                  roleName: 'Trưởng Phòng',
-                  isSchoolEmployee: false,
-                },
-              ],
-            },
-            assignee: null,
-            deadline: '2023-10-31T18:00:00',
-            createdDate: '2023-11-02T20:01:33.664583',
-            children: [
-              {
-                assignmentId: 5,
-                assignmentName: 'Child Assignment 1.2.1',
-                assigner: {
-                  accountId: 2,
-                  email: 'hunglengoc2109@gmail.com',
-                  user: {
-                    userId: 2,
-                    fullName: 'Trần Lê Hải',
-                    dob: '1999-03-01',
-                    gender: 'MALE',
-                    phoneNumber: '0394335205',
-                  },
-                  school: {
-                    schoolId: 1,
-                    schoolName: 'PGD VÀ ĐÀO TẠO',
-                    exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
-                    isActive: true,
-                  },
-                  roles: [
-                    {
-                      roleId: 2,
-                      roleName: 'Trưởng Phòng',
-                      isSchoolEmployee: false,
-                    },
-                  ],
-                },
-                assignee: null,
-                deadline: '2023-11-05T10:00:00',
-                createdDate: '2023-11-02T20:01:33.677221',
-                children: [
-                  {
-                    assignmentId: 6,
-                    assignmentName: 'Assignment grandchild 1.2 editted edtiion',
-                    assigner: {
-                      accountId: 2,
-                      email: 'hunglengoc2109@gmail.com',
-                      user: {
-                        userId: 2,
-                        fullName: 'Trần Lê Hải',
-                        dob: '1999-03-01',
-                        gender: 'MALE',
-                        phoneNumber: '0394335205',
-                      },
-                      school: {
-                        schoolId: 1,
-                        schoolName: 'PGD VÀ ĐÀO TẠO',
-                        exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
-                        isActive: true,
-                      },
-                      roles: [
-                        {
-                          roleId: 2,
-                          roleName: 'Trưởng Phòng',
-                          isSchoolEmployee: false,
-                        },
-                      ],
-                    },
-                    assignee: null,
-                    deadline: '2023-11-30T18:00:00',
-                    createdDate: null,
-                    children: [],
-                    issueId: 1,
-                    description:
-                      'This is Assignment grandchild 1.2 editted edtiion',
-                    status: {
-                      statusId: 13,
-                      statusName: 'Chưa bắt đầu',
-                      statusType: 'Đầu công việc',
-                    },
-                    parentId: 5,
-                    task: false,
-                  },
-                  {
-                    assignmentId: 9,
-                    assignmentName: 'Assignment grandchild 1.2 editted edtiion',
-                    assigner: {
-                      accountId: 2,
-                      email: 'hunglengoc2109@gmail.com',
-                      user: {
-                        userId: 2,
-                        fullName: 'Trần Lê Hải',
-                        dob: '1999-03-01',
-                        gender: 'MALE',
-                        phoneNumber: '0394335205',
-                      },
-                      school: {
-                        schoolId: 1,
-                        schoolName: 'PGD VÀ ĐÀO TẠO',
-                        exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
-                        isActive: true,
-                      },
-                      roles: [
-                        {
-                          roleId: 2,
-                          roleName: 'Trưởng Phòng',
-                          isSchoolEmployee: false,
-                        },
-                      ],
-                    },
-                    assignee: null,
-                    deadline: '2023-11-30T18:00:00',
-                    createdDate: '2023-11-02T20:06:19.710791',
-                    children: [],
-                    issueId: 1,
-                    description:
-                      'This is Assignment grandchild 1.2 editted edtiion',
-                    status: {
-                      statusId: 13,
-                      statusName: 'Chưa bắt đầu',
-                      statusType: 'Đầu công việc',
-                    },
-                    parentId: 5,
-                    task: false,
-                  },
-                ],
-                issueId: 1,
-                description: 'This is child assignment 1.2.1',
-                status: {
-                  statusId: 13,
-                  statusName: 'Chưa bắt đầu',
-                  statusType: 'Đầu công việc',
-                },
-                parentId: 4,
-                task: false,
-              },
-            ],
-            issueId: 1,
-            description: 'This is assignment 1.2',
-            status: {
-              statusId: 13,
-              statusName: 'Chưa bắt đầu',
-              statusType: 'Đầu công việc',
-            },
-            parentId: 1,
-            task: false,
-          },
-        ],
-        issueId: 1,
-        description: 'This is assignment 1',
-        status: {
-          statusId: 13,
-          statusName: 'Chưa bắt đầu',
-          statusType: 'Đầu công việc',
-        },
-        parentId: null,
-        task: false,
-      },
-    ];
+    this.initData();
+
+    // Don't use console.log(this.issueId) here, as it will be executed before the subscription's callback
+
     console.log(this.assignments);
-
-    // this.items = [
-    //   {
-    //     label: 'Thêm mới',
-    //     icon: 'bi bi-plus-circle',
-    //     command: (event) => this.viewFile(this.selectedFile!),
-    //   },
-    //   {
-    //     label: 'Xóa',
-    //     icon: 'bi bi-trash-fill',
-    //     command: (event) => this.deleteContextMenu(),
-    //   },
-    // ];
   }
-
+  initData() {
+    this.issueService
+      .getCurrentActiveIssue()
+      .pipe(
+        switchMap((data) => {
+          console.log(data);
+          this.issueId = data.issueDto.issueId;
+          return this.assignmentService.getAssignmentsByIssueId(
+            data.issueDto.issueId
+          );
+        })
+      )
+      .subscribe((data) => {
+        console.log(data);
+        this.assignments = [data];
+        console.log(this.assignments);
+      });
+  }
   viewFile(file: TreeNode) {
     // this.messageService.add({
     //   severity: 'info',
@@ -422,18 +151,157 @@ export class CreateAssignmentComponent {
   //     this.deleteNodeByKey(child, key);
   //   }
   // }
-  openDetail(assignment: any) {
+  openDetail(assignment?: any, action?: string) {
     this.assignmentVisible = true;
     this.selectedAssignment = assignment;
-    this.assignmentForm
-      .get('assignmentName')
-      ?.setValue(this.selectedAssignment.assignmentName);
-    this.assignmentForm
-      .get('description')
-      ?.setValue(this.selectedAssignment.description);
-    this.assignmentForm.get('date')?.setValue(this.selectedAssignment.deadline);
+    this.action = action;
+    switch (action) {
+      case 'addroot': {
+        break;
+      }
+      case 'addchild': {
+        console.log('run here');
+        this.assignmentForm
+          .get('parentId')
+          ?.setValue(this.selectedAssignment.assignmentId);
+        break;
+      }
+      case 'update':
+        {
+          if (this.selectedAssignment)
+            this.assignmentForm
+              .get('assignmentName')
+              ?.setValue(this.selectedAssignment.assignmentName);
+          this.assignmentForm
+            .get('description')
+            ?.setValue(this.selectedAssignment.description);
+          this.assignmentForm
+            .get('deadline')
+            ?.setValue(
+              new Date(this.selectedAssignment.deadline)
+                .toISOString()
+                .split('T')[0]
+            );
+        }
+        break;
+    }
+  }
+  add() {
+    let addedAssignment;
+    if (this.action == 'addroot') {
+      addedAssignment = {
+        addAssignmentDto: {
+          assignmentName: this.assignmentForm.get('assignmentName')?.value,
+          description: this.assignmentForm.get('description')?.value,
+          deadline: this.parseDateStringToDate(
+            this.assignmentForm.get('deadline')?.value
+          ),
+          issueId: this.issueId,
+        },
+      };
+    } else {
+      addedAssignment = {
+        addAssignmentDto: {
+          assignmentName: this.assignmentForm.get('assignmentName')?.value,
+          description: this.assignmentForm.get('description')?.value,
+          deadline: this.parseDateStringToDate(
+            this.assignmentForm.get('deadline')?.value
+          ),
+          parentId: this.assignmentForm.get('parentId')?.value,
+          issueId: this.issueId,
+        },
+      };
+    }
+    this.assignmentService.addAssignment(addedAssignment).subscribe({
+      next: (response) => {
+        this.initData();
+        this.assignmentVisible = false;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
   update() {
-    this.assignmentVisible = false;
+    const updateAssignment = {
+      updateAssignmentDto: {
+        assignmentId: this.selectedAssignment.assignmentId,
+        assignmentName: this.assignmentForm.get('assignmentName')?.value,
+        description: this.assignmentForm.get('description')?.value,
+        deadline: this.parseDateStringToDate(
+          this.assignmentForm.get('deadline')?.value
+        ),
+      },
+    };
+    this.assignmentService.updateAssignment(updateAssignment).subscribe({
+      next: (response) => {
+        this.initData();
+        this.assignmentVisible = false;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+    console.log('Update');
+    console.log(updateAssignment);
+  }
+  deleteNode(assignment: any) {
+    this.confirmationService.confirm({
+      message: 'Bạn có muốn xóa công việc này?',
+      header: 'Xác nhận xóa',
+      // icon: 'pi pi-info-circle',
+      accept: () => {
+        const deleteNode = {
+          id: assignment.assignmentId,
+        };
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Xóa',
+          detail: 'Xóa thành công',
+        });
+      },
+      reject: (type: any) => {
+        // switch (type) {
+        //   case ConfirmEventType.REJECT:
+        //     this.messageService.add({
+        //       severity: 'error',
+        //       summary: 'Rejected',
+        //       detail: 'You have rejected',
+        //     });
+        //     break;
+        //   case ConfirmEventType.CANCEL:
+        //     this.messageService.add({
+        //       severity: 'warn',
+        //       summary: 'Cancelled',
+        //       detail: 'You have cancelled',
+        //     });
+        //     break;
+        //   default:
+        //     // Handle other cases, if necessary
+        //     break;
+        // }
+      },
+    });
+  }
+
+  assignmentPopuptHideEvent() {
+    this.assignmentForm.reset();
+  }
+  parseDateStringToDate(dateString: string | null | undefined): Date | null {
+    if (dateString === null || dateString === undefined) {
+      return null; // Return null for null or undefined input
+    }
+
+    const [year, month, day] = dateString.split('-').map(Number);
+
+    // Check if the date components are valid
+    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+      return null; // Return null for an invalid date
+    }
+
+    // Create a new Date object with the components
+    const dateObject = new Date(year, month - 1, day);
+
+    return dateObject;
   }
 }

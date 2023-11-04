@@ -18,6 +18,7 @@ import { InspectionPlanDetailComponent } from './features/post-login/inspection-
 import { InitiationPlanDetailComponent } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
 import { CreateAssignmentComponent } from './features/post-login/assignment/create-assignment/create-assignment.component';
 import { SchoolInitiationPlanListComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-list/school-initiation-plan-list.component';
+import { AssignmentListComponent } from './features/post-login/school-side/assignment/assignment-list/assignment-list.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,10 @@ const routes: Routes = [
       {
         path: 'assignment/create',
         component: CreateAssignmentComponent,
+      },
+      {
+        path: 'schoolassignment',
+        component: AssignmentListComponent,
       },
     ],
   },

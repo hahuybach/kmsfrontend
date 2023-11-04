@@ -42,6 +42,7 @@ import { SchoolInitiationPlanModule } from './features/post-login/school-initiat
 import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
 import { AssignmentModule } from './features/post-login/assignment/assignment.module';
+import { SchoolAssignmentModule } from './features/post-login/school-side/assignment/school-assignment.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -79,6 +80,7 @@ import { AssignmentModule } from './features/post-login/assignment/assignment.mo
     SchoolInitiationPlanModule,
     InitiationPlanModule,
     AssignmentModule,
+    SchoolAssignmentModule,
   ],
   providers: [
     MessageService,

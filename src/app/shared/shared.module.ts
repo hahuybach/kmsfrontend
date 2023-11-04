@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { TreeModule } from 'primeng/tree';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { TreeTableModule } from 'primeng/treetable';
+import { DropdownModule } from 'primeng/dropdown';
 @NgModule({
   declarations: [],
   imports: [
@@ -30,6 +31,7 @@ import { TreeTableModule } from 'primeng/treetable';
     TreeModule,
     ContextMenuModule,
     TreeTableModule,
+    DropdownModule,
   ],
   exports: [
     InputTextModule,
@@ -45,6 +47,7 @@ import { TreeTableModule } from 'primeng/treetable';
     TreeModule,
     ContextMenuModule,
     TreeTableModule,
+    DropdownModule,
   ],
 })
 export class SharedModule {}
