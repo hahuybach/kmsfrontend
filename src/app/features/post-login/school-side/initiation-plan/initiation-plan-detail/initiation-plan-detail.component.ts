@@ -8,6 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { FileService } from 'src/app/services/file.service';
 import { InitiationplanService } from 'src/app/services/initiationplan.service';
+import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 
 @Component({
   selector: 'app-initiation-plan-detail',
@@ -46,24 +47,38 @@ export class InitiationPlanDetailComponent implements OnInit {
       .subscribe((data) => {
         this.schoolinitiationplan = data;
         console.log(this.schoolinitiationplan);
-        this.lastDocs =
-          this.schoolinitiationplan.documents[
-            this.schoolinitiationplan.documents.length - 1
-          ];
-        // if (
-        //   this.schoolinitiationplan.documents.length >= 2 &&
-        //   this.schoolinitiationplan.status.statusId == 7
-        // ) {
-        //   console.log(
+
+        // this.lastDocs = {
+        //   schoolDocument:
+        //     this.schoolinitiationplan.documents[
+        //       this.schoolinitiationplan.documents.length - 1
+        //     ].schoolDocument,
+        //   departmentDocument:
         //     this.schoolinitiationplan.documents[
         //       this.schoolinitiationplan.documents.length - 2
-        //     ].departmentDocument
-        //   );
-        //   // this.lastDocs.departmentDocument =
-        //   //   this.schoolinitiationplan.documents[
-        //   //     this.schoolinitiationplan.documents.length - 2
-        //   //   ].departmentDocument.slice();
-        // }
+        //     ].departmentDocument,
+        // };
+
+        if (
+          this.schoolinitiationplan.documents.length >= 2 &&
+          this.schoolinitiationplan.status.statusId == 7
+        ) {
+          this.lastDocs = {
+            schoolDocument:
+              this.schoolinitiationplan.documents[
+                this.schoolinitiationplan.documents.length - 1
+              ].schoolDocument,
+            departmentDocument:
+              this.schoolinitiationplan.documents[
+                this.schoolinitiationplan.documents.length - 2
+              ].departmentDocument,
+          };
+        } else {
+          this.lastDocs =
+            this.schoolinitiationplan.documents[
+              this.schoolinitiationplan.documents.length - 1
+            ];
+        }
         if (
           this.lastDocs.schoolDocument != null &&
           this.schoolinitiationplan.status.statusId != 9
@@ -85,12 +100,12 @@ export class InitiationPlanDetailComponent implements OnInit {
     protected http: HttpClient
   ) {}
   inputFileForm = this.fb.group({
-    documentName: ['', Validators.required],
-    documentCode: ['', Validators.required],
+    documentName: ['', NoWhitespaceValidator()],
+    documentCode: ['', NoWhitespaceValidator()],
     documentTypeId: 4,
-    deadline: [this.today, Validators.required],
+    // deadline: [this.today, Validators.required],
     isPasssed: [false, Validators.required],
-    file: [''],
+    file: ['', Validators.required],
   });
   displayNewFileUpload(file: File) {
     const blobUrl = window.URL.createObjectURL(file as Blob);
@@ -149,6 +164,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.inputFileForm.get('documentCode')?.setValue('');
     this.inputFileForm.get('file')?.setValue('');
     this.fileInputPlaceholders = '';
+    this.buttonApproveStatus = false;
   }
   confirmUpload() {
     this.confirmationService.confirm({
@@ -165,7 +181,6 @@ export class InitiationPlanDetailComponent implements OnInit {
             documentCode: this.inputFileForm.get('documentCode')?.value,
           },
         };
-        // đoạn này là tạo object gửi về cho b nhé
         console.log(initiationplan);
         formData.append(
           'initiation_plan',
@@ -178,34 +193,54 @@ export class InitiationPlanDetailComponent implements OnInit {
           const pdfFile = fileControl.value;
           formData.append('files', pdfFile);
         }
-        //còn đây là nhét thêm file tiếp đi cái đoạn lấy cái initi t gửi về cơ
-        const headers = new HttpHeaders();
-        headers.append('Content-Type', 'undefined');
-        this.http
-          .put(
-            'http://localhost:8080/api/v1/initiation_plan/upload_school_document',
-            formData,
-            { headers }
-          )
-          .subscribe(
-            (response) => {
-              console.log('Form data sent to the backend:', response);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Phê duyệt',
-                detail: 'Phê duyệt thành công',
-              });
-              window.location.reload();
-            },
-            (error) => {
-              console.error('Error while sending form data:', error);
-            }
-          );
+        this.initiationplanService.putUploadSchoolDoc(formData).subscribe({
+          next: (response) => {
+            console.log('Form data sent to the backend:', response);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Đăng tải thành công',
+              detail: 'Đăng tải tài liệu thành công',
+            });
+            window.location.reload();
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        });
+        // const headers = new HttpHeaders();
+        // headers.append('Content-Type', 'undefined');
+        // this.http
+        //   .put(
+        //     'http://localhost:8080/api/v1/initiation_plan/upload_school_document',
+        //     formData,
+        //     { headers }
+        //   )
+        //   .subscribe(
+        //     (response) => {
+        //       console.log('Form data sent to the backend:', response);
+        //       this.messageService.add({
+        //         severity: 'success',
+        //         summary: 'Phê duyệt',
+        //         detail: 'Phê duyệt thành công',
+        //       });
+        //       window.location.reload();
+        //     },
+        //     (error) => {
+        //       console.error('Error while sending form data:', error);
+        //     }
+        //   );
       },
       reject: (type: any) => {},
     });
   }
   visibleIcon() {
     this.iconStatus = true;
+  }
+  hideUploadPopup() {
+    this.inputFileForm.reset(this.inputFileForm.value);
+  }
+  checkCanEdit() {
+    const deadline = new Date(this.schoolinitiationplan.deadline);
+    return Date.now() <= deadline.getTime();
   }
 }

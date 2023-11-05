@@ -2,7 +2,6 @@
 @import "../../../../../../assets/scss/prime-custom";
 
 .plan {
-    border-right: solid 1px $primary;
     height: 100%;
     font-size: 16px;
 }
@@ -13,8 +12,15 @@
     cursor: pointer;
     height: 160px;
     border-radius: 15px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    background-color: #f8f8f8;
+    background-color: #f0f3f5;
+    transition: all 0.6s ease;
+    .font-weight-bold {
+        color: #686f73;
+    }
+    &:hover {
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        cursor: pointer;
+    }
     .plan-file-item-img {
         width: 30%;
         border-radius: 15px 0 0 15px;
@@ -23,6 +29,7 @@
         width: 70%;
         // background-color: #ffd4cf;
         border-radius: 0px 15px 15px 0px;
+        font-size: 16px;
         margin: 0;
         .delete-icon {
             i {
@@ -39,7 +46,9 @@
     }
 }
 .upload {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow:
+        rgba(0, 0, 0, 0.25) 0px 14px 28px,
+        rgba(0, 0, 0, 0.22) 0px 10px 10px;
     width: 100%;
     border-radius: 15px;
     height: 100%;
@@ -75,11 +84,10 @@ p {
 .button-bottom {
     button {
         font-size: 16px;
-        padding: 15px 20px;
-        border-radius: 30px;
-        border: none;
         width: 200px;
         transition: all 0.5s ease;
+        margin: 0;
+
         &.p-tag-danger {
             &:hover {
                 background-color: #ffd4cf;
@@ -100,16 +108,17 @@ p-calendar.p-calendar-inline {
 }
 input {
     border-radius: 8px;
-    width: 400px;
+    width: 800px;
 }
 .input-file-popup {
-    width: 100%;
+    width: 800px;
     input {
-        width: 60%;
+        width: 600px;
         border-radius: 8px 0 0 8px;
     }
     button {
         border-radius: 0 8px 8px 0;
+        margin: 0px;
     }
 }
 :host ::ng-deep {
@@ -131,4 +140,7 @@ input {
     //         color: #fff;
     //     }
     // }
+}
+.font-size-20 {
+    font-size: 20px;
 }

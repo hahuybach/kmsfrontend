@@ -1,0 +1,114 @@
+<p-dialog
+  header="Chi tiết công việc"
+  [(visible)]="assignmentVisible"
+  [style]="{ width: '70vw', height: '760px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="assignmentPopuptHideEvent()"
+>
+  <form [formGroup]="assignmentForm">
+    <div *ngIf="selectedAssignment && action == 'addchild'" class="mb-2">
+      <span class="mb-1">Thuộc</span>
+      <br />
+      <span class="text-black-50">{{ selectedAssignment.assignmentName }}</span>
+    </div>
+    <div class="mb-2">
+      <span class="mb-1">Tên công việc</span>
+      <br />
+      <input
+        class="mb-1"
+        pInputText
+        type="text"
+        formControlName="assignmentName"
+      />
+    </div>
+    <div class="mb-2">
+      <span class="mb-1">Mô tả chi tiết</span>
+      <br />
+      <textarea
+        class="mb-1"
+        rows="5"
+        pInputTextarea
+        formControlName="description"
+      ></textarea>
+    </div>
+    <div class="mb-5">
+      <span class="mb-1">Hạn nộp</span><br />
+      <!-- <p-calendar formControlName="deadline" [showIcon]="true"></p-calendar> -->
+      <input pInputText type="date" formControlName="deadline" />
+    </div>
+    <button *ngIf="action == 'update'" pButton (click)="update()">
+      Cập nhật
+    </button>
+    <button
+      *ngIf="action == 'addroot' || action == 'addchild'"
+      pButton
+      (click)="add()"
+    >
+      Thêm mới
+    </button>
+  </form>
+</p-dialog>
+<p-toast></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Đồng ý"
+  rejectLabel="Hủy"
+></p-confirmDialog>
+<h4>Tạo template công việc cho các trường mầm non</h4>
+<p-treeTable
+  [value]="assignments"
+  [scrollable]="true"
+  [style]="{ 'min-width': '50rem' }"
+  [scrollable]="true"
+  scrollHeight="600px"
+>
+  <ng-template pTemplate="caption">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h6>Danh sách công việc</h6>
+      </div>
+      <div>
+        <button pButton (click)="openDetail(null, 'addroot')">Tạo mới</button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Công việc</th>
+      <th>Người tạo</th>
+      <th>Hạn nộp</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-rowNode>
+    <tr [ttRow]="rowNode">
+      <td>
+        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+        {{ rowData.node.assignmentName }}
+      </td>
+      <td>{{ rowData.node.assigner.user.fullName }}</td>
+      <td>{{ rowData.node.deadline | date }}</td>
+      <td class="d-flex">
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="openDetail(rowData.node, 'addchild')"
+        >
+          <i class="bi bi-plus-circle-fill"></i>
+        </div>
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="openDetail(rowData.node, 'update')"
+        >
+          <i class="bi bi-pencil-fill"></i>
+        </div>
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="deleteNode(rowData.node)"
+        >
+          <i class="bi bi-x-circle-fill"></i>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-treeTable>

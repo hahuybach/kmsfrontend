@@ -1,0 +1,52 @@
+@import "../../../../../../assets/scss/base";
+
+select {
+    width: 100%;
+    font-size: 1rem;
+    color: #495057;
+    background: #ffffff;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid #ced4da;
+    transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s,
+        box-shadow 0.2s;
+    border-radius: 8px;
+}
+input,
+textarea {
+    width: 100%;
+    border-radius: 8px;
+}
+.p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    margin-right: 20px;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+    }
+}
+.font-weight-bold {
+    font-weight: 500;
+}
+.font-size-18 {
+    font-size: 18px;
+}
+.height-100 {
+    height: 100px;
+}
+ul {
+    padding: 0;
+}
+:host ::ng-deep {
+    .p-dropdown {
+        width: 100%;
+    }
+    ul {
+        padding: 0;
+    }
+}

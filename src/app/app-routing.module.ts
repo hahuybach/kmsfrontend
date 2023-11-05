@@ -25,6 +25,10 @@ import {
 import {
   GuidanceDocumentCreateComponent
 } from "./features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component";
+import { CreateAssignmentComponent } from './features/post-login/assignment/create-assignment/create-assignment.component';
+import { SchoolInitiationPlanListComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-list/school-initiation-plan-list.component';
+import { AssignmentListComponent } from './features/post-login/school-side/assignment/assignment-list/assignment-list.component';
+import { SubmitAssignmentComponent } from './features/post-login/school-side/assignment/submit-assignment/submit-assignment.component';
 
 const routes: Routes = [
   {
@@ -81,11 +85,26 @@ const routes: Routes = [
       },
       {
         path: 'guidanceDocument/create/:issueId',
-        component: GuidanceDocumentCreateComponent
+        component: GuidanceDocumentCreateComponent,
+      },{
+        path: 'schoolinitiationplan',
+        component: SchoolInitiationPlanListComponent,
       },
       {
         path: 'initiationplan/:id',
         component: InitiationPlanDetailComponent,
+      },
+      {
+        path: 'assignment/create',
+        component: CreateAssignmentComponent,
+      },
+      {
+        path: 'schoolassignment',
+        component: AssignmentListComponent,
+      },
+      {
+        path: 'submitassignment',
+        component: SubmitAssignmentComponent,
       },
     ],
   },

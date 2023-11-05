@@ -1,0 +1,197 @@
+<h2>Công việc cần nộp</h2>
+<!-- <form formGroupName=""> -->
+<div class="submit-assignment">
+    <p-dialog
+    header="Chi tiết công việc"
+    [(visible)]="assVisible"
+    [style]="{ width: '60vw', height: '100vh' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="selectedAssignment" class="row">
+      <div class="col-md-8 row">
+        <div class="col-md-6">
+          <div class="height-100">
+            <span class="text-black-50">Tên công việc</span>
+            <br />
+            <span class="font-weight-bold">{{
+              selectedAssignment.assignmentName
+            }}</span>
+          </div>
+          <div class="height-100">
+            <span class="text-black-50">Chi tiết công việc công việc</span>
+            <br />
+            <span class="font-weight-bold">{{
+              selectedAssignment.description
+            }}</span>
+          </div>
+          <div class="height-100">
+            <span class="text-black-50">Hạn nộp</span>
+            <br />
+            <span class="font-weight-bold">{{
+              selectedAssignment.deadline
+            }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="height-100">
+            <span class="text-black-50">Người giao</span>
+            <br />
+            <span class="font-weight-bold">{{
+              selectedAssignment.assigner.assignerName
+            }}</span>
+          </div>
+          <div class="height-100">
+            <span class="text-black-50">Người làm</span>
+            <br />
+            <span class="font-weight-bold">{{
+              selectedAssignment.assignee.assigneeName
+            }}</span>
+          </div>
+  
+          <div class="height-100">
+            <span class="text-black-50">Trạng thái</span>
+            <br />
+            <span>
+              <p-tag class="status" [severity]="'info'" [rounded]="true">
+                Đang thực thi
+              </p-tag>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 right-box">
+        <div class="height-100">
+          <span class="text-black-50">Bình luận</span>
+          <br />
+          <div class="comment d-flex">
+            <input pInputText type="text" placeholder="Gửi bình luận" />
+            <div class="d-flex justify-content-center align-items-center p-2">
+              <i class="bi bi-send"></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="selectedAssignment.comments" class="comment-content pt-2">
+          <div
+            *ngFor="let item of selectedAssignment.comments"
+            class="comment-item row"
+          >
+            <div
+              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+            </div>
+            <div class="comment-item-content col-md-9">
+              <span class="font-weight-bold font-size-18"
+                >{{ item.userName }}
+              </span>
+              <span class="text-black-50"></span>
+  
+              <br />
+              <span>{{ item.content }}</span>
+            </div>
+            <div
+              class="col-md-1 d-flex justify-content-center align-items-center"
+            >
+              <i class="bi bi-three-dots-vertical"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="height-100">
+        <span class="font-weight-bold">Tài liệu</span>
+        <br />
+        <!-- <button pButton>Nộp tài liệu</button> -->
+  
+        <!-- <div class="row document-item mb-2">
+          <div class="d-flex flex-row">
+            <div class="col-md-4 pe-3">
+              <label>Tên tài liệu</label><br />
+              <input
+                pInputText
+                placeholder="Điền tên tài liệu"
+                formControlName="documentName"
+              />
+            </div>
+            <div class="col-md-2 pe-3">
+              <label>Mã tài liệu</label><br />
+              <input
+                pInputText
+                placeholder="Điền mã tài liệu"
+                formControlName="documentCode"
+              />
+            </div>
+            <div class="col-md-6">
+              <label>Tài liệu</label><br />
+              <div class="input-file">
+                <input
+                  type="file"
+                  #fileInput
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput)"
+                />
+                <input pInputText readonly class="col-md-8" />
+                <button
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput.click()"
+                  class="col-md-2"
+                ></button>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <!-- <div class="mt-5">
+      <button pButton>Lưu</button>
+    </div> -->
+  </p-dialog>
+  <!-- </form> -->
+  <p-table
+    #dt
+    [value]="assignments"
+    dataKey="id"
+    [rowHover]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 15, 20]"
+    [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>
+          <div>Id</div>
+        </th>
+        <th>
+          <div>Tên</div>
+        </th>
+        <th>
+          <div>Trạng thái</div>
+        </th>
+        <th>
+          <div>Người giao</div>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-assignment>
+      <tr>
+        <td>
+          {{ assignment.assignmentId }}
+        </td>
+        <td>
+          {{ assignment.assignmentName }}
+        </td>
+        <td></td>
+        <td></td>
+        <td>
+          <button pButton (click)="assVisibleToggle(assignment)">Chi tiết</button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+

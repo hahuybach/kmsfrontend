@@ -37,7 +37,7 @@
             <div class="row ms-5">
               <div class="col-md-10">
                 <span class="font-weight-bold font-size-18">
-                  {{ item.documentName }}.pdf
+                  {{ item.documentName + "." + item.fileExtension }}
                 </span>
                 <br />
                 <span>
@@ -114,9 +114,9 @@
             <div class="file-item-content">
               <div class="row ms-5">
                 <div class="col-md-10">
-                  <span class="font-weight-bold font-size-18"
-                    >{{ item.documentName }}.pdf</span
-                  >
+                  <span class="font-weight-bold font-size-18">{{
+                    item.documentName + "." + item.fileExtension
+                  }}</span>
                   <br />
                   <span>
                     <span class="font-weight-bold">Loại TL:</span>

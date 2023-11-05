@@ -47,6 +47,8 @@ import { InitiationPlanModule } from './features/post-login/school-side/initiati
 import {NgxPaginationModule} from "ngx-pagination";
 import {ToastModule} from "primeng/toast";
 import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component';
+import { AssignmentModule } from './features/post-login/assignment/assignment.module';
+import { SchoolAssignmentModule } from './features/post-login/school-side/assignment/school-assignment.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -88,8 +90,9 @@ import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-
     SchoolInitiationPlanModule,
     InitiationPlanModule,
     NgxPaginationModule,
-    ToastModule
-
+    ToastModule,
+    AssignmentModule,
+    SchoolAssignmentModule,
   ],
   providers: [
     MessageService,

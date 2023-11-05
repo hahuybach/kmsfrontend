@@ -10,7 +10,10 @@ import { TagModule } from 'primeng/tag';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
-
+import { TreeModule } from 'primeng/tree';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { TreeTableModule } from 'primeng/treetable';
+import { DropdownModule } from 'primeng/dropdown';
 @NgModule({
   declarations: [],
   imports: [
@@ -25,6 +28,10 @@ import { ToastModule } from 'primeng/toast';
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    TreeModule,
+    ContextMenuModule,
+    TreeTableModule,
+    DropdownModule,
   ],
   exports: [
     InputTextModule,
@@ -37,6 +44,10 @@ import { ToastModule } from 'primeng/toast';
     ConfirmDialogModule,
     DialogModule,
     ToastModule,
+    TreeModule,
+    ContextMenuModule,
+    TreeTableModule,
+    DropdownModule,
   ],
 })
 export class SharedModule {}
