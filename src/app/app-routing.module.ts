@@ -19,6 +19,7 @@ import { InitiationPlanDetailComponent } from './features/post-login/school-side
 import { CreateAssignmentComponent } from './features/post-login/assignment/create-assignment/create-assignment.component';
 import { SchoolInitiationPlanListComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-list/school-initiation-plan-list.component';
 import { AssignmentListComponent } from './features/post-login/school-side/assignment/assignment-list/assignment-list.component';
+import { SubmitAssignmentComponent } from './features/post-login/school-side/assignment/submit-assignment/submit-assignment.component';
 
 const routes: Routes = [
   {
@@ -80,6 +81,10 @@ const routes: Routes = [
       {
         path: 'schoolassignment',
         component: AssignmentListComponent,
+      },
+      {
+        path: 'submitassignment',
+        component: SubmitAssignmentComponent,
       },
     ],
   },

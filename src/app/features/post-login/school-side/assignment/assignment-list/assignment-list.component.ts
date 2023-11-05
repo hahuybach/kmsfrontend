@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AssignmentListComponent implements OnInit {
   assignments: any[];
-  assVisible = false;
+  assVisible = true;
   assigneelist: any[];
   ngOnInit(): void {
     this.assignments = [
