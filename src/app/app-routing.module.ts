@@ -22,6 +22,9 @@ import {
 import {
   GuidanceDocumentDetailComponent
 } from "./features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component";
+import {
+  GuidanceDocumentCreateComponent
+} from "./features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component";
 
 const routes: Routes = [
   {
@@ -75,6 +78,10 @@ const routes: Routes = [
       {
         path: 'guidanceDocument/:id',
         component: GuidanceDocumentDetailComponent
+      },
+      {
+        path: 'guidanceDocument/create/:issueId',
+        component: GuidanceDocumentCreateComponent
       },
       {
         path: 'initiationplan/:id',

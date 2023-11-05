@@ -45,6 +45,8 @@ import { GuidanceDocumentDetailComponent } from './features/post-login/guidance-
 import { GuidanceDocumentFilesComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-files/guidance-document-files.component';
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
 import {NgxPaginationModule} from "ngx-pagination";
+import {ToastModule} from "primeng/toast";
+import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +68,7 @@ import {NgxPaginationModule} from "ngx-pagination";
     GuidanceDocumentListComponent,
     GuidanceDocumentDetailComponent,
     GuidanceDocumentFilesComponent,
+    GuidanceDocumentCreateComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +88,8 @@ import {NgxPaginationModule} from "ngx-pagination";
     SchoolInitiationPlanModule,
     InitiationPlanModule,
     NgxPaginationModule,
-    
+    ToastModule
+
   ],
   providers: [
     MessageService,

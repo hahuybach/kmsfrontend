@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
 import {FilterGuidanceDocumentResponse} from "../models/filter-guidance-document-response";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +46,23 @@ export class GuidanceDocumentService {
 
   getGuidanceDocumentById(id: number) {
     return this.httpClient.get<any>(this.baseUrl + id);
+  }
+  readIssuePDF(id: string): Observable<HttpResponse<Blob>> {
+    // Set the response type as 'blob' to handle binary files
+    return this.httpClient.get(this.baseUrl + 'document/' + id, {
+      responseType: 'blob',
+      observe: 'response',
+    });
+  }
+
+  saveGuidanceDocument(request: any, files: any){
+    const formData : FormData = new FormData();
+    formData.append("guidance",new Blob([JSON.stringify(request)], {type:"application/json"}));
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+    return this.httpClient.post<any>(this.baseUrl + "save", formData, { headers });
   }
 }

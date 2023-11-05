@@ -1,15 +1,15 @@
 <h2>Chi tiết văn bản chỉ đạo</h2>
 
 <div class="row">
-    <div class="col-md-6 mt-5">
+    <div class="col-md-7 mt-5">
         <div class="m-3">
-            <span class="text-black-50">Về việc</span>
+            <span class="text-black-50">Tiêu đề</span>
         </div>
         <div class="m-3">
             <span class="font-weight-bold">{{guidanceDocument.guidanceDocumentName}}</span>
         </div>
     </div>
-    <div class="col-md-6 mt-5">
+    <div class="col-md-2 mt-5">
         <div class="m-3">
             <span class="text-black-50">Người đăng</span>
         </div>
@@ -18,29 +18,40 @@
 
         </div>
     </div>
-    <div class="col-md-6 mt-2">
+
+  <div class="col-md-2 mt-5">
+    <div class="m-3">
+      <span class="text-black-50">Ngày tạo</span>
+    </div>
+    <div class="m-3">
+      <span class="font-weight-bold">{{guidanceDocument.createdDate | date : "dd/MM/yyyy"}} </span>
+    </div>
+  </div>
+
+    <div class="col-md-7 mt-2">
         <div class="m-3">
-            <span class="text-black-50">Mô tả</span>
+            <span class="text-black-50">Lời nhắn</span>
         </div>
         <div class="m-3">
-            <textarea class="font-weight-bold form-control">{{guidanceDocument.description}}</textarea>
+            <textarea readonly class="font-weight-bold form-control">{{guidanceDocument.description}}</textarea>
         </div>
     </div>
-    <div class="col-md-6 mt-2">
-        <div class="m-3">
-            <span class="text-black-50">Ngày tạo</span>
-        </div>
-        <div class="m-3">
-            <span class="font-weight-bold">{{guidanceDocument.createdDate | date : "dd/MM/yyyy"}} </span>
-        </div>
+  <div class="col-md-4 mt-2">
+    <div class="m-3">
+      <span class="text-black-50">Kế hoạch kiểm tra</span>
     </div>
+    <div class="m-3">
+      <span class="font-weight-bold">{{guidanceDocument.issueDto?.issueName}} </span>
+
+    </div>
+  </div>
 
 
 </div>
 
 
 <div class="card mb-5">
-    <p-table [value]="guidanceDocument.documentDtos || []" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table  [value]="guidanceDocument.documentDtos || []" [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template pTemplate="header">
             <tr>
                 <th>Mã tài liệu</th>
@@ -54,10 +65,21 @@
             <tr>
                 <td>{{ document.documentCode }}</td>
                 <td>{{ document.documentName }}</td>
-                <td><img src="../../../../../assets/img/pdf.png" alt=""/></td>
+                <td (click)="openNewTab(document.documentLink)"><img src="../../../../../assets/img/pdf.png" alt=""/></td>
                 <td>{{ document.sizeFormat }}</td>
                 <td>{{ document.uploadedDate | date : "MM/dd/yyyy" }}</td>
             </tr>
         </ng-template>
     </p-table>
 </div>
+<p-dialog
+  header="Xem tài liệu"
+  [(visible)]="pdfLoaded"
+  [style]="{ width: '90vw', height: '100vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div *ngIf="pdfLoaded">
+    <iframe [src]="safePdfUrl" width="100%" height="680px"></iframe>
+  </div>
+</p-dialog>

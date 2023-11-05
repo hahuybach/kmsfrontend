@@ -4,6 +4,9 @@ import {GuidanceDocumentService} from "../../../services/guidance-document.servi
 import {ActivatedRoute, Router} from "@angular/router";
 import {IssueDropDownResponse} from "../../../models/issue-drop-down-response";
 import {IssueService} from "../../../services/issue.service";
+import {MessageService} from "primeng/api";
+import {ToastModule} from 'primeng/toast';
+import {resolve} from "@angular/compiler-cli";
 
 @Component({
   selector: 'app-guidance-document-list',
@@ -15,7 +18,7 @@ export class GuidanceDocumentListComponent implements OnInit {
   issueDropDowns: IssueDropDownResponse[];
   currentIssueSelected: IssueDropDownResponse;
   allGuidanceDocument: number = 0;
-  pageNo: number = 0;
+  pageNo: number = 1;
   pageSize: number = 2;
   sortBy: string = 'createdDate';
   sortDirection: string = 'desc';
@@ -24,26 +27,29 @@ export class GuidanceDocumentListComponent implements OnInit {
   startDateTime: string;
   endDateTime: string;
   fullName: string = '';
-
   dateError = false;
   globalSearch: string = '';
   advanceSearch: boolean = false;
-  advanceSearchButtonText = 'Hiện tra cứu nâng cao'
+  advanceSearchButtonText = 'Hiện tra cứu nâng cao';
+  maxPage: number = 0;
+  maxPageError: boolean = false;
+
+  issueId: number = -1
+  createGuidanceDocument: boolean = true;
+
   constructor(private guidanceDocumentService: GuidanceDocumentService,
               private route: Router,
-              private issueService: IssueService
+              private issueService: IssueService,
+              private messageService: MessageService
   ) {
+    this.guidanceDocuments = [];
   }
 
   loadGuidanceDocuments(): void {
-    console.log("current page" + this.pageNo)
-
-    if ((this.startDateTime != null && this.endDateTime != null) && (this.endDateTime < this.startDateTime)) {
+    if ((this.startDateTime != null && this.endDateTime != null) && (new Date(this.startDateTime) < new Date(this.endDateTime))) {
       this.dateError = true;
       return
     }
-
-
     this.guidanceDocumentService
       .filterGuidanceDocuments(
         this.pageNo,
@@ -62,8 +68,8 @@ export class GuidanceDocumentListComponent implements OnInit {
         next: (result) => {
           this.guidanceDocuments = result.guidanceDocumentDtos;
           this.allGuidanceDocument = result.size;
-          console.log(this.guidanceDocuments);
-          console.log("size " + this.allGuidanceDocument);
+          this.maxPage = result.maxPage;
+          this.onChangePageSize();
         },
         error: (error) => {
           console.log("Error occurred while fetching guidance documents:", error);
@@ -71,6 +77,21 @@ export class GuidanceDocumentListComponent implements OnInit {
       });
     this.dateError = false;
 
+  }
+
+  loadIssueIdForCreate(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.issueService.getCurrentActiveIssue().subscribe({
+        next: (result) => {
+          this.issueId = result.issueDto.issueId;
+          resolve(true);
+        },
+        error: (error) => {
+          this.showError(error.error.message);
+          resolve(false);
+        }
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -105,10 +126,12 @@ export class GuidanceDocumentListComponent implements OnInit {
   }
 
   onAdvanceSearch() {
-    if(this.advanceSearch){
+    if (this.advanceSearch) {
+      this.reset();
       this.advanceSearch = false;
       this.advanceSearchButtonText = 'Hiện tra cứu nâng cao'
-    }else {
+    } else {
+      this.reset();
       this.advanceSearch = true;
       this.advanceSearchButtonText = 'Ẩn tra cứu nâng cao'
     }
@@ -116,9 +139,68 @@ export class GuidanceDocumentListComponent implements OnInit {
   }
 
   onTableDataChange($event: number) {
-    console.log("event" + $event)
     this.pageNo = $event;
     this.loadGuidanceDocuments()
+  }
+
+  reset() {
+    this.pageNo = 1;
+    this.sortBy = 'createdDate';
+    this.sortDirection = 'desc';
+    this.description = ''
+    this.guidanceDocumentName = '';
+    this.startDateTime = '';
+    this.endDateTime = '';
+    this.startDateTime = '';
+    this.globalSearch = '';
+    this.fullName = '';
+    this.loadGuidanceDocuments();
+  }
+
+
+  maxPageOnKeyUp() {
+    if (this.pageNo > this.maxPage) {
+      this.maxPageError = true;
+      this.pageNo = this.maxPage;
+      this.showWarn();
+    } else {
+      this.maxPageError = false;
+    }
+  }
+
+  showWarn() {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Thông báo',
+      detail: 'Số trang bạn vừa tìm không thể vượt quá ' + this.maxPage,
+      key: 'paging'
+    });
+  }
+
+  showError(errorMsg: string) {
+    console.log("error pop up")
+    this.messageService.add({
+      severity: 'error', summary: 'Error', detail: errorMsg,
+      key: 'issueId'
+
+    });
+  }
+
+  onCreateGuidanceDocument() {
+    this.loadIssueIdForCreate().then((success) => {
+      if (success) {
+        this.route.navigate(['guidanceDocument/create/' + this.issueId])
+      }
+    })
+
+  }
+
+  onChangePageSize(){
+
+    if(this.guidanceDocuments.length == 0 && this.pageNo > 1){
+      this.pageNo = this.maxPage;
+      this.loadGuidanceDocuments();
+    }
   }
 }
 
