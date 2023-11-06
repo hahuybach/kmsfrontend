@@ -168,6 +168,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       this.inputFileForm.get('file')?.setValue(file);
       this.fileInputPlaceholders = file.name;
     }
+    // this.fileStatus = true;
+    this.buttonApproveStatus = true;
   }
   resetDeadline() {
     let newDeadline = this.inputFileForm.get('deadline')?.value;

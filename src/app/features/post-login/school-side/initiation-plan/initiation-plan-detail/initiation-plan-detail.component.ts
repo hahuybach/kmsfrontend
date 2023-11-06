@@ -142,6 +142,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     const fileControl = this.inputFileForm.get('file');
     if (fileControl?.value) {
       this.newFile = fileControl.value;
+      console.log(this.newFile);
     }
   }
   getStatusSeverity(statusId: number): string {
@@ -242,5 +243,27 @@ export class InitiationPlanDetailComponent implements OnInit {
   checkCanEdit() {
     const deadline = new Date(this.schoolinitiationplan.deadline);
     return Date.now() <= deadline.getTime();
+  }
+  getSize(size: number): string {
+    const n: number = 1024;
+    let s: string = '';
+    const kb: number = size / n;
+    const mb: number = kb / n;
+    const gb: number = mb / n;
+    const tb: number = gb / n;
+
+    if (size < n) {
+      s = size + ' Bytes';
+    } else if (size >= n && size < n * n) {
+      s = kb.toFixed(1) + ' KB';
+    } else if (size >= n * n && size < n * n * n) {
+      s = mb.toFixed(1) + ' MB';
+    } else if (size >= n * n * n && size < n * n * n * n) {
+      s = gb.toFixed(2) + ' GB';
+    } else if (size >= n * n * n * n) {
+      s = tb.toFixed(2) + ' TB';
+    }
+
+    return s;
   }
 }

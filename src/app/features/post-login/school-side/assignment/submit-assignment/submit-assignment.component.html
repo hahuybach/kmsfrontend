@@ -1,7 +1,7 @@
 <h2>Công việc cần nộp</h2>
 <!-- <form formGroupName=""> -->
 <div class="submit-assignment">
-    <p-dialog
+  <p-dialog
     header="Chi tiết công việc"
     [(visible)]="assVisible"
     [style]="{ width: '60vw', height: '100vh' }"
@@ -48,7 +48,7 @@
               selectedAssignment.assignee.assigneeName
             }}</span>
           </div>
-  
+
           <div class="height-100">
             <span class="text-black-50">Trạng thái</span>
             <br />
@@ -86,7 +86,7 @@
                 >{{ item.userName }}
               </span>
               <span class="text-black-50"></span>
-  
+
               <br />
               <span>{{ item.content }}</span>
             </div>
@@ -101,47 +101,57 @@
       <div class="height-100">
         <span class="font-weight-bold">Tài liệu</span>
         <br />
-        <!-- <button pButton>Nộp tài liệu</button> -->
-  
-        <!-- <div class="row document-item mb-2">
-          <div class="d-flex flex-row">
-            <div class="col-md-4 pe-3">
-              <label>Tên tài liệu</label><br />
-              <input
-                pInputText
-                placeholder="Điền tên tài liệu"
-                formControlName="documentName"
-              />
-            </div>
-            <div class="col-md-2 pe-3">
-              <label>Mã tài liệu</label><br />
-              <input
-                pInputText
-                placeholder="Điền mã tài liệu"
-                formControlName="documentCode"
-              />
-            </div>
-            <div class="col-md-6">
-              <label>Tài liệu</label><br />
-              <div class="input-file">
-                <input
-                  type="file"
-                  #fileInput
-                  style="display: none"
-                  (change)="handleFileInputChange(fileInput)"
-                />
-                <input pInputText readonly class="col-md-8" />
-                <button
-                  type="button"
-                  pButton
-                  label="Chọn tệp"
-                  (click)="fileInput.click()"
-                  class="col-md-2"
-                ></button>
+        <form [formGroup]="filesForm">
+          <ng-container formArrayName="documents">
+            <ng-container
+              *ngFor="let documentForm of documents.controls; let i = index"
+            >
+              <div class="row" [formGroupName]="i">
+                <!-- Document fields here -->
+                <div class="form-group row">
+                  <div class="col-md-2">
+                    <label>Mã tài liệu</label>
+                    <input
+                      formControlName="documentCode"
+                      class="form-control"
+                      type="text"
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <label>Tên tài liệu</label>
+                    <input
+                      formControlName="documentName"
+                      class="form-control"
+                      type="text"
+                    />
+                  </div>
+                  <div class="col-md-7">
+                    <label>File</label>
+                    <input
+                      class="form-control"
+                      required
+                      (change)="onSubmitFile($event, i)"
+                      type="file"
+                    />
+                  </div>
+                  <div class="col-md-1 d-flex align-items-end">
+                    <div>
+                      <button pButton (click)="removeDocument(i)">Xóa</button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Other fields here -->
+
+                <!-- Remove document button -->
+                <div class="form-group"></div>
               </div>
-            </div>
+            </ng-container>
+          </ng-container>
+          <button pButton type="button" (click)="addDocument()">+</button>
+          <div class="mt-2">
+            <button pButton (click)="uploadFiles()">Nộp tài liệu</button>
           </div>
-        </div> -->
+        </form>
       </div>
     </div>
     <!-- <div class="mt-5">
@@ -188,10 +198,11 @@
         <td></td>
         <td></td>
         <td>
-          <button pButton (click)="assVisibleToggle(assignment)">Chi tiết</button>
+          <button pButton (click)="assVisibleToggle(assignment)">
+            Chi tiết
+          </button>
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
-
