@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import "node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
 /* Import PrimeNG styles */
 @import "primeng/resources/primeng.min.css";
 @import "node_modules/primeng/resources/themes/saga-blue/theme.css"; /* Replace with your preferred theme */
-
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-alpine.css";
 //SCROLLBAR CSS
@@ -64,3 +64,6 @@
 $theme-colors: (
   "primary": #4253f0
 );
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

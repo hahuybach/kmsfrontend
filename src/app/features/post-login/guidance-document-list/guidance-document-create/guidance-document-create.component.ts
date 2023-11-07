@@ -142,14 +142,19 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     if (!this.selectedFiles) {
       this.selectedFiles = []; // Initialize the selectedFiles array if it's not already defined
     }
-    this.selectedFiles[index] = event.target.files[0];
-    this.guidanceDocuments.at(index).patchValue({
-      isExist: false
-    })
+    const file = event.target.files[0];
+    if (file.type === 'application/pdf') { // Check if the file type is PDF
+      this.selectedFiles[index] = file;
+      this.guidanceDocuments.at(index).patchValue({
+        isExist: false
+      });
+    } else {
+      // Handle error or provide feedback to the user
+      this.toast.showWarn('error', "Lỗi", "Văn bản chỉ đạo phải ở dưới định dạng pdf")
+      event.target.value = null;
 
-
+    }
   }
-
   checkValidFile(index: number) {
     return this.guidanceDocuments.at(index).get('isExist');
   }

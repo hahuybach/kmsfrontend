@@ -49,6 +49,10 @@ import {ToastModule} from "primeng/toast";
 import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component';
 import { AssignmentModule } from './features/post-login/assignment/assignment.module';
 import { SchoolAssignmentModule } from './features/post-login/school-side/assignment/school-assignment.module';
+import { SchoolListComponent } from './features/post-login/school-list/school-list.component';
+import { SchoolDetailComponent } from './features/post-login/school-list/school-detail/school-detail.component';
+import { SchoolCreateComponent } from './features/post-login/school-list/school-create/school-create.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,6 +75,9 @@ import { SchoolAssignmentModule } from './features/post-login/school-side/assign
     GuidanceDocumentDetailComponent,
     GuidanceDocumentFilesComponent,
     GuidanceDocumentCreateComponent,
+    SchoolListComponent,
+    SchoolDetailComponent,
+    SchoolCreateComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,6 +100,7 @@ import { SchoolAssignmentModule } from './features/post-login/school-side/assign
     ToastModule,
     AssignmentModule,
     SchoolAssignmentModule,
+
   ],
   providers: [
     MessageService,
