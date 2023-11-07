@@ -330,7 +330,9 @@
                 <br />
                 <span class="text-black-50">{{ getSize(newFile.size) }}</span>
                 <br />
-                <span class="text-black-50">{{ newFile.dateModified | date }}</span>
+                <span class="text-black-50">{{
+                  newFile.dateModified | date
+                }}</span>
               </div>
               <div
                 class="col-md-2 d-flex justify-content-center align-items-center"
@@ -362,8 +364,8 @@
         <div *ngIf="fileStatus" class="px-4 my-4">
           <div class="d-flex justify-content-center align-items-center mb-2">
             <span *ngIf="!checkCanEdit()" class="p-error"
-              ><span class="font-weight-bold">Thông báo: </span>Hết mẹ hạn
-              rồi</span
+              ><span class="font-weight-bold">Thông báo: </span>Hiện tại đã hết
+              hạn nên không thể chỉnh sửa</span
             >
           </div>
           <div class="plan-file-item d-flex">

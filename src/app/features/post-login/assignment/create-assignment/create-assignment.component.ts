@@ -7,10 +7,11 @@ import {
   MenuItem,
   MessageService,
 } from 'primeng/api';
-import { switchMap } from 'rxjs';
+import { Observable, concatMap, from, switchMap } from 'rxjs';
 import { Issue } from 'src/app/models/issue.model';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { IssueService } from 'src/app/services/issue.service';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 interface TreeNode {
   assignmentId: number;
   assignmentName: string;
@@ -40,7 +41,7 @@ export class CreateAssignmentComponent {
   action: string | undefined;
   issueId: number;
   constructor(
-    private messageService: MessageService,
+    private toastService: ToastService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private assignmentService: AssignmentService,
@@ -193,9 +194,7 @@ export class CreateAssignmentComponent {
         addAssignmentDto: {
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
           description: this.assignmentForm.get('description')?.value,
-          deadline: this.parseDateStringToDate(
-            this.assignmentForm.get('deadline')?.value
-          ),
+          deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           issueId: this.issueId,
         },
       };
@@ -204,9 +203,7 @@ export class CreateAssignmentComponent {
         addAssignmentDto: {
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
           description: this.assignmentForm.get('description')?.value,
-          deadline: this.parseDateStringToDate(
-            this.assignmentForm.get('deadline')?.value
-          ),
+          deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           parentId: this.assignmentForm.get('parentId')?.value,
           issueId: this.issueId,
         },
@@ -228,11 +225,10 @@ export class CreateAssignmentComponent {
         assignmentId: this.selectedAssignment.assignmentId,
         assignmentName: this.assignmentForm.get('assignmentName')?.value,
         description: this.assignmentForm.get('description')?.value,
-        deadline: this.parseDateStringToDate(
-          this.assignmentForm.get('deadline')?.value
-        ),
+        deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
       },
     };
+    console.log(updateAssignment);
     this.assignmentService.updateAssignment(updateAssignment).subscribe({
       next: (response) => {
         this.initData();
@@ -251,13 +247,18 @@ export class CreateAssignmentComponent {
       header: 'Xác nhận xóa',
       // icon: 'pi pi-info-circle',
       accept: () => {
-        const deleteNode = {
+        const deleteAssignment = {
           id: assignment.assignmentId,
         };
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Xóa',
-          detail: 'Xóa thành công',
+        this.assignmentService.deleteAssignment(deleteAssignment).subscribe({
+          next: (response) => {
+            console.log(response);
+            this.initData();
+            this.assignmentVisible = false;
+          },
+          error: (error) => {
+            console.log(error);
+          },
         });
       },
       reject: (type: any) => {

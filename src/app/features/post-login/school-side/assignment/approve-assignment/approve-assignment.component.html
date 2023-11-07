@@ -1,1 +1,117 @@
-<p>approve-assignment works!</p>
+<form action=""></form>
+<p-dialog
+  header="Chi tiết công việc"
+  [(visible)]="assVisible"
+  [style]="{ width: '70vw', height: '800px' }"
+  [draggable]="false"
+  [resizable]="false"
+></p-dialog>
+<p-table
+  #dt
+  [value]="assignments"
+  dataKey="id"
+  [rowHover]="true"
+  [rows]="10"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 15, 20]"
+  [paginator]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>
+        <div>Id</div>
+      </th>
+      <th>
+        <div>Tên</div>
+      </th>
+
+      <th>
+        <div>Người giao</div>
+      </th>
+      <th>
+        <div>Người làm</div>
+      </th>
+      <th>
+        <div>Trạng thái</div>
+      </th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-assignment let-i="rowIndex">
+    <tr [pEditableRow]="assignment">
+      <td>
+        {{ assignment.assignmentId }}
+      </td>
+      <td>
+        {{ assignment.assignmentName }}
+      </td>
+      <td>
+        {{ assignment.assigner.assignerName }}
+      </td>
+      <td>
+        {{ assignment.assignee.assigneeName }}
+        <!-- Editable dropdown cell for assigneeName -->
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <!-- <p-dropdown
+              [options]="statusOptions"
+              [(ngModel)]="assignment.status"
+            ></p-dropdown> -->
+          </ng-template>
+          <ng-template pTemplate="output">
+            <p-tag class="status" [severity]="'info'" [rounded]="true">
+              Đang thực thi
+            </p-tag>
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <button pButton (click)="assVisibleToggle(assignment)">Chi tiết</button>
+      </td>
+      <td>
+        <!-- Save and cancel buttons for row editing -->
+        <button
+          *ngIf="dt.isRowEditing(assignment)"
+          pButton
+          pRipple
+          type="button"
+          pSaveEditableRow
+          (click)="onRowEditSave(i)"
+          class="p-button-rounded p-button-text p-button-success mr-2"
+        >
+          save
+        </button>
+        <button
+          *ngIf="dt.isRowEditing(assignment)"
+          pButton
+          pRipple
+          type="button"
+          pCancelEditableRow
+          (click)="onRowEditCancel(i)"
+          class="p-button-rounded p-button-text p-button-danger"
+        >
+          cancel
+        </button>
+      </td>
+      <td>
+        <!-- Edit button -->
+        <button
+          pButton
+          pRipple
+          type="button"
+          pInitEditableRow
+          (click)="onRowEditInit(i)"
+          class="p-button-rounded p-button-text"
+          *ngIf="!dt.isRowEditing(assignment)"
+        >
+          edit
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

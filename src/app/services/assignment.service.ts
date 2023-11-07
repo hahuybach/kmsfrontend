@@ -16,13 +16,13 @@ export class AssignmentService {
     console.log(url);
     return this.http.get<any[]>(url, { headers });
   }
-  // public deleteAssignment(data:object): Observable<any> {
-  //   let headers = new HttpHeaders();
-  //   headers = headers.append('Content-Type', 'json');
-  //   const url = `${this.assignmentApiUrl}`;
-  //   console.log(url);
-  //   return this.http.delete(url,data, { headers });
-  // }
+  public deleteAssignment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
+
+    const url = `${this.assignmentApiUrl}delete`;
+    return this.http.delete(url, { headers: headers, body: data });
+  }
   public addAssignment(data: object): Observable<any> {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'json');

@@ -26,7 +26,6 @@ textarea {
     border-radius: 8px;
     border: solid 1px $primary;
     transition: all 0.5s ease;
-    margin-right: 20px;
     &:hover {
         background-color: $primary-hover;
         border-color: $primary-hover;
@@ -55,9 +54,6 @@ ul {
         padding: 0;
     }
 }
-.comment {
-    width: 80%;
-}
 .comment-content {
     border-top: 0.5px solid gray;
 }
@@ -72,6 +68,9 @@ ul {
     }
     .comment-item-content {
         padding-left: 20px;
+        .comment-date {
+            font-size: 14px;
+        }
     }
 }
 .font-size-12 {
@@ -79,4 +78,55 @@ ul {
 }
 .col-md-1 {
     padding: 0;
+}
+
+.comment-item-person {
+    img {
+        width: 40px;
+        height: 40px;
+    }
+}
+.assignment-container {
+    height: 100%;
+    padding: 0px;
+    // display: flex;
+    // flex-direction: column;
+    .right-box {
+        height: 100%;
+        padding: 0 60px;
+        // border: #495057 solid 1px;
+
+        // // background-color: #f8f9fa;
+    }
+    .left-box {
+        overflow: auto;
+        height: 600px;
+    }
+}
+.file-input {
+    input {
+        width: 75%;
+        border-radius: 8px 0 0 8px;
+    }
+    button {
+        width: 25%;
+        border-radius: 0 8px 8px 0;
+    }
+}
+.delete-file-item {
+    font-size: 30px;
+    color: #b42318;
+    transition: all 0.5s ease;
+    &:hover {
+        color: #bc6761;
+    }
+}
+.add-file-item {
+    font-size: 30px;
+    font-weight: 500;
+    color: $primary;
+    transition: all 0.5s ease;
+    &:hover {
+        color: $primary-hover;
+    }
 }

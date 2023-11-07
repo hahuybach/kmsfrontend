@@ -2,74 +2,131 @@
 <!-- <form formGroupName=""> -->
 <div class="submit-assignment">
   <p-dialog
-    header="Chi tiết công việc"
-    [(visible)]="assVisible"
-    [style]="{ width: '60vw', height: '100vh' }"
+    header="Tải file"
+    [(visible)]="fileVisible"
+    [style]="{ width: '70vw', height: '800px' }"
     [draggable]="false"
     [resizable]="false"
   >
-    <div *ngIf="selectedAssignment" class="row">
-      <div class="col-md-8 row">
-        <div class="col-md-6">
-          <div class="height-100">
-            <span class="text-black-50">Tên công việc</span>
-            <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.assignmentName
-            }}</span>
+    <form [formGroup]="fileInputForm">
+      <div class="row">
+        <!-- Add a condition to show only the selected documentForm -->
+        <div>
+          <!-- Your document form content here -->
+          <div>
+            <label for="">Mã tài liệu</label>
+            <input
+              formControlName="documentCode"
+              class="form-control"
+              type="text"
+            />
           </div>
-          <div class="height-100">
-            <span class="text-black-50">Chi tiết công việc công việc</span>
-            <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.description
-            }}</span>
+          <div>
+            <label for="">Tên tài liệu</label>
+            <input
+              formControlName="documentName"
+              class="form-control"
+              type="text"
+            />
           </div>
-          <div class="height-100">
-            <span class="text-black-50">Hạn nộp</span>
+          <div class="file-input">
+            <label for="">Tệp</label>
             <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.deadline
-            }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="height-100">
-            <span class="text-black-50">Người giao</span>
-            <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.assigner.assignerName
-            }}</span>
-          </div>
-          <div class="height-100">
-            <span class="text-black-50">Người làm</span>
-            <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.assignee.assigneeName
-            }}</span>
-          </div>
-
-          <div class="height-100">
-            <span class="text-black-50">Trạng thái</span>
-            <br />
-            <span>
-              <p-tag class="status" [severity]="'info'" [rounded]="true">
-                Đang thực thi
-              </p-tag>
-            </span>
+            <input
+              type="file"
+              #fileInput
+              style="display: none"
+              (change)="handleFileInputChange(fileInput)"
+            />
+            <input
+              pInputText
+              readonly
+              class="col-md-9"
+              placeholder="{{
+                fileInputPlaceholders
+                  ? fileInputPlaceholders
+                  : 'Chọn file để tải lên'
+              }}"
+            />
+            <button
+              type="button"
+              pButton
+              label="Chọn tệp"
+              (click)="fileInput.click()"
+            ></button>
           </div>
         </div>
       </div>
-      <div class="col-md-4 right-box">
+      <div class="mt-5">
+        <button pButton (click)="uploadFiles()">Nộp tài liệu</button>
+      </div>
+    </form>
+  </p-dialog>
+  <p-dialog
+    header="Chi tiết công việc"
+    [(visible)]="assVisible"
+    [style]="{ width: '70vw', height: '800px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="selectedAssignment" class="row assignment-container">
+      <div class="col-md-8 left-box">
         <div class="height-100">
-          <span class="text-black-50">Bình luận</span>
+          <span class="text-black-50">Tên công việc</span>
           <br />
-          <div class="comment d-flex">
-            <input pInputText type="text" placeholder="Gửi bình luận" />
-            <div class="d-flex justify-content-center align-items-center p-2">
-              <i class="bi bi-send"></i>
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.assignmentName
+          }}</span>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Chi tiết công việc</span>
+          <br />
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.description
+          }}</span>
+        </div>
+        <!-- file -->
+        <div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <span class="font-weight-bold">Tài liệu</span>
+            </div>
+            <div
+              class="add-file-item d-flex align-items-center justify-content-center"
+              (click)="addDocument()"
+            >
+              <i class="bi bi-plus-circle-fill"></i>
             </div>
           </div>
+          <br />
+          <div *ngIf="documents.length > 0">
+            <ng-container *ngFor="let doc of documents">
+              {{ doc.documentCode }}-{{ doc.documentName }}
+              <br />
+            </ng-container>
+            <button pButton>Lưu thay đổi</button>
+          </div>
+        </div>
+        <!-- comment -->
+        <div class="height-100">
+          <br />
+          <form [formGroup]="commentForm">
+            <div class="comment d-flex">
+              <input
+                formControlName="content"
+                pInputText
+                type="text"
+                placeholder="Gửi bình luận"
+                (keydown)="onKeyPress($event)"
+              />
+              <div
+                class="d-flex justify-content-center align-items-center p-2"
+                (click)="sendComment()"
+              >
+                <i class="bi bi-send"></i>
+              </div>
+            </div>
+          </form>
         </div>
         <div *ngIf="selectedAssignment.comments" class="comment-content pt-2">
           <div
@@ -77,15 +134,17 @@
             class="comment-item row"
           >
             <div
-              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+              class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
             >
               <img src="../../../../../../assets/img/user_icon.svg" alt="" />
             </div>
-            <div class="comment-item-content col-md-9">
+            <div class="comment-item-content col-md-10">
               <span class="font-weight-bold font-size-18"
                 >{{ item.userName }}
               </span>
-              <span class="text-black-50"></span>
+              <span class="text-black-50 comment-date">{{
+                item.createdDate | date
+              }}</span>
 
               <br />
               <span>{{ item.content }}</span>
@@ -98,65 +157,64 @@
           </div>
         </div>
       </div>
-      <div class="height-100">
-        <span class="font-weight-bold">Tài liệu</span>
-        <br />
-        <form [formGroup]="filesForm">
-          <ng-container formArrayName="documents">
-            <ng-container
-              *ngFor="let documentForm of documents.controls; let i = index"
+      <div class="col-md-4 right-box">
+        <div class="height-100">
+          <span class="text-black-50">Người giao</span>
+          <br />
+          <div class="row mt-1">
+            <div
+              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
             >
-              <div class="row" [formGroupName]="i">
-                <!-- Document fields here -->
-                <div class="form-group row">
-                  <div class="col-md-2">
-                    <label>Mã tài liệu</label>
-                    <input
-                      formControlName="documentCode"
-                      class="form-control"
-                      type="text"
-                    />
-                  </div>
-                  <div class="col-md-2">
-                    <label>Tên tài liệu</label>
-                    <input
-                      formControlName="documentName"
-                      class="form-control"
-                      type="text"
-                    />
-                  </div>
-                  <div class="col-md-7">
-                    <label>File</label>
-                    <input
-                      class="form-control"
-                      required
-                      (change)="onSubmitFile($event, i)"
-                      type="file"
-                    />
-                  </div>
-                  <div class="col-md-1 d-flex align-items-end">
-                    <div>
-                      <button pButton (click)="removeDocument(i)">Xóa</button>
-                    </div>
-                  </div>
-                </div>
-                <!-- Other fields here -->
-
-                <!-- Remove document button -->
-                <div class="form-group"></div>
-              </div>
-            </ng-container>
-          </ng-container>
-          <button pButton type="button" (click)="addDocument()">+</button>
-          <div class="mt-2">
-            <button pButton (click)="uploadFiles()">Nộp tài liệu</button>
+              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+            </div>
+            <div class="col-md-10 d-flex align-items-center">
+              <span class="font-weight-bold">{{
+                selectedAssignment.assigner.assignerName
+              }}</span>
+            </div>
           </div>
-        </form>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Người làm</span>
+          <br />
+          <div class="row mt-1">
+            <div
+              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+            </div>
+            <div class="col-md-10 d-flex align-items-center">
+              <span class="font-weight-bold">{{
+                selectedAssignment.assignee.assigneeName
+              }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Hạn nộp</span>
+          <br />
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.deadline
+          }}</span>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Trạng thái</span>
+          <br />
+          <span class="mt-1">
+            <p-tag class="status" [severity]="'info'" [rounded]="true">
+              Đang thực thi
+            </p-tag>
+          </span>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Ngày tạo</span>
+          <br />
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.deadline
+          }}</span>
+        </div>
       </div>
     </div>
-    <!-- <div class="mt-5">
-      <button pButton>Lưu</button>
-    </div> -->
   </p-dialog>
   <!-- </form> -->
   <p-table

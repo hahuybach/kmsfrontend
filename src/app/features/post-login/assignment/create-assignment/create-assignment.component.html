@@ -69,7 +69,13 @@
         <h6>Danh sách công việc</h6>
       </div>
       <div>
-        <button pButton (click)="openDetail(null, 'addroot')">Tạo mới</button>
+        <button
+          [disabled]="assignments != null"
+          pButton
+          (click)="openDetail(null, 'addroot')"
+        >
+          Tạo mới
+        </button>
       </div>
     </div>
   </ng-template>
@@ -83,8 +89,9 @@
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-rowNode>
     <tr [ttRow]="rowNode">
-      <td>
+      <td class="folder">
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+        <i class="bi bi-folder-fill"></i>
         {{ rowData.node.assignmentName }}
       </td>
       <td>{{ rowData.node.assigner.user.fullName }}</td>

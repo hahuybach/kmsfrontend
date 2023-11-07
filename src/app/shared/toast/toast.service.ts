@@ -24,6 +24,6 @@ export class ToastService {
   }
 
   showError(key: string, summary: string, detail: string) {
-    this.messageService.add({key: key, summary: summary, detail: detail});
+    this.messageService.add({key: key, severity: 'error', summary: summary, detail: detail});
   }
 }
