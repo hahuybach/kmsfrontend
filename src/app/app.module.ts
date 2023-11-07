@@ -12,7 +12,7 @@ import { IssueListComponent } from './features/post-login/issue-list/issue-list.
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
 import { MenuModule } from 'primeng/menu';
 import { AgGridModule } from 'ag-grid-angular';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -97,6 +97,7 @@ import { InitiationPlanModule } from './features/post-login/school-side/initiati
       useClass: TokenExpirationInterceptor,
       multi: true,
     },
+    provideAnimations(),
   ],
   bootstrap: [AppComponent],
 })

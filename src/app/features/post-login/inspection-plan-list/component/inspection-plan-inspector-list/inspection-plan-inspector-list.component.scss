@@ -19,6 +19,16 @@
     width: 60px;
     height: 60px;
   }
+
+}
+
+.delete-button{
+  border: none;
+  background: none;
+  i{
+    font-size: 1.2rem;
+    color: rgb(255, 86, 86);
+  }
 }
 
 .card{
@@ -26,3 +36,13 @@
     font-size: 13px;
   }
 }
+
+.scrollable-container {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.inspector-item{
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+

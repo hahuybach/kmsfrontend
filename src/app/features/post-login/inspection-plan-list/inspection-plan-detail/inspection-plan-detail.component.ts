@@ -76,9 +76,7 @@ export class InspectionPlanDetailComponent implements OnInit {
     }
   }
 
-  ngOnInit()
-    :
-    void {
+  ngOnInit(): void {
     this.route.params
       .pipe(
         switchMap((params) => {

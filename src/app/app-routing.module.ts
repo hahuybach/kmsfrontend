@@ -16,6 +16,9 @@ import { SchoolInitiationPlanDetailComponent } from './features/post-login/schoo
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { InspectionPlanDetailComponent } from './features/post-login/inspection-plan-list/inspection-plan-detail/inspection-plan-detail.component';
 import { InitiationPlanDetailComponent } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
+import {
+  UpdateInspectionPlanComponent
+} from "./features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component";
 
 const routes: Routes = [
   {
@@ -56,6 +59,10 @@ const routes: Routes = [
       {
         path: 'inspection_plan/:id',
         component: InspectionPlanDetailComponent,
+      },
+      {
+        path: 'inspection_plan/update/:id',
+        component: UpdateInspectionPlanComponent,
       },
       // school initiation plan
       {

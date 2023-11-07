@@ -3,6 +3,9 @@ import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpHeaders} from "@angular/common/http";
 import {InspectorService} from "../../../../services/inspector.service";
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
+import {SchoolService} from "../../../../services/school.service";
+import {IssueService} from "../../../../services/issue.service";
+import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
 
 @Component({
   selector: 'app-create-inspection-plan',
@@ -11,18 +14,47 @@ import {inspectionPlanService} from "../../../../services/inspectionplan.service
 })
 export class CreateInspectionPlanComponent {
   inspectionPlanForm: FormGroup;
-  tempInspectorList: any[] = [];
-  tempInspectorIds: number[] = [];
   defaultEndDate: Date = new Date();
   defaultStartDate: Date = new Date();
+  fileInputPlaceholders: string;
+  schoolList: any[];
+  inspectorList: any[];
+  inspectorListId: number[];
+  selectedInspectorList: any[] =[];
 
   constructor(
     private fb: FormBuilder,
-    private readonly inspectionPlanService: inspectionPlanService
+    private readonly inspectionPlanService: inspectionPlanService,
+    private readonly schoolService: SchoolService,
+    private readonly issueService: IssueService,
+    private readonly inspectionplanInspectorService: InspectionplanInspectorlistService
   ) {
   }
 
   ngOnInit() {
+    this.issueService.getCurrentActiveIssue().subscribe({
+        next: (data) => {
+          this.inspectorList = data.issueDto.inspectors;
+          this.inspectionplanInspectorService.setPopupInspectorList(this.inspectorList);
+          this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectorList = list);
+          this.inspectionplanInspectorService.setInspectorList(this.selectedInspectorList);
+          this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.selectedInspectorList = list);
+        },
+        error: (error): any => {
+          console.log(error);
+        }
+      }
+    )
+
+    this.schoolService.getSchools().subscribe({
+      next: (data) => {
+        this.schoolList = data;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
+
     this.inspectionPlanForm = this.fb.group({
       inspectionPlanName: [null, Validators.compose([Validators.required])],
       description: [null, Validators.compose([Validators.required])],
@@ -49,13 +81,14 @@ export class CreateInspectionPlanComponent {
     this.popupInspectorVisible = !this.popupInspectorVisible;
   }
 
-  getInspectorList(data: any) {
-    this.tempInspectorList = data;
-    this.tempInspectorIds = this.tempInspectorList.map(inspector => inspector.accountId);
-    this.inspectionPlanForm.get('inspectorIds')?.setValue(this.tempInspectorIds);
+  onResetList() {
+    this.inspectionplanInspectorService.resetBothLists();
   }
 
-  fileInputPlaceholders: string;
+  getInspectorIds(data: any) {
+    this.inspectorListId = data.map((item: { accountId: any; }) => item.accountId);
+    console.log(this.inspectorListId)
+  }
 
   handleFileInputChange(fileInput: any): void {
     const files = fileInput.files;
@@ -69,6 +102,7 @@ export class CreateInspectionPlanComponent {
   }
 
   onSubmit() {
+    console.log("submit")
     const formData = new FormData();
     const inspectionPlan = {
       inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
