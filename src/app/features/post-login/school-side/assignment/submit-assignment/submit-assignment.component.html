@@ -10,27 +10,36 @@
   >
     <form [formGroup]="fileInputForm">
       <div class="row">
-        <!-- Add a condition to show only the selected documentForm -->
         <div>
-          <!-- Your document form content here -->
           <div>
-            <label for="">Mã tài liệu</label>
+            <span class="text-black-50">Mã tài liệu</span>
+            <br />
             <input
               formControlName="documentCode"
               class="form-control"
               type="text"
+              placeholder="Điền mã tài liệu"
             />
+            <br />
           </div>
           <div>
-            <label for="">Tên tài liệu</label>
+            <span class="text-black-50">Tên tài liệu</span>
+            <br />
             <input
               formControlName="documentName"
               class="form-control"
               type="text"
+              placeholder="Điền tên tài liệu"
             />
+            <br />
+            <ng-container
+              *ngIf="fileInputForm.get('documentName')?.dirty && fileInputForm.controls.documentName.errors?.['whitespace']"
+            >
+              <span class="p-error">Vui lòng điền tên tài liệu</span>
+            </ng-container>
           </div>
           <div class="file-input">
-            <label for="">Tệp</label>
+            <span class="text-black-50">Tệp tài liệu</span>
             <br />
             <input
               type="file"
@@ -58,7 +67,13 @@
         </div>
       </div>
       <div class="mt-5">
-        <button pButton (click)="uploadFiles()">Nộp tài liệu</button>
+        <button
+          pButton
+          (click)="uploadFiles()"
+          [disabled]="fileInputForm.get('file')?.value == '' || fileInputForm.controls.documentName.errors?.['whitespace'] "
+        >
+          Nộp tài liệu
+        </button>
       </div>
     </form>
   </p-dialog>
@@ -89,7 +104,7 @@
         <div>
           <div class="d-flex justify-content-between">
             <div>
-              <span class="font-weight-bold">Tài liệu</span>
+              <span class="text-black-50">Tài liệu</span>
             </div>
             <div
               class="add-file-item d-flex align-items-center justify-content-center"
@@ -100,12 +115,60 @@
           </div>
           <br />
           <div *ngIf="documents.length > 0">
-            <ng-container *ngFor="let doc of documents">
-              {{ doc.documentCode }}-{{ doc.documentName }}
-              <br />
+            <ng-container *ngFor="let item of documents; let i = index">
+              <div class="row mb-3">
+                <div class="col-md-11">
+                  <div
+                    (click)="
+                      item.documentLink
+                        ? openNewTab(item.documentLink)
+                        : displayNewFileUpload(item.file)
+                    "
+                  >
+                    <div class="file-item px-3 py-1 d-flex">
+                      <div
+                        class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                      >
+                        <img src="../../../../../assets/img/pdf.png" alt="" />
+                      </div>
+                      <div class="file-item-content">
+                        <div class="row ms-2">
+                          <div class="col-md-10">
+                            <span class="font-weight-bold font-size-18">{{
+                              item.documentName
+                            }}</span>
+                            <br />
+                            <span
+                              ><span class="font-weight-bold">Mã:</span>
+                              {{ item.documentCode }}</span
+                            >
+                          </div>
+                          <!-- <div class="col-md-2">
+                            <span class="text-black-50">{{
+                              item.sizeFormat || item.file.size
+                            }}</span>
+                            <br />
+                            <span>{{
+                              item.uploadedDate | date : "MM/dd/yyyy"
+                            }}</span>
+                          </div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
+                  (click)="removeDoc(i)"
+                >
+                  <i class="bi bi-x-lg"></i>
+                </div>
+              </div>
             </ng-container>
-            <button pButton>Lưu thay đổi</button>
           </div>
+          <button pButton [disabled]="documents.length == 0">
+            Lưu thay đổi
+          </button>
         </div>
         <!-- comment -->
         <div class="height-100">
@@ -169,7 +232,7 @@
             </div>
             <div class="col-md-10 d-flex align-items-center">
               <span class="font-weight-bold">{{
-                selectedAssignment.assigner.assignerName
+                selectedAssignment.assigner.user.fullName
               }}</span>
             </div>
           </div>
@@ -185,7 +248,7 @@
             </div>
             <div class="col-md-10 d-flex align-items-center">
               <span class="font-weight-bold">{{
-                selectedAssignment.assignee.assigneeName
+                selectedAssignment.assignee.user.fullName
               }}</span>
             </div>
           </div>
@@ -194,7 +257,7 @@
           <span class="text-black-50">Hạn nộp</span>
           <br />
           <span class="font-weight-bold mt-1">{{
-            selectedAssignment.deadline
+            selectedAssignment.deadline | date : "dd/MM/yyyy"
           }}</span>
         </div>
         <div class="height-100">
@@ -202,7 +265,7 @@
           <br />
           <span class="mt-1">
             <p-tag class="status" [severity]="'info'" [rounded]="true">
-              Đang thực thi
+              {{ selectedAssignment.status.statusName }}
             </p-tag>
           </span>
         </div>
@@ -210,7 +273,7 @@
           <span class="text-black-50">Ngày tạo</span>
           <br />
           <span class="font-weight-bold mt-1">{{
-            selectedAssignment.deadline
+            selectedAssignment.createdDate | date : "dd/MM/yyyy"
           }}</span>
         </div>
       </div>
@@ -242,6 +305,7 @@
         <th>
           <div>Người giao</div>
         </th>
+        <th>Hạn nộp</th>
         <th></th>
       </tr>
     </ng-template>
@@ -253,8 +317,21 @@
         <td>
           {{ assignment.assignmentName }}
         </td>
-        <td></td>
-        <td></td>
+        <td>
+          <p-tag
+            class="status"
+            [severity]="getStatusSeverity(assignment?.status.statusId)"
+            [rounded]="true"
+          >
+            {{ assignment?.status.statusName }}
+          </p-tag>
+        </td>
+        <td>
+          {{ assignment.assigner.user.fullName }}
+        </td>
+        <td>
+          {{ assignment.deadline | date : "dd/MM/yyyy" }}
+        </td>
         <td>
           <button pButton (click)="assVisibleToggle(assignment)">
             Chi tiết

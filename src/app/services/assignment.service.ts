@@ -16,6 +16,30 @@ export class AssignmentService {
     console.log(url);
     return this.http.get<any[]>(url, { headers });
   }
+  public getAssignmentsById(id: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}get_assignment_by_id/${id}`;
+    console.log(url);
+    return this.http.get<any[]>(url, { headers });
+  }
+  public getAssignmentsToSubmit(issueId: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}my_isTaskTrue_assignments_by_issue_id/${issueId}`;
+    console.log(url);
+    return this.http.get<any[]>(url, { headers });
+  }
+  public getAssignmentsToAssign(issueId: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}my_isTaskFalse_assignments_by_issue_id/${issueId}`;
+    console.log(url);
+    return this.http.get<any[]>(url, { headers });
+  }
+  public getAssignmentsToApprove(issueId: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}my_assignments_toApprove_by_issue_id/${issueId}`;
+    console.log(url);
+    return this.http.get<any[]>(url, { headers });
+  }
   public deleteAssignment(data: object): Observable<any> {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'json');

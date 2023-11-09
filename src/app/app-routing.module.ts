@@ -91,7 +91,7 @@ const routes: Routes = [
         component: InitiationPlanDetailComponent,
       },
       {
-        path: 'assignment/create',
+        path: 'createtemplate',
         component: CreateAssignmentComponent,
       },
       {

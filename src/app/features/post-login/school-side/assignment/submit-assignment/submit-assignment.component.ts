@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { FileService } from 'src/app/services/file.service';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 
 @Component({
@@ -18,11 +20,19 @@ export class SubmitAssignmentComponent {
   selectedIndex: number;
   documents: any[] = [];
   comments: any[] = [];
-  constructor(private fb: FormBuilder) {}
+  @ViewChild('fileInput') fileInput: any;
+  pdfUrl: string | undefined;
+  pdfLoaded: boolean = false;
+  safePdfUrl: SafeResourceUrl | undefined;
+  constructor(
+    private fb: FormBuilder,
+    private fileService: FileService,
+    private sanitizer: DomSanitizer
+  ) {}
   fileInputForm = this.fb.group({
-    documentCode: ['', Validators.required],
+    documentCode: ['', NoWhitespaceValidator],
     documentName: ['', Validators.required],
-    file: [null, Validators.required],
+    file: ['', Validators.required],
   });
   commentForm = this.fb.group({
     content: ['', Validators.required],
@@ -60,6 +70,9 @@ export class SubmitAssignmentComponent {
     this.documents.push(data);
     this.fileInputForm.reset();
     this.fileInputPlaceholders = '';
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
     console.log(this.documents);
   }
   filesForm: FormGroup;
@@ -73,24 +86,94 @@ export class SubmitAssignmentComponent {
     this.assignments = [
       {
         assignmentId: 1,
-        assignmentName: 'assignment name 1',
-        description: 'des 1',
-        assignee: {
-          assigneeId: 1,
-          assigneeName: 'bach',
-        },
+        assignmentName: 'Assignment 1',
         assigner: {
-          assignerId: 2,
-          assignerName: 'Nguyễn Văn A',
+          accountId: 0,
+          email: 'string',
+          user: {
+            userId: 0,
+            fullName: 'Nguyễn Văn A',
+            dob: '2023-11-09',
+            gender: 'MALE',
+            phoneNumber: 'string',
+          },
+          school: {
+            schoolId: 0,
+            schoolName: 'string',
+            exactAddress: 'string',
+            isActive: true,
+          },
+          roles: [
+            {
+              roleId: 0,
+              roleName: 'string',
+              isSchoolEmployee: true,
+            },
+          ],
         },
-        deadline: '10/11/2002',
-        comments: [
+        assignee: {
+          accountId: 0,
+          email: 'string',
+          user: {
+            userId: 0,
+            fullName: 'Nguyễn Văn B',
+            dob: '2023-11-09',
+            gender: 'MALE',
+            phoneNumber: 'string',
+          },
+          school: {
+            schoolId: 0,
+            schoolName: 'string',
+            exactAddress: 'string',
+            isActive: true,
+          },
+          roles: [
+            {
+              roleId: 0,
+              roleName: 'string',
+              isSchoolEmployee: true,
+            },
+          ],
+        },
+        listOfPossibleAssginees: [
           {
-            userName: 'Hà Huy Bách',
-            content: 'Em làm lại đi nhé',
-            createdDate: '2023-11-06T12:00:00',
+            accountId: 0,
+            email: 'string',
+            user: {
+              userId: 0,
+              fullName: 'string',
+              dob: '2023-11-09',
+              gender: 'MALE',
+              phoneNumber: 'string',
+            },
+            school: {
+              schoolId: 0,
+              schoolName: 'string',
+              exactAddress: 'string',
+              isActive: true,
+            },
+            roles: [
+              {
+                roleId: 0,
+                roleName: 'string',
+                isSchoolEmployee: true,
+              },
+            ],
           },
         ],
+        deadline: '2023-11-09T16:08:16.567Z',
+        createdDate: '2023-11-09T16:08:16.567Z',
+        issueId: 0,
+        description:
+          'Bạn có thể hoàn tác và làm lại tối đa 20 trong số các hành động nhập liệu hoặc thiết kế cuối cùng của bạn trong Access. Để hoàn tác một hành động, hãy nhấn Ctrl + Z',
+        status: {
+          statusId: 16,
+          statusName: 'Chờ phê duyệt',
+          statusType: 'string',
+        },
+        parentId: 0,
+        progress: 0,
+        task: true,
       },
     ];
     this.assigneelist = [
@@ -101,6 +184,14 @@ export class SubmitAssignmentComponent {
       {
         assigneeId: 2,
         assigneeName: 'an',
+      },
+    ];
+    this.documents = [
+      {
+        documentName:
+          'DataTable requires a collection to display along with column',
+        documentCode: '123',
+        file: {},
       },
     ];
   }
@@ -131,23 +222,50 @@ export class SubmitAssignmentComponent {
       this.sendComment();
     }
   }
-  getRelativeTimestamp(dateString: string): string {
-    const commentTimestamp = new Date(dateString);
-    const now = new Date();
-    const timeDifference = now.getTime() - commentTimestamp.getTime();
-    const secondsAgo = Math.floor(timeDifference / 1000);
+  // getRelativeTimestamp(dateString: string): string {
+  //   const commentTimestamp = new Date(dateString);
+  //   const now = new Date();
+  //   const timeDifference = now.getTime() - commentTimestamp.getTime();
+  //   const secondsAgo = Math.floor(timeDifference / 1000);
 
-    if (secondsAgo < 60) {
-      return secondsAgo + 's ago';
-    } else if (secondsAgo < 3600) {
-      const minutesAgo = Math.floor(secondsAgo / 60);
-      return minutesAgo + 'm ago';
-    } else if (secondsAgo < 86400) {
-      const hoursAgo = Math.floor(secondsAgo / 3600);
-      return hoursAgo + 'h ago';
-    } else {
-      const daysAgo = Math.floor(secondsAgo / 86400);
-      return daysAgo + 'd ago';
-    }
+  //   if (secondsAgo < 60) {
+  //     return secondsAgo + 's ago';
+  //   } else if (secondsAgo < 3600) {
+  //     const minutesAgo = Math.floor(secondsAgo / 60);
+  //     return minutesAgo + 'm ago';
+  //   } else if (secondsAgo < 86400) {
+  //     const hoursAgo = Math.floor(secondsAgo / 3600);
+  //     return hoursAgo + 'h ago';
+  //   } else {
+  //     const daysAgo = Math.floor(secondsAgo / 86400);
+  //     return daysAgo + 'd ago';
+  //   }
+  // }
+  openNewTab(documentLink: string) {
+    console.log(documentLink);
+    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
+      const blobUrl = window.URL.createObjectURL(response.body as Blob);
+      this.pdfUrl = blobUrl;
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      this.pdfLoaded = true;
+    });
+  }
+  displayNewFileUpload(file: File) {
+    const blobUrl = window.URL.createObjectURL(file as Blob);
+    this.pdfUrl = blobUrl;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+    this.pdfLoaded = true;
+  }
+  removeDoc(index: number) {
+    this.documents.splice(index, 1);
+  }
+  getStatusSeverity(statusId: number): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      16: 'warning',
+      17: 'success',
+      18: 'danger',
+    };
+
+    return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
   }
 }
