@@ -185,18 +185,23 @@
       <label for="pageNo"
              style=" margin-right: 10px"
       >Số bản ghi trên 1 trang: </label>
-      <input class="form-control super-small-input"
-             min="1"
-             type="number"
-             id="pageSize"
-             name="pageSize"
-             style=" margin-right: 20px"
-             max="{{maxPage}} "
-             (keyup)="loadGuidanceDocuments()"
-             (mouseup)=" loadGuidanceDocuments()"
 
-             [(ngModel)]="pageSize"
-      >
+      <select (change)="changePageSize()" class="form-control super-small-input ng-untouched ng-pristine ng-valid" [(ngModel)]="pageSize">
+        <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>
+      </select>
+
+<!--      <input class="form-control super-small-input"-->
+<!--             min="1"-->
+<!--             type="number"-->
+<!--             id="pageSize"-->
+<!--             name="pageSize"-->
+<!--             style=" margin-right: 20px"-->
+<!--             max="{{maxPage}} "-->
+<!--             (keyup)="loadGuidanceDocuments()"-->
+<!--             (mouseup)=" loadGuidanceDocuments()"-->
+
+<!--             [(ngModel)]="pageSize"-->
+<!--      >-->
 
 
     </div>

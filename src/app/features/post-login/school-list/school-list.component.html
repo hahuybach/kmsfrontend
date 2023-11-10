@@ -83,11 +83,23 @@
         <td>
           <span [class]="school.isActive ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ school.isActive ? "Hoạt động" : "Ngưng hoạt động" }}</span>
         </td>
-        <td>
-          <i
-            class="bi bi-info-circle-fill"
-            (click)="onDetail(school.schoolId)"
-          ></i>
+        <td   style="text-align: center"
+              class="d-flex td-action justify-content-center align-items-center">
+          <div   class="action-item d-flex justify-content-center align-items-center mx-2">
+            <i
+              class="bi bi-info-circle-fill"
+              (click)="onDetail(school.schoolId)"
+            ></i>
+          </div>
+          <div  class="action-item d-flex justify-content-center align-items-center mx-2">
+            <i
+              class="bi bi-pencil-fill"
+              (click)="onUpdate(school.schoolId)"
+
+            ></i>
+          </div>
+
+
         </td>
       </tr>
     </ng-template>

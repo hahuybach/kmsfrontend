@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SchoolResponse} from "../../../../models/school-response";
 import {switchMap} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SchoolService} from "../../../../services/school.service";
 import {AccountResponse} from "../../../../models/account-response";
 
@@ -12,9 +12,10 @@ import {AccountResponse} from "../../../../models/account-response";
 })
 export class SchoolDetailComponent implements OnInit{
   school: SchoolResponse;
-  principal: any
+  principal: AccountResponse
   constructor(private route: ActivatedRoute,
-              private schoolService: SchoolService) {
+              private schoolService: SchoolService,
+              private routeLink: Router) {
   }
   ngOnInit(): void {
     this.route.params
@@ -25,20 +26,23 @@ export class SchoolDetailComponent implements OnInit{
         )
         .subscribe((data) => {
           this.school = data;
-          this.principal = this.findAccountWithRole(this.school,'Hiệu Trưởng');
+          this.principal = data.principal;
 
           console.log(this.school);
           console.log(this.principal)
         });
   }
-     findAccountWithRole(school: SchoolResponse, roleName: string): AccountResponse | undefined {
+     findAccountWithRole(school: SchoolResponse, roleName: string): AccountResponse {
         const account = school.accountDtos.find((account) => {
             const roles = account.roles || [];
             return roles.some((role) => role.roleName === roleName);
         });
 
-        return account;
+        return  account as AccountResponse;
     }
 
 
+    onUpdate() {
+        this.routeLink.navigate(['school/' + this.school.schoolId + '/update'])
+    }
 }

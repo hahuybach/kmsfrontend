@@ -7,6 +7,7 @@ import {IssueService} from "../../../services/issue.service";
 import {MessageService} from "primeng/api";
 import {ToastModule} from 'primeng/toast';
 import {resolve} from "@angular/compiler-cli";
+import {switchMap} from "rxjs";
 
 @Component({
   selector: 'app-guidance-document-list',
@@ -19,7 +20,7 @@ export class GuidanceDocumentListComponent implements OnInit {
   currentIssueSelected: IssueDropDownResponse;
   allGuidanceDocument: number = 0;
   pageNo: number = 1;
-  pageSize: number = 2;
+  pageSize: number = 5;
   sortBy: string = 'createdDate';
   sortDirection: string = 'desc';
   description: string = '';
@@ -33,6 +34,7 @@ export class GuidanceDocumentListComponent implements OnInit {
   advanceSearchButtonText = 'Hiện tra cứu nâng cao';
   maxPage: number = 0;
   maxPageError: boolean = false;
+    recordPerPageOption: number[] = [5, 15, 25];
 
   issueId: number = -1
   createGuidanceDocument: boolean = true;
@@ -40,7 +42,8 @@ export class GuidanceDocumentListComponent implements OnInit {
   constructor(private guidanceDocumentService: GuidanceDocumentService,
               private route: Router,
               private issueService: IssueService,
-              private messageService: MessageService
+              private messageService: MessageService,
+              private activateRouter: ActivatedRoute
   ) {
     this.guidanceDocuments = [];
   }
@@ -69,7 +72,27 @@ export class GuidanceDocumentListComponent implements OnInit {
           this.guidanceDocuments = result.guidanceDocumentDtos;
           this.allGuidanceDocument = result.size;
           this.maxPage = result.maxPage;
-          this.onChangePageSize();
+            this.onChangePageSize();
+
+          this.route.navigate([], {
+            relativeTo: this.activateRouter,
+            queryParams: {
+              pageNo: this.pageNo,
+              pageSize: this.pageSize,
+              sortBy: this.sortBy,
+              sortDirection: this.sortDirection,
+              guidanceDocumentName: this.guidanceDocumentName,
+              startDateTime: this.startDateTime,
+              endDateTime: this.endDateTime,
+              fullName: this.fullName,
+              globalSearch     :this.globalSearch
+
+
+              // Add other query parameters as needed
+            },
+            queryParamsHandling: 'merge'
+          });
+
         },
         error: (error) => {
           console.log("Error occurred while fetching guidance documents:", error);
@@ -101,6 +124,38 @@ export class GuidanceDocumentListComponent implements OnInit {
           this.issueDropDowns = result.issueDropDownBoxDtos;
         }
       })
+
+    this.activateRouter.queryParams.subscribe(
+        value => {
+          if(value['pageNo']){
+            this.pageNo = value['pageNo'];
+          }
+          if(value['pageSize']){
+            this.pageSize = value['pageSize'];
+          }
+          if(value['sortBy']){
+            this.sortBy = value['sortBy'];
+          }
+          if(value['sortDirection']){
+            this.sortDirection = value['sortDirection'];
+          }
+          if(value['guidanceDocumentName']){
+            this.guidanceDocumentName = value['guidanceDocumentName'];
+          }
+          if(value['startDateTime']){
+            this.startDateTime = value['startDateTime'];
+          }
+          if(value['endDateTime']){
+            this.endDateTime = value['endDateTime'];
+          }
+          if(value['fullName']){
+            this.fullName = value['fullName']
+          }
+          if(value['globalSearch']){
+            this.globalSearch = value['globalSearch']
+          }
+        }
+    )
     this.loadGuidanceDocuments();
 
 
@@ -196,11 +251,14 @@ export class GuidanceDocumentListComponent implements OnInit {
   }
 
   onChangePageSize(){
-
-    if(this.guidanceDocuments.length == 0 && this.pageNo > 1){
+      if(this.guidanceDocuments.length == 0 && this.pageNo > 1){
       this.pageNo = this.maxPage;
       this.loadGuidanceDocuments();
     }
   }
+
+    changePageSize() {
+        this.loadGuidanceDocuments();
+    }
 }
 

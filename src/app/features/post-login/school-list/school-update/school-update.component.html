@@ -1,0 +1,93 @@
+<h2>Cập nhật trường</h2>
+<form [formGroup]="updateForm"
+      class="row"
+      (ngSubmit)="onSubmit()"
+>
+    <div class="col-md-6" *ngIf="school">
+        <h5 class="m-3">Thông tin trường</h5>
+        <div class="col-md-10">
+            <div class="m-3">
+                <label>Tên trường</label>
+            </div>
+            <div class="m-3">
+                <input
+                        class="form-control"
+                        type="text"
+                        formControlName='schoolName'
+                >
+                                <span *ngIf="isBlank('schoolName')" class="p-error">Không được để trống mục này</span>
+                                <span *ngIf="updateForm.get('schoolName')?.hasError('notUnique')" class="p-error">Tên trường này đã tồn tại</span>
+
+            </div>
+
+        </div>
+        <div class="col-md-10">
+            <div class="m-3">
+                <label>Địa chỉ</label>
+
+            </div>
+            <div class="m-3">
+                <input
+                        class="form-control"
+                        type="text"
+                        formControlName='address'
+                >
+                                <span *ngIf="isBlank('address')" class="p-error">Không được để trống mục này</span>
+
+            </div>
+
+        </div>
+        <div class="col-md-10">
+            <div class="m-3">
+                <label>Trạng thái</label>
+
+            </div>
+            <div class="m-3">
+                <select class="form-control"
+                        formControlName='isActive'>
+                    <option value="true"><span class="badge bg-success">Đang hoạt động</span></option>
+                    <option value="false"><span class="badge bg-success">Ngưng hoạt động</span></option>
+                </select>
+
+            </div>
+
+        </div>
+        <button class="m-3 btn btn-primary" type="submit">Cập nhật</button>
+        <button class="m-3 btn btn-primary" (click)="onBack()" >Quay lại</button>
+
+    </div>
+    <div class="col-md-6" *ngIf="principal">
+        <div class="m-3">
+            <h5>Thông tin hiệu trưởng</h5>
+        </div>
+        <div class="mb-4">
+            <div class="m-3">
+                <p class="text-black-50">Email</p>
+            </div>
+            <div class="m-3 d-flex justify-content-between ">
+                <p *ngIf="!isUpdatePrincipalEmail" class="font-weight-bold">{{principal.email}}</p>
+                <input *ngIf="isUpdatePrincipalEmail"
+                       formControlName='principalEmail'
+                       class="form-control">
+                <div class="d-flex justify-content-center">
+
+                    <i
+                       (click)="onClickNotUpdatePrincipalEmail()"
+                       [ngClass]="isUpdatePrincipalEmail ?'icon bi bi-x' : 'icon bi bi-pencil-fill' "></i>
+                </div>
+                <span *ngIf="isBlank('principalEmail')" class="p-error">Không được để trống mục này</span>
+                <span *ngIf="updateForm.get('principalEmail')?.hasError('notUnique')" class="p-error">Tên email này đã tồn tại</span>
+                <span class="p-error"
+                      *ngIf="updateForm.get('principalEmail')?.hasError('email')">Sai định dạng gmail</span>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+<p-toast position="top-right" key="error"></p-toast>
+<div class="overlay" *ngIf="isLoading">
+    <div class="spinner-container">
+        <div class="spinner-border" role="status"></div>
+    </div>
+</div>

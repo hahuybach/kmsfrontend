@@ -52,6 +52,7 @@ import { SchoolAssignmentModule } from './features/post-login/school-side/assign
 import { SchoolListComponent } from './features/post-login/school-list/school-list.component';
 import { SchoolDetailComponent } from './features/post-login/school-list/school-detail/school-detail.component';
 import { SchoolCreateComponent } from './features/post-login/school-list/school-create/school-create.component';
+import { SchoolUpdateComponent } from './features/post-login/school-list/school-update/school-update.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { SchoolCreateComponent } from './features/post-login/school-list/school-
     SchoolListComponent,
     SchoolDetailComponent,
     SchoolCreateComponent,
+    SchoolUpdateComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,6 +4,7 @@ import {map, Observable} from "rxjs";
 import {SchoolService} from "../../../../services/school.service";
 import {AccountService} from "../../../../services/account.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-school-create',
@@ -19,7 +20,8 @@ export class SchoolCreateComponent implements OnInit {
     constructor(private formBuilder: FormBuilder,
                 private accountService: AccountService,
                 private schoolService: SchoolService,
-                private toastService : ToastService
+                private toastService : ToastService,
+                private router: Router
     ) {
     }
 
@@ -51,7 +53,7 @@ export class SchoolCreateComponent implements OnInit {
             this.schoolService.saveSchool(saveSchoolRequest)
                 .subscribe({
                     next : (result) =>{
-                        console.log(result);
+                        this.router.navigate(['school/' + result.school.schoolId])
                     },
                     error : (error) => {
                         this.isLoading = false;

@@ -30,4 +30,11 @@ export class SchoolService {
   findSchoolById(schoolId: number){
     return this.httpClient.get<any>(this.baseUrl + schoolId)
   }
+
+  updateSchool(request: any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.httpClient.put<any>(this.baseUrl + 'update', JSON.stringify(request), {headers})
+
+  }
 }

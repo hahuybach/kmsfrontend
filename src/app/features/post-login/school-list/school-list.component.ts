@@ -57,4 +57,8 @@ export class SchoolListComponent implements OnInit{
   onCreateSchool() {
     this.router.navigate(['/schools/create'])
   }
+
+  onUpdate(schoolId: any) {
+    this.router.navigate(['school/' + schoolId + '/update'])
+  }
 }

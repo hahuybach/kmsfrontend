@@ -32,6 +32,7 @@ import { SubmitAssignmentComponent } from './features/post-login/school-side/ass
 import {SchoolListComponent} from "./features/post-login/school-list/school-list.component";
 import {SchoolDetailComponent} from "./features/post-login/school-list/school-detail/school-detail.component";
 import {SchoolCreateComponent} from "./features/post-login/school-list/school-create/school-create.component";
+import {SchoolUpdateComponent} from "./features/post-login/school-list/school-update/school-update.component";
 
 const routes: Routes = [
   {
@@ -120,6 +121,10 @@ const routes: Routes = [
       {
         path: 'schools/create',
         component: SchoolCreateComponent
+      },
+      {
+        path: 'school/:id/update',
+        component: SchoolUpdateComponent
       }
     ],
   },
