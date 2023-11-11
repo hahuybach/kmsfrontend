@@ -24,6 +24,7 @@ import { SchoolInitiationPlanListComponent } from './features/post-login/school-
 import { AssignmentListComponent } from './features/post-login/school-side/assignment/assignment-list/assignment-list.component';
 import { SubmitAssignmentComponent } from './features/post-login/school-side/assignment/submit-assignment/submit-assignment.component';
 import { ApproveAssignmentComponent } from './features/post-login/school-side/assignment/approve-assignment/approve-assignment.component';
+import { AssignAssignmentComponent } from './features/post-login/school-side/assignment/assign-assignment/assign-assignment.component';
 
 const routes: Routes = [
   {
@@ -105,6 +106,10 @@ const routes: Routes = [
       {
         path: 'approveassignment',
         component: ApproveAssignmentComponent,
+      },
+      {
+        path: 'assignassignment',
+        component: AssignAssignmentComponent,
       },
     ],
   },

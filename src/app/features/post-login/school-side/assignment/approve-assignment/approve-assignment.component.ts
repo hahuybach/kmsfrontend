@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SelectItem } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
+import { FileService } from 'src/app/services/file.service';
 import { IssueService } from 'src/app/services/issue.service';
 
 @Component({
@@ -19,6 +21,9 @@ export class ApproveAssignmentComponent implements OnInit {
   assignmentForm: FormGroup;
   issueId: number;
   statusForm: FormGroup;
+  pdfUrl: string | undefined;
+  pdfLoaded: boolean = false;
+  safePdfUrl: SafeResourceUrl | undefined;
   commentForm = this.fb.group({
     content: ['', Validators.required],
     userName: ['', Validators.required],
@@ -27,102 +32,27 @@ export class ApproveAssignmentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private assignmentService: AssignmentService,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private fileService: FileService,
+    private sanitizer: DomSanitizer
   ) {}
   ngOnInit(): void {
-    this.assignments = [
-      {
-        assignmentId: 1,
-        assignmentName: 'Assignment 1',
-        assigner: {
-          accountId: 0,
-          email: 'string',
-          user: {
-            userId: 0,
-            fullName: 'Nguyễn Văn A',
-            dob: '2023-11-09',
-            gender: 'MALE',
-            phoneNumber: 'string',
-          },
-          school: {
-            schoolId: 0,
-            schoolName: 'string',
-            exactAddress: 'string',
-            isActive: true,
-          },
-          roles: [
-            {
-              roleId: 0,
-              roleName: 'string',
-              isSchoolEmployee: true,
-            },
-          ],
-        },
-        assignee: {
-          accountId: 0,
-          email: 'string',
-          user: {
-            userId: 0,
-            fullName: 'Nguyễn Văn B',
-            dob: '2023-11-09',
-            gender: 'MALE',
-            phoneNumber: 'string',
-          },
-          school: {
-            schoolId: 0,
-            schoolName: 'string',
-            exactAddress: 'string',
-            isActive: true,
-          },
-          roles: [
-            {
-              roleId: 0,
-              roleName: 'string',
-              isSchoolEmployee: true,
-            },
-          ],
-        },
-        listOfPossibleAssginees: [
-          {
-            accountId: 0,
-            email: 'string',
-            user: {
-              userId: 0,
-              fullName: 'string',
-              dob: '2023-11-09',
-              gender: 'MALE',
-              phoneNumber: 'string',
-            },
-            school: {
-              schoolId: 0,
-              schoolName: 'string',
-              exactAddress: 'string',
-              isActive: true,
-            },
-            roles: [
-              {
-                roleId: 0,
-                roleName: 'string',
-                isSchoolEmployee: true,
-              },
-            ],
-          },
-        ],
-        deadline: '2023-11-09T16:08:16.567Z',
-        createdDate: '2023-11-09T16:08:16.567Z',
-        issueId: 0,
-        description:
-          'Bạn có thể hoàn tác và làm lại tối đa 20 trong số các hành động nhập liệu hoặc thiết kế cuối cùng của bạn trong Access. Để hoàn tác một hành động, hãy nhấn Ctrl + Z',
-        status: {
-          statusId: 16,
-          statusName: 'Chưa phê duyệt',
-          statusType: 'string',
-        },
-        parentId: 0,
-        progress: 0,
-        task: true,
-      },
-    ];
+    this.issueService
+      .getCurrentActiveIssue()
+      .pipe(
+        switchMap((data) => {
+          console.log(data);
+          this.issueId = data.issueDto.issueId;
+          return this.assignmentService.getAssignmentsToApprove(
+            data.issueDto.issueId
+          );
+        })
+      )
+      .subscribe((data) => {
+        console.log(data);
+        this.assignments = data.assignmentListDtos;
+        console.log(this.assignments);
+      });
     this.assignmentForm = this.fb.group({
       status: ['', Validators.required],
     });
@@ -155,25 +85,31 @@ export class ApproveAssignmentComponent implements OnInit {
     },
     {
       label: 'Phê duyệt',
-      value: 'Phê duyệt',
+      value: true,
       severity: 'success',
       disabled: false,
     },
     {
       label: 'Không phê duyệt',
-      value: 'Không phê duyệt',
+      value: false,
       severity: 'danger',
       disabled: false,
     },
   ];
 
   assVisibleToggle(assignment: any) {
-    this.assVisible = true;
     console.log(assignment);
-    this.selectedAssignment = assignment;
-    this.assignmentForm
-      .get('status')
-      ?.setValue(this.selectedAssignment.status.statusName);
+    this.assignmentService
+      .getAssignmentsById(assignment.assignmentId)
+      .subscribe((data) => {
+        this.selectedAssignment = data;
+        this.documents = data.documents;
+        const statusControl = this.assignmentForm.get('status');
+        if (statusControl) {
+          statusControl.setValue(data.status.statusName);
+        }
+      });
+    this.assVisible = true;
   }
   onRowEditSave(i: number) {
     console.log('save ' + i);
@@ -207,5 +143,45 @@ export class ApproveAssignmentComponent implements OnInit {
     };
 
     return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
+  }
+  openNewTab(documentLink: string) {
+    console.log(documentLink);
+    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
+      const blobUrl = window.URL.createObjectURL(response.body as Blob);
+      this.pdfUrl = blobUrl;
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      this.pdfLoaded = true;
+    });
+  }
+  displayNewFileUpload(file: File) {
+    const blobUrl = window.URL.createObjectURL(file as Blob);
+    this.pdfUrl = blobUrl;
+    this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+    this.pdfLoaded = true;
+  }
+  onChangeStatus(event: any) {
+    const selectedStatus = event.value;
+    console.log('Selected Status:', selectedStatus);
+    const data = {
+      assignmentId: this.selectedAssignment.assignmentId,
+      isPassed: selectedStatus,
+    };
+    console.log(data);
+    const formData = new FormData();
+    formData.append(
+      'task',
+      new Blob([JSON.stringify(data)], {
+        type: 'application/json',
+      })
+    );
+
+    this.assignmentService.evaluateAssignment(formData).subscribe({
+      next: () => {
+        console.log('success');
+      },
+      error: (error) => {
+        console.log(error.error.message);
+      },
+    });
   }
 }

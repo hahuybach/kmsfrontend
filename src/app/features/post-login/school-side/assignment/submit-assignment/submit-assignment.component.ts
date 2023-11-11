@@ -1,7 +1,11 @@
+import { error } from '@angular/compiler-cli/src/transformers/util';
 import { Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { switchMap } from 'rxjs';
+import { AssignmentService } from 'src/app/services/assignment.service';
 import { FileService } from 'src/app/services/file.service';
+import { IssueService } from 'src/app/services/issue.service';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 
 @Component({
@@ -20,6 +24,9 @@ export class SubmitAssignmentComponent {
   selectedIndex: number;
   documents: any[] = [];
   comments: any[] = [];
+  // newDocs: any[] = [];
+  issueId: number;
+  deleteDocIds: number[] = [];
   @ViewChild('fileInput') fileInput: any;
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
@@ -27,7 +34,9 @@ export class SubmitAssignmentComponent {
   constructor(
     private fb: FormBuilder,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private issueService: IssueService,
+    private assignmentService: AssignmentService
   ) {}
   fileInputForm = this.fb.group({
     documentCode: ['', NoWhitespaceValidator],
@@ -68,6 +77,7 @@ export class SubmitAssignmentComponent {
     };
     console.log(data);
     this.documents.push(data);
+    // this.newDocs.push(data);
     this.fileInputForm.reset();
     this.fileInputPlaceholders = '';
     if (this.fileInput) {
@@ -83,122 +93,45 @@ export class SubmitAssignmentComponent {
     // this.filesForm = this.fb.group({
     //   documents: this.fb.array([]),
     // });
-    this.assignments = [
-      {
-        assignmentId: 1,
-        assignmentName: 'Assignment 1',
-        assigner: {
-          accountId: 0,
-          email: 'string',
-          user: {
-            userId: 0,
-            fullName: 'Nguyễn Văn A',
-            dob: '2023-11-09',
-            gender: 'MALE',
-            phoneNumber: 'string',
-          },
-          school: {
-            schoolId: 0,
-            schoolName: 'string',
-            exactAddress: 'string',
-            isActive: true,
-          },
-          roles: [
-            {
-              roleId: 0,
-              roleName: 'string',
-              isSchoolEmployee: true,
-            },
-          ],
-        },
-        assignee: {
-          accountId: 0,
-          email: 'string',
-          user: {
-            userId: 0,
-            fullName: 'Nguyễn Văn B',
-            dob: '2023-11-09',
-            gender: 'MALE',
-            phoneNumber: 'string',
-          },
-          school: {
-            schoolId: 0,
-            schoolName: 'string',
-            exactAddress: 'string',
-            isActive: true,
-          },
-          roles: [
-            {
-              roleId: 0,
-              roleName: 'string',
-              isSchoolEmployee: true,
-            },
-          ],
-        },
-        listOfPossibleAssginees: [
-          {
-            accountId: 0,
-            email: 'string',
-            user: {
-              userId: 0,
-              fullName: 'string',
-              dob: '2023-11-09',
-              gender: 'MALE',
-              phoneNumber: 'string',
-            },
-            school: {
-              schoolId: 0,
-              schoolName: 'string',
-              exactAddress: 'string',
-              isActive: true,
-            },
-            roles: [
-              {
-                roleId: 0,
-                roleName: 'string',
-                isSchoolEmployee: true,
-              },
-            ],
-          },
-        ],
-        deadline: '2023-11-09T16:08:16.567Z',
-        createdDate: '2023-11-09T16:08:16.567Z',
-        issueId: 0,
-        description:
-          'Bạn có thể hoàn tác và làm lại tối đa 20 trong số các hành động nhập liệu hoặc thiết kế cuối cùng của bạn trong Access. Để hoàn tác một hành động, hãy nhấn Ctrl + Z',
-        status: {
-          statusId: 16,
-          statusName: 'Chờ phê duyệt',
-          statusType: 'string',
-        },
-        parentId: 0,
-        progress: 0,
-        task: true,
-      },
-    ];
-    this.assigneelist = [
-      {
-        assigneeId: 1,
-        assigneeName: 'bach',
-      },
-      {
-        assigneeId: 2,
-        assigneeName: 'an',
-      },
-    ];
-    this.documents = [
-      {
-        documentName:
-          'DataTable requires a collection to display along with column',
-        documentCode: '123',
-        file: {},
-      },
-    ];
+    this.issueService
+      .getCurrentActiveIssue()
+      .pipe(
+        switchMap((data) => {
+          console.log(data);
+          this.issueId = data.issueDto.issueId;
+
+          return this.assignmentService.getAssignmentsToAssign(
+            data.issueDto.issueId
+          );
+        })
+      )
+      .subscribe((data) => {
+        console.log('Đống data lấy về');
+        console.log(data);
+        this.assignments = data.assignmentListDtos;
+        this.documents = data.assignmentListDtos.documents;
+        console.log(this.assignments);
+      });
+    // this.documents = [
+    //   {
+    //     documentName:
+    //       'DataTable requires a collection to display along with column',
+    //     documentCode: '123',
+    //     file: {},
+    //   },
+    // ];
   }
   assVisibleToggle(assignment: any) {
     this.assVisible = true;
     console.log(assignment);
-    this.selectedAssignment = assignment;
+    this.assignmentService
+      .getAssignmentsById(assignment.assignmentId)
+      .subscribe((data) => {
+        this.selectedAssignment = data;
+        this.documents = data.documents;
+      });
+
+    // this.selectedAssignment = assignment;
   }
   handleFileInputChange(fileInput: any): void {
     const files = fileInput.files;
@@ -207,6 +140,44 @@ export class SubmitAssignmentComponent {
       this.fileInputPlaceholders = file.name;
       this.fileInputForm.get('file')?.setValue(file);
     }
+  }
+  sendFiles() {
+    const newDocs: any[] = [];
+    for (let index = 0; index < this.documents.length; index++) {
+      if (this.documents[index].documentId == null) {
+        newDocs.push(this.documents[index]);
+      }
+    }
+    const docs = newDocs.map(({ file, ...rest }) => rest);
+    const files = newDocs.map((item) => item.file);
+    const formData = new FormData();
+    const jsonData = {
+      assignmentId: this.selectedAssignment.assignmentId,
+      documents: docs,
+      deleteDocIds: [],
+    };
+    this.selectedAssignment.status.statusId = 16;
+    this.selectedAssignment.status.statusName = 'Chờ phê duyệt';
+    console.log(jsonData);
+    formData.append(
+      'task',
+      new Blob([JSON.stringify(jsonData)], {
+        type: 'application/json',
+      })
+    );
+    for (let i = 0; i <= files.length; i++) {
+      formData.append(`files`, files[i]);
+    }
+    // console.log(this.documents);
+    // console.log(jsonData);
+    this.assignmentService.submitAssignment(formData).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
   sendComment() {
     console.log(this.commentForm.get('content')?.value);
@@ -258,6 +229,7 @@ export class SubmitAssignmentComponent {
   }
   removeDoc(index: number) {
     this.documents.splice(index, 1);
+    this.deleteDocIds.push(index);
   }
   getStatusSeverity(statusId: number): string {
     const statusSeverityMap: { [key: number]: string } = {

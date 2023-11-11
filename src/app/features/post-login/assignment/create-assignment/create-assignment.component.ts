@@ -40,12 +40,14 @@ export class CreateAssignmentComponent {
   date = JSON.stringify(new Date());
   action: string | undefined;
   issueId: number;
+  data: any;
   constructor(
     private toastService: ToastService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private assignmentService: AssignmentService,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private messageService: MessageService
   ) {}
   // newNodeForm = this.fb.group({
   //   nodeName: ['', Validators.required],
@@ -58,8 +60,6 @@ export class CreateAssignmentComponent {
   });
   ngOnInit() {
     this.initData();
-
-    // Don't use console.log(this.issueId) here, as it will be executed before the subscription's callback
 
     console.log(this.assignments);
   }
@@ -77,7 +77,8 @@ export class CreateAssignmentComponent {
       )
       .subscribe((data) => {
         console.log(data);
-        this.assignments = [data];
+        this.data = data;
+        this.assignments = [this.data.assignmentListDto];
         console.log(this.assignments);
       });
   }
@@ -213,9 +214,19 @@ export class CreateAssignmentComponent {
       next: (response) => {
         this.initData();
         this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Tạo thành công',
+          detail: 'Tạo thành công',
+        });
       },
       error: (error) => {
-        console.log(error);
+        this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Tạo thất bại',
+          detail: error.error.message,
+        });
       },
     });
   }
@@ -233,9 +244,19 @@ export class CreateAssignmentComponent {
       next: (response) => {
         this.initData();
         this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Cập nhật thành công',
+          detail: 'Cập nhật thành công',
+        });
       },
       error: (error) => {
-        console.log(error);
+        this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi cập nhật',
+          detail: error.error.message,
+        });
       },
     });
     console.log('Update');
@@ -255,9 +276,18 @@ export class CreateAssignmentComponent {
             console.log(response);
             this.initData();
             this.assignmentVisible = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Xóa thành công',
+              detail: 'Xóa thành công',
+            });
           },
           error: (error) => {
-            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Xóa thất bại',
+              detail: error.error.message,
+            });
           },
         });
       },
@@ -304,5 +334,34 @@ export class CreateAssignmentComponent {
     const dateObject = new Date(year, month - 1, day);
 
     return dateObject;
+  }
+  sendToSchools() {
+    this.issueService
+      .getCurrentActiveIssue()
+      .pipe(
+        switchMap((data) => {
+          console.log(data);
+          this.issueId = data.issueDto.issueId;
+          return this.assignmentService.sendAssignmentsToSchool(
+            data.issueDto.issueId
+          );
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Gửi thành công',
+            detail: 'Gửi template thành công',
+          });
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Gửi thất bại',
+            detail: error.error.message,
+          });
+        },
+      });
   }
 }
