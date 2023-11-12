@@ -1,43 +1,31 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {IssueService} from "../../../../../services/issue.service";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {InspectionplanInspectorlistService} from "../../../../../services/inspectionplan-inspectorlist.service";
 
 @Component({
   selector: 'app-inspection-plan-inspector-popup',
   templateUrl: './inspection-plan-inspector-popup.component.html',
   styleUrls: ['./inspection-plan-inspector-popup.component.scss']
 })
-export class InspectionPlanInspectorPopupComponent {
+export class InspectionPlanInspectorPopupComponent{
   @Input() popupInspectorVisible: boolean;
+  @Input() inspectorList: any[] = [];
   @Output() popupInspectorVisibleChange = new EventEmitter<boolean>();
-  @Output() inspectorSelectChange = new EventEmitter<any[]>();
+  selectedInspectors: any[] = [];
 
-  selectedInspectors:any = [];
-  inspectorList: any = [];
-
+  constructor(
+    private readonly inspectionplanInspectorService: InspectionplanInspectorlistService
+  ) {
+  }
 
   resetInspectorListVisible() {
     this.popupInspectorVisibleChange.emit(this.popupInspectorVisible);
   }
 
   addInspector() {
-    this.inspectorSelectChange.emit(this.selectedInspectors);
+    this.inspectionplanInspectorService.saveToInspectorList(this.selectedInspectors);
     this.popupInspectorVisible = false;
-  }
-
-  constructor(
-    private readonly issueService: IssueService,
-  ) {
-  }
-
-  ngOnInit(): void {
-    this.issueService.getCurrentActiveIssue().subscribe({
-        next: (data) => {
-          this.inspectorList = data.issueDto.inspectors;
-        },
-        error: (error): any => {
-          console.log(error);
-        }
-      }
-    )
+    this.selectedInspectors = [];
   }
 }

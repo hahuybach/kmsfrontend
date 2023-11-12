@@ -25,6 +25,9 @@ import { AssignmentListComponent } from './features/post-login/school-side/assig
 import { SubmitAssignmentComponent } from './features/post-login/school-side/assignment/submit-assignment/submit-assignment.component';
 import { ApproveAssignmentComponent } from './features/post-login/school-side/assignment/approve-assignment/approve-assignment.component';
 import { AssignAssignmentComponent } from './features/post-login/school-side/assignment/assign-assignment/assign-assignment.component';
+import {
+  UpdateInspectionPlanComponent
+} from "./features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component";
 
 const routes: Routes = [
   {
@@ -65,6 +68,10 @@ const routes: Routes = [
       {
         path: 'inspection_plan/:id',
         component: InspectionPlanDetailComponent,
+      },
+      {
+        path: 'inspection_plan/update/:id',
+        component: UpdateInspectionPlanComponent,
       },
       // school initiation plan
       {

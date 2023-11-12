@@ -7,7 +7,13 @@
 }
 
 .p-inputtext,
-.p-inputtextarea {
+.p-inputtextarea,
+.p-dropdown {
+  border-radius: 8px;
+}
+
+::ng-deep .p-dropdown{
+  width: 100%;
   border-radius: 8px;
 }
 
@@ -23,11 +29,12 @@
 }
 
 .document-item {
-  .col-md-2, .col-md-4{
-    input{
+  .col-md-2, .col-md-4 {
+    input {
       width: 100%;
     }
   }
+
   .input-file {
     .p-inputtext {
       border-radius: 8px 0 0 8px;

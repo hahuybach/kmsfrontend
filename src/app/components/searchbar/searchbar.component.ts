@@ -1,44 +1,51 @@
+import {Component, OnInit} from '@angular/core';
+import {MenuItem} from 'primeng/api';
+import {HttpClient} from "@angular/common/http";
+import {StompService} from "../../features/post-login/push-notification/stomp.service";
+import {ActivatedRoute} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
+import {switchMap} from "rxjs";
 
-import { Component, OnInit } from '@angular/core';
-import { MenuItem} from 'primeng/api';
 @Component({
   selector: 'app-searchbar',
   templateUrl: './searchbar.component.html',
   styleUrls: ['./searchbar.component.scss']
 })
-export class SearchbarComponent {
-    badgeValue: string = "2";
-    menuItems: MenuItem[] = [];
-    notiItems: MenuItem[] = [];
+export class SearchbarComponent implements OnInit {
+  notificationListDtos: any;
+  user: string | null;
 
-  constructor() {}
-  
-  ngOnInit() {
-      this.menuItems = [
-        {
-            label: 'User profile'
-        },
-        {
-            separator: true
-        },
-        {
-            label: 'Setting'
-        },
-    ];
-    this.notiItems = [
-        {
-            label: 'Noti 1'
-        },
-        {
-            separator: true
-        },
-        {
-            label: 'Noti 2'
-        },
-    ];
+  constructor(
+    private http: HttpClient,
+    private stompService: StompService,
+    private route: ActivatedRoute,
+    private readonly authService: AuthService
+  ) {
   }
-  clearBadge(){
-    this.badgeValue = "0";
+
+  ngOnInit(): void {
+    this.getNotification()
+    this.user = this.authService.getSubFromCookie();
+    this.stompService.subscribe('/notify/' + this.user, (): any => {
+      this.getNotification()
+    })
+  }
+
+  private getNotification(): void {
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          return this.stompService.getUnseenNotificationByAccountId();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.notificationListDtos = data.notificationListDtos;
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      });
   }
 
 }
