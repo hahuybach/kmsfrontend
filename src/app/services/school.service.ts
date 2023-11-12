@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,10 @@ export class SchoolService {
     headers = headers.set('Content-Type', 'application/json');
     return this.httpClient.put<any>(this.baseUrl + 'update', JSON.stringify(request), {headers})
 
+  }
+  public getSchools(): Observable<any[]> {
+    let headers = new HttpHeaders();
+    const url = `${this.baseUrl}list`;
+    return this.httpClient.get<any[]>(url, {headers});
   }
 }

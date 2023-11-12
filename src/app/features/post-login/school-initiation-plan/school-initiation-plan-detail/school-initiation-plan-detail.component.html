@@ -47,7 +47,12 @@
       <ng-template pTemplate="body" let-plan let-i="rowIndex">
         <tr>
           <td>{{ i + 1 }}</td>
-          <td>{{ plan.schoolDocument.documentName }}</td>
+          <td
+            class="his-file-name"
+            (click)="openNewTab(plan.schoolDocument.documentLink)"
+          >
+            {{ plan.schoolDocument.documentName }}
+          </td>
           <td>{{ plan.schoolDocument.documentCode }}</td>
           <td>{{ plan.schoolDocument.uploadedDate | date : "dd/MM/yyyy" }}</td>
           <td>{{ plan.schoolDocument.account.user.fullName }}</td>
@@ -110,7 +115,7 @@
     header="Chỉnh sửa hạn nộp"
     [(visible)]="resetDeadlineVisible"
     [modal]="true"
-    [style]="{ width: '40vw', height: '800px' }"
+    [style]="{ width: '60vw', height: '800px' }"
     [draggable]="false"
     [resizable]="false"
   >
@@ -122,13 +127,15 @@
         [style]="{ width: '100%' }"
       ></p-calendar>
     </div>
-    <button pButton (click)="resetDeadline()">Thay đổi hạn nộp</button>
+    <div class="mt-5 d-flex justify-content-center align-items-center">
+      <button pButton (click)="resetDeadline()">Thay đổi hạn nộp</button>
+    </div>
   </p-dialog>
   <p-dialog
     header="Đánh giá tài liệu"
     [(visible)]="uploadFileVisible"
     [modal]="true"
-    [style]="{ width: '50vw', height: '600px' }"
+    [style]="{ width: '60vw', height: '600px' }"
     [draggable]="false"
     [resizable]="false"
     (onHide)="hideUploadPopup()"
@@ -188,18 +195,26 @@
         >Vui lòng chọn tài liệu</span
       > -->
     </div>
-    <button
+    <!-- <button
       type="button"
       pButton
       (click)="upload()"
       [disabled]="inputFileForm.get('file')?.value == '' || inputFileForm.controls.documentName.errors?.['whitespace'] || inputFileForm.controls.documentCode.errors?.['whitespace'] "
     >
       Tải tài liệu
-    </button>
+    </button> -->
+    <div
+      class="button-bottom py-4 d-flex justify-content-around align-items-center"
+    >
+      <button class="p-tag p-tag-danger" (click)="reject()">
+        Không phê duyệt
+      </button>
+      <button class="p-tag p-tag-success" (click)="approve()">Phê duyệt</button>
+    </div>
   </p-dialog>
 </form>
 
-<div class="row">
+<div class="row" *ngIf="schoolinitiationplan">
   <div class="col-md-7 plan">
     <div class="plan-content row">
       <div class="col-md-8">
@@ -232,20 +247,22 @@
           <br />
           <p-tag
             *ngIf="
-              schoolinitiationplan.status.statusId >= 6 &&
-              schoolinitiationplan.status.statusId <= 9
+              schoolinitiationplan?.status.statusId >= 6 &&
+              schoolinitiationplan?.status.statusId <= 9
             "
             class="status"
-            [severity]="getStatusSeverity(schoolinitiationplan.status.statusId)"
+            [severity]="
+              getStatusSeverity(schoolinitiationplan?.status.statusId)
+            "
             [rounded]="true"
           >
-            {{ schoolinitiationplan.status.statusName }}
+            {{ schoolinitiationplan?.status.statusName }}
           </p-tag>
         </div>
         <div class="mb-3">
           <span class="mb-2 text-black-50">Hạn nộp</span>
           <p class="font-weight-bold p-error">
-            {{ schoolinitiationplan.deadline | date : "dd/MM/yyyy" }}
+            {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
           </p>
         </div>
       </div>
@@ -267,16 +284,16 @@
       </div>
 
       <div
-        *ngIf="schoolinitiationplan.status.statusId != 6"
+        *ngIf="schoolinitiationplan?.status.statusId != 6"
         class="plan-file-item d-flex"
-        (click)="openNewTab(lastDocs.schoolDocument.documentLink)"
+        (click)="openNewTab(lastDocs.schoolDocument?.documentLink)"
       >
         <div
           class="plan-file-item-img d-flex justify-content-center align-items-center"
         >
           <img src="../../../../../assets/img/pdf.png" alt="" />
         </div>
-        <div class="plan-file-item-content">
+        <div class="plan-file-item-content" *ngIf="lastDocs?.schoolDocument">
           <div class="col-md-10 p-2">
             <span class="font-weight-bold">
               {{ lastDocs.schoolDocument.documentName }}
@@ -305,7 +322,7 @@
         <h4>Đánh giá kế hoạch</h4>
       </div>
 
-      <ng-container *ngIf="schoolinitiationplan.status.statusId == 6">
+      <ng-container *ngIf="schoolinitiationplan?.status.statusId == 6">
         <div class="input-file">
           <div class="my-4 d-flex justify-content-center align-items-center">
             <span class="p-error">
@@ -324,7 +341,7 @@
           </div>
         </div>
       </ng-container>
-      <ng-container *ngIf="schoolinitiationplan.status.statusId == 7">
+      <ng-container *ngIf="schoolinitiationplan?.status.statusId == 7">
         <div
           *ngIf="!fileStatus"
           class="input-file d-flex justify-content-center align-items-center"
@@ -338,7 +355,7 @@
           ></button>
         </div>
 
-        <div
+        <!-- <div
           *ngIf="fileStatus"
           class="px-4 my-4"
           (click)="displayNewFileUpload(newFile)"
@@ -373,28 +390,17 @@
               </div>
             </div>
           </div>
-        </div>
-        <div
-          *ngIf="buttonApproveStatus"
-          class="button-bottom py-4 d-flex justify-content-around align-items-center"
-        >
-          <button type="button" class="p-tag p-tag-danger" (click)="reject()">
-            Không phê duyệt
-          </button>
-          <button type="button" class="p-tag p-tag-success" (click)="approve()">
-            Phê duyệt
-          </button>
-        </div>
+        </div> -->
       </ng-container>
       <ng-container
         *ngIf="
-          schoolinitiationplan.status.statusId == 8 ||
-          schoolinitiationplan.status.statusId == 9
+          schoolinitiationplan?.status.statusId == 8 ||
+          schoolinitiationplan?.status.statusId == 9
         "
       >
         <div
           class="px-4 my-4"
-          (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
+          (click)="openNewTab(lastDocs.departmentDocument?.documentLink)"
         >
           <div class="plan-file-item d-flex">
             <div
@@ -405,20 +411,21 @@
             <div class="plan-file-item-content row">
               <div class="col-md-10 p-2">
                 <span class="font-weight-bold">
-                  {{ lastDocs.departmentDocument.documentName }}
+                  {{ lastDocs.departmentDocument?.documentName }}
                 </span>
                 <br />
                 <span class="font-weight-bold">Mã: </span
                 ><span class="text-black-50">{{
-                  lastDocs.departmentDocument.documentCode
+                  lastDocs.departmentDocument?.documentCode
                 }}</span>
                 <br />
                 <span class="text-black-50">{{
-                  lastDocs.departmentDocument.sizeFormat
+                  lastDocs.departmentDocument?.sizeFormat
                 }}</span>
                 <br />
                 <span class="text-black-50">{{
-                  lastDocs.departmentDocument.uploadedDate | date : "dd/MM/yyyy"
+                  lastDocs.departmentDocument?.uploadedDate
+                    | date : "dd/MM/yyyy"
                 }}</span>
               </div>
             </div>
@@ -427,16 +434,16 @@
             <span>Kết quả đánh giá:</span> &nbsp;&nbsp;
             <p-tag
               *ngIf="
-                schoolinitiationplan.status.statusId >= 6 &&
-                schoolinitiationplan.status.statusId <= 9
+                schoolinitiationplan?.status.statusId >= 6 &&
+                schoolinitiationplan?.status.statusId <= 9
               "
               class="status"
               [severity]="
-                getStatusSeverity(schoolinitiationplan.status.statusId)
+                getStatusSeverity(schoolinitiationplan?.status.statusId)
               "
               [rounded]="true"
             >
-              {{ schoolinitiationplan.status.statusName }}
+              {{ schoolinitiationplan?.status.statusName }}
             </p-tag>
           </div>
         </div>

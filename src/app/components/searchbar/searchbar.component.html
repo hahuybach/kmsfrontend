@@ -5,12 +5,8 @@
       <i class="fa fa-search" aria-hidden="true"></i>
     </span>
   </div>
-  <div
-    class="col-md-6 d-flex flex-row justify-content-end align-items-center top-nav"
-  >
-    <a (click)="clearBadge()">
-      <i class="bi bi-bell" pBadge [value]="badgeValue" severity="danger"></i>
-    </a>
+  <div class="col-md-6 d-flex flex-row justify-content-end align-items-center top-nav">
+    <app-notification-list [notificationItems]="notificationListDtos"></app-notification-list>
     <a>
       <i class="bi bi-person-circle"></i>
     </a>

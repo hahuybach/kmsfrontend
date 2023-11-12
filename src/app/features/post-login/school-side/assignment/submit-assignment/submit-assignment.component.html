@@ -1,75 +1,257 @@
 <h2>Công việc cần nộp</h2>
 <!-- <form formGroupName=""> -->
+<p-dialog
+  [(visible)]="pdfLoaded"
+  [style]="{ width: '90vw', height: '1080px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div *ngIf="pdfLoaded">
+    <iframe [src]="safePdfUrl" width="100%" height="650px"></iframe>
+  </div>
+</p-dialog>
 <div class="submit-assignment">
-    <p-dialog
-    header="Chi tiết công việc"
-    [(visible)]="assVisible"
-    [style]="{ width: '60vw', height: '100vh' }"
+  <p-dialog
+    header="Tải file"
+    [(visible)]="fileVisible"
+    [style]="{ width: '70vw', height: '800px' }"
     [draggable]="false"
     [resizable]="false"
   >
-    <div *ngIf="selectedAssignment" class="row">
-      <div class="col-md-8 row">
-        <div class="col-md-6">
-          <div class="height-100">
-            <span class="text-black-50">Tên công việc</span>
+    <form [formGroup]="fileInputForm">
+      <div class="row">
+        <div>
+          <div>
+            <span class="text-black-50">Mã tài liệu</span>
             <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.assignmentName
-            }}</span>
+            <input
+              formControlName="documentCode"
+              class="form-control"
+              type="text"
+              placeholder="Điền mã tài liệu"
+            />
+            <br />
           </div>
-          <div class="height-100">
-            <span class="text-black-50">Chi tiết công việc công việc</span>
+          <div>
+            <span class="text-black-50">Tên tài liệu</span>
             <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.description
-            }}</span>
+            <input
+              formControlName="documentName"
+              class="form-control"
+              type="text"
+              placeholder="Điền tên tài liệu"
+            />
+            <br />
+            <ng-container
+              *ngIf="fileInputForm.get('documentName')?.dirty && fileInputForm.controls.documentName.errors?.['whitespace']"
+            >
+              <span class="p-error">Vui lòng điền tên tài liệu</span>
+            </ng-container>
           </div>
-          <div class="height-100">
-            <span class="text-black-50">Hạn nộp</span>
+          <div class="file-input">
+            <span class="text-black-50">Tệp tài liệu</span>
             <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.deadline
-            }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="height-100">
-            <span class="text-black-50">Người giao</span>
-            <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.assigner.assignerName
-            }}</span>
-          </div>
-          <div class="height-100">
-            <span class="text-black-50">Người làm</span>
-            <br />
-            <span class="font-weight-bold">{{
-              selectedAssignment.assignee.assigneeName
-            }}</span>
-          </div>
-  
-          <div class="height-100">
-            <span class="text-black-50">Trạng thái</span>
-            <br />
-            <span>
-              <p-tag class="status" [severity]="'info'" [rounded]="true">
-                Đang thực thi
-              </p-tag>
-            </span>
+            <input
+              type="file"
+              #fileInput
+              style="display: none"
+              (change)="handleFileInputChange(fileInput)"
+            />
+            <input
+              pInputText
+              readonly
+              class="col-md-9"
+              placeholder="{{
+                fileInputPlaceholders
+                  ? fileInputPlaceholders
+                  : 'Chọn file để tải lên'
+              }}"
+            />
+            <button
+              type="button"
+              pButton
+              label="Chọn tệp"
+              (click)="fileInput.click()"
+            ></button>
           </div>
         </div>
       </div>
-      <div class="col-md-4 right-box">
+      <div class="mt-5">
+        <button
+          pButton
+          (click)="uploadFiles()"
+          [disabled]="fileInputForm.get('file')?.value == '' || fileInputForm.controls.documentName.errors?.['whitespace'] "
+        >
+          Nộp tài liệu
+        </button>
+      </div>
+    </form>
+  </p-dialog>
+  <p-dialog
+    header="Chi tiết công việc"
+    [(visible)]="assVisible"
+    [style]="{ width: '70vw', height: '800px' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="selectedAssignment" class="row assignment-container">
+      <div class="col-md-8 left-box">
         <div class="height-100">
-          <span class="text-black-50">Bình luận</span>
+          <span class="text-black-50">Tên công việc</span>
           <br />
-          <div class="comment d-flex">
-            <input pInputText type="text" placeholder="Gửi bình luận" />
-            <div class="d-flex justify-content-center align-items-center p-2">
-              <i class="bi bi-send"></i>
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.assignmentName
+          }}</span>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Chi tiết công việc</span>
+          <br />
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.description
+          }}</span>
+        </div>
+        <!-- file -->
+        <div>
+          <div class="d-flex justify-content-between">
+            <div>
+              <span class="text-black-50">Tài liệu</span>
+            </div>
+            <div
+              *ngIf="selectedAssignment.status.statusId != 17"
+              class="add-file-item d-flex align-items-center justify-content-center"
+              (click)="addDocument()"
+            >
+              <i class="bi bi-plus-circle-fill"></i>
             </div>
           </div>
+          <br />
+          <div
+            *ngIf="
+              documents.length > 0 && selectedAssignment.status.statusId != 17
+            "
+          >
+            <ng-container *ngFor="let item of documents; let i = index">
+              <div class="row mb-3">
+                <div class="col-md-11">
+                  <div
+                    (click)="
+                      item.documentLink
+                        ? openNewTab(item.documentLink)
+                        : displayNewFileUpload(item.file)
+                    "
+                  >
+                    <div class="file-item px-3 py-1 d-flex">
+                      <div
+                        class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                      >
+                        <img src="../../../../../assets/img/pdf.png" alt="" />
+                      </div>
+                      <div class="file-item-content">
+                        <div class="row ms-2">
+                          <div class="col-md-10">
+                            <span class="font-weight-bold font-size-18">{{
+                              item.documentName
+                            }}</span>
+                            <br />
+                            <span
+                              ><span class="font-weight-bold">Mã:</span>
+                              {{ item.documentCode }}</span
+                            >
+                          </div>
+                          <!-- <div class="col-md-2">
+                            <span class="text-black-50">{{
+                              item.sizeFormat || item.file.size
+                            }}</span>
+                            <br />
+                            <span>{{
+                              item.uploadedDate | date : "MM/dd/yyyy"
+                            }}</span>
+                          </div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
+                  (click)="removeDoc(i)"
+                >
+                  <i class="bi bi-x-lg"></i>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div
+            *ngIf="
+              documents.length > 0 && selectedAssignment.status.statusId == 17
+            "
+          >
+            <ng-container *ngFor="let item of documents; let i = index">
+              <div class="row mb-3">
+                <div (click)="openNewTab(item.documentLink)">
+                  <div class="file-item px-3 py-1 d-flex">
+                    <div
+                      class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                    >
+                      <img src="../../../../../assets/img/pdf.png" alt="" />
+                    </div>
+                    <div class="file-item-content">
+                      <div class="row ms-2">
+                        <div class="col-md-10">
+                          <span class="font-weight-bold font-size-18">{{
+                            item.documentName
+                          }}</span>
+                          <br />
+                          <span
+                            ><span class="font-weight-bold">Mã:</span>
+                            {{ item.documentCode }}</span
+                          >
+                        </div>
+                        <!-- <div class="col-md-2">
+                            <span class="text-black-50">{{
+                              item.sizeFormat || item.file.size
+                            }}</span>
+                            <br />
+                            <span>{{
+                              item.uploadedDate | date : "MM/dd/yyyy"
+                            }}</span>
+                          </div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <button
+            *ngIf="selectedAssignment.status.statusId != 17"
+            pButton
+            [disabled]="documents.length == 0"
+            (click)="sendFiles()"
+          >
+            Lưu thay đổi
+          </button>
+        </div>
+        <!-- comment -->
+        <div class="height-100">
+          <br />
+          <form [formGroup]="commentForm">
+            <div class="comment d-flex">
+              <input
+                formControlName="content"
+                pInputText
+                type="text"
+                placeholder="Gửi bình luận"
+                (keydown)="onKeyPress($event)"
+              />
+              <div
+                class="d-flex justify-content-center align-items-center p-2"
+                (click)="sendComment()"
+              >
+                <i class="bi bi-send"></i>
+              </div>
+            </div>
+          </form>
         </div>
         <div *ngIf="selectedAssignment.comments" class="comment-content pt-2">
           <div
@@ -77,16 +259,18 @@
             class="comment-item row"
           >
             <div
-              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+              class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
             >
               <img src="../../../../../../assets/img/user_icon.svg" alt="" />
             </div>
-            <div class="comment-item-content col-md-9">
+            <div class="comment-item-content col-md-10">
               <span class="font-weight-bold font-size-18"
                 >{{ item.userName }}
               </span>
-              <span class="text-black-50"></span>
-  
+              <span class="text-black-50 comment-date">{{
+                item.createdDate | date
+              }}</span>
+
               <br />
               <span>{{ item.content }}</span>
             </div>
@@ -98,55 +282,68 @@
           </div>
         </div>
       </div>
-      <div class="height-100">
-        <span class="font-weight-bold">Tài liệu</span>
-        <br />
-        <!-- <button pButton>Nộp tài liệu</button> -->
-  
-        <!-- <div class="row document-item mb-2">
-          <div class="d-flex flex-row">
-            <div class="col-md-4 pe-3">
-              <label>Tên tài liệu</label><br />
-              <input
-                pInputText
-                placeholder="Điền tên tài liệu"
-                formControlName="documentName"
-              />
+      <div class="col-md-4 right-box">
+        <div class="height-100">
+          <span class="text-black-50">Người giao</span>
+          <br />
+          <div class="row mt-1">
+            <div
+              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
             </div>
-            <div class="col-md-2 pe-3">
-              <label>Mã tài liệu</label><br />
-              <input
-                pInputText
-                placeholder="Điền mã tài liệu"
-                formControlName="documentCode"
-              />
-            </div>
-            <div class="col-md-6">
-              <label>Tài liệu</label><br />
-              <div class="input-file">
-                <input
-                  type="file"
-                  #fileInput
-                  style="display: none"
-                  (change)="handleFileInputChange(fileInput)"
-                />
-                <input pInputText readonly class="col-md-8" />
-                <button
-                  type="button"
-                  pButton
-                  label="Chọn tệp"
-                  (click)="fileInput.click()"
-                  class="col-md-2"
-                ></button>
-              </div>
+            <div class="col-md-10 d-flex align-items-center">
+              <span class="font-weight-bold">{{
+                selectedAssignment.assigner.user.fullName
+              }}</span>
             </div>
           </div>
-        </div> -->
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Người làm</span>
+          <br />
+          <div class="row mt-1">
+            <div
+              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+            </div>
+            <div class="col-md-10 d-flex align-items-center">
+              <span class="font-weight-bold">{{
+                selectedAssignment.assignee.user.fullName
+              }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Hạn nộp</span>
+          <br />
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.deadline | date : "dd/MM/yyyy"
+          }}</span>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Trạng thái</span>
+          <br />
+          <span class="mt-1">
+            <p-tag
+              class="status"
+              [severity]="getStatusSeverity(selectedAssignment.status.statusId)"
+              [rounded]="true"
+            >
+              {{ selectedAssignment.status.statusName }}
+            </p-tag>
+          </span>
+        </div>
+        <div class="height-100">
+          <span class="text-black-50">Ngày tạo</span>
+          <br />
+          <span class="font-weight-bold mt-1">{{
+            selectedAssignment.createdDate | date : "dd/MM/yyyy"
+          }}</span>
+        </div>
       </div>
     </div>
-    <!-- <div class="mt-5">
-      <button pButton>Lưu</button>
-    </div> -->
   </p-dialog>
   <!-- </form> -->
   <p-table
@@ -174,6 +371,7 @@
         <th>
           <div>Người giao</div>
         </th>
+        <th>Hạn nộp</th>
         <th></th>
       </tr>
     </ng-template>
@@ -185,13 +383,27 @@
         <td>
           {{ assignment.assignmentName }}
         </td>
-        <td></td>
-        <td></td>
         <td>
-          <button pButton (click)="assVisibleToggle(assignment)">Chi tiết</button>
+          <p-tag
+            class="status"
+            [severity]="getStatusSeverity(assignment?.status.statusId)"
+            [rounded]="true"
+          >
+            {{ assignment?.status.statusName }}
+          </p-tag>
+        </td>
+        <td>
+          {{ assignment.assigner.user.fullName }}
+        </td>
+        <td>
+          {{ assignment.deadline | date : "dd/MM/yyyy" }}
+        </td>
+        <td>
+          <button pButton (click)="assVisibleToggle(assignment)">
+            Chi tiết
+          </button>
         </td>
       </tr>
     </ng-template>
   </p-table>
 </div>
-

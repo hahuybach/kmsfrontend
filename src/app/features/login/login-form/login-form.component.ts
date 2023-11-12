@@ -26,7 +26,7 @@ export class LoginFormComponent implements OnInit {
         next: (response) => {
           const data = JSON.parse(response);
           this.auth.setJwtInCookie(data.token);
-          console.log(data.token);
+          this.auth.setTokenTimeOut();
           this.router.navigateByUrl('/dashboard');
         },
         error: (err) => {

@@ -1,103 +1,169 @@
-<div class="row create-inspection-plan">
-  <h4 class="mb-3">Tạo mới quyết định kiểm tra</h4>
-  <app-inspection-plan-inspector-popup
-    (popupInspectorVisibleChange)="changeInspectorVisible()"
-    [popupInspectorVisible]="popupInspectorVisible"
-  ></app-inspection-plan-inspector-popup>
-  <form class="row" [formGroup]="inspectionPlanForm">
-    <div class="form-content col-md-8">
-      <div class="inspection-plan-name mb-1">
-        <h6>Tên quyết định kiểm tra</h6>
-        <input
-          type="text"
-          pInputText
-          placeholder="Tên quyết định kiểm tra"
-          class="w-100"
-          formControlName="inspectionPlanName"
-        />
+<div class="container-fluid">
+  <div class="row update-inspection-plan">
+    <p-dialog
+      header="Xem tài liệu"
+      [(visible)]="pdfPreviewVisibility"
+      [style]="{ width: '90vw', height: '100vh' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+        <div class="spinner-border text-center" role="status"></div>
+        <p>Đang tải...</p>
       </div>
-      <div class="inspection-plan-description mb-1">
-        <h6>Chi tiết</h6>
-        <textarea
-          type="text"
-          pInputTextarea
-          placeholder="Chi tiết về kế hoạch quyết định kiểm tra"
-          rows="5"
-          class="w-100"
-          formControlName="inspectionPlanDescription"
-        ></textarea>
-      </div>
-      <div class="inspection-plan-school mb-1 col-md-6 pe-3">
-        <h6>Trường kiểm tra</h6>
-        <select title="schoolList" class="form-select" formControlName="schoolId">
-          <option selected value="0">Chọn trường kiểm tra</option>
-          <option>Trường Mầm Non Ngọc Hùng</option>
-          <option>Trường Mầm Non Hoa Hồng</option>
-          <option>Trường Mầm Non Ánh Sao</option>
-        </select>
-      </div>
-      <div class="row">
-        <div class="col-md-3">
-          <label for="startDate" class="fw-medium">Ngày bắt đầu</label>
-          <input id="startDate" class="form-control" type="date" formControlName="startDate"/>
-          <span id="startDateSelected"></span>
+      <ng-template #pdfIsLoaded>
+        <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
+      </ng-template>
+    </p-dialog>
+    <h4 class="mb-2">Cập nhật quyết định kiểm tra</h4>
+    <app-inspection-plan-inspector-popup
+      (popupInspectorVisibleChange)="changeInspectorVisible()"
+      [popupInspectorVisible]="popupInspectorVisible"
+      [inspectorList]="nonInspectorList"
+    ></app-inspection-plan-inspector-popup>
+    <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
+      <div class="form-content col-md-8">
+        <div class="inspection-plan-name mb-3">
+          <label class="fw-medium">Tên quyết định kiểm tra</label>
+          <input
+            type="text"
+            pInputText
+            class="w-100"
+            formControlName="inspectionPlanName"
+          />
         </div>
-        <div class="col-md-3">
-          <label for="endDate" class="fw-medium">Ngày kết thúc</label>
-          <input id="endDate" class="form-control" type="date"  formControlName="endDate"/>
-          <span id="endDateSelected"></span>
+        <div class="inspection-plan-description mb-3">
+          <label class="fw-medium">Chi tiết</label>
+          <textarea
+            type="text"
+            pInputTextarea
+            rows="5"
+            class="w-100"
+            formControlName="description"
+          ></textarea>
         </div>
-      </div>
-    </div>
-    <div class="col-md-4 h-25 d-flex justify-content-center align-items-center">
-      <app-inspection-plan-inspector-list (toggleIssueListPopup)="changeInspectorVisible()"></app-inspection-plan-inspector-list>
-    </div>
-    <div class="document mt-3" formGroupName="documentInspectionPlanDto">
-      <h6>Tài liệu công văn</h6>
-      <div class="row document-item mb-2">
-        <div class="d-flex flex-row">
-          <div class="col-md-4 pe-3">
-            <label>Tên tài liệu</label><br/>
-            <input
-              pInputText
-              placeholder="Điền tên tài liệu"
-              formControlName="documentName"
-            />
+        <div class="inspection-plan-school mb-3 col-md-6 pe-3">
+          <label class="fw-medium">Trường kiểm tra</label>
+          <select title="schoolList" class="form-select" disabled>
+            <option selected value="0">{{inspectionPlanDetail?.inspectionPlan?.school?.schoolName}}</option>
+          </select>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label class="fw-medium">Ngày bắt đầu</label>
+            <input class="form-control" type="date" formControlName="startDate"/>
           </div>
-          <div class="col-md-2 pe-3">
-            <label>Mã tài liệu</label><br/>
-            <input
-              pInputText
-              placeholder="Điền mã tài liệu"
-              formControlName="documentCode"
-            />
+          <div class="col-md-3">
+            <label class="fw-medium">Ngày kết thúc</label>
+            <input class="form-control" type="date" formControlName="endDate"/>
           </div>
-          <div class="col-md-6">
-            <label>Tài liệu</label><br/>
-            <div class="input-file">
-              <input
-                type="file"
-                #fileInput
-                style="display: none"
-                (change)="handleFileInputChange(fileInput)"
-              />
-              <input pInputText readonly class="col-md-8"/>
-              <button
-                type="button"
-                pButton
-                label="Chọn tệp"
-                (click)="fileInput.click()"
-                class="col-md-2"
-              ></button>
+        </div>
+        <div>
+          <h5 class="mb-2">Tài liệu công văn</h5>
+          <div class="file-item py-3 d-flex"
+               (click)="openNewTab(inspectionPlanDetail.inspectionPlan.documents[0]?.documentLink)">
+            <div class="file-item-icon d-flex justify-content-center align-items-center">
+              <img src="assets/img/pdf_logo.svg" alt=""/>
+            </div>
+            <div class="row col-md-10 d-flex align-items-end mb-3">
+              <div class="col-md-8">
+                <p class="mb-0">
+                  <span>Tên tài liệu: </span>
+                  <span class="fw-bold">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}</span>
+                </p>
+                <p class="mb-0">
+                  <span>Loại tài liệu: </span>
+                  <span
+                    class="fw-bold">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}</span>
+                </p>
+                <p class="mb-0">
+                  <span>Mã tài liệu: </span>
+                  <span class="fw-bold">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentCode}}</span>
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <p class="mb-0">
+                  <span>Kích thước: </span>
+                  <span
+                    class="fw-bold">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.size  | fileSizePipe:'MB' }}</span>
+                </p>
+                <p class="mb-0">
+                  <span>Ngày tạo: </span>
+                  <span
+                    class="fw-bold">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.uploadedDate | date : "MM/dd/yyyy" }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="update-file-item d-flex justify-content-center mx-4"
+               [@slideInOut]="documentUpdated ? 'out' :'in'">
+            <button type="button" class="d-flex flex-column align-items-center" (click)="changeDocumentUpdate()">
+              <i class="bi bi-cloud-plus"></i>
+              Cập nhật tài liệu
+            </button>
+          </div>
+          <div [@slideInOut]="documentUpdated ? 'in' :'out'" class="document-item px-2 pt-2 mx-4" formGroupName="documentInspectionPlanDto">
+            <ng-template ngIf="documentUpdated === 'in'">
+              <div class="col-md-12 d-flex flex-row">
+                <div class="col-md-8 pe-3">
+                  <label>Tên tài liệu</label><br/>
+                  <input
+                    pInputText
+                    placeholder="Điền tên tài liệu"
+                    formControlName="documentName"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label>Mã tài liệu</label><br/>
+                  <input
+                    pInputText
+                    placeholder="Điền mã tài liệu"
+                    formControlName="documentCode"
+                  />
+                </div>
+              </div>
+              <div class="col-md-12">
+                <label>Tài liệu</label><br/>
+                <div class="input-file">
+                  <input
+                    type="file"
+                    #fileInput
+                    style="display: none"
+                    (change)="handleFileInputChange(fileInput)"
+                  />
+                  <input pInputText readonly class="col-md-9"
+                         placeholder="{{fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'}}"/>
+                  <button
+                    type="button"
+                    pButton
+                    label="Chọn tệp"
+                    (click)="fileInput.click()"
+                    class="col-md-3"
+                  ></button>
+                </div>
+              </div>
+            </ng-template>
+            <div class="close-document-update d-flex justify-content-center">
+              <button type="button" class="w-100" (click)="changeDocumentUpdate()">
+                <i class="bi bi-x-circle"></i>
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="mt-5 row w-100">
-      <div class="col-12 save-button d-flex w-100">
-        <button class="btn text-white">Lưu</button>
+      <div class="col-md-4 d-flex align-items-start">
+        <app-inspection-plan-inspector-list class="w-100"
+                                            (toggleIssueListPopup)="changeInspectorVisible()"
+                                            [listEditable]="true"
+                                            [selectedInspectors]="inspectorList"
+                                            (resetList)="onResetList()"
+                                            (inspectorList)="getInspectorIds($event)"
+        ></app-inspection-plan-inspector-list>
       </div>
-    </div>
-  </form>
+      <div class="mt-5 row w-100 mb-3">
+        <div class="col-12 save-button d-flex w-100 justify-content-center">
+          <button type="submit" class="btn text-white">Cập nhật</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

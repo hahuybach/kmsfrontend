@@ -30,4 +30,11 @@ export class inspectionPlanService {
     const url = `${this.inspectionApiUrl}/detail/${inspectionPlanId}`;
     return this.http.get(url, {headers});
   }
+
+  public updateInspectionPlan(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+    const url = `${this.inspectionApiUrl}/update`;
+    return this.http.put(url, formData, {headers});
+  }
 }

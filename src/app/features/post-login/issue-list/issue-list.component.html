@@ -16,8 +16,8 @@
   >
     <ng-template pTemplate="caption">
       <div class="table-header">
-        <span class="p-input-icon-left">
-          <i class="bi bi-search"></i>
+        <span>
+          <!-- <i class="bi bi-search"></i> -->
           <input
             pInputText
             type="text"
@@ -25,9 +25,9 @@
             placeholder="Tìm kiếm"
           />
         </span>
-        <p-button (click)="navigateToCreateIssue()" class="btn-purple">Tạo mới
-        </p-button
-        >
+        <p-button (click)="navigateToCreateIssue()" class="btn-purple"
+          >Tạo mới
+        </p-button>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
@@ -100,19 +100,15 @@
         >
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="navigateToDetail(issue.issueId)"
           >
-            <i
-              class="bi bi-info-circle-fill"
-              (click)="navigateToDetail(issue.issueId)"
-            ></i>
+            <i class="bi bi-info-circle-fill"></i>
           </div>
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="navigateToUpdate(issue.issueId)"
           >
-            <i
-              class="bi bi-pencil-fill"
-              (click)="navigateToUpdate(issue.issueId)"
-            ></i>
+            <i class="bi bi-pencil-fill"></i>
           </div>
         </td>
       </tr>

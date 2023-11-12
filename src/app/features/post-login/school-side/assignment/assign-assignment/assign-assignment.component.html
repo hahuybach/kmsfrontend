@@ -1,1 +1,358 @@
-<p>assign-assignment works!</p>
+<p-dialog
+  header="Chi tiết công việc"
+  [(visible)]="detailVisible"
+  [style]="{ width: '70vw', height: '1080px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="assignmentPopuptHideEvent()"
+>
+  <div *ngIf="selectedAssignment" class="row assignment-container">
+    <div class="col-md-8 left-box">
+      <div class="height-100">
+        <span class="text-black-50">Tên công việc</span>
+        <br />
+        <span class="font-weight-bold mt-1">{{
+          selectedAssignment.assignmentName
+        }}</span>
+      </div>
+      <div class="height-100">
+        <span class="text-black-50">Chi tiết công việc</span>
+        <br />
+        <span class="font-weight-bold mt-1">{{
+          selectedAssignment.description
+        }}</span>
+      </div>
+      <!-- file -->
+      <div>
+        <div class="d-flex justify-content-between">
+          <div>
+            <span class="text-black-50">Tài liệu</span>
+          </div>
+        </div>
+        <br />
+        <div *ngIf="documents.length > 0">
+          <ng-container *ngFor="let item of documents; let i = index">
+            <div class="row mb-3">
+              <div (click)="openNewTab(item.documentLink)">
+                <div class="file-item px-3 py-1 d-flex">
+                  <div
+                    class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                  >
+                    <img src="../../../../../assets/img/pdf.png" alt="" />
+                  </div>
+                  <div class="file-item-content">
+                    <div class="row ms-2">
+                      <div class="col-md-10">
+                        <span class="font-weight-bold font-size-18">{{
+                          item.documentName
+                        }}</span>
+                        <br />
+                        <span
+                          ><span class="font-weight-bold">Mã:</span>
+                          {{ item.documentCode }}</span
+                        >
+                      </div>
+                      <!-- <div class="col-md-2">
+                        <span class="text-black-50">{{
+                          item.sizeFormat || item.file.size
+                        }}</span>
+                        <br />
+                        <span>{{
+                          item.uploadedDate | date : "MM/dd/yyyy"
+                        }}</span>
+                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <!-- comment -->
+      <div class="height-100">
+        <br />
+        <form [formGroup]="commentForm">
+          <div class="comment d-flex">
+            <input
+              formControlName="content"
+              pInputText
+              type="text"
+              placeholder="Gửi bình luận"
+              (keydown)="onKeyPress($event)"
+            />
+            <div
+              class="d-flex justify-content-center align-items-center p-2"
+              (click)="sendComment()"
+            >
+              <i class="bi bi-send"></i>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div *ngIf="selectedAssignment.comments" class="comment-content pt-2">
+        <div
+          *ngFor="let item of selectedAssignment.comments"
+          class="comment-item row"
+        >
+          <div
+            class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
+          >
+            <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+          </div>
+          <div class="comment-item-content col-md-10">
+            <span class="font-weight-bold font-size-18"
+              >{{ item.userName }}
+            </span>
+            <span class="text-black-50 comment-date">{{
+              item.createdDate | date : "dd/MM/yyyy"
+            }}</span>
+
+            <br />
+            <span>{{ item.content }}</span>
+          </div>
+          <div
+            class="col-md-1 d-flex justify-content-center align-items-center"
+          >
+            <i class="bi bi-three-dots-vertical"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 right-box">
+      <div class="height-100">
+        <span class="text-black-50">Người giao</span>
+        <br />
+        <div class="row mt-1">
+          <div
+            class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+          >
+            <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+          </div>
+          <div class="col-md-10 d-flex align-items-center">
+            <span class="font-weight-bold">{{
+              selectedAssignment.assigner.user.fullName
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="height-100">
+        <span class="text-black-50">Người làm</span>
+        <br />
+        <div class="row mt-1">
+          <div
+            class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+          >
+            <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+          </div>
+          <div class="col-md-10 d-flex align-items-center">
+            <span class="font-weight-bold">{{
+              selectedAssignment.assignee.user.fullName
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="height-100">
+        <span class="text-black-50">Hạn nộp</span>
+        <br />
+        <span class="font-weight-bold mt-1">{{
+          selectedAssignment.deadline | date : "dd/MM/yyyy"
+        }}</span>
+      </div>
+      <div class="height-100">
+        <span class="text-black-50">Trạng thái</span>
+        <br />
+        <!-- <form [formGroup]="statusForm"> -->
+        <p-dropdown dataKey="value" [options]="statusOptions" #dropdown>
+          <ng-template let-option pTemplate="selectedItem">
+            <p-tag class="status" [severity]="option.severity" [rounded]="true">
+              {{ option.label }}
+            </p-tag>
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <p-tag
+              class="status"
+              [severity]="option.severity"
+              [rounded]="true"
+              [ngClass]="{ 'disabled-option': option.disabled }"
+            >
+              {{ option.label }}
+            </p-tag>
+          </ng-template>
+        </p-dropdown>
+        <!-- </form> -->
+      </div>
+      <div class="height-100">
+        <span class="text-black-50">Ngày tạo</span>
+        <br />
+        <span class="font-weight-bold mt-1">{{
+          selectedAssignment.createdDate | date : "dd/MM/yyyy"
+        }}</span>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+<p-dialog
+  header="Chi tiết công việc"
+  [(visible)]="assignmentVisible"
+  [style]="{ width: '70vw', height: '1080px' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="assignmentPopuptHideEvent()"
+>
+  <form [formGroup]="assignmentForm">
+    <div *ngIf="selectedAssignment && action == 'addchild'" class="mb-2">
+      <span class="mb-1 font-weight-bold">Thuộc</span>
+      <br />
+      <span class="text-black-50">{{ selectedAssignment.assignmentName }}</span>
+      <br />
+      <span class="mb-1 font-weight-bold">Loại công việc</span>
+      <br />
+      <p-dropdown [options]="typeAssignmentOptions"></p-dropdown>
+    </div>
+    <div class="mb-2">
+      <span class="mb-1 font-weight-bold">Tên công việc</span>
+      <br />
+      <input
+        class="mb-1"
+        pInputText
+        type="text"
+        formControlName="assignmentName"
+      />
+    </div>
+    <div class="mb-2">
+      <span class="mb-1 font-weight-bold">Mô tả chi tiết</span>
+      <br />
+      <textarea
+        class="mb-1"
+        rows="3"
+        pInputTextarea
+        formControlName="description"
+      ></textarea>
+    </div>
+    <div class="mb-2">
+      <span class="mb-1 font-weight-bold">Người làm</span>
+      <br />
+      <p-dropdown [options]="listOfPossibleAssginees">
+        <ng-template let-option pTemplate="selectedItem">
+          <div>
+            <span> {{ option.user.fullName }} </span>&nbsp;<span
+              class="text-black-50"
+            >
+              {{ option.email }}</span
+            >
+          </div>
+        </ng-template>
+        <ng-template let-option pTemplate="item">
+          <div>
+            <span> {{ option.user.fullName }} </span>&nbsp;<span>
+              {{ option.email }}</span
+            >
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+    <div class="mb-4">
+      <span class="mb-1 font-weight-bold">Hạn nộp</span><br />
+      <!-- <p-calendar formControlName="deadline" [showIcon]="true"></p-calendar> -->
+      <input pInputText type="date" formControlName="deadline" />
+    </div>
+    <button *ngIf="action == 'update'" pButton (click)="update()">
+      Cập nhật
+    </button>
+    <button
+      *ngIf="action == 'addroot' || action == 'addchild'"
+      pButton
+      (click)="add()"
+    >
+      Thêm mới
+    </button>
+  </form>
+</p-dialog>
+<p-dialog
+  [(visible)]="pdfLoaded"
+  [style]="{ width: '90vw', height: '1080px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div *ngIf="pdfLoaded">
+    <iframe [src]="safePdfUrl" width="100%" height="650px"></iframe>
+  </div>
+</p-dialog>
+<p-toast></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Đồng ý"
+  rejectLabel="Hủy"
+></p-confirmDialog>
+<h4>Phân chia công việc</h4>
+<p-treeTable
+  [value]="assignments"
+  [scrollable]="true"
+  [style]="{ 'min-width': '50rem' }"
+  [scrollable]="true"
+  scrollHeight="600px"
+>
+  <ng-template pTemplate="caption">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h6>Danh sách công việc</h6>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Công việc</th>
+      <th>Người giao</th>
+      <th>Người làm</th>
+      <th>Hạn nộp</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-rowNode>
+    <tr [ttRow]="rowNode">
+      <td class="folder">
+        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+        <ng-container *ngIf="rowData.node.task">
+          <i class="bi bi-file-earmark-check-fill file-icon"></i>
+        </ng-container>
+        <ng-container *ngIf="!rowData.node.task">
+          <i class="bi bi-folder-fill folder-icon"></i>
+        </ng-container>
+        {{ rowData.node.assignmentName }}
+      </td>
+      <td>{{ rowData.node.assigner.user.fullName }}</td>
+      <td>{{ rowData.node.assignee.user.fullName }}</td>
+      <td>{{ rowData.node.deadline | date : "dd/MM/yyyy" }}</td>
+      <td class="d-flex">
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="openDetailRowNode(rowData.node)"
+        >
+          <i class="bi bi-info-circle-fill"></i>
+        </div>
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="openDetail(rowData.node, 'addchild')"
+          *ngIf="rowData.node.assignee.email === user"
+        >
+          <i class="bi bi-plus-circle-fill"></i>
+        </div>
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="openDetail(rowData.node, 'update')"
+          *ngIf="rowData.node.assigner.email === user"
+        >
+          <i class="bi bi-pencil-fill"></i>
+        </div>
+        <div
+          class="action-item d-flex justify-content-center align-items-center mx-2"
+          (click)="deleteNode(rowData.node)"
+          *ngIf="rowData.node.assigner.email === user"
+        >
+          <i class="bi bi-x-circle-fill"></i>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-treeTable>

@@ -110,7 +110,7 @@
     header="Nộp tài liệu"
     [(visible)]="uploadFileVisible"
     [modal]="true"
-    [style]="{ width: '50vw', height: '600px' }"
+    [style]="{ width: '60vw', height: '600px' }"
     [draggable]="false"
     [resizable]="false"
     (onHide)="hideUploadPopup()"
@@ -188,46 +188,48 @@
         <div class="mb-3">
           <span class="mb-2 text-black-50">Tên kế hoạch</span>
           <p class="font-weight-bold">
-            {{ schoolinitiationplan.initiationPlanName }}
+            {{ schoolinitiationplan?.initiationPlanName }}
           </p>
         </div>
         <div class="mb-3">
           <span class="mb-2 text-black-50">Trường</span>
           <p class="font-weight-bold">
-            {{ schoolinitiationplan.school.schoolName }}
+            {{ schoolinitiationplan?.school.schoolName }}
           </p>
         </div>
         <div class="mb-3">
           <span class="mb-2 text-black-50">Ngày tạo</span>
           <p class="font-weight-bold">
-            {{ schoolinitiationplan.createdDate | date : "dd/MM/yyyy" }}
+            {{ schoolinitiationplan?.createdDate | date : "dd/MM/yyyy" }}
           </p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="mb-3">
           <span class="mb-2 text-black-50">Người lên kế hoạch</span>
-          <p class="font-weight-bold">{{ schoolinitiationplan.createdBy }}</p>
+          <p class="font-weight-bold">{{ schoolinitiationplan?.createdBy }}</p>
         </div>
         <div class="mb-3">
           <span class="mb-2 text-black-50">Trạng thái</span>
           <br />
           <p-tag
             *ngIf="
-              schoolinitiationplan.status.statusId >= 6 &&
-              schoolinitiationplan.status.statusId <= 9
+              schoolinitiationplan?.status.statusId >= 6 &&
+              schoolinitiationplan?.status.statusId <= 9
             "
             class="status"
-            [severity]="getStatusSeverity(schoolinitiationplan.status.statusId)"
+            [severity]="
+              getStatusSeverity(schoolinitiationplan?.status.statusId)
+            "
             [rounded]="true"
           >
-            {{ schoolinitiationplan.status.statusName }}
+            {{ schoolinitiationplan?.status.statusName }}
           </p-tag>
         </div>
         <div class="mb-3">
           <span class="mb-2 text-black-50">Hạn nộp</span>
           <p class="font-weight-bold p-error">
-            {{ schoolinitiationplan.deadline | date : "dd/MM/yyyy" }}
+            {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
           </p>
         </div>
       </div>
@@ -247,38 +249,40 @@
           </button>
         </div>
       </div>
-
-      <div
-        *ngIf="schoolinitiationplan.status.statusId != 6"
-        class="plan-file-item d-flex"
-        (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
-      >
-        <div
-          class="plan-file-item-img d-flex justify-content-center align-items-center"
-        >
-          <img src="../../../../../assets/img/pdf.png" alt="" />
-        </div>
-        <div class="plan-file-item-content">
-          <div class="col-md-10 p-2">
+<ng-container *ngIf="lastDocs.departmentDocument">
+  <div
+          *ngIf="schoolinitiationplan?.status.statusId != 6"
+          class="plan-file-item d-flex"
+          (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
+  >
+    <div
+            class="plan-file-item-img d-flex justify-content-center align-items-center"
+    >
+      <img src="../../../../../assets/img/pdf.png" alt="" />
+    </div>
+    <div class="plan-file-item-content" >
+      <div class="col-md-10 p-2">
             <span class="font-weight-bold">
-              {{ lastDocs.departmentDocument.documentName }}
+              {{ lastDocs.departmentDocument?.documentName }}
             </span>
-            <br />
-            <span class="font-weight-bold">Mã: </span>
-            <span class="text-black-50">{{
-              lastDocs.departmentDocument.documentCode
-            }}</span>
-            <br />
-            <span class="text-black-50">{{
-              lastDocs.departmentDocument.sizeFormat
-            }}</span>
-            <br />
-            <span class="text-black-50">{{
-              lastDocs.departmentDocument.uploadedDate | date : "dd/MM/yyyy"
-            }}</span>
-          </div>
-        </div>
+        <br />
+        <span class="font-weight-bold">Mã: </span>
+        <span class="text-black-50">{{
+          lastDocs.departmentDocument.documentCode
+          }}</span>
+        <br />
+        <span class="text-black-50">{{
+          lastDocs.departmentDocument.sizeFormat
+          }}</span>
+        <br />
+        <span class="text-black-50">{{
+          lastDocs.departmentDocument.uploadedDate | date : "dd/MM/yyyy"
+          }}</span>
       </div>
+    </div>
+  </div>
+</ng-container>
+
     </div>
   </div>
   <div class="col-md-5">
@@ -289,8 +293,8 @@
       <!--6 Đang thực thi và 9 không được phê duyệt-->
       <ng-container
         *ngIf="
-          schoolinitiationplan.status.statusId == 6 ||
-          schoolinitiationplan.status.statusId == 9
+          schoolinitiationplan?.status.statusId == 6 ||
+          schoolinitiationplan?.status.statusId == 9
         "
       >
         <div
@@ -326,6 +330,11 @@
                   inputFileForm.get("documentCode")?.value
                 }}</span>
                 <br />
+                <span class="text-black-50">{{ getSize(newFile.size) }}</span>
+                <br />
+                <span class="text-black-50">{{
+                  newFile.dateModified | date
+                }}</span>
               </div>
               <div
                 class="col-md-2 d-flex justify-content-center align-items-center"
@@ -353,12 +362,12 @@
         </div>
       </ng-container>
       <!-- 7 đang chờ phê duyệt -->
-      <ng-container *ngIf="schoolinitiationplan.status.statusId == 7">
+      <ng-container *ngIf="schoolinitiationplan?.status.statusId == 7">
         <div *ngIf="fileStatus" class="px-4 my-4">
           <div class="d-flex justify-content-center align-items-center mb-2">
             <span *ngIf="!checkCanEdit()" class="p-error"
-              ><span class="font-weight-bold">Thông báo: </span>Hết mẹ hạn
-              rồi</span
+              ><span class="font-weight-bold">Thông báo: </span>Hiện tại đã hết
+              hạn nên không thể chỉnh sửa</span
             >
           </div>
           <div class="plan-file-item d-flex">
@@ -431,7 +440,7 @@
           ></button>
         </div>
       </ng-container>
-      <ng-container *ngIf="schoolinitiationplan.status.statusId == 8">
+      <ng-container *ngIf="schoolinitiationplan?.status.statusId == 8">
         <div
           class="px-4 my-4"
           (click)="openNewTab(lastDocs.departmentDocument.documentLink)"

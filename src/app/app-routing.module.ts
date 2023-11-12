@@ -16,15 +16,9 @@ import { SchoolInitiationPlanDetailComponent } from './features/post-login/schoo
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { InspectionPlanDetailComponent } from './features/post-login/inspection-plan-list/inspection-plan-detail/inspection-plan-detail.component';
 import { InitiationPlanDetailComponent } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
-import {
-  GuidanceDocumentListComponent
-} from "./features/post-login/guidance-document-list/guidance-document-list.component";
-import {
-  GuidanceDocumentDetailComponent
-} from "./features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component";
-import {
-  GuidanceDocumentCreateComponent
-} from "./features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component";
+import { GuidanceDocumentListComponent } from './features/post-login/guidance-document-list/guidance-document-list.component';
+import { GuidanceDocumentDetailComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component';
+import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component';
 import { CreateAssignmentComponent } from './features/post-login/assignment/create-assignment/create-assignment.component';
 import { SchoolInitiationPlanListComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-list/school-initiation-plan-list.component';
 import { AssignmentListComponent } from './features/post-login/school-side/assignment/assignment-list/assignment-list.component';
@@ -36,6 +30,11 @@ import {SchoolUpdateComponent} from "./features/post-login/school-list/school-up
 import {UserListComponent} from "./features/post-login/user-list/user-list.component";
 import {UserDetailComponent} from "./features/post-login/user-list/user-detail/user-detail.component";
 import {UserCreateComponent} from "./features/post-login/user-list/user-create/user-create.component";
+import { ApproveAssignmentComponent } from './features/post-login/school-side/assignment/approve-assignment/approve-assignment.component';
+import { AssignAssignmentComponent } from './features/post-login/school-side/assignment/assign-assignment/assign-assignment.component';
+import {
+  UpdateInspectionPlanComponent
+} from "./features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component";
 
 const routes: Routes = [
   {
@@ -49,7 +48,7 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       // issue
-      {path: 'issuelist', component: IssueListComponent},
+      { path: 'issuelist', component: IssueListComponent },
       {
         path: 'issuelist/:id',
         component: IssueDetailComponent,
@@ -77,6 +76,10 @@ const routes: Routes = [
         path: 'inspection_plan/:id',
         component: InspectionPlanDetailComponent,
       },
+      {
+        path: 'inspection_plan/update/:id',
+        component: UpdateInspectionPlanComponent,
+      },
       // school initiation plan
       {
         path: 'schoolinitiationplan/:id',
@@ -84,16 +87,17 @@ const routes: Routes = [
       },
       {
         path: 'guidanceDocument',
-        component: GuidanceDocumentListComponent
+        component: GuidanceDocumentListComponent,
       },
       {
         path: 'guidanceDocument/:id',
-        component: GuidanceDocumentDetailComponent
+        component: GuidanceDocumentDetailComponent,
       },
       {
         path: 'guidanceDocument/create/:issueId',
         component: GuidanceDocumentCreateComponent,
-      },{
+      },
+      {
         path: 'schoolinitiationplan',
         component: SchoolInitiationPlanListComponent,
       },
@@ -102,7 +106,7 @@ const routes: Routes = [
         component: InitiationPlanDetailComponent,
       },
       {
-        path: 'assignment/create',
+        path: 'createtemplate',
         component: CreateAssignmentComponent,
       },
       {
@@ -141,7 +145,15 @@ const routes: Routes = [
         path: 'users/create',
         component: UserCreateComponent
       },
+      {
 
+        path: 'approveassignment',
+        component: ApproveAssignmentComponent,
+      },
+      {
+        path: 'assignassignment',
+        component: AssignAssignmentComponent,
+      },
     ],
   },
   {
@@ -168,5 +180,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

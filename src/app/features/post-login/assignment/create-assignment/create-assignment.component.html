@@ -69,7 +69,13 @@
         <h6>Danh sách công việc</h6>
       </div>
       <div>
-        <button pButton (click)="openDetail(null, 'addroot')">Tạo mới</button>
+        <button
+          [disabled]="assignments != null"
+          pButton
+          (click)="openDetail(null, 'addroot')"
+        >
+          Tạo mới
+        </button>
       </div>
     </div>
   </ng-template>
@@ -78,37 +84,48 @@
       <th>Công việc</th>
       <th>Người tạo</th>
       <th>Hạn nộp</th>
-      <th></th>
+      <th *ngIf="!data.sent"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-rowNode>
     <tr [ttRow]="rowNode">
-      <td>
+      <td class="folder">
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+        <i class="bi bi-folder-fill"></i>
         {{ rowData.node.assignmentName }}
       </td>
       <td>{{ rowData.node.assigner.user.fullName }}</td>
-      <td>{{ rowData.node.deadline | date }}</td>
-      <td class="d-flex">
-        <div
-          class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="openDetail(rowData.node, 'addchild')"
-        >
-          <i class="bi bi-plus-circle-fill"></i>
-        </div>
-        <div
-          class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="openDetail(rowData.node, 'update')"
-        >
-          <i class="bi bi-pencil-fill"></i>
-        </div>
-        <div
-          class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="deleteNode(rowData.node)"
-        >
-          <i class="bi bi-x-circle-fill"></i>
-        </div>
-      </td>
+      <td>{{ rowData.node.deadline | date : "dd/MM/yyyy" }}</td>
+      <ng-container *ngIf="!data.sent">
+        <td  class="d-flex">
+          <div
+                  class="action-item d-flex justify-content-center align-items-center mx-2"
+                  (click)="openDetail(rowData.node, 'addchild')"
+          >
+            <i class="bi bi-plus-circle-fill"></i>
+          </div>
+          <div
+                  class="action-item d-flex justify-content-center align-items-center mx-2"
+                  (click)="openDetail(rowData.node, 'update')"
+          >
+            <i class="bi bi-pencil-fill"></i>
+          </div>
+          <div
+                  class="action-item d-flex justify-content-center align-items-center mx-2"
+                  (click)="deleteNode(rowData.node)"
+          >
+            <i class="bi bi-x-circle-fill"></i>
+          </div>
+        </td>
+      </ng-container>
+
     </tr>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="p-2">
+      <button [disabled]="data.sent" pButton (click)="sendToSchools()">
+        Gửi template
+      </button>
+    </div>
   </ng-template>
 </p-treeTable>

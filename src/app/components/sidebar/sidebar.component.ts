@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 
@@ -7,7 +7,9 @@ import {Router} from "@angular/router";
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit{
+  isPrincipal: boolean
+  isDirector: boolean
 
   constructor(
     private auth: AuthService,
@@ -17,5 +19,17 @@ export class SidebarComponent {
   logout(){
     this.auth.logout();
     this.router.navigateByUrl("/login");
+  }
+
+  ngOnInit(): void {
+    for (const argument of this.auth.getRoleFromJwt()) {
+      if (argument.authority === "Trưởng Phòng") {
+        this.isDirector = true;
+      }
+      if (argument.authority === "Hiệu Trưởng") {
+        this.isPrincipal = true;
+
+      }
+    }
   }
 }

@@ -1,0 +1,58 @@
+@import "../../../assets/scss/base";
+
+*{
+  font-size: 14px;
+}
+
+.notification{
+  button{
+    margin-right: 1.5rem;
+    padding: 0 20px;
+    border: none;
+    background: none;
+    i {
+      color: $primary;
+      font-size: 30px;
+      border-radius: 100%;
+
+      &:hover {
+        color: $primary-hover;
+      }
+    }
+
+    .primary-badge {
+      background-color: $primary;
+    }
+  }
+
+  .notification-heading{
+    font-size: 20px;
+  }
+
+  .notification-list{
+    width: 370px;
+    max-height: 450px;
+    .notification-item{
+      text-decoration: none;
+      color: black;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+      &:hover {
+        background-color: #D3D3D3;
+      }
+      i{
+        color: $primary;
+        font-size: 0.5rem;
+      }
+      .unseen{
+
+      }
+    }
+  }
+  .dropdown-toggle::after {
+    display: none;
+  }
+}

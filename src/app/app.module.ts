@@ -12,7 +12,7 @@ import { IssueListComponent } from './features/post-login/issue-list/issue-list.
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
 import { MenuModule } from 'primeng/menu';
 import { AgGridModule } from 'ag-grid-angular';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -27,14 +27,14 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
-import { FormsModule } from '@angular/forms';
+import {FormsModule} from "@angular/forms";
 import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
 import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
-import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe';
+import { SortByIdPipe } from './shared/pipes/sortByDocumentTypeIdPipe.pipe';
 import { InspectionPlanModule } from './features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
@@ -57,6 +57,8 @@ import { UserListComponent } from './features/post-login/user-list/user-list.com
 import { UserDetailComponent } from './features/post-login/user-list/user-detail/user-detail.component';
 import { UserCreateComponent } from './features/post-login/user-list/user-create/user-create.component';
 
+import { NotificationListComponent } from './components/notification-list/notification-list.component';
+import {StompService} from "./features/post-login/push-notification/stomp.service";
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,6 +88,7 @@ import { UserCreateComponent } from './features/post-login/user-list/user-create
     UserListComponent,
     UserDetailComponent,
     UserCreateComponent,
+    NotificationListComponent,
   ],
   imports: [
     BrowserModule,
@@ -118,6 +121,7 @@ import { UserCreateComponent } from './features/post-login/user-list/user-create
     InspectorService,
     FormDataService,
     AuthGuard,
+    StompService,
     DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
@@ -129,6 +133,7 @@ import { UserCreateComponent } from './features/post-login/user-list/user-create
       useClass: TokenExpirationInterceptor,
       multi: true,
     },
+    provideAnimations(),
   ],
   bootstrap: [AppComponent],
 })

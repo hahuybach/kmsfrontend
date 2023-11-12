@@ -7,10 +7,11 @@ import {
   MenuItem,
   MessageService,
 } from 'primeng/api';
-import { switchMap } from 'rxjs';
+import { Observable, concatMap, from, switchMap } from 'rxjs';
 import { Issue } from 'src/app/models/issue.model';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { IssueService } from 'src/app/services/issue.service';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 interface TreeNode {
   assignmentId: number;
   assignmentName: string;
@@ -39,12 +40,14 @@ export class CreateAssignmentComponent {
   date = JSON.stringify(new Date());
   action: string | undefined;
   issueId: number;
+  data: any;
   constructor(
-    private messageService: MessageService,
+    private toastService: ToastService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
     private assignmentService: AssignmentService,
-    private issueService: IssueService
+    private issueService: IssueService,
+    private messageService: MessageService
   ) {}
   // newNodeForm = this.fb.group({
   //   nodeName: ['', Validators.required],
@@ -57,8 +60,6 @@ export class CreateAssignmentComponent {
   });
   ngOnInit() {
     this.initData();
-
-    // Don't use console.log(this.issueId) here, as it will be executed before the subscription's callback
 
     console.log(this.assignments);
   }
@@ -76,7 +77,8 @@ export class CreateAssignmentComponent {
       )
       .subscribe((data) => {
         console.log(data);
-        this.assignments = [data];
+        this.data = data;
+        this.assignments = [this.data.assignmentListDto];
         console.log(this.assignments);
       });
   }
@@ -193,9 +195,7 @@ export class CreateAssignmentComponent {
         addAssignmentDto: {
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
           description: this.assignmentForm.get('description')?.value,
-          deadline: this.parseDateStringToDate(
-            this.assignmentForm.get('deadline')?.value
-          ),
+          deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           issueId: this.issueId,
         },
       };
@@ -204,9 +204,7 @@ export class CreateAssignmentComponent {
         addAssignmentDto: {
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
           description: this.assignmentForm.get('description')?.value,
-          deadline: this.parseDateStringToDate(
-            this.assignmentForm.get('deadline')?.value
-          ),
+          deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           parentId: this.assignmentForm.get('parentId')?.value,
           issueId: this.issueId,
         },
@@ -216,9 +214,19 @@ export class CreateAssignmentComponent {
       next: (response) => {
         this.initData();
         this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Tạo thành công',
+          detail: 'Tạo thành công',
+        });
       },
       error: (error) => {
-        console.log(error);
+        this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Tạo thất bại',
+          detail: error.error.message,
+        });
       },
     });
   }
@@ -228,18 +236,27 @@ export class CreateAssignmentComponent {
         assignmentId: this.selectedAssignment.assignmentId,
         assignmentName: this.assignmentForm.get('assignmentName')?.value,
         description: this.assignmentForm.get('description')?.value,
-        deadline: this.parseDateStringToDate(
-          this.assignmentForm.get('deadline')?.value
-        ),
+        deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
       },
     };
+    console.log(updateAssignment);
     this.assignmentService.updateAssignment(updateAssignment).subscribe({
       next: (response) => {
         this.initData();
         this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Cập nhật thành công',
+          detail: 'Cập nhật thành công',
+        });
       },
       error: (error) => {
-        console.log(error);
+        this.assignmentVisible = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi cập nhật',
+          detail: error.error.message,
+        });
       },
     });
     console.log('Update');
@@ -251,36 +268,30 @@ export class CreateAssignmentComponent {
       header: 'Xác nhận xóa',
       // icon: 'pi pi-info-circle',
       accept: () => {
-        const deleteNode = {
+        const deleteAssignment = {
           id: assignment.assignmentId,
         };
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Xóa',
-          detail: 'Xóa thành công',
+        this.assignmentService.deleteAssignment(deleteAssignment).subscribe({
+          next: (response) => {
+            console.log(response);
+            this.initData();
+            this.assignmentVisible = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Xóa thành công',
+              detail: 'Xóa thành công',
+            });
+          },
+          error: (error) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Xóa thất bại',
+              detail: error.error.message,
+            });
+          },
         });
       },
-      reject: (type: any) => {
-        // switch (type) {
-        //   case ConfirmEventType.REJECT:
-        //     this.messageService.add({
-        //       severity: 'error',
-        //       summary: 'Rejected',
-        //       detail: 'You have rejected',
-        //     });
-        //     break;
-        //   case ConfirmEventType.CANCEL:
-        //     this.messageService.add({
-        //       severity: 'warn',
-        //       summary: 'Cancelled',
-        //       detail: 'You have cancelled',
-        //     });
-        //     break;
-        //   default:
-        //     // Handle other cases, if necessary
-        //     break;
-        // }
-      },
+      reject: (type: any) => {},
     });
   }
 
@@ -303,5 +314,34 @@ export class CreateAssignmentComponent {
     const dateObject = new Date(year, month - 1, day);
 
     return dateObject;
+  }
+  sendToSchools() {
+    this.issueService
+      .getCurrentActiveIssue()
+      .pipe(
+        switchMap((data) => {
+          console.log(data);
+          this.issueId = data.issueDto.issueId;
+          return this.assignmentService.sendAssignmentsToSchool(
+            data.issueDto.issueId
+          );
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Gửi thành công',
+            detail: 'Gửi template thành công',
+          });
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Gửi thất bại',
+            detail: error.error.message,
+          });
+        },
+      });
   }
 }
