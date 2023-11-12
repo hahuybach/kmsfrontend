@@ -79,7 +79,7 @@ export class AuthService {
     return iat ? iat.split('=')[1] : null;
   }
 
-  getSubFromCookie(): string | null{
+  getSubFromCookie(): string | null {
     const sub = document.cookie
       .split('; ')
       .find((row) => row.startsWith('sub='));

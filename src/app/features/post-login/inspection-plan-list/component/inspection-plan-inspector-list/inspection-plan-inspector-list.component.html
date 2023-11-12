@@ -4,9 +4,9 @@
 <ng-template #inspectorList>
   <div class="list-inspector h-100 d-flex flex-column">
     <div class="list-inspector-header px-3 text-center">
-      <h5 class="mx-auto">Danh sách thanh tra</h5>
+      <h5 class="mx-auto mt-2">Danh sách thanh tra</h5>
       <div class="total">
-        <span class="text-secondary mx-auto">Tổng số: {{ selectedInspectors?.length || 0}}</span>
+        <span class="mx-auto">Tổng số: {{ selectedInspectors.length}}</span>
       </div>
     </div>
 
@@ -41,12 +41,7 @@
         </ng-container>
       </div>
     </div>
-    <div class="w-100 d-flex justify-content-center mt-2" *ngIf="listEditable">
-      <div *ngIf="toggleChange">
-        <button type="button" pButton class="create-inspector"
-                (click)="changeToggleStatus()">Chỉnh sửa ban KTNB
-        </button>
-      </div>
+    <div class="w-100 d-flex justify-content-center my-2" *ngIf="listEditable">
       <div *ngIf="!toggleChange" class="w-100 px-1 d-flex flex-row justify-content-between align-items-center">
         <button type="button" pButton class="create-inspector px-4" (click)="onReset()">
           Hủy
@@ -59,5 +54,10 @@
         </button>
       </div>
     </div>
+  </div>
+  <div *ngIf="toggleChange && listEditable" class="mt-2 text-center">
+    <button type="button" pButton class="create-inspector"
+            (click)="changeToggleStatus()">Chỉnh sửa ban kiểm tra
+    </button>
   </div>
 </ng-template>

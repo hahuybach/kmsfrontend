@@ -17,7 +17,7 @@
     </p-dialog>
     <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
     <div class="row">
-      <div class="form-content col-md-8" *ngIf="inspectionPlanDetail">
+      <div class="form-content col-md-8 d-flex flex-column justify-content-between" *ngIf="inspectionPlanDetail">
         <div class="row mb-2">
           <div class="col-md-9">
             <div class="inspection-plan-name mb-1">
@@ -46,8 +46,7 @@
           <div class="col-md-9">
             <div class="inspection-plan-name mb-1">
               <span>Chi tiết</span>
-              <textarea pInputTextarea class="w-100 fw-bolder"
-                        readonly>{{inspectionPlanDetail.inspectionPlan.description}}</textarea>
+              <p class="fw-bolder">{{inspectionPlanDetail.inspectionPlan.description}}</p>
             </div>
           </div>
           <div class="col-md-3">
@@ -62,7 +61,7 @@
           </div>
         </div>
         <h5 class="mb-2">Tài liệu công văn</h5>
-        <div class="file-item mb-2 py-3 d-flex"
+        <div class="file-item py-3 d-flex"
              (click)="openNewTab(inspectionPlanDetail.inspectionPlan.documents[0]?.documentLink)">
           <div class="file-item-icon d-flex justify-content-center align-items-center">
             <img src="assets/img/pdf_logo.svg" alt=""/>

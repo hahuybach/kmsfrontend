@@ -42,6 +42,7 @@ import { SchoolInitiationPlanModule } from './features/post-login/school-initiat
 import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
+import {StompService} from "./features/post-login/push-notification/stomp.service";
 @NgModule({
   declarations: [
     AppComponent,
@@ -88,6 +89,7 @@ import { NotificationListComponent } from './components/notification-list/notifi
     InspectorService,
     FormDataService,
     AuthGuard,
+    StompService,
     DatePipe,
     {
       provide: HTTP_INTERCEPTORS,

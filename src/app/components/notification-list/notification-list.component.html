@@ -5,55 +5,16 @@
   <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="notification-list overflow-auto">
     <div class="notification-heading fw-bolder text-center mb-2">Thông báo</div>
     <div class="dropdown-divider"></div>
-    <a class="notification-item p-3 mx-1 unseen">
+    <a class="notification-item p-3 mx-1" *ngFor="let notification of notificationItems; let i = index" (click)="handleCLickNotificationItem(i)">
       <div class="notification-info">
-        <p class="mb-1 fw-bold">Quyết định kiểm tra</p>
-        <p class="mb-1">Quyết định kiểm tra mới vừa được tạo</p>
-        <p class="mb-1">11/11/2023 | 21:46</p>
+        <p class="mb-1 fw-bold">{{notification.notificationType}}</p>
+        <p class="mb-1">{{notification.message}}</p>
+        <p class="mb-1">{{notification.createdOn  | date : "dd/MM/yyyy | hh:mm"}}</p>
       </div>
-      <div class="">
+      <div class="" *ngIf="!notification.isSeen">
         <i class="bi bi-circle-fill"></i>
       </div>
     </a>
-    <a class="notification-item p-3 mx-1 unseen">
-      <div class="notification-info">
-        <p class="mb-1 fw-bold">Quyết định kiểm tra</p>
-        <p class="mb-1">Quyết định kiểm tra mới vừa được tạo</p>
-        <p class="mb-1">11/11/2023 | 21:46</p>
-      </div>
-      <div class="">
-        <i class="bi bi-circle-fill"></i>
-      </div>
-    </a>
-    <a class="notification-item p-3 mx-1">
-      <div class="notification-info">
-        <p class="mb-1 fw-bold">Quyết định kiểm tra</p>
-        <p class="mb-1">Quyết định kiểm tra mới vừa được tạo</p>
-        <p class="mb-1">11/11/2023 | 21:46</p>
-      </div>
-      <div class="">
-        <i class="bi bi-circle-fill"></i>
-      </div>
-    </a>
-    <div class="notification-item p-3 mx-1">
-      <div class="notification-info">
-        <p class="mb-1 fw-bold">Quyết định kiểm tra</p>
-        <p class="mb-1">Quyết định kiểm tra mới vừa được tạo</p>
-        <p class="mb-1">11/11/2023 | 21:46</p>
-      </div>
-      <div class="">
-        <i class="bi bi-circle-fill"></i>
-      </div>
-    </div>
-    <div class="notification-item p-3 mx-1">
-      <div class="notification-info">
-        <p class="mb-1 fw-bold">Quyết định kiểm tra</p>
-        <p class="mb-1">Quyết định kiểm tra mới vừa được tạo</p>
-        <p class="mb-1">11/11/2023 | 21:46</p>
-      </div>
-      <div class="">
-        <i class="bi bi-circle-fill"></i>
-      </div>
-    </div>
+    <div class=""></div>
   </div>
 </div>
