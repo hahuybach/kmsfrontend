@@ -13,6 +13,7 @@ import {ToastModule} from 'primeng/toast';
 import {DropdownModule} from "primeng/dropdown";
 import {FileSizePipePipe} from './pipes/file-size-pipe.pipe';
 import {FormsModule} from "@angular/forms";
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {FormsModule} from "@angular/forms";
     DialogModule,
     ToastModule,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   exports: [
     InputTextModule,
@@ -46,7 +48,8 @@ import {FormsModule} from "@angular/forms";
     ToastModule,
     FileSizePipePipe,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
 })
 export class SharedModule {

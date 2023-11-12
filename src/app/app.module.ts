@@ -27,20 +27,21 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
-import { FormsModule } from '@angular/forms';
+import {FormsModule} from "@angular/forms";
 import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
 import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
-import { SortByIdPipe } from '../app/shared/pipes/sortByDocumentTypeIdPipe.pipe';
+import { SortByIdPipe } from './shared/pipes/sortByDocumentTypeIdPipe.pipe';
 import { InspectionPlanModule } from './features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
 import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
+import { NotificationListComponent } from './components/notification-list/notification-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +60,7 @@ import { InitiationPlanModule } from './features/post-login/school-side/initiati
     IssueListPopUpComponent,
     IssueListRightSideComponent,
     SortByIdPipe,
+    NotificationListComponent,
   ],
   imports: [
     BrowserModule,

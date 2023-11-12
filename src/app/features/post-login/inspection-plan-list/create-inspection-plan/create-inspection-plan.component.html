@@ -17,6 +17,16 @@
             class="w-100"
             formControlName="inspectionPlanName"
           />
+          <div class="mt-1"
+               *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
+            <span
+              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
+              Vui lòng điền tên quyết định kiểm tra
+            </span>
+            <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxLength']" class="p-error">
+              Tên quyết định kiểm tra quá dài
+            </span>
+          </div>
         </div>
         <div class="inspection-plan-description mb-3">
           <label class="fw-medium">Chi tiết</label>
@@ -28,6 +38,12 @@
             class="w-100"
             formControlName="description"
           ></textarea>
+          <div class="mt-1"
+               *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
+              Vui lòng điền chi tiết quyết định kiểm tra
+            </span>
+          </div>
         </div>
         <div class="inspection-plan-school mb-3 col-md-6 pe-3">
           <label class="fw-medium">Trường kiểm tra</label>
@@ -41,7 +57,6 @@
           <div class="col-md-3">
             <label for="startDate" class="fw-medium">Ngày bắt đầu</label>
             <input id="startDate" class="form-control" type="date" formControlName="startDate"/>
-            <span id="startDateSelected"></span>
           </div>
           <div class="col-md-3">
             <label for="endDate" class="fw-medium">Ngày kết thúc</label>
@@ -70,6 +85,15 @@
                 placeholder="Điền tên tài liệu"
                 formControlName="documentName"
               />
+              <div class="mt-1"
+                   *ngIf="documentNameControls?.invalid && (documentNameControls?.touched || documentNameControls?.dirty)">
+                <span *ngIf="documentNameControls?.errors?.['required']" class="p-error">
+                  Vui lòng điền tên tài liệu
+                </span>
+                <span *ngIf="documentNameControls?.errors?.['maxLength']" class="p-error">
+                  Tên tài liệu quá dài
+                </span>
+              </div>
             </div>
             <div class="col-md-2 pe-3">
               <label>Mã tài liệu</label><br/>
@@ -78,6 +102,15 @@
                 placeholder="Điền mã tài liệu"
                 formControlName="documentCode"
               />
+              <div class="mt-1"
+                   *ngIf="documentCodeControls?.invalid && (documentCodeControls?.touched || documentCodeControls?.dirty)">
+                <span *ngIf="documentCodeControls?.errors?.['required']" class="p-error">
+                  Vui lòng điền mã tài liệu
+                </span>
+                <span *ngIf="documentCodeControls?.errors?.['maxLength']" class="p-error">
+                  Mã tài liệu quá dài
+                </span>
+              </div>
             </div>
             <div class="col-md-6">
               <label>Tài liệu</label><br/>
@@ -104,7 +137,7 @@
       </div>
       <div class="mt-5 mb-3 row w-100">
         <div class="col-12 save-button d-flex w-100 justify-content-center">
-          <button class="btn text-white">Lưu quyết định</button>
+          <button [disabled]="inspectionPlanForm.invalid" class="btn text-white">Lưu quyết định</button>
         </div>
       </div>
     </form>

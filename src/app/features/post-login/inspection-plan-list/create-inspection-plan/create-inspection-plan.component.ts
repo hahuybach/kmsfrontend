@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpHeaders} from "@angular/common/http";
 import {InspectorService} from "../../../../services/inspector.service";
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
@@ -20,7 +20,7 @@ export class CreateInspectionPlanComponent {
   schoolList: any[];
   inspectorList: any[];
   inspectorListId: number[];
-  selectedInspectorList: any[] =[];
+  selectedInspectorList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +56,7 @@ export class CreateInspectionPlanComponent {
     })
 
     this.inspectionPlanForm = this.fb.group({
-      inspectionPlanName: [null, Validators.compose([Validators.required])],
+      inspectionPlanName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       description: [null, Validators.compose([Validators.required])],
       chiefId: [0, Validators.compose([Validators.required])],
       inspectorIds: [[], Validators.compose([Validators.required])],
@@ -64,8 +64,8 @@ export class CreateInspectionPlanComponent {
       endDate: [null, Validators.compose([Validators.required])],
       schoolId: [0, Validators.compose([Validators.required])],
       documentInspectionPlanDto: this.fb.group({
-        documentName: [null, Validators.compose([Validators.required])],
-        documentCode: [null, Validators.compose([Validators.required])],
+        documentName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
+        documentCode: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
         documentFile: [null, Validators.compose([Validators.required])]
       })
     })
@@ -88,6 +88,14 @@ export class CreateInspectionPlanComponent {
   getInspectorIds(data: any) {
     this.inspectorListId = data.map((item: { accountId: any; }) => item.accountId);
     console.log(this.inspectorListId)
+  }
+
+  get documentNameControls() {
+    return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentName'];
+  }
+
+  get documentCodeControls() {
+    return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentCode'];
   }
 
   handleFileInputChange(fileInput: any): void {

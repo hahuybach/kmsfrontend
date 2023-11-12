@@ -123,7 +123,6 @@ export class UpdateInspectionPlanComponent {
         this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
         this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.inspectorList = list);
         this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.nonInspectorList = list);
-        console.log(data)
         this.startDate = new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0];
         this.endDate = new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0];
         this.getInspectorIds(this.inspectionPlanDetail.inspectors);
