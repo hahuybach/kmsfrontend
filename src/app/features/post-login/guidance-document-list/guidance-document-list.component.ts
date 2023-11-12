@@ -37,7 +37,6 @@ export class GuidanceDocumentListComponent implements OnInit {
     recordPerPageOption: number[] = [5, 15, 25];
 
   issueId: number = -1
-  createGuidanceDocument: boolean = true;
 
   constructor(private guidanceDocumentService: GuidanceDocumentService,
               private route: Router,

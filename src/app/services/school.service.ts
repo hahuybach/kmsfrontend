@@ -9,9 +9,13 @@ export class SchoolService {
 
   constructor(private httpClient: HttpClient) {
   }
-
+// cái này tìm tất cả
   findAll() {
     return this.httpClient.get<any>(this.baseUrl + 'findAll')
+  }
+  // cái này tìm ngoại trừ cái PGD
+  findAllSchools() {
+    return this.httpClient.get<any>(this.baseUrl + 'findAllSchool')
   }
   isSchoolNameUnique(schoolName : string){
     const request = {

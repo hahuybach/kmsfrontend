@@ -1,0 +1,287 @@
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<p-toast position="top-right" key="error"></p-toast>
+<div class="m-3">
+    <h2>Tra cứu người dùng</h2>
+</div>
+<div class="row mt-4">
+    <div class="form-group col-md-7" *ngIf="!advanceSearch">
+        <input type="text"
+               name="globalSearch"
+               id="globalSearch"
+               class="form-control small-input fontAwesome mb-3"
+               [(ngModel)]="globalSearch"
+               (keyup)="loadUsers()"
+               placeholder="&#xF002; Tra cứu nhanh"
+        >
+    </div>
+    <div *ngIf="advanceSearch" class="col-md-10">
+        <div class="row">
+            <div class="col-md-3" *ngIf="!hasPrincipalRow">
+                <p-dropdown [options]="schools"
+                            [(ngModel)]="currentSchool"
+                            optionLabel="schoolName" [filter]="true"
+                            filterBy="schoolName"
+                            [showClear]="true"
+                            placeholder="Chọn 1 nơi làm việc"
+                            (onChange)="loadUsers()"
+                >
+                    <ng-template pTemplate="selectedItem">
+                        <div class="flex align-items-center gap-2" *ngIf="currentSchool">
+                            <div>{{ currentSchool.schoolName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-school pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ school.schoolName }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div>
+            <div class="col-md-3">
+                <p-dropdown [options]="roles"
+                            [(ngModel)]="selectedRole"
+                            optionLabel="roleName" [filter]="true"
+                            filterBy="roleName"
+                            [showClear]="true"
+                            placeholder="Chọn 1 vai trò"
+                            (onChange)="loadUsers()"
+                            class="m-3"
+                >
+                    <ng-template pTemplate="selectedItem">
+                        <div class="flex align-items-center gap-2" *ngIf="selectedRole">
+                            <div>{{ selectedRole.roleName }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-role pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ role.roleName }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div>
+            <div class="col-md-3">
+                    <p-dropdown
+                        placeholder="Chọn 1 giới tính"
+                        [options]="genders"
+                        [(ngModel)]="gender"
+                        [showClear]="true"
+                        (onChange)="loadUsers()"
+                        (onClear)="removeGender()"
+                ></p-dropdown>
+            </div>
+            <div class="col-md-3">
+                <p-dropdown
+                        placeholder="Chọn 1 trạng thái"
+                        [options]="isActives"
+                        [(ngModel)]="isActive"
+                        [showClear]="true"
+                        (onChange)="loadUsers()"
+                        (onClear)="removeStatus()"
+
+                ></p-dropdown>
+            </div>
+        </div>
+
+
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label>Tên</label>
+                <input class="form-control"
+                       name="fullName"
+                       id="fullName"
+                       [(ngModel)]="fullName"
+                       (keyup)="loadUsers()"
+                >
+            </div>
+            <div class="col-md-5">
+                <label>Số điện thoại</label>
+                <input class="form-control"
+                       type="text"
+                       name="phoneNumber"
+                       id="phoneNumber"
+                       [(ngModel)]="phoneNumber"
+                       (keyup)="loadUsers()"
+                >
+            </div>
+            <div class="col-md-2">
+                <label>Email</label>
+                <input class="form-control"
+                       name="email"
+                       id="email"
+                       type="text"
+                       [(ngModel)]="email"
+                       (keyup)="loadUsers()"
+
+                >
+            </div>
+
+
+        </div>
+    </div>
+    <div class="col-md-2">
+        <button (click)="onAdvanceSearch()" class="btn btn-primary">{{advanceSearchButtonText}}</button>
+    </div>
+</div>
+<div class="d-flex justify-content-end mb-3">
+  <button class="btn btn-primary" (click)="onCreateUser()">Tạo mới</button>
+</div>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th (click)="onSort('user.userId')">
+                <div class="header-container">
+                    <span class="icon-text">Mã</span>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.userId' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.userId' && sortDirection === 'desc'"></i>
+                </div>
+            </th>
+            <th (click)="onSort('user.fullName')">
+                <div class="header-container">
+                    <span class="icon-text">Tên</span>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.fullName' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.fullName' && sortDirection === 'desc'"></i>
+                </div>
+            </th>
+            <th (click)="onSort('user.account.email')">
+                <div class="header-container">
+                    <span class="icon-text">Email</span>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.email' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.email' && sortDirection === 'desc'"></i>
+                </div>
+            </th>
+            <th (click)="onSort('user.phoneNumber')">
+                <div class="header-container">
+                    <span class="icon-text">Số điện thoại</span>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.phoneNumber' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.phoneNumber' && sortDirection === 'desc'"></i>
+                </div>
+            </th>
+
+            <th (click)="onSort('user.account.school')">
+                <div class="header-container">
+                    <span class="icon-text">Đơn vị</span>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.school' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.school' && sortDirection === 'desc'"></i>
+                </div>
+
+
+            </th>
+            <th (click)="onSort('user.account.accountRoles.role.roleId')">
+                <div class="header-container">
+                    <span class="icon-text">Chức vụ</span>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.accountRoles.role.roleId' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.accountRoles.role.roleId' && sortDirection === 'desc'"></i>
+                </div>
+            </th>
+            <th (click)="onSort('user.account.isActive')">
+                <div class="header-container">
+                    <span class="icon-text">Trạng thái</span>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.isActive' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.isActive' && sortDirection === 'desc'"></i>
+                </div>
+            </th>
+
+            <th></th>
+        </tr>
+        <span *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</span>
+
+        </thead>
+        <ng-container *ngIf="users">
+            <tbody *ngIf="users.length > 0">
+            <tr
+                    *ngFor="
+          let user of users
+            | paginate
+              : {
+                  itemsPerPage: pageSize,
+                  currentPage: pageNo,
+                  totalItems: totalElements
+                };
+          let i = index
+        "
+            >
+                <td>{{ user.userId}}</td>
+                <td>{{ user.fullName == null ? "Chưa nhập tên" : user.fullName}}</td>
+                <td>{{ user.email}}</td>
+                <td>{{ user.phoneNumber == null ? "Chưa nhập số điện thoại" : user.phoneNumber }}</td>
+                <td>{{ user.school?.schoolName }}</td>
+                <td>
+                    <ng-container *ngFor="let role of user.accountRoles; let last = last">
+                        {{ role.role?.roleName }}{{ last ? '' : ';' }}
+                    </ng-container>
+                 </td>
+                <td>   <span [class]="user.isActive ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ user.isActive ? "Đang hoạt động" : "Ngưng hoạt động" }}</span>
+                </td>
+                <td>
+
+                    <i
+                            class="bi bi-info-circle-fill"
+                            (click)="onDetail(user.userId)"
+                    ></i>
+
+                </td>
+            </tr>
+            </tbody>
+        </ng-container>
+
+
+    </table>
+    <div class="d-flex justify-content-end mt-3" *ngIf="users">
+        <div class="d-flex justify-content-center" *ngIf="users.length > 0">
+
+            <label for="pageNo"
+                   style=" margin-right: 10px"
+            >Trang: </label>
+            <input class="form-control super-small-input mr-3" min="1" type="number" id="pageNo" name="pageNo"
+                   max="{{totalPages}} "
+                   style=" margin-right: 20px"
+                   (keyup)="[maxPageOnKeyUp(), loadUsers()]"
+                   (mouseup)="[maxPageOnKeyUp(), loadUsers()]"
+                   [(ngModel)]="pageNo"
+            >
+
+
+            <label for="pageNo"
+                   style=" margin-right: 10px"
+            >Số bản ghi trên 1 trang: </label>
+
+            <select (change)="[loadUsers()]" class="form-control super-small-input ng-untouched ng-pristine ng-valid" [(ngModel)]="pageSize">
+                <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>
+            </select>
+
+            <!--      <input class="form-control super-small-input"-->
+            <!--             min="1"-->
+            <!--             type="number"-->
+            <!--             id="pageSize"-->
+            <!--             name="pageSize"-->
+            <!--             style=" margin-right: 20px"-->
+            <!--             max="{{maxPage}} "-->
+            <!--             (keyup)="loadGuidanceDocuments()"-->
+            <!--             (mouseup)=" loadGuidanceDocuments()"-->
+
+            <!--             [(ngModel)]="pageSize"-->
+            <!--      >-->
+
+
+        </div>
+
+        <div class="" *ngIf="users">
+            <pagination-controls
+                    previousLabel="Trước"
+                    nextLabel="Sau"
+                    (pageChange)="   [  onTableDataChange($event), maxPageOnKeyUp()]"
+            >
+            </pagination-controls>
+
+
+        </div>
+    </div>
+
+
+
+    <p-toast key="paging" position="bottom-right"></p-toast>
+    <p-toast key="issueId" position="top-right"></p-toast>
+

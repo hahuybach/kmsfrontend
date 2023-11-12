@@ -22,7 +22,7 @@ export class SchoolListComponent implements OnInit{
 
   }
   ngOnInit(): void {
-    this.schoolService.findAll().subscribe({
+    this.schoolService.findAllSchools().subscribe({
         next: (value) => {
             this.schools = value;
             console.log(this.schools);

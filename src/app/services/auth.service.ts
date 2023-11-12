@@ -77,4 +77,21 @@ export class AuthService {
       .find((row) => row.startsWith('iat='));
     return iat ? iat.split('=')[1] : null;
   }
+  getRoleFromJwt(): any | null {
+    const jwt = this.getJwtFromCookie();
+    if (jwt) {
+      const decodedToken: any = this.getDecodedJWT(jwt);
+      return decodedToken?.roles;
+    }
+    return null;
+  }
+  getSchoolFromJwt(): any | null {
+    const jwt = this.getJwtFromCookie();
+    if (jwt) {
+      const decodedToken: any = this.getDecodedJWT(jwt);
+      return decodedToken?.school;
+    }
+    return null;
+  }
+
 }

@@ -53,6 +53,9 @@ import { SchoolListComponent } from './features/post-login/school-list/school-li
 import { SchoolDetailComponent } from './features/post-login/school-list/school-detail/school-detail.component';
 import { SchoolCreateComponent } from './features/post-login/school-list/school-create/school-create.component';
 import { SchoolUpdateComponent } from './features/post-login/school-list/school-update/school-update.component';
+import { UserListComponent } from './features/post-login/user-list/user-list.component';
+import { UserDetailComponent } from './features/post-login/user-list/user-detail/user-detail.component';
+import { UserCreateComponent } from './features/post-login/user-list/user-create/user-create.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +83,9 @@ import { SchoolUpdateComponent } from './features/post-login/school-list/school-
     SchoolDetailComponent,
     SchoolCreateComponent,
     SchoolUpdateComponent,
+    UserListComponent,
+    UserDetailComponent,
+    UserCreateComponent,
   ],
   imports: [
     BrowserModule,
