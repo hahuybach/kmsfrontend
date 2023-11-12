@@ -53,6 +53,7 @@ export class AuthService {
     const decodedToken = this.getDecodedJWT(jwt);
     document.cookie = `exp=${decodedToken.exp}`;
     document.cookie = `iat=${decodedToken.iat}`;
+    document.cookie = `sub=${decodedToken.sub}`;
     document.cookie = `jwtToken=${jwt}`;
   }
 
@@ -76,5 +77,11 @@ export class AuthService {
       .split('; ')
       .find((row) => row.startsWith('iat='));
     return iat ? iat.split('=')[1] : null;
+  }
+  getSubFromCookie(): string | null {
+    const sub = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('sub='));
+    return sub ? sub.split('=')[1] : null;
   }
 }
