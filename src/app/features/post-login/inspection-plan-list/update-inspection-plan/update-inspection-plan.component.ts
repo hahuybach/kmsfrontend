@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {switchMap} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {FileService} from "../../../../services/file.service";
@@ -65,6 +65,7 @@ export class UpdateInspectionPlanComponent {
   inspectorList: any[];
   nonInspectorList: any[];
   inspectorListId: number[] = [];
+  chiefInspector: any;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -73,7 +74,8 @@ export class UpdateInspectionPlanComponent {
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly fileService: FileService,
     private readonly sanitizer: DomSanitizer,
-    private readonly inspectionplanInspectorService: InspectionplanInspectorlistService
+    private readonly inspectionplanInspectorService: InspectionplanInspectorlistService,
+    private readonly router: Router
   ) {
   }
 
@@ -126,11 +128,14 @@ export class UpdateInspectionPlanComponent {
         this.startDate = new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0];
         this.endDate = new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0];
         this.getInspectorIds(this.inspectionPlanDetail.inspectors);
+        this.chiefInspector = this.inspectorList.filter(inspector => inspector.chief);
+        console.log(this.chiefInspector)
         this.inspectionPlanForm.patchValue({
           inspectionPlanName: this.inspectionPlanDetail.inspectionPlan.inspectionPlanName,
           description: this.inspectionPlanDetail.inspectionPlan.description,
           startDate: this.startDate,
           endDate: this.endDate,
+          chiefId: this.chiefInspector.accountId
         })
       },
       error: (error) => {
@@ -169,7 +174,7 @@ export class UpdateInspectionPlanComponent {
       inspectionPlanId: this.inspectionPlanDetail.inspectionPlan.inspectionPlanId,
       inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
       description: this.inspectionPlanForm.get('description')?.value,
-      chiefId: 1,
+      chiefId: this.inspectionPlanForm.get('chiefId')?.value,
       inspectorIds: this.inspectorListId,
       startDate: new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString(),
       endDate: new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString(),
@@ -194,7 +199,7 @@ export class UpdateInspectionPlanComponent {
 
     this.inspectionPlanService.updateInspectionPlan(formData).subscribe({
       next: (response) => {
-        console.log(response)
+        this.router.navigateByUrl("inspection_plan/"+response.inspectionPlan.inspectionPlanId);
       },
       error: (error) => {
         console.log(error)

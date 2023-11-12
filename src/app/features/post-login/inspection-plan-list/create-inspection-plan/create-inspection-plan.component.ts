@@ -6,6 +6,7 @@ import {inspectionPlanService} from "../../../../services/inspectionplan.service
 import {SchoolService} from "../../../../services/school.service";
 import {IssueService} from "../../../../services/issue.service";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-inspection-plan',
@@ -27,7 +28,8 @@ export class CreateInspectionPlanComponent {
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly schoolService: SchoolService,
     private readonly issueService: IssueService,
-    private readonly inspectionplanInspectorService: InspectionplanInspectorlistService
+    private readonly inspectionplanInspectorService: InspectionplanInspectorlistService,
+    private readonly router: Router
   ) {
   }
 
@@ -115,8 +117,8 @@ export class CreateInspectionPlanComponent {
     const inspectionPlan = {
       inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
       description: this.inspectionPlanForm.get('description')?.value,
-      chiefId: 1,
-      inspectorIds: this.inspectionPlanForm.get('inspectorIds')?.value,
+      chiefId: this.inspectionPlanForm.get('chiefId')?.value,
+      inspectorIds: this.inspectorListId,
       startDate: new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString(),
       endDate: new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString(),
       schoolId: this.inspectionPlanForm.get('schoolId')?.value,
@@ -134,7 +136,7 @@ export class CreateInspectionPlanComponent {
 
     this.inspectionPlanService.saveInspectionPlan(formData).subscribe({
       next: (response) => {
-        console.log(response)
+        this.router.navigateByUrl("inspection_plan/"+response.inspectionPlan.inspectionPlanId);
       },
       error: (error) => {
         console.log(error)

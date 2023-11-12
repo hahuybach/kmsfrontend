@@ -14,7 +14,6 @@ export class InspectionPlanInspectorListComponent {
   @Output() inspectorList = new EventEmitter<any[]>();
   toggleChange: boolean = true;
   deleteButtonVisibility: boolean = false;
-
   inspector: object = {
     accountId: 0,
 
@@ -32,6 +31,7 @@ export class InspectionPlanInspectorListComponent {
   changeToggleStatus() {
     this.toggleChange = !this.toggleChange;
     this.deleteButtonVisibility = !this.deleteButtonVisibility;
+    console.log(this.selectedInspectors)
   }
 
   onDeleteInspector(index: number){
@@ -46,7 +46,7 @@ export class InspectionPlanInspectorListComponent {
   onSave(){
     let inspectorList = this.inspectionplanInspectorService.saveChanges();
     this.inspectorList.emit(inspectorList);
-    console.log(this.selectedInspectors);
     this.changeToggleStatus();
   }
+
 }

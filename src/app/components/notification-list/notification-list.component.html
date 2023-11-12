@@ -1,11 +1,11 @@
 <div ngbDropdown class="d-inline-block notification">
-  <button (click)="clearBadge()" type="button" id="dropdownBasic1" ngbDropdownToggle>
+  <button type="button" id="dropdownBasic1" ngbDropdownToggle>
     <i class="bi bi-bell" pBadge [value]="badgeValue" severity="danger"></i>
   </button>
   <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="notification-list overflow-auto">
     <div class="notification-heading fw-bolder text-center mb-2">Thông báo</div>
     <div class="dropdown-divider"></div>
-    <a class="notification-item p-3 mx-1" *ngFor="let notification of notificationItems; let i = index" (click)="handleCLickNotificationItem(i)">
+    <a class="notification-item p-3 mx-1" *ngFor="let notification of notificationItems?.notificationListDtos; let i = index" (click)="handleCLickNotificationItem(i)">
       <div class="notification-info">
         <p class="mb-1 fw-bold">{{notification.notificationType}}</p>
         <p class="mb-1">{{notification.message}}</p>

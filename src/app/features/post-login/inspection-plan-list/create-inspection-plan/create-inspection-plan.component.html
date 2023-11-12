@@ -5,6 +5,7 @@
       (popupInspectorVisibleChange)="changeInspectorVisible()"
       [popupInspectorVisible]="popupInspectorVisible"
       [inspectorList]="inspectorList"
+      (selectedInspectorsList)="getInspectorIds($event)"
     ></app-inspection-plan-inspector-popup>
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
       <div class="form-content col-md-8 mb-2">
@@ -45,13 +46,23 @@
             </span>
           </div>
         </div>
-        <div class="inspection-plan-school mb-3 col-md-6 pe-3">
-          <label class="fw-medium">Trường kiểm tra</label>
-          <p-dropdown class="full-width-dropdown" [options]="schoolList" formControlName="schoolId"
-                      optionLabel="schoolName"
-                      [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
-                      placeholder="Chọn trường kiểm tra">
-          </p-dropdown>
+        <div class="inspection-plan-school mb-3 row">
+          <div class="col-md-6">
+            <label class="fw-medium">Trường kiểm tra</label>
+            <p-dropdown class="full-width-dropdown" [options]="schoolList" formControlName="schoolId"
+                        optionLabel="schoolName"
+                        [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
+                        placeholder="Chọn trường kiểm tra">
+            </p-dropdown>
+          </div>
+          <div class="col-md-6">
+            <label class="fw-medium">Trưởng đoàn kiểm tra</label>
+            <p-dropdown class="full-width-dropdown" [options]="selectedInspectorList" formControlName="chiefId"
+                        optionLabel="user.fullName"
+                        [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
+                        placeholder="Chọn trưởng đoàn kiểm tra">
+            </p-dropdown>
+          </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
@@ -137,7 +148,7 @@
       </div>
       <div class="mt-5 mb-3 row w-100">
         <div class="col-12 save-button d-flex w-100 justify-content-center">
-          <button [disabled]="inspectionPlanForm.invalid" class="btn text-white">Lưu quyết định</button>
+          <button class="btn text-white">Lưu quyết định</button>
         </div>
       </div>
     </form>

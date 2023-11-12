@@ -12,6 +12,7 @@ export class InspectionPlanInspectorPopupComponent{
   @Input() popupInspectorVisible: boolean;
   @Input() inspectorList: any[] = [];
   @Output() popupInspectorVisibleChange = new EventEmitter<boolean>();
+  @Output() selectedInspectorsList = new EventEmitter<any[]>();
   selectedInspectors: any[] = [];
 
   constructor(
@@ -25,6 +26,7 @@ export class InspectionPlanInspectorPopupComponent{
 
   addInspector() {
     this.inspectionplanInspectorService.saveToInspectorList(this.selectedInspectors);
+    this.selectedInspectorsList.emit(this.selectedInspectors);
     this.popupInspectorVisible = false;
     this.selectedInspectors = [];
   }
