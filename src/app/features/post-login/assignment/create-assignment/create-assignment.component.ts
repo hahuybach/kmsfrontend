@@ -291,27 +291,7 @@ export class CreateAssignmentComponent {
           },
         });
       },
-      reject: (type: any) => {
-        // switch (type) {
-        //   case ConfirmEventType.REJECT:
-        //     this.messageService.add({
-        //       severity: 'error',
-        //       summary: 'Rejected',
-        //       detail: 'You have rejected',
-        //     });
-        //     break;
-        //   case ConfirmEventType.CANCEL:
-        //     this.messageService.add({
-        //       severity: 'warn',
-        //       summary: 'Cancelled',
-        //       detail: 'You have cancelled',
-        //     });
-        //     break;
-        //   default:
-        //     // Handle other cases, if necessary
-        //     break;
-        // }
-      },
+      reject: (type: any) => {},
     });
   }
 

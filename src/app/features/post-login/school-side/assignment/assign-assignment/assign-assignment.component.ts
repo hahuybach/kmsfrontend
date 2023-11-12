@@ -22,10 +22,16 @@ export class AssignAssignmentComponent implements OnInit {
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
   });
+  typeAssignmentOptions: any[] = [];
+  listOfPossibleAssginees: any[] = [];
   ngOnInit(): void {
     // this.assignmentService.getAssignmentsToSubmit(1).subscribe((data) => {
     //   console.log(data);
     // });
+    this.typeAssignmentOptions = [
+      { label: 'Thư mục', value: true },
+      { label: 'Nộp tài liệu', value: false },
+    ];
     this.issueService
       .getCurrentActiveIssue()
       .pipe(
@@ -73,6 +79,8 @@ export class AssignAssignmentComponent implements OnInit {
   openDetail(assignment?: any, action?: string) {
     this.assignmentVisible = true;
     this.selectedAssignment = assignment;
+    this.listOfPossibleAssginees = assignment.listOfPossibleAssginees;
+    console.log(this.listOfPossibleAssginees);
     this.action = action;
     switch (action) {
       case 'addchild': {

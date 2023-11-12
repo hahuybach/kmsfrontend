@@ -1,3 +1,9 @@
+<p-toast></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  rejectLabel="Hủy"
+  acceptLabel="Đồng ý"
+></p-confirmDialog>
 <p-dialog
   [(visible)]="pdfLoaded"
   [style]="{ width: '90vw', height: '1080px' }"
@@ -178,14 +184,17 @@
               formControlName="status"
               [options]="statusOptions"
               (onChange)="onChangeStatus($event)"
+              #dropdown
             >
               <ng-template let-option pTemplate="selectedItem">
+                {{ option.statusName }}-{{ selectedValue.statusName }}
                 <p-tag
                   class="status"
                   [severity]="option.severity"
                   [rounded]="true"
+                  *ngIf="option.statusName === selectedValue.statusName"
                 >
-                  {{ option.label }}
+                  {{ option.statusName }}
                 </p-tag>
               </ng-template>
               <ng-template let-option pTemplate="item">

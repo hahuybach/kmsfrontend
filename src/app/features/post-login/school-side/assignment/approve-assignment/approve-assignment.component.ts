@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { SelectItem } from 'primeng/api';
+import { ConfirmationService, SelectItem } from 'primeng/api';
+import { Dropdown } from 'primeng/dropdown';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { FileService } from 'src/app/services/file.service';
 import { IssueService } from 'src/app/services/issue.service';
-
+import { NgModule } from '@angular/core';
 @Component({
   selector: 'app-approve-assignment',
   templateUrl: './approve-assignment.component.html',
@@ -24,6 +25,8 @@ export class ApproveAssignmentComponent implements OnInit {
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
+  @ViewChild('dropdown') dropdown: Dropdown;
+  selectedValue: any;
   commentForm = this.fb.group({
     content: ['', Validators.required],
     userName: ['', Validators.required],
@@ -34,7 +37,8 @@ export class ApproveAssignmentComponent implements OnInit {
     private assignmentService: AssignmentService,
     private issueService: IssueService,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private confirmationService: ConfirmationService
   ) {}
   ngOnInit(): void {
     this.issueService
@@ -111,16 +115,6 @@ export class ApproveAssignmentComponent implements OnInit {
       });
     this.assVisible = true;
   }
-  onRowEditSave(i: number) {
-    console.log('save ' + i);
-  }
-  onRowEditCancel(i: number) {
-    console.log('cancel ' + i);
-  }
-  onRowEditInit(i: number) {
-    console.log('init ' + i);
-    this.assignmentForm.get('status')?.setValue('đang làm');
-  }
   sendComment() {
     console.log(this.commentForm.get('content')?.value);
     this.selectedAssignment.comments.unshift({
@@ -161,26 +155,26 @@ export class ApproveAssignmentComponent implements OnInit {
   }
   onChangeStatus(event: any) {
     const selectedStatus = event.value;
-    console.log('Selected Status:', selectedStatus);
-    const data = {
-      assignmentId: this.selectedAssignment.assignmentId,
-      isPassed: selectedStatus,
-    };
-    console.log(data);
-    const formData = new FormData();
-    formData.append(
-      'task',
-      new Blob([JSON.stringify(data)], {
-        type: 'application/json',
-      })
-    );
+        console.log('Selected Status:', selectedStatus);
+        const data = {
+          assignmentId: this.selectedAssignment.assignmentId,
+          isPassed: selectedStatus,
+        };
+        console.log(data);
+        const formData = new FormData();
+        formData.append(
+          'task',
+          new Blob([JSON.stringify(data)], {
+            type: 'application/json',
+          })
+        );
 
-    this.assignmentService.evaluateAssignment(formData).subscribe({
-      next: () => {
-        console.log('success');
-      },
-      error: (error) => {
-        console.log(error.error.message);
+        this.assignmentService.evaluateAssignment(formData).subscribe({
+          next: () => {
+            console.log('success');
+          },
+          error: (error) => {
+            console.log(error.error.message);
       },
     });
   }

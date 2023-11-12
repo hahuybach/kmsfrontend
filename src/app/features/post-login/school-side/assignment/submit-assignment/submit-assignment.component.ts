@@ -154,7 +154,7 @@ export class SubmitAssignmentComponent {
     const jsonData = {
       assignmentId: this.selectedAssignment.assignmentId,
       documents: docs,
-      deleteDocIds: [],
+      deletedDocumentIds: this.deleteDocIds,
     };
     this.selectedAssignment.status.statusId = 16;
     this.selectedAssignment.status.statusName = 'Chờ phê duyệt';
