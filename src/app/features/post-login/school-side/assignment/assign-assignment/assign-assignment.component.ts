@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { FileService } from 'src/app/services/file.service';
 import { IssueService } from 'src/app/services/issue.service';
 
 @Component({
@@ -24,10 +27,46 @@ export class AssignAssignmentComponent implements OnInit {
   });
   typeAssignmentOptions: any[] = [];
   listOfPossibleAssginees: any[] = [];
+  user: any;
+  detailVisible = false;
+  commentForm = this.fb.group({
+    content: ['', Validators.required],
+    userName: ['', Validators.required],
+    createdDate: ['', Validators.required],
+  });
+  documents: any[];
+  pdfUrl: string | undefined;
+  pdfLoaded: boolean = false;
+  safePdfUrl: SafeResourceUrl | undefined;
+  statusOptions = [
+    {
+      label: 'Chờ phê duyệt',
+      value: 'Chờ phê duyệt',
+      severity: 'warning',
+      disabled: true,
+    },
+    {
+      label: 'Phê duyệt',
+      value: true,
+      severity: 'success',
+      disabled: false,
+    },
+    {
+      label: 'Không phê duyệt',
+      value: false,
+      severity: 'danger',
+      disabled: false,
+    },
+  ];
+    // statusForm = this.fb.group({
+    //   status: ['', Validators],
+    // });
   ngOnInit(): void {
     // this.assignmentService.getAssignmentsToSubmit(1).subscribe((data) => {
     //   console.log(data);
     // });
+    this.user = this.authService.getSubFromCookie();
+    console.log(this.user);
     this.typeAssignmentOptions = [
       { label: 'Thư mục', value: true },
       { label: 'Nộp tài liệu', value: false },
@@ -55,7 +94,10 @@ export class AssignAssignmentComponent implements OnInit {
     private issueService: IssueService,
     private fb: FormBuilder,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private authService: AuthService,
+    private fileService: FileService,
+    private sanitizer: DomSanitizer
   ) {}
   initData() {
     this.issueService
@@ -146,5 +188,47 @@ export class AssignAssignmentComponent implements OnInit {
   update() {}
   assignmentPopuptHideEvent() {
     this.assignmentForm.reset();
+  }
+  openDetailRowNode(rowNode: any) { 
+    this.assignmentService
+      .getAssignmentsById(rowNode.assignmentId)
+      .subscribe((data) => {
+        this.selectedAssignment = data;
+        this.documents = data.documents;
+        this.detailVisible = true;
+      });
+  }
+  getStatusSeverity(statusId: number): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      15: 'success',
+      16: 'warning',
+      17: 'success',
+      18: 'danger',
+    };
+
+    return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
+  }
+  sendComment() {
+    console.log(this.commentForm.get('content')?.value);
+    this.selectedAssignment.comments.unshift({
+      content: this.commentForm.get('content')?.value,
+      userName: 'tran le hai',
+      createdDate: new Date(),
+    });
+    this.commentForm.reset();
+  }
+  onKeyPress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.sendComment();
+    }
+  }
+  openNewTab(documentLink: string) {
+    console.log(documentLink);
+    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
+      const blobUrl = window.URL.createObjectURL(response.body as Blob);
+      this.pdfUrl = blobUrl;
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      this.pdfLoaded = true;
+    });
   }
 }

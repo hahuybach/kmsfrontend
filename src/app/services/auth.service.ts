@@ -1,33 +1,34 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   login(email: string, password: string) {
-    const userInfo = {email: email, password: password}
+    const userInfo = { email: email, password: password };
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post('http://localhost:8080/api/v1/auth/authenticate'
-      , JSON.stringify(userInfo)
-      , {headers: headers, responseType: 'text'}
-    )
+    return this.http.post(
+      'http://localhost:8080/api/v1/auth/authenticate',
+      JSON.stringify(userInfo),
+      { headers: headers, responseType: 'text' }
+    );
   }
 
   logout() {
     const jwtCookie = document.cookie;
-    document.cookie = "jwtToken=; exp=Thu, 01 Jan 1970 00:00:00 UTC; iat=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    console.log("logout")
-    console.log(this.getJwtFromCookie())
+    document.cookie =
+      'jwtToken=; exp=Thu, 01 Jan 1970 00:00:00 UTC; iat=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    console.log('logout');
+    console.log(this.getJwtFromCookie());
   }
 
   isLoggedIn(): boolean {
     const jwt = this.getJwtFromCookie();
     const exp: any = this.getExpireFromCookie();
-    if (jwt == null || exp == "") {
+    if (jwt == null || exp == '') {
       return false;
     }
     const expireAt = JSON.parse(exp);
@@ -83,6 +84,8 @@ export class AuthService {
     const sub = document.cookie
       .split('; ')
       .find((row) => row.startsWith('sub='));
+    console.log(sub);
+
     return sub ? sub.split('=')[1] : null;
   }
 }
