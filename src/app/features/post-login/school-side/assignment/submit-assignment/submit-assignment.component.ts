@@ -2,6 +2,7 @@ import { error } from '@angular/compiler-cli/src/transformers/util';
 import { Component, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { FileService } from 'src/app/services/file.service';
@@ -31,12 +32,15 @@ export class SubmitAssignmentComponent {
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
+  isSubmit = false;
   constructor(
     private fb: FormBuilder,
     private fileService: FileService,
     private sanitizer: DomSanitizer,
     private issueService: IssueService,
-    private assignmentService: AssignmentService
+    private assignmentService: AssignmentService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
   fileInputForm = this.fb.group({
     documentCode: ['', NoWhitespaceValidator],
@@ -57,12 +61,7 @@ export class SubmitAssignmentComponent {
   //   file: ['', Validators.required],
   // });
   addDocument() {
-    this.fileVisible = true;
-  }
-
-  removeDocument(index: number) {
-    console.log('runhere');
-    // this.documents.removeAt(index);
+      this.fileVisible = true;
   }
 
   // get documents() {
@@ -77,61 +76,220 @@ export class SubmitAssignmentComponent {
     };
     console.log(data);
     this.documents.push(data);
-    // this.newDocs.push(data);
     this.fileInputForm.reset();
     this.fileInputPlaceholders = '';
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
     console.log(this.documents);
+    // GỌI ĐẾN API UPLOAD DOC LÊN HỆ THỐNG
   }
   filesForm: FormGroup;
 
   ngOnInit(): void {
-    // this.addDocument();
-    // console.log(this.filesForm.value);
-    // this.filesForm = this.fb.group({
-    //   documents: this.fb.array([]),
-    // });
-    this.issueService
-      .getCurrentActiveIssue()
-      .pipe(
-        switchMap((data) => {
-          console.log(data);
-          this.issueId = data.issueDto.issueId;
+    this.assignments = [
+      {
+        assignmentId: 77,
+        assignmentName: 'Mẫu thư mục cho các trường năm học 2022-2023',
+        assigner: {
+          accountId: 2,
+          email: 'hunglengoc2109@gmail.com',
+          user: {
+            userId: 2,
+            fullName: 'Trần Lê Hải',
+            dob: '1999-03-01',
+            gender: 'MALE',
+            phoneNumber: '0394335205',
+          },
+          school: {
+            schoolId: 1,
+            schoolName: 'PGD VÀ ĐÀO TẠO',
+            exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+            isActive: true,
+          },
+          roles: [
+            {
+              roleId: 2,
+              roleName: 'Trưởng Phòng',
+              isSchoolEmployee: false,
+            },
+          ],
+        },
+        assignee: {
+          accountId: 7,
+          email: 'hieutruong@gmail.com',
+          user: {
+            userId: 7,
+            fullName: 'Hiệu Thị Trưởng',
+            dob: '1999-03-01',
+            gender: 'MALE',
+            phoneNumber: '0394335205',
+          },
+          school: {
+            schoolId: 2,
+            schoolName: 'MN ÁNH SAO',
+            exactAddress: 'CẦU GIẤY',
+            isActive: true,
+          },
+          roles: [
+            {
+              roleId: 7,
+              roleName: 'Hiệu Trưởng',
+              isSchoolEmployee: true,
+            },
+          ],
+        },
+        listOfPossibleAssginees: [
+          {
+            accountId: 7,
+            email: 'hieutruong@gmail.com',
+            user: {
+              userId: 7,
+              fullName: 'Hiệu Thị Trưởng',
+              dob: '1999-03-01',
+              gender: 'MALE',
+              phoneNumber: '0394335205',
+            },
+            school: {
+              schoolId: 2,
+              schoolName: 'MN ÁNH SAO',
+              exactAddress: 'CẦU GIẤY',
+              isActive: true,
+            },
+            roles: [
+              {
+                roleId: 7,
+                roleName: 'Hiệu Trưởng',
+                isSchoolEmployee: true,
+              },
+            ],
+          },
+        ],
+        deadline: '2023-12-30T23:59:00',
+        createdDate: '2023-11-12T19:21:30.350867',
+        status: {
+          statusId: 22,
+          statusName: 'Chưa hoàn thành',
+        },
+        limitDocNumber: 3,
+      },
+      {
+        assignmentId: 78,
+        assignmentName: 'Mẫu thư mục cho các trường năm học 2022-2023',
+        assigner: {
+          accountId: 2,
+          email: 'hunglengoc2109@gmail.com',
+          user: {
+            userId: 2,
+            fullName: 'Trần Lê Hải',
+            dob: '1999-03-01',
+            gender: 'MALE',
+            phoneNumber: '0394335205',
+          },
+          school: {
+            schoolId: 1,
+            schoolName: 'PGD VÀ ĐÀO TẠO',
+            exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+            isActive: true,
+          },
+          roles: [
+            {
+              roleId: 2,
+              roleName: 'Trưởng Phòng',
+              isSchoolEmployee: false,
+            },
+          ],
+        },
+        assignee: {
+          accountId: 7,
+          email: 'hieutruong@gmail.com',
+          user: {
+            userId: 7,
+            fullName: 'Hiệu Thị Trưởng',
+            dob: '1999-03-01',
+            gender: 'MALE',
+            phoneNumber: '0394335205',
+          },
+          school: {
+            schoolId: 2,
+            schoolName: 'MN ÁNH SAO',
+            exactAddress: 'CẦU GIẤY',
+            isActive: true,
+          },
+          roles: [
+            {
+              roleId: 7,
+              roleName: 'Hiệu Trưởng',
+              isSchoolEmployee: true,
+            },
+          ],
+        },
+        listOfPossibleAssginees: [
+          {
+            accountId: 7,
+            email: 'hieutruong@gmail.com',
+            user: {
+              userId: 7,
+              fullName: 'Hiệu Thị Trưởng',
+              dob: '1999-03-01',
+              gender: 'MALE',
+              phoneNumber: '0394335205',
+            },
+            school: {
+              schoolId: 2,
+              schoolName: 'MN ÁNH SAO',
+              exactAddress: 'CẦU GIẤY',
+              isActive: true,
+            },
+            roles: [
+              {
+                roleId: 7,
+                roleName: 'Hiệu Trưởng',
+                isSchoolEmployee: true,
+              },
+            ],
+          },
+        ],
+        deadline: '2023-12-30T23:59:00',
+        createdDate: '2023-11-12T19:21:30.350867',
+        status: {
+          statusId: 22,
+          statusName: 'Chưa hoàn thành',
+        },
+        limitDocNumber: 3,
+      },
+    ];
+    // this.issueService
+    //   .getCurrentActiveIssue()
+    //   .pipe(
+    //     switchMap((data) => {
+    //       console.log(data);
+    //       this.issueId = data.issueDto.issueId;
 
-          return this.assignmentService.getAssignmentsToAssign(
-            data.issueDto.issueId
-          );
-        })
-      )
-      .subscribe((data) => {
-        console.log('Đống data lấy về');
-        console.log(data);
-        this.assignments = data.assignmentListDtos;
-        this.documents = data.assignmentListDtos.documents;
-        console.log(this.assignments);
-      });
-    // this.documents = [
-    //   {
-    //     documentName:
-    //       'DataTable requires a collection to display along with column',
-    //     documentCode: '123',
-    //     file: {},
-    //   },
-    // ];
+    //       return this.assignmentService.getAssignmentsToSubmit(
+    //         data.issueDto.issueId
+    //       );
+    //     })
+    //   )
+    //   .subscribe((data) => {
+    //     console.log('Đống data lấy về');
+    //     console.log(data);
+    //     this.assignments = data.assignmentListDtos;
+    //     this.documents = data.assignmentListDtos.documents;
+    //     console.log(this.assignments);
+    //   });
   }
   assVisibleToggle(assignment: any) {
     this.assVisible = true;
-    console.log(assignment);
-    this.assignmentService
-      .getAssignmentsById(assignment.assignmentId)
-      .subscribe((data) => {
-        this.selectedAssignment = data;
-        this.documents = data.documents;
-      });
+    // console.log(assignment);
+    // this.assignmentService
+    //   .getAssignmentsById(assignment.assignmentId)
+    //   .subscribe((data) => {
+    //     this.selectedAssignment = data;
+    //     this.documents = data.documents;
+    //   });
 
-    // this.selectedAssignment = assignment;
+    this.selectedAssignment = assignment;
   }
   handleFileInputChange(fileInput: any): void {
     const files = fileInput.files;
@@ -141,42 +299,59 @@ export class SubmitAssignmentComponent {
       this.fileInputForm.get('file')?.setValue(file);
     }
   }
-  sendFiles() {
-    const newDocs: any[] = [];
-    for (let index = 0; index < this.documents.length; index++) {
-      if (this.documents[index].documentId == null) {
-        newDocs.push(this.documents[index]);
-      }
-    }
-    const docs = newDocs.map(({ file, ...rest }) => rest);
-    const files = newDocs.map((item) => item.file);
-    const formData = new FormData();
-    const jsonData = {
-      assignmentId: this.selectedAssignment.assignmentId,
-      documents: docs,
-      deletedDocumentIds: this.deleteDocIds,
-    };
-    this.selectedAssignment.status.statusId = 16;
-    this.selectedAssignment.status.statusName = 'Chờ phê duyệt';
-    console.log(jsonData);
-    formData.append(
-      'task',
-      new Blob([JSON.stringify(jsonData)], {
-        type: 'application/json',
-      })
-    );
-    for (let i = 0; i <= files.length; i++) {
-      formData.append(`files`, files[i]);
-    }
-    // console.log(this.documents);
-    // console.log(jsonData);
-    this.assignmentService.submitAssignment(formData).subscribe({
-      next: (data) => {
-        console.log(data);
+  submit() {
+    this.confirmationService.confirm({
+      message: 'Bạn có muốn nộp công việc này?',
+      header: 'Xác nhận nộp',
+      icon: 'bi bi-exclamation-triangle-fill',
+      accept: () => {
+        const jsonData = {
+          submitRequest: {
+            assignmentId: this.selectedAssignment.assignmentId,
+            isSubmit: true,
+          },
+        };
+        this.selectedAssignment.status.statusId = 16;
+        this.selectedAssignment.status.statusName = 'Chờ phê duyệt';
+        console.log(jsonData);
+        this.isSubmit = true;
+        // this.assignmentService.submitAssignment(jsonData).subscribe({
+        //   next: (data) => {
+        //     console.log(data);
+        //   },
+        //   error: (error) => {
+        //     console.log(error);
+        //   },
+        // });
       },
-      error: (error) => {
-        console.log(error);
+      reject: (type: any) => {},
+    });
+  }
+  cancel() {
+    this.confirmationService.confirm({
+      message: 'Bạn có muốn hủy công việc này?',
+      header: 'Xác nhận hủy',
+      icon: 'bi bi-exclamation-triangle-fill',
+      accept: () => {
+        const jsonData = {
+          submitRequest: {
+            assignmentId: this.selectedAssignment.assignmentId,
+            isSubmit: false,
+          },
+        };
+        this.selectedAssignment.status.statusId = 15;
+        this.selectedAssignment.status.statusName = 'Đang tiến hành';
+        this.isSubmit = false;
+        // this.assignmentService.submitAssignment(jsonData).subscribe({
+        //   next: (data) => {
+        //     console.log(data);
+        //   },
+        //   error: (error) => {
+        //     console.log(error);
+        //   },
+        // });
       },
+      reject: (type: any) => {},
     });
   }
   sendComment() {
@@ -230,6 +405,7 @@ export class SubmitAssignmentComponent {
   removeDoc(index: number) {
     this.documents.splice(index, 1);
     this.deleteDocIds.push(index);
+    // GỌI ĐẾN API XÓA TÀI LIỆU
   }
   getStatusSeverity(statusId: number): string {
     const statusSeverityMap: { [key: number]: string } = {

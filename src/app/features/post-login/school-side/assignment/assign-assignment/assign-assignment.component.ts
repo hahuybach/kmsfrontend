@@ -58,36 +58,411 @@ export class AssignAssignmentComponent implements OnInit {
       disabled: false,
     },
   ];
-    // statusForm = this.fb.group({
-    //   status: ['', Validators],
-    // });
+  // statusForm = this.fb.group({
+  //   status: ['', Validators],
+  // });
   ngOnInit(): void {
-    // this.assignmentService.getAssignmentsToSubmit(1).subscribe((data) => {
-    //   console.log(data);
-    // });
     this.user = this.authService.getSubFromCookie();
     console.log(this.user);
     this.typeAssignmentOptions = [
       { label: 'Thư mục', value: true },
       { label: 'Nộp tài liệu', value: false },
     ];
-    this.issueService
-      .getCurrentActiveIssue()
-      .pipe(
-        switchMap((data) => {
-          console.log(data);
-          this.issueId = data.issueDto.issueId;
+    this.assignments = [
+      {
+        assignmentId: 77,
+        assignmentName: 'Mẫu thư mục cho các trường năm học 2022-2023',
+        assigner: {
+          accountId: 2,
+          email: 'hunglengoc2109@gmail.com',
+          user: {
+            userId: 2,
+            fullName: 'Trần Lê Hải',
+            dob: '1999-03-01',
+            gender: 'MALE',
+            phoneNumber: '0394335205',
+          },
+          school: {
+            schoolId: 1,
+            schoolName: 'PGD VÀ ĐÀO TẠO',
+            exactAddress: 'Quan Hoa, Cầu Giấy, Hà Nội',
+            isActive: true,
+          },
+          roles: [
+            { roleId: 2, roleName: 'Trưởng Phòng', isSchoolEmployee: false },
+          ],
+        },
+        assignee: {
+          accountId: 7,
+          email: 'hieutruong@gmail.com',
+          user: {
+            userId: 7,
+            fullName: 'Hiệu Thị Trưởng',
+            dob: '1999-03-01',
+            gender: 'MALE',
+            phoneNumber: '0394335205',
+          },
+          school: {
+            schoolId: 2,
+            schoolName: 'MN ÁNH SAO',
+            exactAddress: 'CẦU GIẤY',
+            isActive: true,
+          },
+          roles: [
+            { roleId: 7, roleName: 'Hiệu Trưởng', isSchoolEmployee: true },
+          ],
+        },
+        listOfPossibleAssginees: [
+          {
+            accountId: 7,
+            email: 'hieutruong@gmail.com',
+            user: {
+              userId: 7,
+              fullName: 'Hiệu Thị Trưởng',
+              dob: '1999-03-01',
+              gender: 'MALE',
+              phoneNumber: '0394335205',
+            },
+            school: {
+              schoolId: 2,
+              schoolName: 'MN ÁNH SAO',
+              exactAddress: 'CẦU GIẤY',
+              isActive: true,
+            },
+            roles: [
+              { roleId: 7, roleName: 'Hiệu Trưởng', isSchoolEmployee: true },
+            ],
+          },
+        ],
+        deadline: '2023-12-30T23:59:00',
+        createdDate: '2023-11-12T19:21:30.350867',
+        children: [
+          {
+            assignmentId: 78,
+            assignmentName: 'Ban giám hiệu',
+            assigner: {
+              accountId: 7,
+              email: 'hieutruong@gmail.com',
+              user: {
+                userId: 7,
+                fullName: 'Hiệu Thị Trưởng',
+                dob: '1999-03-01',
+                gender: 'MALE',
+                phoneNumber: '0394335205',
+              },
+              school: {
+                schoolId: 2,
+                schoolName: 'MN ÁNH SAO',
+                exactAddress: 'CẦU GIẤY',
+                isActive: true,
+              },
+              roles: [
+                { roleId: 7, roleName: 'Hiệu Trưởng', isSchoolEmployee: true },
+              ],
+            },
+            assignee: null,
+            listOfPossibleAssginees: [
+              {
+                accountId: 8,
+                email: 'totruongchuyenmon@gmail.com',
+                user: {
+                  userId: 8,
+                  fullName: 'Tổ Thị Trưởng CM',
+                  dob: '1999-03-01',
+                  gender: 'FEMALE',
+                  phoneNumber: '0394335205',
+                },
+                school: {
+                  schoolId: 2,
+                  schoolName: 'MN ÁNH SAO',
+                  exactAddress: 'CẦU GIẤY',
+                  isActive: true,
+                },
+                roles: [
+                  {
+                    roleId: 8,
+                    roleName: 'Tổ Trưởng Chuyên Môn',
+                    isSchoolEmployee: true,
+                  },
+                ],
+              },
+              {
+                accountId: 9,
+                email: 'giaothivien@gmail.com',
+                user: {
+                  userId: 9,
+                  fullName: 'Giao Vien',
+                  dob: '1999-03-01',
+                  gender: 'MALE',
+                  phoneNumber: '0394335205',
+                },
+                school: {
+                  schoolId: 2,
+                  schoolName: 'MN ÁNH SAO',
+                  exactAddress: 'CẦU GIẤY',
+                  isActive: true,
+                },
+                roles: [
+                  { roleId: 9, roleName: 'Giáo Viên', isSchoolEmployee: true },
+                ],
+              },
+              {
+                accountId: 7,
+                email: 'hieutruong@gmail.com',
+                user: {
+                  userId: 7,
+                  fullName: 'Hiệu Thị Trưởng',
+                  dob: '1999-03-01',
+                  gender: 'MALE',
+                  phoneNumber: '0394335205',
+                },
+                school: {
+                  schoolId: 2,
+                  schoolName: 'MN ÁNH SAO',
+                  exactAddress: 'CẦU GIẤY',
+                  isActive: true,
+                },
+                roles: [
+                  {
+                    roleId: 7,
+                    roleName: 'Hiệu Trưởng',
+                    isSchoolEmployee: true,
+                  },
+                ],
+              },
+            ],
+            deadline: '2023-11-30T23:59:00',
+            createdDate: '2023-11-12T19:21:30.369144',
+            children: [
+              {
+                assignmentId: 79,
+                assignmentName: 'Hiệu trưởng',
+                assigner: null,
+                assignee: null,
+                listOfPossibleAssginees: [
+                  {
+                    accountId: 8,
+                    email: 'totruongchuyenmon@gmail.com',
+                    user: {
+                      userId: 8,
+                      fullName: 'Tổ Thị Trưởng CM',
+                      dob: '1999-03-01',
+                      gender: 'FEMALE',
+                      phoneNumber: '0394335205',
+                    },
+                    school: {
+                      schoolId: 2,
+                      schoolName: 'MN ÁNH SAO',
+                      exactAddress: 'CẦU GIẤY',
+                      isActive: true,
+                    },
+                    roles: [
+                      {
+                        roleId: 8,
+                        roleName: 'Tổ Trưởng Chuyên Môn',
+                        isSchoolEmployee: true,
+                      },
+                    ],
+                  },
+                  {
+                    accountId: 9,
+                    email: 'giaothivien@gmail.com',
+                    user: {
+                      userId: 9,
+                      fullName: 'Giao Vien',
+                      dob: '1999-03-01',
+                      gender: 'MALE',
+                      phoneNumber: '0394335205',
+                    },
+                    school: {
+                      schoolId: 2,
+                      schoolName: 'MN ÁNH SAO',
+                      exactAddress: 'CẦU GIẤY',
+                      isActive: true,
+                    },
+                    roles: [
+                      {
+                        roleId: 9,
+                        roleName: 'Giáo Viên',
+                        isSchoolEmployee: true,
+                      },
+                    ],
+                  },
+                  null,
+                ],
+                deadline: '2023-11-23T23:59:00',
+                createdDate: '2023-11-12T19:21:30.371139',
+                children: [],
+                issueId: 1,
+                description: 'Hiệu trưởng',
+                status: {
+                  statusId: 14,
+                  statusName: 'Đang tiến hành',
+                  statusType: 'Đầu công việc',
+                },
+                parentId: 78,
+                progress: 0,
+                schoolId: 2,
+                template: true,
+                task: false,
+              },
+            ],
+            issueId: 1,
+            description: 'Folder ban giám hiệu',
+            status: {
+              statusId: 14,
+              statusName: 'Đang tiến hành',
+              statusType: 'Đầu công việc',
+            },
+            parentId: 77,
+            progress: 0,
+            schoolId: 2,
+            template: true,
+            task: false,
+          },
+          {
+            assignmentId: 80,
+            assignmentName: 'Các tổ chuyên môn',
+            assigner: {
+              accountId: 7,
+              email: 'hieutruong@gmail.com',
+              user: {
+                userId: 7,
+                fullName: 'Hiệu Thị Trưởng',
+                dob: '1999-03-01',
+                gender: 'MALE',
+                phoneNumber: '0394335205',
+              },
+              school: {
+                schoolId: 2,
+                schoolName: 'MN ÁNH SAO',
+                exactAddress: 'CẦU GIẤY',
+                isActive: true,
+              },
+              roles: [
+                { roleId: 7, roleName: 'Hiệu Trưởng', isSchoolEmployee: true },
+              ],
+            },
+            assignee: null,
+            listOfPossibleAssginees: [
+              {
+                accountId: 8,
+                email: 'totruongchuyenmon@gmail.com',
+                user: {
+                  userId: 8,
+                  fullName: 'Tổ Thị Trưởng CM',
+                  dob: '1999-03-01',
+                  gender: 'FEMALE',
+                  phoneNumber: '0394335205',
+                },
+                school: {
+                  schoolId: 2,
+                  schoolName: 'MN ÁNH SAO',
+                  exactAddress: 'CẦU GIẤY',
+                  isActive: true,
+                },
+                roles: [
+                  {
+                    roleId: 8,
+                    roleName: 'Tổ Trưởng Chuyên Môn',
+                    isSchoolEmployee: true,
+                  },
+                ],
+              },
+              {
+                accountId: 9,
+                email: 'giaothivien@gmail.com',
+                user: {
+                  userId: 9,
+                  fullName: 'Giao Vien',
+                  dob: '1999-03-01',
+                  gender: 'MALE',
+                  phoneNumber: '0394335205',
+                },
+                school: {
+                  schoolId: 2,
+                  schoolName: 'MN ÁNH SAO',
+                  exactAddress: 'CẦU GIẤY',
+                  isActive: true,
+                },
+                roles: [
+                  { roleId: 9, roleName: 'Giáo Viên', isSchoolEmployee: true },
+                ],
+              },
+              {
+                accountId: 7,
+                email: 'hieutruong@gmail.com',
+                user: {
+                  userId: 7,
+                  fullName: 'Hiệu Thị Trưởng',
+                  dob: '1999-03-01',
+                  gender: 'MALE',
+                  phoneNumber: '0394335205',
+                },
+                school: {
+                  schoolId: 2,
+                  schoolName: 'MN ÁNH SAO',
+                  exactAddress: 'CẦU GIẤY',
+                  isActive: true,
+                },
+                roles: [
+                  {
+                    roleId: 7,
+                    roleName: 'Hiệu Trưởng',
+                    isSchoolEmployee: true,
+                  },
+                ],
+              },
+            ],
+            deadline: '2023-11-30T23:59:00',
+            createdDate: '2023-11-12T19:21:30.372137',
+            children: [],
+            issueId: 1,
+            description: 'chi tiết các tổ chuyên môn',
+            status: {
+              statusId: 14,
+              statusName: 'Đang tiến hành',
+              statusType: 'Đầu công việc',
+            },
+            parentId: 77,
+            progress: 0,
+            schoolId: 2,
+            template: true,
+            task: false,
+          },
+        ],
+        issueId: 1,
+        description: 'Mẫu thư mục cho các trường năm học 2022-2023',
+        status: {
+          statusId: 14,
+          statusName: 'Đang tiến hành',
+          statusType: 'Đầu công việc',
+        },
+        parentId: null,
+        progress: 0,
+        schoolId: 2,
+        template: true,
+        task: false,
+        parent: null,
+      },
+    ];
+    // this.issueService
+    //   .getCurrentActiveIssue()
+    //   .pipe(
+    //     switchMap((data) => {
+    //       console.log(data);
+    //       this.issueId = data.issueDto.issueId;
 
-          return this.assignmentService.getAssignmentsToAssign(
-            data.issueDto.issueId
-          );
-        })
-      )
-      .subscribe((data) => {
-        console.log('Đống data lấy về');
-        this.assignments = data.assignmentListDtos;
-        console.log(this.assignments);
-      });
+    //       return this.assignmentService.getAssignmentsToAssign(
+    //         data.issueDto.issueId
+    //       );
+    //     })
+    //   )
+    //   .subscribe((data) => {
+    //     console.log('Đống data lấy về');
+    //     this.assignments = data.assignmentListDtos;
+    //     console.log(this.assignments);
+    //   });
   }
   constructor(
     private assignmentService: AssignmentService,
@@ -189,7 +564,7 @@ export class AssignAssignmentComponent implements OnInit {
   assignmentPopuptHideEvent() {
     this.assignmentForm.reset();
   }
-  openDetailRowNode(rowNode: any) { 
+  openDetailRowNode(rowNode: any) {
     this.assignmentService
       .getAssignmentsById(rowNode.assignmentId)
       .subscribe((data) => {

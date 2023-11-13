@@ -68,13 +68,13 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}update`;
     return this.http.put(url, data, { headers });
   }
-  public submitAssignment(formData: FormData): Observable<any> {
+  public submitAssignment(data: object): Observable<any> {
     const headers = new HttpHeaders();
-    headers.append('Content-Type', 'undefined');
+    headers.append('Content-Type', 'json');
 
     const url = `${this.assignmentApiUrl}submit_task`;
     console.log(url);
-    return this.http.put(url, formData, { headers });
+    return this.http.put(url, data, { headers });
   }
   public evaluateAssignment(data: object): Observable<any> {
     const headers = new HttpHeaders();

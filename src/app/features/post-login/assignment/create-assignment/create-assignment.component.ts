@@ -32,7 +32,7 @@ interface TreeNode {
   styleUrls: ['./create-assignment.component.scss'],
 })
 export class CreateAssignmentComponent {
-  assignments!: any[];
+  assignments: any[] = [];
   items!: MenuItem[];
   selectedAssignment: any;
   visibleNewNode = false;
@@ -75,11 +75,18 @@ export class CreateAssignmentComponent {
           );
         })
       )
-      .subscribe((data) => {
-        console.log(data);
-        this.data = data;
-        this.assignments = [this.data.assignmentListDto];
-        console.log(this.assignments);
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.data = data;
+          if (this.data.assignmentListDto != null) {
+            this.assignments = [this.data.assignmentListDto];
+          }
+          console.log(this.assignments);
+        },
+        error: (error) => {
+          console.log(error.error.message);
+        },
       });
   }
   viewFile(file: TreeNode) {
@@ -197,6 +204,7 @@ export class CreateAssignmentComponent {
           description: this.assignmentForm.get('description')?.value,
           deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           issueId: this.issueId,
+          isTask: false,
         },
       };
     } else {
@@ -207,9 +215,11 @@ export class CreateAssignmentComponent {
           deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           parentId: this.assignmentForm.get('parentId')?.value,
           issueId: this.issueId,
+          isTask: false,
         },
       };
     }
+    console.log(addedAssignment);
     this.assignmentService.addAssignment(addedAssignment).subscribe({
       next: (response) => {
         this.initData();
@@ -221,6 +231,7 @@ export class CreateAssignmentComponent {
         });
       },
       error: (error) => {
+        console.log(error);
         this.assignmentVisible = false;
         this.messageService.add({
           severity: 'error',

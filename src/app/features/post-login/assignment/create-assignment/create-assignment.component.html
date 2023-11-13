@@ -70,7 +70,7 @@
       </div>
       <div>
         <button
-          [disabled]="assignments != null"
+          [disabled]="assignments.length != 0"
           pButton
           (click)="openDetail(null, 'addroot')"
         >
@@ -84,7 +84,7 @@
       <th>Công việc</th>
       <th>Người tạo</th>
       <th>Hạn nộp</th>
-      <th *ngIf="!data.sent"></th>
+      <th></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-rowNode>
@@ -97,35 +97,32 @@
       <td>{{ rowData.node.assigner.user.fullName }}</td>
       <td>{{ rowData.node.deadline | date : "dd/MM/yyyy" }}</td>
       <ng-container *ngIf="!data.sent">
-        <td  class="d-flex">
+        <td class="d-flex">
           <div
-                  class="action-item d-flex justify-content-center align-items-center mx-2"
-                  (click)="openDetail(rowData.node, 'addchild')"
+            class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="openDetail(rowData.node, 'addchild')"
           >
             <i class="bi bi-plus-circle-fill"></i>
           </div>
           <div
-                  class="action-item d-flex justify-content-center align-items-center mx-2"
-                  (click)="openDetail(rowData.node, 'update')"
+            class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="openDetail(rowData.node, 'update')"
           >
             <i class="bi bi-pencil-fill"></i>
           </div>
           <div
-                  class="action-item d-flex justify-content-center align-items-center mx-2"
-                  (click)="deleteNode(rowData.node)"
+            class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="deleteNode(rowData.node)"
           >
             <i class="bi bi-x-circle-fill"></i>
           </div>
         </td>
       </ng-container>
-
     </tr>
   </ng-template>
   <ng-template pTemplate="footer">
     <div class="p-2">
-      <button [disabled]="data.sent" pButton (click)="sendToSchools()">
-        Gửi template
-      </button>
+      <button pButton (click)="sendToSchools()">Gửi template</button>
     </div>
   </ng-template>
 </p-treeTable>

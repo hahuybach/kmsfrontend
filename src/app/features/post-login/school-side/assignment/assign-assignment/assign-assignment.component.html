@@ -131,7 +131,7 @@
           </div>
           <div class="col-md-10 d-flex align-items-center">
             <span class="font-weight-bold">{{
-              selectedAssignment.assigner.user.fullName
+              selectedAssignment.assigner?.user.fullName
             }}</span>
           </div>
         </div>
@@ -147,7 +147,7 @@
           </div>
           <div class="col-md-10 d-flex align-items-center">
             <span class="font-weight-bold">{{
-              selectedAssignment.assignee.user.fullName
+              selectedAssignment.assignee?.user.fullName
             }}</span>
           </div>
         </div>
@@ -321,9 +321,9 @@
         </ng-container>
         {{ rowData.node.assignmentName }}
       </td>
-      <td>{{ rowData.node.assigner.user.fullName }}</td>
-      <td>{{ rowData.node.assignee.user.fullName }}</td>
-      <td>{{ rowData.node.deadline | date : "dd/MM/yyyy" }}</td>
+      <td>{{ rowData.node.assigner?.user.fullName }}</td>
+      <td>{{ rowData.node.assignee?.user.fullName }}</td>
+      <td>{{ rowData.node?.deadline | date : "dd/MM/yyyy" }}</td>
       <td class="d-flex">
         <div
           class="action-item d-flex justify-content-center align-items-center mx-2"
@@ -334,21 +334,20 @@
         <div
           class="action-item d-flex justify-content-center align-items-center mx-2"
           (click)="openDetail(rowData.node, 'addchild')"
-          *ngIf="rowData.node.assignee.email === user"
         >
           <i class="bi bi-plus-circle-fill"></i>
         </div>
         <div
           class="action-item d-flex justify-content-center align-items-center mx-2"
           (click)="openDetail(rowData.node, 'update')"
-          *ngIf="rowData.node.assigner.email === user"
+          *ngIf="rowData.node.assigner?.email === user"
         >
           <i class="bi bi-pencil-fill"></i>
         </div>
         <div
           class="action-item d-flex justify-content-center align-items-center mx-2"
           (click)="deleteNode(rowData.node)"
-          *ngIf="rowData.node.assigner.email === user"
+          *ngIf="rowData.node.assigner?.email === user"
         >
           <i class="bi bi-x-circle-fill"></i>
         </div>

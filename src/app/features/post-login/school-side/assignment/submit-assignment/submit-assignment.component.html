@@ -1,5 +1,11 @@
 <h2>Công việc cần nộp</h2>
-<!-- <form formGroupName=""> -->
+<p-toast></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Đồng ý"
+  rejectLabel="Hủy"
+></p-confirmDialog>
+<!-- PDF preview popup-->
 <p-dialog
   [(visible)]="pdfLoaded"
   [style]="{ width: '90vw', height: '1080px' }"
@@ -11,6 +17,7 @@
   </div>
 </p-dialog>
 <div class="submit-assignment">
+  <!-- File upload popup -->
   <p-dialog
     header="Tải file"
     [(visible)]="fileVisible"
@@ -87,6 +94,7 @@
       </div>
     </form>
   </p-dialog>
+  <!-- Task detail popup -->
   <p-dialog
     header="Chi tiết công việc"
     [(visible)]="assVisible"
@@ -130,16 +138,10 @@
               documents.length > 0 && selectedAssignment.status.statusId != 17
             "
           >
-            <ng-container *ngFor="let item of documents; let i = index">
-              <div class="row mb-3">
-                <div class="col-md-11">
-                  <div
-                    (click)="
-                      item.documentLink
-                        ? openNewTab(item.documentLink)
-                        : displayNewFileUpload(item.file)
-                    "
-                  >
+            <ng-container *ngIf="isSubmit; else notSubmit">
+              <ng-container *ngFor="let item of documents; let i = index">
+                <div class="row mb-3">
+                  <div (click)="openNewTab(item.documentLink)">
                     <div class="file-item px-3 py-1 d-flex">
                       <div
                         class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
@@ -172,14 +174,60 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
-                  (click)="removeDoc(i)"
-                >
-                  <i class="bi bi-x-lg"></i>
-                </div>
-              </div>
+              </ng-container>
             </ng-container>
+            <ng-template #notSubmit>
+              <ng-container *ngFor="let item of documents; let i = index">
+                <div class="row mb-3">
+                  <div class="col-md-11">
+                    <div
+                      (click)="
+                        item.documentLink
+                          ? openNewTab(item.documentLink)
+                          : displayNewFileUpload(item.file)
+                      "
+                    >
+                      <div class="file-item px-3 py-1 d-flex">
+                        <div
+                          class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                        >
+                          <img src="../../../../../assets/img/pdf.png" alt="" />
+                        </div>
+                        <div class="file-item-content">
+                          <div class="row ms-2">
+                            <div class="col-md-10">
+                              <span class="font-weight-bold font-size-18">{{
+                                item.documentName
+                              }}</span>
+                              <br />
+                              <span
+                                ><span class="font-weight-bold">Mã:</span>
+                                {{ item.documentCode }}</span
+                              >
+                            </div>
+                            <!-- <div class="col-md-2">
+                              <span class="text-black-50">{{
+                                item.sizeFormat || item.file.size
+                              }}</span>
+                              <br />
+                              <span>{{
+                                item.uploadedDate | date : "MM/dd/yyyy"
+                              }}</span>
+                            </div> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
+                    (click)="removeDoc(i)"
+                  >
+                    <i class="bi bi-x-lg"></i>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-template>
           </div>
           <div
             *ngIf="
@@ -223,14 +271,16 @@
               </div>
             </ng-container>
           </div>
-          <button
-            *ngIf="selectedAssignment.status.statusId != 17"
-            pButton
-            [disabled]="documents.length == 0"
-            (click)="sendFiles()"
+          <ng-container
+            *ngIf="
+              documents.length != 0 && selectedAssignment.status.statusId != 17
+            "
           >
-            Lưu thay đổi
-          </button>
+            <button *ngIf="!isSubmit" pButton (click)="submit()">
+              Xác nhận
+            </button>
+            <button *ngIf="isSubmit" pButton (click)="cancel()">Hủy</button>
+          </ng-container>
         </div>
         <!-- comment -->
         <div class="height-100">
@@ -294,7 +344,7 @@
             </div>
             <div class="col-md-10 d-flex align-items-center">
               <span class="font-weight-bold">{{
-                selectedAssignment.assigner.user.fullName
+                selectedAssignment.assigner?.user.fullName
               }}</span>
             </div>
           </div>
@@ -310,7 +360,7 @@
             </div>
             <div class="col-md-10 d-flex align-items-center">
               <span class="font-weight-bold">{{
-                selectedAssignment.assignee.user.fullName
+                selectedAssignment.assignee?.user.fullName
               }}</span>
             </div>
           </div>

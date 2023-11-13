@@ -7,7 +7,11 @@
     </div>
     <div>
       <ul>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a routerLink="" [routerLink]="['/dashboard']">
             <div>
               <i class="bi bi-bar-chart"></i>
@@ -15,7 +19,7 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
           <a class="" [routerLink]="['/schoolList']">
             <div>
               <i class="bi bi-building"></i>
@@ -23,7 +27,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/inspection_plan']">
             <div>
               <i class="bi bi-file-earmark-person"></i>
@@ -31,7 +39,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/userList']">
             <div>
               <i class="bi bi-people"></i>
@@ -39,7 +51,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/issuelist']">
             <div>
               <i class="bi bi-list-check"></i>
@@ -47,23 +63,27 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector">
-          <a class="" [routerLink]="['/schoolinitiationplan']" >
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
+          <a class="" [routerLink]="['/schoolinitiationplan']">
             <div>
               <i class="bi bi-clock"></i>
               &nbsp; Kế hoạch thực hiện
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isPrincipal">
-          <a class="" [routerLink]="['/initiationplan']" >
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
+          <a class="" [routerLink]="['/initiationplan']">
             <div>
               <i class="bi bi-clock"></i>
               &nbsp; Kế hoạch thực hiện
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/report']">
             <div>
               <i class="bi bi-graph-up-arrow"></i>
@@ -71,7 +91,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/conclusion']">
             <div>
               <i class="bi bi-clipboard2-check"></i>
@@ -79,19 +103,39 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/guidanceDocument']">
             <div>
               <i class="bi bi-clipboard2-check"></i>
               &nbsp; Văn bản chỉ đạo
-              </div>
+            </div>
           </a>
-          </li>
+        </li>
         <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
           <a class="" [routerLink]="['/createtemplate']">
             <div>
               <i class="bi bi-folder-plus"></i>
               &nbsp; Tạo template
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
+          <a class="" [routerLink]="['/assignassignment']">
+            <div>
+              <i class="bi bi-list-check"></i>
+              &nbsp; Danh sách công việc
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
+          <a class="" [routerLink]="['/submitassignment']">
+            <div>
+              <i class="bi bi-folder-plus"></i>
+              &nbsp; Nộp tài liệu
             </div>
           </a>
         </li>
