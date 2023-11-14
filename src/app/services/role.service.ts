@@ -11,12 +11,19 @@ export class RoleService {
   findAll(){
     return this.http.get<any>(this.baseUrl + 'findAll');
   }
+
   findSchoolRole(){
     return this.http.get<any>(this.baseUrl + 'findSchoolRoles');
   }
 
-  // this one does not have admin or inspector role
+  // this one does not have admin, inspector role and director roles
   findDeptRoles(){
     return this.http.get<any>(this.baseUrl + 'findDeptRoles');
+  }
+
+
+  // this one have every roles in the department
+  findAllDeptRoles(){
+    return this.http.get<any>(this.baseUrl + 'findAllDeptRoles')
   }
 }

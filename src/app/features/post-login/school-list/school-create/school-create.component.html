@@ -1,13 +1,12 @@
 <h2>Tạo trường</h2>
 <form [formGroup]="saveSchoolForm"
       class="row"
-      (ngSubmit)="onSubmit()"
 >
     <div class="col-md-6">
         <h5 class="m-3">Thông tin trường</h5>
         <div class="col-md-10">
             <div class="m-3">
-                <label>Tên trường</label>
+                <label><span class="p-error">*</span>Tên trường <span class="p-error">(bắt buộc)</span></label>
             </div>
             <div class="m-3">
                 <input
@@ -23,7 +22,7 @@
         </div>
         <div class="col-md-10">
             <div class="m-3">
-                <label>Địa chỉ</label>
+                <label><span class="p-error">*</span>Địa chỉ <span class="p-error">(bắt buộc)</span></label>
 
             </div>
             <div class="m-3">
@@ -38,14 +37,14 @@
             </div>
 
         </div>
-        <button class="m-3 btn btn-primary" type="submit">Tạo</button>
+        <button class="m-3 btn btn-primary" (click)="confirm()" type="submit">Tạo</button>
 
     </div>
     <div class="col-md-6">
-        <h5 class="m-3">Thông tin về hiệu trưởng</h5>
+        <h5 class="m-3">Thông tin hiệu trưởng</h5>
         <div class="col-md-10">
             <div class="m-3">
-                <label>Email</label>
+                <label><span class="p-error">*</span>Email <span class="p-error">(bắt buộc)</span></label>
             </div>
             <div class="m-3">
                 <input
@@ -64,6 +63,70 @@
     </span>
             </div>
         </div>
+
+      <div class="col-md-10">
+        <div class="m-3">
+          <label><span class="p-error">*</span>Tên <span class="p-error">(bắt buộc)</span></label>
+        </div>
+        <div class="m-3">
+          <input
+            class="form-control"
+            type="text"
+            formControlName='fullName'
+            placeholder="(VD): Nguyen Van A"
+          >
+          <span class="p-error"
+                *ngIf="checkError('fullName', 'whitespace')">
+            Không được để trống mục này</span>
+
+
+        </div>
+      </div>
+
+      <div class="col-md-10">
+        <div class="m-3">
+          <label>Giới tính</label>
+        </div>
+        <div class="m-3">
+          <p-dropdown [options]="genders" formControlName = "gender">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-md-10">
+        <div class="m-3">
+          <label>Ngày sinh</label>
+        </div>
+        <div class="m-3">
+          <input
+            class="form-control"
+            type="date"
+            formControlName='dob'
+          >
+          <span class="p-error"
+                *ngIf="checkError('dob', 'invalidDate')">
+      Ngày sinh không thể là tương lai
+    </span>
+        </div>
+      </div>
+
+      <div class="col-md-10">
+        <div class="m-3">
+          <label>Số điện thoại</label>
+        </div>
+        <div class="m-3">
+          <input
+            class="form-control"
+            type="text"
+            formControlName='phoneNumber'
+            placeholder="(VD): 0123456789"
+          >
+          <span class="p-error"
+                *ngIf="checkError('phoneNumber', 'pattern')">
+      Sai định dạng số điện thoại
+    </span>
+        </div>
+      </div>
     </div>
 
 
@@ -75,3 +138,4 @@
 </div>
 
 <p-toast position="top-right" key="error"></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>

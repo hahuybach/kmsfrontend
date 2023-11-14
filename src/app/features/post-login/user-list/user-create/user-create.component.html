@@ -2,13 +2,16 @@
   <h2>Tạo người dùng</h2>
 </div>
 <p-toast position="top-right" key="error"></p-toast>
+<p-toast position="center" key="confirm"></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+
 <form [formGroup]="createUserForm" >
   <div class="row">
     <div class="col-md-6">
       <div class="row">
         <div class="col-md-10">
           <div class="m-3">
-            <label>Tên</label>
+            <label><span class="p-error">*</span> Tên <span class="p-error">(bắt buộc)</span></label>
           </div>
           <div class="m-3">
             <input
@@ -17,6 +20,9 @@
               formControlName='fullName'
               placeholder="(VD): Nguyen Van A"
             >
+            <span *ngIf="  (this.createUserForm.get('fullName')?.hasError('required') || this.createUserForm.get('fullName')?.hasError('whitespace'))   &&
+            ((this.createUserForm.get('fullName')?.dirty ?? false) ||
+                (this.createUserForm.get('fullName')?.touched ?? false) || this.isSubmitted)" class="p-error">Không được để trống mục này</span>
 
           </div>
         </div>
@@ -78,7 +84,7 @@
       <div class="row">
         <div class="col-md-10">
           <div class="m-3">
-            <label>Email</label>
+            <label><span class="p-error">*</span> Email <span class="p-error">(bắt buộc)</span></label>
           </div>
           <div class="m-3">
             <input
@@ -96,10 +102,38 @@
     </span>
           </div>
         </div>
+
+        <div class="row" *ngIf="schools">
+          <div class="col-md-10">
+            <div class="m-3">
+              <label>Đơn vị</label>
+            </div>
+            <div class="m-3">
+              <p-dropdown [options]="schools"
+                          optionLabel="schoolName" [filter]="true"
+                          filterBy="schoolName"
+                          [(ngModel)]="selectedSchool"
+                          [ngModelOptions]="{standalone: true}"
+                          placeholder="Chọn 1 đơn vị"
+                          (onChange)="[patchSchoolId(), changeRole()]"
+              >
+
+                <ng-template let-school pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ school.schoolName }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <div>
+              </div>
+
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-10">
             <div class="m-3">
-              <label>Chức vụ</label>
+              <label><span class="p-error">*</span> Chức vụ <span class="p-error">(bắt buộc)</span></label>
             </div>
             <div class="m-3">
               <p-dropdown [options]="roles"
@@ -135,7 +169,7 @@
   </div>
   </div>
   <div class="m-3">
-    <button (click)="onSubmit()" type="submit" class="btn btn-primary">Tạo</button>
+    <button (click)="confirm()" type="submit" class="btn btn-primary">Tạo</button>
   </div>
 </form>
 <div class="overlay" *ngIf="isLoading">

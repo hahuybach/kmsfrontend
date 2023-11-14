@@ -7,154 +7,234 @@ import {AuthService} from "../../../../services/auth.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
 import {AbstractControl, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import {SchoolResponse} from "../../../../models/school-response";
+import {Role} from "../../../../shared/enum/role";
+import {SchoolService} from "../../../../services/school.service";
 
 @Component({
-    selector: 'app-user-create',
-    templateUrl: './user-create.component.html',
-    styleUrls: ['./user-create.component.scss']
+  selector: 'app-user-create',
+  templateUrl: './user-create.component.html',
+  styleUrls: ['./user-create.component.scss']
 })
 export class UserCreateComponent implements OnInit {
-    roles: RoleResponse[];
-    selectedRole: RoleResponse;
-    genders: any[] = [{label: 'Nam', value: 'MALE'},
-        {label: 'Nữ', value: 'FEMALE'}]
+  roles: RoleResponse[];
+  selectedRole: any;
+  genders: any[] = [{label: 'Nam', value: 'MALE'},
+    {label: 'Nữ', value: 'FEMALE'}]
 
-    createUserForm = this.fb.group({
-        email: ['', [Validators.email, Validators.required], [this.validateEmailUnique.bind(this)]],
-        roleId: [-1,[Validators.required,Validators.min(1)] ],
-        fullName: [],
-        gender: [],
-        phoneNumber: [null, [Validators.pattern("^[0-9]{10}$")]],
-        dob: [null,this.validateDateNotGreaterThanToday.bind(this)],
-        isActive: [true],
-        schoolId:[]
+  createUserForm = this.fb.group({
+    email: ['', [Validators.email, Validators.required], [this.validateEmailUnique.bind(this)]],
+    roleId: [-1, [Validators.required, Validators.min(1)]],
+    fullName: ['', [NoWhitespaceValidator(), Validators.required]],
+    gender: ['MALE'],
+    phoneNumber: [null, [Validators.pattern("^[0-9]{10}$")]],
+    dob: [null, this.validateDateNotGreaterThanToday.bind(this)],
+    isActive: [true],
+    schoolId: [-1, [Validators.required, Validators.min(1)]]
 
-    })
-    isSubmitted: boolean = false;
-    isLoading: boolean = false;
+  })
+  isSubmitted: boolean = false;
+  isLoading: boolean = false;
+  schools: SchoolResponse[]
+  selectedSchool: any
+  constructor(private accountService: AccountService,
+              private route: Router,
+              private auth: AuthService,
+              private roleService: RoleService,
+              private toast: ToastService,
+              private fb: FormBuilder,
+              private confirmationService: ConfirmationService,
+              private schoolService: SchoolService) {
+  }
 
-    constructor(private accountService: AccountService,
-                private route: Router,
-                private auth: AuthService,
-                private roleService: RoleService,
-                private toast: ToastService,
-                private fb: FormBuilder) {
-    }
+  ngOnInit(): void {
+    for (const argument of this.auth.getRoleFromJwt()) {
+      if (argument.authority === Role.DIRECTOR) {
+        this.roleService.findDeptRoles().subscribe({
+          next: (data) => {
+            this.roles = data.roles;
+            this.createUserForm.patchValue({
+              schoolId: this.auth.getSchoolFromJwt().schoolId
+            })
 
-    ngOnInit(): void {
-        for (const argument of this.auth.getRoleFromJwt()) {
-            if (argument.authority === "Trưởng Phòng") {
-                this.roleService.findDeptRoles().subscribe({
-                    next: (data) => {
-                        this.roles = data.roles;
-
-
-                    },
-                    error: (err) => {
-                        this.toast.showWarn('error', "Lỗi", err.error.message)
-                        console.log(err);
-                    }
-                })
+          },
+          error: (err) => {
+            this.toast.showWarn('error', "Lỗi", err.error.message)
+            console.log(err);
+          }
+        })
+      }
+      if (argument.authority === Role.PRINCIPAL) {
+        this.roleService.findSchoolRole().subscribe(
+          {
+            next: (data) => {
+              this.roles = data.roles;
+              this.roles = this.roles.filter(role => role.roleName !== "Hiệu Trưởng");
+              this.createUserForm.patchValue({
+                schoolId: this.auth.getSchoolFromJwt().schoolId
+              })
+            },
+            error: (err) => {
+              this.toast.showWarn('error', "Lỗi", err.error.message)
+              console.log(err);
             }
-        }
-        this.createUserForm.patchValue({
-            schoolId: this.auth.getSchoolFromJwt().schoolId
-        })
-        console.log(this.auth.getSchoolFromJwt());
-        console.log(this.auth.getRoleFromJwt());
-    }
+          }
+        )
+      }
 
-    onSubmit() {
-        this.isSubmitted = true;
-        console.log(this.createUserForm.get('fullName'));
-        if (!this.createUserForm.invalid){
-            this.isLoading = true;
-            console.log("is valid")
-         this.accountService.saveUser(this.createUserForm).subscribe({
-             next: (data) => {
-
-                 console.log(data);
-                 this.route.navigate(['user/' + data.userDto.userId])
-             },
-             error : (err) =>{
-                 this.isLoading = false;
-                 this.toast.showWarn('error', "Lỗi", err.error.message)
-                 console.log(err);
+      if (argument.authority === Role.ADMIN) {
+       this.schoolService.findAll().subscribe({
+         next: (data) =>{
+           this.schools = data;
+           this.selectedSchool = this.schools.at(0);
+           this.createUserForm.patchValue({
+             schoolId: this.selectedSchool.schoolId
+           })
+           this.roleService.findAllDeptRoles().subscribe({
+             next: (data) =>{
+               this.roles = data.roles;
+               this.roles = this.roles.filter(role => role.roleName !== Role.ADMIN && role.roleName !== Role.CHIEF_INSPECTOR && role.roleName !== Role.INSPECTOR);
              }
-         })
+           })
+         }
+       })
+      }
+    }
+
+  }
+
+  onSubmit() {
+    this.isSubmitted = true;
+    console.log(this.createUserForm.get('fullName'));
+    if (!this.createUserForm.invalid) {
+      this.isLoading = true;
+      console.log("is valid")
+      this.accountService.saveUser(this.createUserForm).subscribe({
+        next: (data) => {
+
+          console.log(data);
+          this.route.navigate(['user/' + data.userDto.userId])
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.toast.showWarn('error', "Lỗi", err.error.message)
+          console.log(err);
         }
-        console.log(this.createUserForm.value);
+      })
+    }
+    console.log(this.createUserForm.value);
+  }
+
+  patchRoleId() {
+    console.log(this.selectedRole);
+    this.createUserForm.patchValue({
+      roleId: this.selectedRole?.roleId
+    })
+  }
+
+  isBlank(field: string): boolean | undefined {
+    return (
+      this.createUserForm.get(field)?.hasError('required') &&
+      ((this.createUserForm.get(field)?.dirty ?? false) ||
+        (this.createUserForm.get(field)?.touched ?? false) || this.isSubmitted)
+    );
+  }
+
+  isError(field: string, errorCode: string): boolean | undefined {
+    return (
+      this.createUserForm.get(field)?.hasError(errorCode) &&
+      ((this.createUserForm.get(field)?.dirty ?? false) ||
+        (this.createUserForm.get(field)?.touched ?? false))
+    );
+  }
+
+  validateDateNotGreaterThanToday(control: AbstractControl): ValidationErrors | null {
+    const selectedDate = control.value;
+    const today = new Date();
+
+    if (selectedDate && new Date(selectedDate) > today) {
+      return {'invalidDate': true};
     }
 
-    patchRoleId() {
-        console.log(this.selectedRole);
-        this.createUserForm.patchValue({
-            roleId: this.selectedRole?.roleId
-        })
-    }
-    isBlank(field: string): boolean | undefined {
-        return (
-            this.createUserForm.get(field)?.hasError('required') &&
-            ((this.createUserForm.get(field)?.dirty ?? false) ||
-                (this.createUserForm.get(field)?.touched ?? false) || this.isSubmitted)
-        );
-    }
-    isError(field: string, errorCode: string): boolean | undefined {
-        return (
-            this.createUserForm.get(field)?.hasError(errorCode) &&
-            ((this.createUserForm.get(field)?.dirty ?? false) ||
-                (this.createUserForm.get(field)?.touched ?? false))
-        );
-    }
-    validatePhoneNumber(control: AbstractControl): ValidationErrors | null {
-        const phoneNumberRegex = /^\d{10}$/; // Regex pattern for a 10-digit phone number
+    return null;
+  }
 
-        if (control.value && !phoneNumberRegex.test(control.value)) {
-            return { 'invalidPhoneNumber': true };
+  validateEmailUnique(control: AbstractControl): Promise<ValidationErrors | null> {
+
+    const email = control.value;
+    return new Promise<ValidationErrors | null>((resolve, reject) => {
+      this.accountService.isUnique(email).subscribe({
+        next: (result) => {
+          console.log(result);
+          if (result.isUnique) {
+            setTimeout(() => {
+              resolve(null);
+
+            }, 1000)
+          } else {
+            setTimeout(() => {
+              resolve({'notUnique': true});
+
+            }, 1000)
+          }
+        },
+        error: (error) => {
+          console.error(error);
+          // Handle the error if necessary
+          reject(error);
+        },
+        complete: () => {
+        },
+      });
+    });
+  }
+
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận muốn tạo người dùng này không?',
+      header: 'Xác nhân',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel:'Không',
+      accept: () => {
+        this.onSubmit()
+
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
+          case ConfirmEventType.CANCEL:
+            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
         }
+      }
+    });
+  }
 
-        return null;
-    }
+  patchSchoolId() {
+    this.createUserForm.patchValue({
+      schoolId: this.selectedSchool?.schoolId
+    })
+  }
 
-    validateDateNotGreaterThanToday(control: AbstractControl): ValidationErrors | null {
-        const selectedDate = control.value;
-        const today = new Date();
-
-        if (selectedDate && new Date(selectedDate) > today) {
-            return { 'invalidDate': true };
+  changeRole() {
+    // school role
+    if (this.selectedSchool.schoolId != 1){
+      this.roleService.findSchoolRole().subscribe({
+        next: (data) =>{
+          this.roles = data.roles;
         }
-
-        return null;
+      })
+    }else {
+      this.roleService.findAllDeptRoles().subscribe({
+        next: (data) =>{
+          this.roles = data.roles;
+        }
+      })
     }
 
-    validateEmailUnique(control: AbstractControl): Promise<ValidationErrors | null> {
-
-        const email = control.value;
-        return new Promise<ValidationErrors | null>((resolve, reject) => {
-            this.accountService.isUnique(email).subscribe({
-                next: (result) => {
-                    console.log(result);
-                    if (result.isUnique) {
-                        setTimeout(() => {
-                            resolve(null);
-
-                        }, 1000)
-                    } else {
-                        setTimeout(() => {
-                            resolve({'notUnique': true});
-
-                        }, 1000)
-                    }
-                },
-                error: (error) => {
-                    console.error(error);
-                    // Handle the error if necessary
-                    reject(error);
-                },
-                complete: () => {
-                },
-            });
-        });
-    }
-
+  }
 }

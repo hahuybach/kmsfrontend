@@ -31,7 +31,7 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector ||isAdmin ">
           <a class="" [routerLink]="['/userList']">
             <div>
               <i class="bi bi-people"></i>
