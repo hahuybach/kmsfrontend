@@ -38,6 +38,7 @@ export class UserCreateComponent implements OnInit {
   isLoading: boolean = false;
   schools: SchoolResponse[]
   selectedSchool: any
+
   constructor(private accountService: AccountService,
               private route: Router,
               private auth: AuthService,
@@ -84,24 +85,52 @@ export class UserCreateComponent implements OnInit {
       }
 
       if (argument.authority === Role.ADMIN) {
-       this.schoolService.findAll().subscribe({
-         next: (data) =>{
-           this.schools = data;
-           this.selectedSchool = this.schools.at(0);
-           this.createUserForm.patchValue({
-             schoolId: this.selectedSchool.schoolId
-           })
-           this.roleService.findAllDeptRoles().subscribe({
-             next: (data) =>{
-               this.roles = data.roles;
-               this.roles = this.roles.filter(role => role.roleName !== Role.ADMIN && role.roleName !== Role.CHIEF_INSPECTOR && role.roleName !== Role.INSPECTOR);
-             }
-           })
-         }
-       })
+        this.schoolService.findAll().subscribe({
+          next: (data) => {
+            this.schools = data;
+            this.selectedSchool = this.schools.at(0);
+
+            this.createUserForm.patchValue({
+              schoolId: this.selectedSchool.schoolId
+            })
+            this.roleService.findAllDeptRoles().subscribe({
+              next: (data) => {
+                this.roles = data.roles;
+                this.roles = this.roles.filter(role => role.roleName !== Role.ADMIN && role.roleName !== Role.CHIEF_INSPECTOR && role.roleName !== Role.INSPECTOR);
+                if (this.selectedSchool.schoolId == 1) {
+                  this.setRole(this.selectedSchool.schoolId, Role.DIRECTOR, true);
+                } else {
+                  this.setRole(this.selectedSchool.schoolId, Role.PRINCIPAL, true);
+
+                }
+              }
+            })
+          }
+        })
       }
     }
 
+  }
+
+  setRole(schoolId: number, roleName: string, isActive: boolean) {
+    const data = {
+      "schoolId": schoolId,
+      "roleName": roleName,
+      "isActive": isActive
+    }
+    this.accountService.findBySchoolIdAndRoleNameAndStatus(data).subscribe({
+      next: (data) => {
+        console.log(data);
+        if (data.accountDtos.length > 0) {
+          // PGD thi remove truong phong neu co 1 truong phong active
+          if (schoolId == 1) {
+            this.roles = this.roles.filter(role => role.roleName !== Role.DIRECTOR)
+          } else {
+            this.roles = this.roles.filter(role => role.roleName !== Role.PRINCIPAL)
+          }
+        }
+      }
+    })
   }
 
   onSubmit() {
@@ -196,7 +225,7 @@ export class UserCreateComponent implements OnInit {
       header: 'Xác nhân',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
-      rejectLabel:'Không',
+      rejectLabel: 'Không',
       accept: () => {
         this.onSubmit()
 
@@ -218,20 +247,25 @@ export class UserCreateComponent implements OnInit {
     this.createUserForm.patchValue({
       schoolId: this.selectedSchool?.schoolId
     })
+    this.changeRole();
   }
 
   changeRole() {
     // school role
-    if (this.selectedSchool.schoolId != 1){
+    if (this.selectedSchool.schoolId != 1) {
       this.roleService.findSchoolRole().subscribe({
-        next: (data) =>{
+        next: (data) => {
           this.roles = data.roles;
+          this.setRole(this.selectedSchool.schoolId, Role.PRINCIPAL,true)
+
         }
       })
-    }else {
+    } else {
       this.roleService.findAllDeptRoles().subscribe({
-        next: (data) =>{
+        next: (data) => {
           this.roles = data.roles;
+          this.roles = this.roles.filter(role => role.roleName !== Role.ADMIN && role.roleName !== Role.CHIEF_INSPECTOR && role.roleName !== Role.INSPECTOR);
+          this.setRole(this.selectedSchool.schoolId, Role.DIRECTOR,true)
         }
       })
     }

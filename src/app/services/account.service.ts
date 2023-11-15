@@ -77,5 +77,13 @@ export class AccountService {
 
   }
 
+  findBySchoolIdAndRoleNameAndStatus(data :any){
+    console.log(data);
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.httpClient.post<any>(this.baseUrl + 'findByRoleNameSchoolIdAndStatus', JSON.stringify(data), {headers});
+
+
+  }
+
 
 }

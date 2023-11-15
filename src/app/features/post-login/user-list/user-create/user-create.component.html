@@ -115,7 +115,7 @@
                           [(ngModel)]="selectedSchool"
                           [ngModelOptions]="{standalone: true}"
                           placeholder="Chọn 1 đơn vị"
-                          (onChange)="[patchSchoolId(), changeRole()]"
+                          (onChange)="[patchSchoolId()]"
               >
 
                 <ng-template let-school pTemplate="item">
