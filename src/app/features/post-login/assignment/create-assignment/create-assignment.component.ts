@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -47,7 +48,8 @@ export class CreateAssignmentComponent {
     private confirmationService: ConfirmationService,
     private assignmentService: AssignmentService,
     private issueService: IssueService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private datePipe: DatePipe
   ) {}
   // newNodeForm = this.fb.group({
   //   nodeName: ['', Validators.required],
@@ -89,77 +91,6 @@ export class CreateAssignmentComponent {
         },
       });
   }
-  viewFile(file: TreeNode) {
-    // this.messageService.add({
-    //   severity: 'info',
-    //   summary: 'Node Details',
-    //   detail: file.label,
-    // });
-    this.visibleNewNode = true;
-    console.log(file.children?.length);
-  }
-  // addNewNode() {
-  //   if (this.selectedFile == null) {
-  //     const newNode: TreeNode = {
-  //       key: this.files.length + '',
-  //       label: this.newNodeForm.get('nodeName')?.value + '',
-  //       data: this.newNodeForm.get('nodeName')?.value,
-  //       icon: 'pi pi-fw pi-cog',
-  //       children: [],
-  //     };
-  //     this.files.push(newNode);
-  //   } else {
-  //     const newNode: TreeNode = {
-  //       key:
-  //         this.selectedFile.children == null
-  //           ? this.selectedFile.key + '-0'
-  //           : this.selectedFile.key + '-' + this.selectedFile?.children.length,
-  //       label: this.newNodeForm.get('nodeName')?.value + '',
-  //       data: this.newNodeForm.get('nodeName')?.value,
-  //       icon: 'pi pi-fw pi-cog',
-  //       children: [],
-  //     };
-  //     console.log(newNode);
-  //     for (const item of this.files) {
-  //       this.addNodeToParent(item, newNode);
-  //     }
-  //   }
-
-  //   console.log(this.files);
-  //   this.visibleNewNode = false;
-  // }
-  // deleteContextMenu() {
-  //   for (const item of this.files) {
-  //     this.deleteNodeByKey(item, this.selectedFile.key);
-  //   }
-  // }
-  // addNodeToParent(parent: TreeNode<string>, newNode: TreeNode<string>): void {
-  //   if (parent.key === this.selectedFile.key) {
-  //     if (parent.children) {
-  //       parent.children.push(newNode);
-  //     } else {
-  //       parent.children = [newNode];
-  //     }
-  //     return;
-  //   }
-
-  //   if (parent.children) {
-  //     for (const child of parent.children) {
-  //       this.addNodeToParent(child, newNode);
-  //     }
-  //   }
-  // }
-  // deleteNodeByKey(parent: TreeNode<string> | undefined, key: string): void {
-  //   if (!parent || !parent.children) {
-  //     return;
-  //   }
-
-  //   parent.children = parent.children.filter((child) => child.key !== key);
-
-  //   for (const child of parent.children) {
-  //     this.deleteNodeByKey(child, key);
-  //   }
-  // }
   openDetail(assignment?: any, action?: string) {
     this.assignmentVisible = true;
     this.selectedAssignment = assignment;
@@ -202,7 +133,7 @@ export class CreateAssignmentComponent {
         addAssignmentDto: {
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
           description: this.assignmentForm.get('description')?.value,
-          deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
+          // deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           issueId: this.issueId,
           isTask: false,
         },
@@ -212,7 +143,7 @@ export class CreateAssignmentComponent {
         addAssignmentDto: {
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
           description: this.assignmentForm.get('description')?.value,
-          deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
+          // deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
           parentId: this.assignmentForm.get('parentId')?.value,
           issueId: this.issueId,
           isTask: false,
@@ -247,7 +178,7 @@ export class CreateAssignmentComponent {
         assignmentId: this.selectedAssignment.assignmentId,
         assignmentName: this.assignmentForm.get('assignmentName')?.value,
         description: this.assignmentForm.get('description')?.value,
-        deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
+        // deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
       },
     };
     console.log(updateAssignment);
@@ -274,14 +205,16 @@ export class CreateAssignmentComponent {
     console.log(updateAssignment);
   }
   deleteNode(assignment: any) {
+    console.log(assignment);
     this.confirmationService.confirm({
       message: 'Bạn có muốn xóa công việc này?',
       header: 'Xác nhận xóa',
-      // icon: 'pi pi-info-circle',
+      icon: 'bi bi-exclamation-triangle-fill',
       accept: () => {
         const deleteAssignment = {
           id: assignment.assignmentId,
         };
+        console.log(deleteAssignment);
         this.assignmentService.deleteAssignment(deleteAssignment).subscribe({
           next: (response) => {
             console.log(response);
@@ -327,32 +260,48 @@ export class CreateAssignmentComponent {
     return dateObject;
   }
   sendToSchools() {
-    this.issueService
-      .getCurrentActiveIssue()
-      .pipe(
-        switchMap((data) => {
-          console.log(data);
-          this.issueId = data.issueDto.issueId;
-          return this.assignmentService.sendAssignmentsToSchool(
-            data.issueDto.issueId
-          );
-        })
-      )
-      .subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Gửi thành công',
-            detail: 'Gửi template thành công',
-          });
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Gửi thất bại',
-            detail: error.error.message,
-          });
-        },
+    if (this.data.sent) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Không thể gửi',
+        detail: 'Template đã được gửi rồi nên không gửi lại được nữa',
       });
+    } else {
+      this.confirmationService.confirm({
+        message: 'Bạn có muốn gửi template?',
+        header: 'Xác nhận gửi',
+        icon: 'bi bi-exclamation-triangle-fill',
+        accept: () => {
+          this.issueService
+            .getCurrentActiveIssue()
+            .pipe(
+              switchMap((data) => {
+                console.log(data);
+                this.issueId = data.issueDto.issueId;
+                return this.assignmentService.sendAssignmentsToSchool(
+                  data.issueDto.issueId
+                );
+              })
+            )
+            .subscribe({
+              next: () => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Gửi thành công',
+                  detail: 'Gửi template thành công',
+                });
+              },
+              error: (error) => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Gửi thất bại',
+                  detail: error.error.message,
+                });
+              },
+            });
+        },
+        reject: (type: any) => {},
+      });
+    }
   }
 }

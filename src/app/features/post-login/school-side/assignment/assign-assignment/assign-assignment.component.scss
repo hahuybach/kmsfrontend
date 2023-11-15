@@ -4,7 +4,6 @@
     border-radius: 8px;
     border: solid 1px $primary;
     transition: all 0.5s ease;
-    margin-right: 20px;
     &:hover {
         background-color: $primary-hover;
         border-color: $primary-hover;
@@ -32,14 +31,13 @@
         align-items: center;
     }
 }
-.folder {
-    .folder-icon {
-        color: rgb(255, 196, 0);
-    }
-    .file-icon {
-        color: $primary;
-    }
+.folder-icon {
+    color: rgb(255, 196, 0);
 }
+.file-icon {
+    color: $primary;
+}
+
 :host ::ng-deep {
     .p-button {
         background-color: $primary;

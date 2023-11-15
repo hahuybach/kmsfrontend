@@ -7,9 +7,10 @@ import { AssignmentService } from 'src/app/services/assignment.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { FileService } from 'src/app/services/file.service';
 import { IssueService } from 'src/app/services/issue.service';
-
+import { ChangeDetectionStrategy } from '@angular/core';
 @Component({
   selector: 'app-assign-assignment',
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './assign-assignment.component.html',
   styleUrls: ['./assign-assignment.component.scss'],
 })
@@ -34,7 +35,7 @@ export class AssignAssignmentComponent implements OnInit {
     userName: ['', Validators.required],
     createdDate: ['', Validators.required],
   });
-  documents: any[];
+  documents: any[] = [];
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
@@ -292,7 +293,81 @@ export class AssignAssignmentComponent implements OnInit {
                 ],
                 deadline: '2023-11-23T23:59:00',
                 createdDate: '2023-11-12T19:21:30.371139',
-                children: [],
+                children: [
+                  {
+                    assignmentId: 100,
+                    assignmentName: 'Nộp tài liệu hiệu trưởng',
+                    assigner: null,
+                    assignee: null,
+                    listOfPossibleAssginees: [
+                      {
+                        accountId: 8,
+                        email: 'totruongchuyenmon@gmail.com',
+                        user: {
+                          userId: 8,
+                          fullName: 'Tổ Thị Trưởng CM',
+                          dob: '1999-03-01',
+                          gender: 'FEMALE',
+                          phoneNumber: '0394335205',
+                        },
+                        school: {
+                          schoolId: 2,
+                          schoolName: 'MN ÁNH SAO',
+                          exactAddress: 'CẦU GIẤY',
+                          isActive: true,
+                        },
+                        roles: [
+                          {
+                            roleId: 8,
+                            roleName: 'Tổ Trưởng Chuyên Môn',
+                            isSchoolEmployee: true,
+                          },
+                        ],
+                      },
+                      {
+                        accountId: 9,
+                        email: 'giaothivien@gmail.com',
+                        user: {
+                          userId: 9,
+                          fullName: 'Giao Vien',
+                          dob: '1999-03-01',
+                          gender: 'MALE',
+                          phoneNumber: '0394335205',
+                        },
+                        school: {
+                          schoolId: 2,
+                          schoolName: 'MN ÁNH SAO',
+                          exactAddress: 'CẦU GIẤY',
+                          isActive: true,
+                        },
+                        roles: [
+                          {
+                            roleId: 9,
+                            roleName: 'Giáo Viên',
+                            isSchoolEmployee: true,
+                          },
+                        ],
+                      },
+                      null,
+                    ],
+                    deadline: null,
+                    createdDate: '2023-11-12T19:21:30.371139',
+                    children: [],
+                    issueId: 1,
+                    description: 'Nộp tài liệu pdf cho hiệu trưởng',
+                    status: {
+                      statusId: 14,
+                      statusName: 'Đang tiến hành',
+                      statusType: 'Đầu công việc',
+                    },
+                    parentId: 79,
+                    progress: 0,
+                    schoolId: 2,
+                    template: false,
+                    task: true,
+                    authorities: ['canEvaluate'],
+                  },
+                ],
                 issueId: 1,
                 description: 'Hiệu trưởng',
                 status: {
@@ -305,6 +380,7 @@ export class AssignAssignmentComponent implements OnInit {
                 schoolId: 2,
                 template: true,
                 task: false,
+                authorities: [],
               },
             ],
             issueId: 1,
@@ -319,6 +395,7 @@ export class AssignAssignmentComponent implements OnInit {
             schoolId: 2,
             template: true,
             task: false,
+            authorities: ['canModifyFolderAsmMetaData', 'canDeleteFolder','canCompleteConfirm'],
           },
           {
             assignmentId: 80,
@@ -429,6 +506,7 @@ export class AssignAssignmentComponent implements OnInit {
             schoolId: 2,
             template: true,
             task: false,
+            authorities: ['canModifyFolderAsmMetaData', 'canDeleteFolder'],
           },
         ],
         issueId: 1,
@@ -444,8 +522,16 @@ export class AssignAssignmentComponent implements OnInit {
         template: true,
         task: false,
         parent: null,
+        authorities: [
+          'canCreateFolderAsm',
+          // 'canModifyFolderMetaData',
+
+          'canCompleteConfirm',
+          'canCancelConfirm',
+        ],
       },
     ];
+    console.log(this.assignments);
     // this.issueService
     //   .getCurrentActiveIssue()
     //   .pipe(
@@ -509,27 +595,29 @@ export class AssignAssignmentComponent implements OnInit {
       }
       case 'update':
         {
-          if (this.selectedAssignment)
+          if (this.selectedAssignment) {
             this.assignmentForm
               .get('assignmentName')
               ?.setValue(this.selectedAssignment.assignmentName);
-          this.assignmentForm
-            .get('description')
-            ?.setValue(this.selectedAssignment.description);
-          this.assignmentForm
-            .get('deadline')
-            ?.setValue(
-              new Date(this.selectedAssignment.deadline)
-                .toISOString()
-                .split('T')[0]
-            );
+            this.assignmentForm
+              .get('description')
+              ?.setValue(this.selectedAssignment.description);
+            this.assignmentForm
+              .get('deadline')
+              ?.setValue(
+                new Date(this.selectedAssignment.deadline)
+                  .toISOString()
+                  .split('T')[0]
+              );
+          }
         }
         break;
     }
   }
   deleteNode(assignment: any) {
     this.confirmationService.confirm({
-      message: 'Bạn có muốn xóa công việc này?',
+      message:
+        'Bạn có muốn xóa công việc ' + assignment.assignmentName + ' này?',
       header: 'Xác nhận xóa',
       // icon: 'pi pi-info-circle',
       accept: () => {
@@ -564,14 +652,31 @@ export class AssignAssignmentComponent implements OnInit {
   assignmentPopuptHideEvent() {
     this.assignmentForm.reset();
   }
-  openDetailRowNode(rowNode: any) {
-    this.assignmentService
-      .getAssignmentsById(rowNode.assignmentId)
-      .subscribe((data) => {
-        this.selectedAssignment = data;
-        this.documents = data.documents;
-        this.detailVisible = true;
-      });
+  openDetailRowNode(rowNode: any, action: string) {
+    this.action = action;
+    // this.assignmentService
+    //   .getAssignmentsById(rowNode.assignmentId)
+    //   .subscribe((data) => {
+    //     this.selectedAssignment = data;
+    //     this.documents = data.documents;
+    //     this.detailVisible = true;
+    //   });
+    this.selectedAssignment = rowNode;
+    this.detailVisible = true;
+    if (this.selectedAssignment) {
+      this.assignmentForm
+        .get('assignmentName')
+        ?.setValue(this.selectedAssignment.assignmentName);
+      this.assignmentForm
+        .get('description')
+        ?.setValue(this.selectedAssignment.description);
+      this.assignmentForm
+        .get('deadline')
+        ?.setValue(
+          new Date(this.selectedAssignment.deadline).toISOString().split('T')[0]
+        );
+    }
+    console.log(rowNode);
   }
   getStatusSeverity(statusId: number): string {
     const statusSeverityMap: { [key: number]: string } = {
@@ -605,5 +710,12 @@ export class AssignAssignmentComponent implements OnInit {
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
     });
+  }
+  hasAuthority(authority: string): boolean {
+    console.log('run here');
+    return this.selectedAssignment.authorities.includes(authority);
+  }
+  hasAuthorityByRowNode(authority: string, rowNode: any): boolean {
+    return rowNode.authorities.includes(authority);
   }
 }
