@@ -175,16 +175,34 @@
           <span class="text-black-50">Người làm</span>
           <br />
           <div class="row mt-1">
-            <div
-              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+            <ng-container
+              *ngIf="hasAuthority('canChangeAssignee'); else assigneeChange"
             >
-              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
-            </div>
-            <div class="col-md-10 d-flex align-items-center">
-              <span class="font-weight-bold">{{
-                selectedAssignment.assignee?.user.fullName
-              }}</span>
-            </div>
+              <p-dropdown
+                [options]="selectedAssignment.listOfPossibleAssginees"
+                formControlName="assigneeId"
+                [filter]="true"
+                filterBy="user.fullName"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div>
+                    {{ option.user.fullName }}
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-container>
+            <ng-template #assigneeChange>
+              <div
+                class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+              >
+                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+              </div>
+              <div class="col-md-10 d-flex align-items-center">
+                <span class="font-weight-bold">{{
+                  selectedAssignment.assignee?.user.fullName
+                }}</span>
+              </div>
+            </ng-template>
           </div>
         </div>
         <div class="height-100">
@@ -251,7 +269,7 @@
         >
           <span class="font-weight-bold">Xác nhận hoàn thành</span>
           <br />
-          <button pButton>Xác nhận</button>
+          <button pButton (click)="completeOrCancelCF(true)">Xác nhận</button>
         </div>
         <div
           *ngIf="action === 'info' && hasAuthority('canCancelConfirm')"
@@ -259,7 +277,7 @@
         >
           <span class="font-weight-bold">Hủy xác nhận hoàn thành</span>
           <br />
-          <button pButton>Hủy</button>
+          <button pButton (click)="completeOrCancelCF(false)">Hủy</button>
         </div>
       </div>
     </div>
@@ -280,7 +298,10 @@
       <br />
       <span class="mb-1 font-weight-bold">Loại công việc</span>
       <br />
-      <p-dropdown [options]="typeAssignmentOptions"></p-dropdown>
+      <p-dropdown
+        [options]="typeAssignmentOptions"
+        formControlName="isTask"
+      ></p-dropdown>
     </div>
     <div class="mb-2">
       <span class="mb-1 font-weight-bold">Tên công việc</span>
@@ -305,7 +326,11 @@
     <div class="mb-2">
       <span class="mb-1 font-weight-bold">Người làm</span>
       <br />
-      <p-dropdown [options]="listOfPossibleAssginees">
+      <p-dropdown
+        [options]="listOfPossibleAssignees"
+        formControlName="assigneeId"
+        optionValue="accountId"
+      >
         <ng-template let-option pTemplate="selectedItem">
           <div>
             <span> {{ option.user.fullName }} </span>&nbsp;<span
@@ -353,7 +378,7 @@
   </div>
 </p-dialog>
 
-<h4>Phân chia công việc</h4>
+<h4>Danh sách công việc</h4>
 <p-treeTable
   [value]="assignments"
   [scrollable]="true"
@@ -364,7 +389,7 @@
   <ng-template pTemplate="caption">
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <h6>Danh sách công việc</h6>
+        <h6>Chi tiết danh sách công việc</h6>
       </div>
     </div>
   </ng-template>

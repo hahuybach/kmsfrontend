@@ -62,34 +62,23 @@ export class CreateAssignmentComponent {
   });
   ngOnInit() {
     this.initData();
-
-    console.log(this.assignments);
   }
   initData() {
-    this.issueService
-      .getCurrentActiveIssue()
-      .pipe(
-        switchMap((data) => {
-          console.log(data);
-          this.issueId = data.issueDto.issueId;
-          return this.assignmentService.getAssignmentsByIssueId(
-            data.issueDto.issueId
-          );
-        })
-      )
-      .subscribe({
-        next: (data) => {
-          console.log(data);
-          this.data = data;
-          if (this.data.assignmentListDto != null) {
-            this.assignments = [this.data.assignmentListDto];
-          }
-          console.log(this.assignments);
-        },
-        error: (error) => {
-          console.log(error.error.message);
-        },
-      });
+    this.assignmentService.getDeptAssignments().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.data = data;
+        this.assignments = [data.assignmentListDto];
+        console.log(this.assignments);
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Lỗi',
+          detail: error.error.message,
+        });
+      },
+    });
   }
   openDetail(assignment?: any, action?: string) {
     this.assignmentVisible = true;
@@ -151,7 +140,7 @@ export class CreateAssignmentComponent {
       };
     }
     console.log(addedAssignment);
-    this.assignmentService.addAssignment(addedAssignment).subscribe({
+    this.assignmentService.addDeptAssignment(addedAssignment).subscribe({
       next: (response) => {
         this.initData();
         this.assignmentVisible = false;
@@ -182,7 +171,7 @@ export class CreateAssignmentComponent {
       },
     };
     console.log(updateAssignment);
-    this.assignmentService.updateAssignment(updateAssignment).subscribe({
+    this.assignmentService.updateDeptAssignment(updateAssignment).subscribe({
       next: (response) => {
         this.initData();
         this.assignmentVisible = false;
@@ -272,33 +261,22 @@ export class CreateAssignmentComponent {
         header: 'Xác nhận gửi',
         icon: 'bi bi-exclamation-triangle-fill',
         accept: () => {
-          this.issueService
-            .getCurrentActiveIssue()
-            .pipe(
-              switchMap((data) => {
-                console.log(data);
-                this.issueId = data.issueDto.issueId;
-                return this.assignmentService.sendAssignmentsToSchool(
-                  data.issueDto.issueId
-                );
-              })
-            )
-            .subscribe({
-              next: () => {
-                this.messageService.add({
-                  severity: 'success',
-                  summary: 'Gửi thành công',
-                  detail: 'Gửi template thành công',
-                });
-              },
-              error: (error) => {
-                this.messageService.add({
-                  severity: 'error',
-                  summary: 'Gửi thất bại',
-                  detail: error.error.message,
-                });
-              },
-            });
+          this.assignmentService.sendAssignmentsToSchool().subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Gửi thành công',
+                detail: 'Gửi template thành công',
+              });
+            },
+            error: (error) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Gửi thất bại',
+                detail: error.error.message,
+              });
+            },
+          });
         },
         reject: (type: any) => {},
       });
