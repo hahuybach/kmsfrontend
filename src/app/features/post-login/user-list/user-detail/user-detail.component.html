@@ -48,6 +48,13 @@
         <p class="font-weight-bold">{{user.dob == null ? "Chưa nhập ngày sinh" : user.dob}}</p>
       </div>
     </div>
+    <div class="m-3">
+      <button class="btn btn-primary"
+              (click)="onUpdate()"
+            *ngIf="isUpdatable(this.user)"
+      >Cập nhật</button>
+    </div>
+
 
   </div>
   <div class="m-1 col-md-5">

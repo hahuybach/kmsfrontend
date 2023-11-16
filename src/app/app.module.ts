@@ -59,6 +59,7 @@ import { UserCreateComponent } from './features/post-login/user-list/user-create
 
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import {StompService} from "./features/post-login/push-notification/stomp.service";
+import { UserUpdateComponent } from './features/post-login/user-list/user-update/user-update.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,6 +90,7 @@ import {StompService} from "./features/post-login/push-notification/stomp.servic
     UserDetailComponent,
     UserCreateComponent,
     NotificationListComponent,
+    UserUpdateComponent,
   ],
   imports: [
     BrowserModule,

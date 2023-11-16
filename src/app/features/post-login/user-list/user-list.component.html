@@ -215,14 +215,26 @@
                  </td>
                 <td>   <span [class]="user.isActive ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ user.isActive ? "Đang hoạt động" : "Ngưng hoạt động" }}</span>
                 </td>
-                <td>
+              <td   style="text-align: center"
+                    class="d-flex td-action justify-content-center align-items-center">
+                <div   class="action-item d-flex justify-content-center align-items-center mx-2">
+                  <i
+                    class="bi bi-info-circle-fill"
+                    (click)="onDetail(user.userId)"
+                  ></i>
+                </div>
+                <div  class="action-item d-flex justify-content-center align-items-center mx-2"
+                *ngIf="isUpdatable(user)"
+                >
+                  <i
+                    class="bi bi-pencil-fill"
+                    (click)="onUpdate(user.userId)"
 
-                    <i
-                            class="bi bi-info-circle-fill"
-                            (click)="onDetail(user.userId)"
-                    ></i>
+                  ></i>
+                </div>
 
-                </td>
+
+              </td>
             </tr>
             </tbody>
         </ng-container>

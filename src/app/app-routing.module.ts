@@ -35,6 +35,7 @@ import { AssignAssignmentComponent } from './features/post-login/school-side/ass
 import {
   UpdateInspectionPlanComponent
 } from "./features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component";
+import {UserUpdateComponent} from "./features/post-login/user-list/user-update/user-update.component";
 
 const routes: Routes = [
   {
@@ -154,6 +155,10 @@ const routes: Routes = [
         path: 'assignassignment',
         component: AssignAssignmentComponent,
       },
+      {
+        path: 'user/:id/update',
+        component: UserUpdateComponent
+      }
     ],
   },
   {

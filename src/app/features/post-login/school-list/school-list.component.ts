@@ -4,6 +4,8 @@ import {SchoolService} from "../../../services/school.service";
 import {Table} from "primeng/table";
 import {FilterMatchMode, PrimeNGConfig} from "primeng/api";
 import {Router} from "@angular/router";
+import {AuthService} from "../../../services/auth.service";
+import {Role} from "../../../shared/enum/role";
 
 @Component({
   selector: 'app-school-list',
@@ -14,15 +16,27 @@ export class SchoolListComponent implements OnInit{
   schools: SchoolResponse[];
   statuses: any[];
   selectedSchool: SchoolResponse;
-
+  isDirector: boolean
   constructor(private schoolService: SchoolService,
               private config: PrimeNGConfig,
-              private router: Router
+              private router: Router,
+              private auth: AuthService
               ) {
 
   }
+
+  setAuth(){
+    for (const role of this.auth.getRoleFromJwt()) {
+      if (role.authority === Role.DIRECTOR){
+        this.isDirector = true;
+      }
+    }
+  }
+
   ngOnInit(): void {
+    this.setAuth()
     this.schoolService.findAllSchools().subscribe({
+
         next: (value) => {
             this.schools = value;
             console.log(this.schools);

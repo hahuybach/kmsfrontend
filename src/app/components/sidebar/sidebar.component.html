@@ -15,11 +15,19 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector || isAdmin">
           <a class="" [routerLink]="['/schoolList']">
             <div>
               <i class="bi bi-building"></i>
               &nbsp; Danh sách trường
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
+          <a class="" [routerLink]="['/school/'] +schoolId ">
+            <div>
+              <i class="bi bi-building"></i>
+              &nbsp; Trường của bạn
             </div>
           </a>
         </li>

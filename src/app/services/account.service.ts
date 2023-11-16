@@ -81,9 +81,12 @@ export class AccountService {
     console.log(data);
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.httpClient.post<any>(this.baseUrl + 'findByRoleNameSchoolIdAndStatus', JSON.stringify(data), {headers});
-
-
   }
 
+  updateUser(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.httpClient.put<any>(this.baseUrl + 'update', JSON.stringify(data), {headers});
+  }
 
 }

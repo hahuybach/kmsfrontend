@@ -12,6 +12,7 @@ export class SidebarComponent implements OnInit{
   isPrincipal: boolean =false
   isDirector: boolean = false
   isAdmin: boolean = false
+  schoolId: any;
   constructor(
     private auth: AuthService,
     private router: Router
@@ -24,6 +25,7 @@ export class SidebarComponent implements OnInit{
 
   ngOnInit(): void {
     console.log(this.auth.getRoleFromJwt());
+    this.schoolId = this.auth.getSchoolFromJwt().schoolId;
     for (const argument of this.auth.getRoleFromJwt()) {
       if (argument.authority === "Trưởng Phòng") {
         this.isDirector = true;

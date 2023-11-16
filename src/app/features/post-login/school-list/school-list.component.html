@@ -91,7 +91,9 @@
               (click)="onDetail(school.schoolId)"
             ></i>
           </div>
-          <div  class="action-item d-flex justify-content-center align-items-center mx-2">
+          <div  class="action-item d-flex justify-content-center align-items-center mx-2"
+          *ngIf="!isDirector"
+          >
             <i
               class="bi bi-pencil-fill"
               (click)="onUpdate(school.schoolId)"
