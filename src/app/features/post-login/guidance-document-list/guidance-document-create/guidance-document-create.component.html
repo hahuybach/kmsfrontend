@@ -1,8 +1,10 @@
+<h2>Tạo văn bản bổ sung</h2>
+
 <form [formGroup]="guidanceForm">
   <div class="row">
     <div class="form-group col-md-7">
       <div class="m-3">
-        <label>Về việc</label>
+        <label>Tiêu đề</label>
       </div>
       <div class="m-3">
         <input
@@ -137,9 +139,12 @@
       Thêm mới
     </button>
   </div>
-  <button class="btn btn-primary" type="submit" (click)="onSubmit()">
-    Tạo mới
-  </button>
+  <div class="m-2">
+    <button class="btn btn-primary" type="submit" (click)="confirm()">
+      Tạo mới
+    </button>
+  </div>
+
 </form>
 <div class="overlay" *ngIf="isLoading">
   <div class="spinner-container">
@@ -148,3 +153,4 @@
 </div>
 
 <p-toast position="top-right" key="error"></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>

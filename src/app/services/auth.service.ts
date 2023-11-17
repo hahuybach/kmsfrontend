@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private baseUrl = DomainName.URL + "api/v1/auth/"
   constructor(private http: HttpClient) {}
+
 
   login(email: string, password: string) {
     const userInfo = { email: email, password: password };
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post<any>(
-      'http://localhost:8080/api/v1/auth/authenticate',
+      this.baseUrl + "authenticate",
       JSON.stringify(userInfo),
       { headers: headers }
     );
@@ -105,4 +108,20 @@ export class AuthService {
 
     return sub ? sub.split('=')[1] : null;
   }
+
+  sendResetPasswordToken(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.http.post<any>(this.baseUrl + 'forgotPassword',JSON.stringify(data), {headers})
+  }
+
+  resetPassword(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.http.post<any>(this.baseUrl + 'checkToken',JSON.stringify(data), {headers})
+
+  }
+
+
+
 }

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <h2>Danh sách các trường</h2>
-<div class="d-flex justify-content-end mb-3">
+<div class="d-flex justify-content-end mb-3" *ngIf="!isDirector">
   <button class="btn btn-primary" (click)="onCreateSchool()">Tạo mới</button>
 </div>
 <div class="card">
@@ -28,7 +28,7 @@
                            type="text"
                            class="fontAwesome w-100"
                            (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
-                           placeholder="&#xF002;"/>
+                           placeholder="&#xF002; Tra cứu nhanh theo tên trường hoặc địa chỉ"/>
                 </span>
         <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
       </div>
@@ -53,11 +53,11 @@
       <tr>
         <th></th>
         <th>
-          <p-columnFilter type="text" field="schoolName"></p-columnFilter>
+          <p-columnFilter type="text" field="schoolName" placeholder="(VD): Trường mầm non Ánh Sao"></p-columnFilter>
 
         </th>
         <th>
-          <p-columnFilter type="text" field="exactAddress"></p-columnFilter>
+          <p-columnFilter type="text" field="exactAddress" placeholder="(VD): Số 2, Nguyễn Khánh Toàn"></p-columnFilter>
         </th>
 
         <th>
@@ -66,7 +66,8 @@
               <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Tất cả"
                           [showClear]="true">
                 <ng-template let-option pTemplate="item">
-                  <span [class]="option.value ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{option.label}}</span>
+                  <span
+                    [class]="option.value ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{option.label}}</span>
                 </ng-template>
               </p-dropdown>
             </ng-template>
@@ -81,18 +82,19 @@
         <td>{{ school.schoolName }}</td>
         <td>{{ school.exactAddress }}</td>
         <td>
-          <span [class]="school.isActive ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ school.isActive ? "Hoạt động" : "Ngưng hoạt động" }}</span>
+          <span
+            [class]="school.isActive ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ school.isActive ? "Hoạt động" : "Ngưng hoạt động" }}</span>
         </td>
-        <td   style="text-align: center"
-              class="d-flex td-action justify-content-center align-items-center">
-          <div   class="action-item d-flex justify-content-center align-items-center mx-2">
+        <td style="text-align: center"
+            class="d-flex td-action justify-content-center align-items-center">
+          <div class="action-item d-flex justify-content-center align-items-center mx-2">
             <i
               class="bi bi-info-circle-fill"
               (click)="onDetail(school.schoolId)"
             ></i>
           </div>
-          <div  class="action-item d-flex justify-content-center align-items-center mx-2"
-          *ngIf="!isDirector"
+          <div class="action-item d-flex justify-content-center align-items-center mx-2"
+               *ngIf="!isDirector"
           >
             <i
               class="bi bi-pencil-fill"
