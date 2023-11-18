@@ -98,15 +98,15 @@ export class UpdateInspectionPlanComponent {
 
   ngOnInit() {
     this.inspectionPlanForm = this.fb.group({
-      inspectionPlanName: [null, Validators.compose([Validators.required])],
+      inspectionPlanName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       description: [null, Validators.compose([Validators.required])],
       chiefId: [0, Validators.compose([Validators.required])],
       inspectors: [[], Validators.compose([Validators.required])],
       startDate: [null, Validators.compose([Validators.required])],
       endDate: [null, Validators.compose([Validators.required])],
       documentInspectionPlanDto: this.fb.group({
-        documentName: [null, Validators.compose([Validators.required])],
-        documentCode: [null, Validators.compose([Validators.required])],
+        documentName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
+        documentCode: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
         documentFile: [null, Validators.compose([Validators.required])]
       })
     })
@@ -165,6 +165,18 @@ export class UpdateInspectionPlanComponent {
     } else {
       this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.setValue(null);
     }
+  }
+
+  get documentNameControls() {
+    return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentName'];
+  }
+
+  get documentCodeControls() {
+    return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentCode'];
+  }
+
+  get documentFileControls() {
+    return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentFile'];
   }
 
   onSubmit() {

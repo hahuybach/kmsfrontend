@@ -31,6 +31,16 @@
             class="w-100"
             formControlName="inspectionPlanName"
           />
+          <div class="mt-1"
+               *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
+            <span
+              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
+              Vui lòng điền tên quyết định kiểm tra
+            </span>
+            <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxLength']" class="p-error">
+              Tên quyết định kiểm tra quá dài
+            </span>
+          </div>
         </div>
         <div class="inspection-plan-description mb-3">
           <label class="fw-medium">Chi tiết</label>
@@ -41,6 +51,12 @@
             class="w-100"
             formControlName="description"
           ></textarea>
+          <div class="mt-1"
+               *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
+              Vui lòng điền chi tiết quyết định kiểm tra
+            </span>
+          </div>
         </div>
         <div class="inspection-plan-school mb-3 row">
           <div class="col-md-6">
@@ -122,6 +138,15 @@
                     placeholder="Điền tên tài liệu"
                     formControlName="documentName"
                   />
+                  <div class="mt-1"
+                       *ngIf="documentUpdated && documentNameControls?.invalid && (documentNameControls?.touched || documentNameControls?.dirty)">
+                <span *ngIf="documentUpdated && documentNameControls?.errors?.['required']" class="p-error">
+                  Vui lòng điền tên tài liệu
+                </span>
+                    <span *ngIf="documentUpdated && documentNameControls?.errors?.['maxLength']" class="p-error">
+                  Tên tài liệu quá dài
+                </span>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <label>Mã tài liệu</label><br/>
@@ -130,6 +155,15 @@
                     placeholder="Điền mã tài liệu"
                     formControlName="documentCode"
                   />
+                  <div class="mt-1"
+                       *ngIf="documentUpdated && documentCodeControls?.invalid && (documentCodeControls?.touched || documentCodeControls?.dirty)">
+                <span *ngIf="documentUpdated && documentCodeControls?.errors?.['required']" class="p-error">
+                  Vui lòng điền mã tài liệu
+                </span>
+                    <span *ngIf="documentUpdated && documentCodeControls?.errors?.['maxLength']" class="p-error">
+                  Mã tài liệu quá dài
+                </span>
+                  </div>
                 </div>
               </div>
               <div class="col-md-12">
@@ -150,6 +184,12 @@
                     (click)="fileInput.click()"
                     class="col-md-3"
                   ></button>
+                </div>
+                <div class="mt-1"
+                     *ngIf="documentFileControls?.invalid && (documentFileControls?.touched || documentFileControls?.dirty)">
+                <span *ngIf="documentFileControls?.errors?.['required']" class="p-error">
+                  Vui lòng tải tài liệu lên
+                </span>
                 </div>
               </div>
             </ng-template>
