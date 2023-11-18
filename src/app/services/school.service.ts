@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SchoolService {
-  baseUrl: string = 'http://localhost:8080/api/v1/school/'
+  baseUrl: string = DomainName.URL + 'api/v1/school/'
 
   constructor(private httpClient: HttpClient) {
   }
