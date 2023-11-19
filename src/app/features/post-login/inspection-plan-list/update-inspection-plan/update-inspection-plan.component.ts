@@ -7,6 +7,7 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {FileService} from "../../../../services/file.service";
 import {trigger, transition, state, animate, style, group} from "@angular/animations";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
+import {ConfirmEventType, ConfirmationService} from "primeng/api";
 
 @Component({
   selector: 'app-update-inspection-plan',
@@ -53,19 +54,24 @@ export class UpdateInspectionPlanComponent {
   popupInspectorVisible: boolean = false;
   inspectionPlanId: number;
   inspectionPlanDetail: any;
-  startDate: string;
-  endDate: string;
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
   pdfPreviewVisibility: boolean = false;
   documentUpdated: boolean = false;
   fileInputPlaceholders: string;
-
   inspectorList: any[];
   nonInspectorList: any[];
   inspectorListId: number[] = [];
   chiefInspector: any;
+  minStartDate: string;
+  maxStartDate: string;
+  minEndDate: string;
+  eligibleChiefList: any[];
+  chiefList: any[];
+  selectedInspectorList: any[] = [];
+  defaultEndDate: Date = new Date();
+  defaultStartDate: Date = new Date();
 
   constructor(
     private readonly fb: FormBuilder,
@@ -75,7 +81,8 @@ export class UpdateInspectionPlanComponent {
     private readonly fileService: FileService,
     private readonly sanitizer: DomSanitizer,
     private readonly inspectionplanInspectorService: InspectionplanInspectorlistService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly confirmationService: ConfirmationService
   ) {
   }
 
@@ -110,6 +117,8 @@ export class UpdateInspectionPlanComponent {
         documentFile: [null, Validators.compose([Validators.required])]
       })
     })
+
+
     this.route.params
       .pipe(
         switchMap((params) => {
@@ -121,27 +130,35 @@ export class UpdateInspectionPlanComponent {
         this.inspectionPlanDetail = data;
         this.inspectorList = data.inspectors;
         this.nonInspectorList = data.nonInspectors;
+        this.chiefList = data.eligibleChief;
         this.inspectionplanInspectorService.setInspectorList(this.inspectorList);
         this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
         this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.inspectorList = list);
         this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.nonInspectorList = list);
-        this.startDate = new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0];
-        this.endDate = new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0];
         this.getInspectorIds(this.inspectionPlanDetail.inspectors);
         this.chiefInspector = this.inspectorList.filter(inspector => inspector.chief);
         console.log(this.chiefInspector)
         this.inspectionPlanForm.patchValue({
           inspectionPlanName: this.inspectionPlanDetail.inspectionPlan.inspectionPlanName,
           description: this.inspectionPlanDetail.inspectionPlan.description,
-          startDate: this.startDate,
-          endDate: this.endDate,
+          startDate: new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0],
+          endDate: new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0],
           chiefId: this.chiefInspector.accountId
         })
       },
       error: (error) => {
         console.log(error);
       }
-    })
+    });
+
+    this.defaultStartDate.setDate(this.defaultStartDate.getDate() + 1);
+    this.defaultEndDate.setDate(this.defaultStartDate.getDate() + 1);
+    this.minStartDate = this.defaultStartDate.toISOString().slice(0, 10);
+    this.minEndDate = this.defaultEndDate.toISOString().slice(0, 10);
+    this.maxStartDate = this.defaultEndDate.toISOString().slice(0, 10);
+    this.inspectionPlanForm.get('startDate')?.setValue(this.defaultStartDate.toISOString().split('T')[0]);
+    this.inspectionPlanForm.get('endDate')?.setValue(this.defaultEndDate.toISOString().split('T')[0]);
+    this.initInspectorList();
   }
 
   openNewTab(documentLink: string) {
@@ -179,7 +196,66 @@ export class UpdateInspectionPlanComponent {
     return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentFile'];
   }
 
+  initInspectorList() {
+    let startDate =   new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString();
+    let endDate =   new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString();
+    this.inspectionPlanService.getEligibleInspector(startDate, endDate).subscribe({
+      next: (data:any) => {
+        console.log(data)
+        this.inspectorList = data.inspectorDtos;
+        this.chiefList = data.chiefDtos;
+        this.inspectionplanInspectorService.setPopupInspectorList(this.inspectorList);
+        this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectorList = list);
+      },
+      error: (error) =>{
+        console.log(error)
+      }
+    });
+  }
+
+
+  onStartDateChange() {
+    if (this.selectedInspectorList.length > 0){
+      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+    }
+    this.minEndDate =  new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString().slice(0, 10);
+    this.initInspectorList();
+  }
+
+  onEndDateChange() {
+    if (this.selectedInspectorList.length > 0){
+      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+    }
+    this.maxStartDate = new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString().slice(0, 10);
+    this.initInspectorList();
+  }
+
+  confirm1(message: string, header: string) {
+    this.confirmationService.confirm({
+      message: message,
+      header: header,
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.resetInspectorList()
+      },
+      reject: (type : ConfirmEventType) => {
+      }
+    });
+  }
+
+  resetInspectorList(){
+    this.eligibleChiefList = [];
+    this.selectedInspectorList = [];
+    this.chiefList = [];
+    this.inspectorList = [];
+  }
+
   onSubmit() {
+    if (this.inspectionPlanForm.invalid){
+      this.inspectionPlanForm.markAllAsTouched();
+      return;
+    }
+
     const formData = new FormData();
     console.log(this.inspectorListId)
     const inspectionPlan = {

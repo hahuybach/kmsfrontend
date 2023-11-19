@@ -24,7 +24,7 @@
             class="w-100"
             formControlName="inspectionPlanName"
           />
-          <div class="mt-1"
+          <div
                *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
             <span
               *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
@@ -45,7 +45,7 @@
             class="w-100"
             formControlName="description"
           ></textarea>
-          <div class="mt-1"
+          <div
                *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
             <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
               Vui lòng điền chi tiết quyết định kiểm tra
@@ -60,6 +60,12 @@
                         [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
                         placeholder="Chọn trường kiểm tra">
             </p-dropdown>
+            <div
+                 *ngIf="inspectionPlanForm.controls?.['schoolId']?.invalid && (inspectionPlanForm.controls?.['schoolId']?.touched ||inspectionPlanForm.controls?.['schoolId']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['schoolId']?.errors?.['required']" class="p-error">
+              Vui lòng chọn trường kiểm tra
+            </span>
+            </div>
           </div>
           <div class="col-md-6">
             <label class="fw-medium">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
@@ -68,6 +74,12 @@
                         [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
                         placeholder="Chọn trưởng đoàn kiểm tra">
             </p-dropdown>
+            <div
+                 *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['chiefId']?.errors?.['required']" class="p-error">
+              Vui lòng chọn trưởng đoàn kiểm tra
+            </span>
+            </div>
           </div>
         </div>
         <div class="row mb-3">
@@ -82,14 +94,22 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 d-flex justify-content-center">
+      <div class="col-md-4 d-flex justify-content-start flex-column align-items-center">
         <app-inspection-plan-inspector-list class="w-100"
                                             [listEditable]="true"
                                             [selectedInspectors]="selectedInspectorList"
                                             (toggleIssueListPopup)="changeInspectorVisible()"
                                             (resetList)="onResetList()"
                                             (inspectorList)="getInspectorIds($event)"
+                                            [chiefList]="chiefList"
+                                            (recreateInspectorList)="resetInspectorList()"
         ></app-inspection-plan-inspector-list>
+        <div class="mt-1"
+             *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.invalid && (inspectionPlanForm.controls?.['inspectorIds']?.touched ||inspectionPlanForm.controls?.['inspectorIds']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.errors?.['required']" class="p-error">
+              Vui lòng chọn danh sách đoàn kiểm tra
+            </span>
+        </div>
       </div>
       <div class="document" formGroupName="documentInspectionPlanDto">
         <h6 class="fw-bold">Tài liệu công văn</h6>
@@ -102,7 +122,7 @@
                 placeholder="Điền tên tài liệu"
                 formControlName="documentName"
               />
-              <div class="mt-1"
+              <div
                    *ngIf="documentNameControls?.invalid && (documentNameControls?.touched || documentNameControls?.dirty)">
                 <span *ngIf="documentNameControls?.errors?.['required']" class="p-error">
                   Vui lòng điền tên tài liệu
@@ -119,7 +139,7 @@
                 placeholder="Điền mã tài liệu"
                 formControlName="documentCode"
               />
-              <div class="mt-1"
+              <div
                    *ngIf="documentCodeControls?.invalid && (documentCodeControls?.touched || documentCodeControls?.dirty)">
                 <span *ngIf="documentCodeControls?.errors?.['required']" class="p-error">
                   Vui lòng điền mã tài liệu
@@ -148,10 +168,10 @@
                   class="col-md-2"
                 ></button>
               </div>
-              <div class="mt-1"
+              <div
                    *ngIf="documentFileControls?.invalid && (documentFileControls?.touched || documentFileControls?.dirty)">
                 <span *ngIf="documentFileControls?.errors?.['required']" class="p-error">
-                  Vui lòng điền mã tài liệu
+                  Vui lòng chọn tài liệu công văn
                 </span>
               </div>
             </div>
@@ -160,7 +180,7 @@
       </div>
       <div class="mt-5 mb-3 row w-100">
         <div class="col-12 save-button d-flex w-100 justify-content-center">
-          <button [disabled]="inspectionPlanForm.invalid" class="btn text-white">Lưu quyết định</button>
+          <button class="btn text-white">Lưu quyết định</button>
         </div>
       </div>
     </form>

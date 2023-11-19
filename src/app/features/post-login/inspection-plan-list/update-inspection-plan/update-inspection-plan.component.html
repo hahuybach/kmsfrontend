@@ -20,6 +20,8 @@
       (popupInspectorVisibleChange)="changeInspectorVisible()"
       [popupInspectorVisible]="popupInspectorVisible"
       [inspectorList]="nonInspectorList"
+      [chiefList]="chiefList"
+      (selectedInspectorsList)="getInspectorIds($event)"
     ></app-inspection-plan-inspector-popup>
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
       <div class="form-content col-md-8">
@@ -31,8 +33,8 @@
             class="w-100"
             formControlName="inspectionPlanName"
           />
-          <div class="mt-1"
-               *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
+          <div
+            *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
             <span
               *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
               Vui lòng điền tên quyết định kiểm tra
@@ -51,8 +53,8 @@
             class="w-100"
             formControlName="description"
           ></textarea>
-          <div class="mt-1"
-               *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
+          <div
+            *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
             <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
               Vui lòng điền chi tiết quyết định kiểm tra
             </span>
@@ -72,16 +74,22 @@
                         [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
                         placeholder="{{chiefInspector[0].user?.fullName}}">
             </p-dropdown>
+            <div
+              *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['chiefId']?.errors?.['required']" class="p-error">
+              Vui lòng chọn trưởng đoàn kiểm tra
+            </span>
+            </div>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
             <label class="fw-medium">Ngày bắt đầu</label>
-            <input class="form-control" type="date" formControlName="startDate"/>
+            <input class="form-control" type="date" formControlName="startDate" [min]="minStartDate" [max]="maxStartDate" (change)="onStartDateChange()"/>
           </div>
           <div class="col-md-3">
             <label class="fw-medium">Ngày kết thúc</label>
-            <input class="form-control" type="date" formControlName="endDate"/>
+            <input class="form-control" type="date" formControlName="endDate"  [min]="minEndDate" (change)="onEndDateChange()"/>
           </div>
         </div>
         <div>
@@ -208,6 +216,8 @@
                                             [selectedInspectors]="inspectorList"
                                             (resetList)="onResetList()"
                                             (inspectorList)="getInspectorIds($event)"
+                                            [chiefList]="chiefList"
+                                            (recreateInspectorList)="resetInspectorList()"
         ></app-inspection-plan-inspector-list>
       </div>
       <div class="mt-5 row w-100 mb-3">

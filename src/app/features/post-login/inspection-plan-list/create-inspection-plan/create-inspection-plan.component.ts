@@ -102,7 +102,6 @@ export class CreateInspectionPlanComponent {
   getInspectorIds(data: any) {
     let inspectorListId = data.map((item: { accountId: any; }) => item.accountId);
     this.eligibleChiefList = data.filter((eligibleInspector: { accountId: number; }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
-    console.log(this.eligibleChiefList)
     this.inspectionPlanForm.get('inspectorIds')?.setValue(inspectorListId);
   }
 
@@ -152,6 +151,7 @@ export class CreateInspectionPlanComponent {
     this.selectedInspectorList = [];
     this.chiefList = [];
     this.inspectorList = [];
+    this.initInspectorList();
   }
 
   handleFileInputChange(fileInput: any): void {
@@ -166,7 +166,10 @@ export class CreateInspectionPlanComponent {
   }
 
   onSubmit() {
-    console.log("submit")
+    if (this.inspectionPlanForm.invalid){
+      this.inspectionPlanForm.markAllAsTouched();
+      return;
+    }
     const formData = new FormData();
     const inspectionPlan = {
       inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
