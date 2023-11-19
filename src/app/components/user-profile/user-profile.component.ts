@@ -16,16 +16,17 @@ export class UserProfileComponent implements OnInit{
  isUpdate = false
  currentUser : UserResponseForUserList
   form = this.fb.group({
-    fullName: ['', NoWhitespaceValidator],
-    dob:[null as unknown as Date, validateDateNotGreaterThanToday],
+    fullName: ['', NoWhitespaceValidator()],
+    dob:[null as unknown as Date, validateDateNotGreaterThanToday.bind(this)],
     gender: ['', Validators.required],
-    phoneNumber: ['', Validators.pattern("^[0-9]{10}$")]
+    phoneNumber: ['', [Validators.pattern("^[0-9]{10}$"), Validators.required]]
   })
   constructor(private fb: FormBuilder,
               private accountService: AccountService) {
   }
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
+  isSubmitted = false
   ngOnInit(): void {
     this.accountService.getCurrentUser().subscribe({
       next: (data) =>{
@@ -45,5 +46,20 @@ export class UserProfileComponent implements OnInit{
 
   onUpdate() {
     this.isUpdate = true;
+  }
+  isBlank(field: string): boolean | undefined {
+    return (
+      this.form.get(field)?.hasError('required') &&
+      ((this.form.get(field)?.dirty ?? false) ||
+        (this.form.get(field)?.touched ?? false) || this.isSubmitted)
+    );
+  }
+
+  isError(field: string, errorCode: string): boolean | undefined {
+    return (
+      this.form.get(field)?.hasError(errorCode) &&
+      ((this.form.get(field)?.dirty ?? false) ||
+        (this.form.get(field)?.touched ?? false))
+    );
   }
 }

@@ -77,6 +77,7 @@
         </div>
         <div>
           <input type="text" formControlName = 'fullName' class="form-control">
+          <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
         </div>
 
         <div>
@@ -84,6 +85,9 @@
         </div>
         <div>
           <input type="text" formControlName = 'phoneNumber' class="form-control">
+          <span class="p-error" *ngIf="isError('phoneNumber', 'pattern')">Sai định dạng số điện thoại</span>
+          <span class="p-error" *ngIf="isBlank('phoneNumber')">Mục này không được trống</span>
+
         </div>
 
         <div>
@@ -100,6 +104,7 @@
         </div>
         <div>
           <input type="date" formControlName = 'dob' class="form-control">
+          <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
         </div>
 
       </div>
