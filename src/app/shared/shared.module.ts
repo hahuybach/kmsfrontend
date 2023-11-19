@@ -17,10 +17,12 @@ import {DropdownModule} from "primeng/dropdown";
 import {FileSizePipePipe} from './pipes/file-size-pipe.pipe';
 import {FormsModule} from "@angular/forms";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {LoadingCompleteDialogComponent} from "../components/loading-complete-dialog/loading-complete-dialog.component";
 
 @NgModule({
   declarations: [
-    FileSizePipePipe
+    FileSizePipePipe,
+    LoadingCompleteDialogComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +42,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
     DropdownModule,
     DropdownModule,
     FormsModule,
-    NgbModule
+    NgbModule,
   ],
   exports: [
     InputTextModule,
@@ -60,7 +62,8 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
     FileSizePipePipe,
     DropdownModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    LoadingCompleteDialogComponent
   ],
 })
 export class SharedModule {

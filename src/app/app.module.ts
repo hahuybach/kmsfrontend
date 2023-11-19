@@ -62,6 +62,8 @@ import {StompService} from "./features/post-login/push-notification/stomp.servic
 import { UserUpdateComponent } from './features/post-login/user-list/user-update/user-update.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ChangePasswordComponent } from './components/user-profile/change-password/change-password.component';
+import { NotificationListAllComponent } from './components/notification-list/notification-list-all/notification-list-all.component';
+import { NotificationListUnseenComponent } from './components/notification-list/notification-list-unseen/notification-list-unseen.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -95,6 +97,8 @@ import { ChangePasswordComponent } from './components/user-profile/change-passwo
     UserUpdateComponent,
     UserProfileComponent,
     ChangePasswordComponent,
+    NotificationListAllComponent,
+    NotificationListUnseenComponent,
   ],
   imports: [
     BrowserModule,
@@ -142,5 +146,7 @@ import { ChangePasswordComponent } from './components/user-profile/change-passwo
     provideAnimations(),
   ],
   bootstrap: [AppComponent],
+  exports: [
+  ]
 })
 export class AppModule {}

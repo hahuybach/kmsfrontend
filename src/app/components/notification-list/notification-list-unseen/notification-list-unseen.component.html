@@ -1,0 +1,10 @@
+<a class="notification-item p-3 mx-1" *ngFor="let unseenNotification of unseenNotificationDtos; let i = index" (click)="handleCLickNotificationItem(i)">
+  <div class="notification-info">
+    <p class="mb-1 fw-bold">{{unseenNotification.notificationType}}</p>
+    <p class="mb-1">{{unseenNotification.message}}</p>
+    <p class="mb-1">{{unseenNotification.createdOn  | date : "dd/MM/yyyy | hh:mm"}}</p>
+  </div>
+  <div class="" *ngIf="!unseenNotification.isSeen">
+    <i class="bi bi-circle-fill"></i>
+  </div>
+</a>

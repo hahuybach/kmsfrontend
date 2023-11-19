@@ -91,11 +91,8 @@
       </tr>
     </ng-template>
   </p-table>
-  <button
-    pButton
-    (click)="addInspector()"
-    [disabled]="!selectedInspectors || !selectedInspectors.length"
-  >
-    Lưu
-  </button>
+  <div class="d-flex flex-row justify-content-between align-items-end">
+    <button pButton (click)="addInspector()" class="px-3">Lưu đoàn kiểm tra</button>
+    <div *ngIf="errorText" class="p-error">{{ errorText }}</div>
+  </div>
 </p-dialog>

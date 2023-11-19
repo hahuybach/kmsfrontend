@@ -1,0 +1,17 @@
+<p-dialog
+  header="Tạo mới {{categoryLowerCase}}"
+  [(visible)]="visible"
+  [style]="{ width: '40%', height: '50%' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closable]="false"
+>
+  <div *ngIf="!completed" class="spinner">
+    <div class="spinner-border text-center" role="status"></div>
+    <p>Đang tạo {{categoryLowerCase}}</p>
+  </div>
+  <div *ngIf="completed" class="d-flex flex-column justify-content-center align-items-center mt-5">
+    <i class="bi bi-check-circle-fill icon"></i>
+    <p class="mt-1 icon-text">Tạo {{categoryLowerCase}} thành công</p>
+  </div>
+</p-dialog>

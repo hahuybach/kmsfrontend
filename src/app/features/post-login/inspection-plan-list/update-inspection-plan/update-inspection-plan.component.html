@@ -1,5 +1,10 @@
 <div class="container-fluid">
   <div class="row update-inspection-plan">
+    <p-confirmDialog
+      [style]="{width: '50vw'}"
+      acceptLabel="Xác nhận"
+      rejectLabel="Hủy bỏ"
+    ></p-confirmDialog>
     <p-dialog
       header="Xem tài liệu"
       [(visible)]="pdfPreviewVisibility"
@@ -20,6 +25,8 @@
       (popupInspectorVisibleChange)="changeInspectorVisible()"
       [popupInspectorVisible]="popupInspectorVisible"
       [inspectorList]="nonInspectorList"
+      [chiefList]="chiefList"
+      (selectedInspectorsList)="getInspectorIds($event)"
     ></app-inspection-plan-inspector-popup>
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
       <div class="form-content col-md-8">
@@ -31,6 +38,16 @@
             class="w-100"
             formControlName="inspectionPlanName"
           />
+          <div
+            *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
+            <span
+              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
+              Vui lòng điền tên quyết định kiểm tra
+            </span>
+            <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxLength']" class="p-error">
+              Tên quyết định kiểm tra quá dài
+            </span>
+          </div>
         </div>
         <div class="inspection-plan-description mb-3">
           <label class="fw-medium">Chi tiết</label>
@@ -41,21 +58,42 @@
             class="w-100"
             formControlName="description"
           ></textarea>
+          <div
+            *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
+              Vui lòng điền chi tiết quyết định kiểm tra
+            </span>
+          </div>
         </div>
-        <div class="inspection-plan-school mb-3 col-md-6 pe-3">
-          <label class="fw-medium">Trường kiểm tra</label>
-          <select title="schoolList" class="form-select" disabled>
-            <option selected value="0">{{inspectionPlanDetail?.inspectionPlan?.school?.schoolName}}</option>
-          </select>
+        <div class="inspection-plan-school mb-3 row">
+          <div class="col-md-6">
+            <label class="fw-medium">Trường kiểm tra</label>
+            <select title="schoolList" class="form-select" disabled>
+              <option selected value="0">{{inspectionPlanDetail?.inspectionPlan?.school?.schoolName}}</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="fw-medium">Trưởng đoàn kiểm tra</label>
+            <p-dropdown class="full-width-dropdown" [options]="eligibleChiefList" formControlName="chiefId"
+                        optionLabel="user.fullName"
+                        [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true">
+            </p-dropdown>
+            <div
+              *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)">
+            <span *ngIf="inspectionPlanForm.controls?.['chiefId']?.errors?.['required']" class="p-error">
+              Vui lòng chọn trưởng đoàn kiểm tra
+            </span>
+            </div>
+          </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
             <label class="fw-medium">Ngày bắt đầu</label>
-            <input class="form-control" type="date" formControlName="startDate"/>
+            <input class="form-control" type="date" formControlName="startDate" [min]="minStartDate" [max]="maxStartDate" (change)="onStartDateChange()"/>
           </div>
           <div class="col-md-3">
             <label class="fw-medium">Ngày kết thúc</label>
-            <input class="form-control" type="date" formControlName="endDate"/>
+            <input class="form-control" type="date" formControlName="endDate"  [min]="minEndDate" (change)="onEndDateChange()"/>
           </div>
         </div>
         <div>
@@ -101,7 +139,8 @@
               Cập nhật tài liệu
             </button>
           </div>
-          <div [@slideInOut]="documentUpdated ? 'in' :'out'" class="document-item px-2 pt-2 mx-4" formGroupName="documentInspectionPlanDto">
+          <div [@slideInOut]="documentUpdated ? 'in' :'out'" class="document-item px-2 pt-2 mx-4"
+               formGroupName="documentInspectionPlanDto">
             <ng-template ngIf="documentUpdated === 'in'">
               <div class="col-md-12 d-flex flex-row">
                 <div class="col-md-8 pe-3">
@@ -111,6 +150,15 @@
                     placeholder="Điền tên tài liệu"
                     formControlName="documentName"
                   />
+                  <div class="mt-1"
+                       *ngIf="documentUpdated && documentNameControls?.invalid && (documentNameControls?.touched || documentNameControls?.dirty)">
+                <span *ngIf="documentUpdated && documentNameControls?.errors?.['required']" class="p-error">
+                  Vui lòng điền tên tài liệu
+                </span>
+                    <span *ngIf="documentUpdated && documentNameControls?.errors?.['maxLength']" class="p-error">
+                  Tên tài liệu quá dài
+                </span>
+                  </div>
                 </div>
                 <div class="col-md-4">
                   <label>Mã tài liệu</label><br/>
@@ -119,6 +167,15 @@
                     placeholder="Điền mã tài liệu"
                     formControlName="documentCode"
                   />
+                  <div class="mt-1"
+                       *ngIf="documentUpdated && documentCodeControls?.invalid && (documentCodeControls?.touched || documentCodeControls?.dirty)">
+                <span *ngIf="documentUpdated && documentCodeControls?.errors?.['required']" class="p-error">
+                  Vui lòng điền mã tài liệu
+                </span>
+                    <span *ngIf="documentUpdated && documentCodeControls?.errors?.['maxLength']" class="p-error">
+                  Mã tài liệu quá dài
+                </span>
+                  </div>
                 </div>
               </div>
               <div class="col-md-12">
@@ -140,6 +197,12 @@
                     class="col-md-3"
                   ></button>
                 </div>
+                <div class="mt-1"
+                     *ngIf="documentFileControls?.invalid && (documentFileControls?.touched || documentFileControls?.dirty)">
+                <span *ngIf="documentFileControls?.errors?.['required']" class="p-error">
+                  Vui lòng tải tài liệu lên
+                </span>
+                </div>
               </div>
             </ng-template>
             <div class="close-document-update d-flex justify-content-center">
@@ -157,6 +220,8 @@
                                             [selectedInspectors]="inspectorList"
                                             (resetList)="onResetList()"
                                             (inspectorList)="getInspectorIds($event)"
+                                            [chiefList]="chiefList"
+                                            (recreateInspectorList)="resetInspectorList()"
         ></app-inspection-plan-inspector-list>
       </div>
       <div class="mt-5 row w-100 mb-3">

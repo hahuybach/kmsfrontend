@@ -13,6 +13,7 @@ import {switchMap} from "rxjs";
 })
 export class SearchbarComponent implements OnInit {
   notificationListDtos: any;
+  unseenNotificationListDtos: any;
   user: string | null;
   isVisible = false;
 
@@ -25,10 +26,11 @@ export class SearchbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getNotification()
+    this.getNotification();
+    this.getUnseenNotification();
     this.user = this.authService.getSubFromCookie();
     this.stompService.subscribe('/notify/' + this.user, (): any => {
-      this.getNotification()
+      this.getNotification();
     })
   }
 
@@ -36,12 +38,29 @@ export class SearchbarComponent implements OnInit {
     this.route.params
       .pipe(
         switchMap((params) => {
-          return this.stompService.getUnseenNotificationByAccountId();
+          return this.stompService.getAllNotification();
         })
       )
       .subscribe({
         next: (data) => {
-          this.notificationListDtos = data.notificationListDtos;
+          this.notificationListDtos = data;
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      });
+  }
+  private getUnseenNotification(): void {
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          return this.stompService.getAllUnseenNotification();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          console.log(data.notificationListDtos)
+          this.unseenNotificationListDtos = data.notificationListDtos;
         },
         error: (error) => {
           console.log(error)

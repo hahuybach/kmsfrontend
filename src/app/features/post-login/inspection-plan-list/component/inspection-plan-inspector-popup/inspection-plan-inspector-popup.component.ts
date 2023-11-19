@@ -8,12 +8,14 @@ import {InspectionplanInspectorlistService} from "../../../../../services/inspec
   templateUrl: './inspection-plan-inspector-popup.component.html',
   styleUrls: ['./inspection-plan-inspector-popup.component.scss']
 })
-export class InspectionPlanInspectorPopupComponent{
+export class InspectionPlanInspectorPopupComponent {
   @Input() popupInspectorVisible: boolean;
   @Input() inspectorList: any[] = [];
+  @Input() chiefList: any[] = [];
   @Output() popupInspectorVisibleChange = new EventEmitter<boolean>();
+  @Output() selectedInspectorsList = new EventEmitter<any[]>();
   selectedInspectors: any[] = [];
-
+  errorText: string = '';
   constructor(
     private readonly inspectionplanInspectorService: InspectionplanInspectorlistService
   ) {
@@ -24,8 +26,23 @@ export class InspectionPlanInspectorPopupComponent{
   }
 
   addInspector() {
+    if (!this.selectedInspectors || !this.selectedInspectors.length) {
+      this.errorText = 'Vui lòng chọn ít nhất một thành viên cho đoàn kiểm tra';
+      return;
+    } else if (!this.isEligibleInspectorExist(this.selectedInspectors)){
+      this.errorText = 'Đoàn kiểm tra phải bao gồm ít nhất một trưởng phòng hoặc phó phòng';
+      return;
+    }
+    this.errorText = '';
     this.inspectionplanInspectorService.saveToInspectorList(this.selectedInspectors);
+    this.selectedInspectorsList.emit(this.selectedInspectors);
     this.popupInspectorVisible = false;
     this.selectedInspectors = [];
+  }
+
+  isEligibleInspectorExist(selectedInspectors: any[]): boolean {
+    let eligibleChiefList = selectedInspectors.filter((eligibleInspector: { accountId: number; }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
+    console.log(eligibleChiefList)
+    return eligibleChiefList.length > 0;
   }
 }
