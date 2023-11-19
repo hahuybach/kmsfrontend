@@ -5,6 +5,8 @@ import {FormBuilder, Validators} from "@angular/forms";
 import {NoWhitespaceValidator} from "../../shared/validators/no-white-space.validator";
 import {validateDateNotGreaterThanToday} from "../../shared/validators/date-not-greater-than-today";
 import {UserResponseForUserList} from "../../models/user-response-for-user-list";
+import {ToastService} from "../../shared/toast/toast.service";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
   selector: 'app-user-profile',
@@ -23,7 +25,10 @@ export class UserProfileComponent implements OnInit{
     phoneNumber: ['', [Validators.pattern("^[0-9]{10}$"), Validators.required]]
   })
   constructor(private fb: FormBuilder,
-              private accountService: AccountService) {
+              private accountService: AccountService,
+              private toastService: ToastService,
+              private confirmationService: ConfirmationService
+              ) {
   }
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
@@ -56,7 +61,7 @@ export class UserProfileComponent implements OnInit{
   }
 
   onUpdate() {
-    this.isUpdate = true;
+    this.isUpdate = !this.isUpdate;
   }
   isBlank(field: string): boolean | undefined {
     return (
@@ -74,4 +79,38 @@ export class UserProfileComponent implements OnInit{
     );
   }
 
+  onSubmit() {
+    if (!this.form.invalid){
+      this.accountService.updateUserDetail(this.form.value).subscribe({
+        next: (data) =>{
+          this.isUpdate = false;
+          this.toastService.showSuccess("error","Thông báo", "Cập nhật người dùng thành công")
+          this.ngOnInit();
+        }
+      })
+    }
+  }
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận việc thay đổi này không?',
+      header: 'Xác nhân',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel: 'Không',
+      accept: () => {
+        this.onSubmit()
+
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc thay đổi');
+            break;
+          case ConfirmEventType.CANCEL:
+            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc thay đổi');
+            break;
+        }
+      }
+    });
+  }
 }

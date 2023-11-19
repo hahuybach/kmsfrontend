@@ -89,4 +89,10 @@ export class AccountService {
     return this.httpClient.put<any>(this.baseUrl + 'update', JSON.stringify(data), {headers});
   }
 
+  updateUserDetail(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.httpClient.put<any>(this.baseUrl + 'updateUserDetail', JSON.stringify(data), {headers});
+  }
+
 }
