@@ -14,6 +14,7 @@ import {switchMap} from "rxjs";
 export class SearchbarComponent implements OnInit {
   notificationListDtos: any;
   user: string | null;
+  isVisible = false;
 
   constructor(
     private http: HttpClient,
@@ -48,4 +49,7 @@ export class SearchbarComponent implements OnInit {
       });
   }
 
+  onClickUserProfile() {
+    this.isVisible = !this.isVisible;
+  }
 }

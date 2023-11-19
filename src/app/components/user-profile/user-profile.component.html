@@ -1,0 +1,65 @@
+<p-dialog header="Thông tin cá nhân" [(visible)]="visible" [style]="{width: '60vw', height: '100vw'}">
+  <div class="row">
+    <div class="col-md-7">
+      <div>
+        <div>
+          <label>Email</label>
+        </div>
+        <div>
+          <p>{{this.currentUser.email}}</p>
+        </div>
+
+        <div>
+          <label>Tên</label>
+        </div>
+        <div>
+          <p>{{this.currentUser.fullName}}</p>
+        </div>
+
+        <div>
+          <label>Số điện thoại</label>
+        </div>
+        <div>
+          <p>{{this.currentUser.phoneNumber}}</p>
+        </div>
+
+        <div>
+          <label>Giới tính</label>
+        </div>
+        <div>
+          <p>{{this.currentUser.gender == "MALE" ?  "Nam" : "Nữ"}}</p>
+        </div>
+
+        <div>
+          <label>Năm sinh</label>
+        </div>
+        <div>
+          <p>{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div>
+        <div>
+          <label>Đơn vị</label>
+        </div>
+        <div>
+          <p>{{this.currentUser.school?.schoolName}}</p>
+        </div>
+      </div>
+      <div>
+        <div>
+          <label>Chức vụ</label>
+        </div>
+        <div>
+          <p> <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
+            {{ role.role?.roleName }}{{ last ? '' : ';' }}
+          </ng-container></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</p-dialog>
