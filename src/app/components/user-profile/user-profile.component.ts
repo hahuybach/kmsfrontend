@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {AccountService} from "../../services/account.service";
 import {FormBuilder, Validators} from "@angular/forms";
@@ -13,6 +13,7 @@ import {UserResponseForUserList} from "../../models/user-response-for-user-list"
 })
 export class UserProfileComponent implements OnInit{
  @Input()  visible = false;
+ @Output() visibleChange = new EventEmitter<boolean>();
  isUpdate = false
  currentUser : UserResponseForUserList
   form = this.fb.group({
@@ -43,6 +44,16 @@ export class UserProfileComponent implements OnInit{
     console.log(this.form.value);
   }
 
+  resetVisible(){
+   this.visibleChange.emit(this.visible);
+   this.isUpdate = false;
+    this.form.patchValue({
+      fullName: this.currentUser.fullName,
+      dob: this.currentUser?.dob,
+      gender: this.currentUser.gender,
+      phoneNumber: this.currentUser.phoneNumber,
+    })
+  }
 
   onUpdate() {
     this.isUpdate = true;
@@ -62,4 +73,5 @@ export class UserProfileComponent implements OnInit{
         (this.form.get(field)?.touched ?? false))
     );
   }
+
 }

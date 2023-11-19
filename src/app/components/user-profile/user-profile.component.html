@@ -1,4 +1,8 @@
-<p-dialog header="Thông tin cá nhân" [(visible)]="visible" [style]="{width: '60vw', height: '100vw'}">
+<p-dialog header="Thông tin cá nhân"
+          [(visible)]="visible"
+          [style]="{width: '60vw', height: '100vw'}"
+          (onHide)="resetVisible()"
+>
   <div class="row" *ngIf="!isUpdate && this.currentUser">
     <div class="col-md-7">
       <div>
