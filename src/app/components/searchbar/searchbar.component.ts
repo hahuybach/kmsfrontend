@@ -40,7 +40,7 @@ export class SearchbarComponent implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          this.notificationListDtos = data.notificationListDtos;
+          this.notificationListDtos = data;
         },
         error: (error) => {
           console.log(error)
