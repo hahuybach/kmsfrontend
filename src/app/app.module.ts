@@ -43,6 +43,8 @@ import { TokenExpirationInterceptor } from './shared/interceptor/token_expiratio
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import {StompService} from "./features/post-login/push-notification/stomp.service";
+import { NotificationListAllComponent } from './components/notification-list/notification-list-all/notification-list-all.component';
+import { NotificationListUnseenComponent } from './components/notification-list/notification-list-unseen/notification-list-unseen.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,6 +64,8 @@ import {StompService} from "./features/post-login/push-notification/stomp.servic
     IssueListRightSideComponent,
     SortByIdPipe,
     NotificationListComponent,
+    NotificationListAllComponent,
+    NotificationListUnseenComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,5 +108,7 @@ import {StompService} from "./features/post-login/push-notification/stomp.servic
     provideAnimations(),
   ],
   bootstrap: [AppComponent],
+  exports: [
+  ]
 })
 export class AppModule {}

@@ -62,7 +62,6 @@ export class UpdateInspectionPlanComponent {
   fileInputPlaceholders: string;
   inspectorList: any[];
   nonInspectorList: any[];
-  inspectorListId: number[] = [];
   chiefInspector: any;
   minStartDate: string;
   maxStartDate: string;
@@ -95,12 +94,15 @@ export class UpdateInspectionPlanComponent {
   }
 
   onResetList() {
-    console.log(this.nonInspectorList)
     this.inspectionplanInspectorService.resetBothLists()
   }
 
   getInspectorIds(data: any) {
-    this.inspectorListId = data.map((item: { accountId: any; }) => item.accountId);
+    let inspectorListId = data.map((item: { accountId: any; }) => item.accountId);
+    this.eligibleChiefList = data.filter((eligibleInspector: {
+      accountId: number;
+    }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
+    this.inspectionPlanForm.get('inspectorIds')?.setValue(inspectorListId);
   }
 
   ngOnInit() {
@@ -108,7 +110,7 @@ export class UpdateInspectionPlanComponent {
       inspectionPlanName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       description: [null, Validators.compose([Validators.required])],
       chiefId: [0, Validators.compose([Validators.required])],
-      inspectors: [[], Validators.compose([Validators.required])],
+      inspectorIds: [[], Validators.compose([Validators.required])],
       startDate: [null, Validators.compose([Validators.required])],
       endDate: [null, Validators.compose([Validators.required])],
       documentInspectionPlanDto: this.fb.group({
@@ -128,9 +130,10 @@ export class UpdateInspectionPlanComponent {
       ).subscribe({
       next: (data) => {
         this.inspectionPlanDetail = data;
-        this.inspectorList = data.inspectors;
         this.nonInspectorList = data.nonInspectors;
         this.chiefList = data.eligibleChief;
+        this.inspectorList = data.inspectors;
+        this.getInspectorIds(this.inspectorList);
         this.inspectionplanInspectorService.setInspectorList(this.inspectorList);
         this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
         this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.inspectorList = list);
@@ -143,21 +146,18 @@ export class UpdateInspectionPlanComponent {
           description: this.inspectionPlanDetail.inspectionPlan.description,
           startDate: new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0],
           endDate: new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0],
-          chiefId: this.chiefInspector.accountId
+          chiefId: this.chiefInspector.accountId,
         })
       },
       error: (error) => {
         console.log(error);
       }
     });
-
     this.defaultStartDate.setDate(this.defaultStartDate.getDate() + 1);
     this.defaultEndDate.setDate(this.defaultStartDate.getDate() + 1);
     this.minStartDate = this.defaultStartDate.toISOString().slice(0, 10);
     this.minEndDate = this.defaultEndDate.toISOString().slice(0, 10);
     this.maxStartDate = this.defaultEndDate.toISOString().slice(0, 10);
-    this.inspectionPlanForm.get('startDate')?.setValue(this.defaultStartDate.toISOString().split('T')[0]);
-    this.inspectionPlanForm.get('endDate')?.setValue(this.defaultEndDate.toISOString().split('T')[0]);
     this.initInspectorList();
   }
 
@@ -197,17 +197,16 @@ export class UpdateInspectionPlanComponent {
   }
 
   initInspectorList() {
-    let startDate =   new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString();
-    let endDate =   new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString();
+    let startDate = new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString();
+    let endDate = new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString();
     this.inspectionPlanService.getEligibleInspector(startDate, endDate).subscribe({
-      next: (data:any) => {
-        console.log(data)
-        this.inspectorList = data.inspectorDtos;
+      next: (data: any) => {
+        this.nonInspectorList = data.inspectorDtos;
         this.chiefList = data.chiefDtos;
-        this.inspectionplanInspectorService.setPopupInspectorList(this.inspectorList);
-        this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectorList = list);
+        this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
+        this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.nonInspectorList = list);
       },
-      error: (error) =>{
+      error: (error) => {
         console.log(error)
       }
     });
@@ -215,19 +214,19 @@ export class UpdateInspectionPlanComponent {
 
 
   onStartDateChange() {
-    if (this.selectedInspectorList.length > 0){
+    this.minEndDate = new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString().slice(0, 10);
+    if (this.inspectorList.length > 0) {
       this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
     }
-    this.minEndDate =  new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString().slice(0, 10);
     this.initInspectorList();
   }
 
   onEndDateChange() {
-    if (this.selectedInspectorList.length > 0){
+    this.maxStartDate = new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString().slice(0, 10);
+    if (this.inspectorList.length > 0) {
       this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
     }
-    this.maxStartDate = new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString().slice(0, 10);
-    this.initInspectorList();
+    this.initInspectorList()
   }
 
   confirm1(message: string, header: string) {
@@ -238,32 +237,51 @@ export class UpdateInspectionPlanComponent {
       accept: () => {
         this.resetInspectorList()
       },
-      reject: (type : ConfirmEventType) => {
+      reject: (type: ConfirmEventType) => {
       }
     });
   }
 
-  resetInspectorList(){
+  resetInspectorList() {
     this.eligibleChiefList = [];
     this.selectedInspectorList = [];
     this.chiefList = [];
     this.inspectorList = [];
+    this.inspectionplanInspectorService.clearBothList();
+    this.initInspectorList();
+  }
+
+  public findInvalidControls() {
+    const invalid = [];
+    const controls = this.inspectionPlanForm.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    return invalid;
   }
 
   onSubmit() {
-    if (this.inspectionPlanForm.invalid){
+    if (!this.documentUpdated) {
+      this.inspectionPlanForm.get('documentInspectionPlanDto.documentName')?.setErrors(null);
+      this.inspectionPlanForm.get('documentInspectionPlanDto.documentCode')?.setErrors(null);
+      this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.setErrors(null);
+    }
+
+    if (this.inspectionPlanForm.invalid) {
+      console.log(this.findInvalidControls())
       this.inspectionPlanForm.markAllAsTouched();
       return;
     }
 
     const formData = new FormData();
-    console.log(this.inspectorListId)
     const inspectionPlan = {
       inspectionPlanId: this.inspectionPlanDetail.inspectionPlan.inspectionPlanId,
       inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
       description: this.inspectionPlanForm.get('description')?.value,
       chiefId: this.inspectionPlanForm.get('chiefId')?.value,
-      inspectorIds: this.inspectorListId,
+      inspectorIds: this.inspectionPlanForm.get('inspectorIds')?.value,
       startDate: new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString(),
       endDate: new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString(),
       documentInspectionPlanDto: {
@@ -277,7 +295,7 @@ export class UpdateInspectionPlanComponent {
       inspectionPlan.documentInspectionPlanDto.documentCode = this.inspectionPlanForm.get('documentInspectionPlanDto.documentCode')?.value;
       const file = this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.value
       formData.append(`file`, file, file?.name);
-    }else {
+    } else {
       formData.append(`file`, '');
     }
     formData.append("request", new Blob([JSON.stringify(inspectionPlan)], {type: "application/json"}))
@@ -287,7 +305,7 @@ export class UpdateInspectionPlanComponent {
 
     this.inspectionPlanService.updateInspectionPlan(formData).subscribe({
       next: (response) => {
-        this.router.navigateByUrl("inspection_plan/"+response.inspectionPlan.inspectionPlanId);
+        this.router.navigateByUrl("inspection_plan/" + response.inspectionPlan.inspectionPlanId);
       },
       error: (error) => {
         console.log(error)

@@ -8,13 +8,6 @@ import {NotificationService} from "../../services/notification.service";
   styleUrls: ['./notification-list.component.scss']
 })
 export class NotificationListComponent implements OnChanges {
-
-  constructor(
-    private readonly router: Router,
-    private readonly notificationService: NotificationService
-  ) {
-  }
-
   badgeValue: string = "0";
   @Input() notificationItems: {
     notificationListDtos: {
@@ -28,25 +21,32 @@ export class NotificationListComponent implements OnChanges {
     unseen: number
   };
 
-  clearBadge() {
-    this.badgeValue = "0";
+  @Input() unseenNotificationDtos: {
+    createdOn: Date,
+    isSeen: boolean,
+    link: string,
+    message: string,
+    notificationId: number,
+    notificationType: string
+  }[];
+
+  showAllNotification: boolean = true;
+
+  onClickAllNotification(){
+    this.showAllNotification = true;
   }
 
-  handleCLickNotificationItem(index: number) {
-    let notificationId: number = this.notificationItems.notificationListDtos[index].notificationId;
-    this.notificationService.notificationIsSeen(notificationId).subscribe({
-      next: (response) => {
-        console.log(response);
-      }
-    });
-    let link: string = this.notificationItems.notificationListDtos[index].link;
-    this.router.navigateByUrl(link.toString());
+  onClickUnseenNotification(){
+    this.showAllNotification = false;
+  }
+
+  clearBadge() {
+    this.badgeValue = "0";
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.notificationItems?.unseen != 0) {
       this.badgeValue = this.notificationItems?.unseen.toString();
-      console.log(this.notificationItems?.unseen)
     } else {
       this.badgeValue = "0";
     }
