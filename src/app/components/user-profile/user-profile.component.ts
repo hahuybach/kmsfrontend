@@ -13,29 +13,37 @@ import {UserResponseForUserList} from "../../models/user-response-for-user-list"
 })
 export class UserProfileComponent implements OnInit{
  @Input()  visible = false;
+ isUpdate = false
  currentUser : UserResponseForUserList
   form = this.fb.group({
     fullName: ['', NoWhitespaceValidator],
-    dob:['', validateDateNotGreaterThanToday],
+    dob:[null as unknown as Date, validateDateNotGreaterThanToday],
     gender: ['', Validators.required],
     phoneNumber: ['', Validators.pattern("^[0-9]{10}$")]
   })
   constructor(private fb: FormBuilder,
               private accountService: AccountService) {
   }
+  genders: any[] = [{label: 'Nam', value: 'MALE'},
+    {label: 'Nữ', value: 'FEMALE'}]
   ngOnInit(): void {
     this.accountService.getCurrentUser().subscribe({
       next: (data) =>{
         this.currentUser = data.userDto;
         this.form.patchValue({
           fullName: this.currentUser.fullName,
-          dob: this.currentUser?.dob?.toDateString(),
+          dob: this.currentUser?.dob,
           gender: this.currentUser.gender,
           phoneNumber: this.currentUser.phoneNumber,
         })
       }
+
     })
+    console.log(this.form.value);
   }
 
 
+  onUpdate() {
+    this.isUpdate = true;
+  }
 }
