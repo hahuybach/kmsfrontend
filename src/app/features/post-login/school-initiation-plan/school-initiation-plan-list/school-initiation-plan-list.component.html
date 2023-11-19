@@ -40,6 +40,7 @@
                 [showClear]="true"
                 placeholder="Chọn 1 trường"
                 (onChange)="loadDocuments()"
+                *ngIf="!isPrincipal"
     >
       <ng-template pTemplate="selectedItem">
         <div class="flex align-items-center gap-2" *ngIf="selectedSchool">

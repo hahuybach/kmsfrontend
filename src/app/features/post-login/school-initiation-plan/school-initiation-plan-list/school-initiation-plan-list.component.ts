@@ -7,6 +7,8 @@ import {IssueService} from "../../../../services/issue.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
 import {InitiationPlanResponse} from "../../../../models/initiation-plan-response";
 import {Router} from "@angular/router";
+import {AuthService} from "../../../../services/auth.service";
+import {Role} from "../../../../shared/enum/role";
 
 @Component({
     selector: 'app-school-initiation-plan-list',
@@ -43,23 +45,35 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     totalElements: number;
     maxPage: any;
     recordPerPageOption: number[] = [5, 15, 25];
+    isPrincipal: boolean
 
     constructor(private initiationplanService: InitiationplanService,
                 private schoolService: SchoolService,
                 private issueService: IssueService,
                 private toastService: ToastService,
-                private router: Router) {
+                private router: Router,
+                private auth: AuthService) {
     }
 
     ngOnInit(): void {
+      for (const role of this.auth.getRoleFromJwt()) {
+        if (role.authority === Role.PRINCIPAL){
+          this.isPrincipal = true;
+          this.selectedSchool = this.auth.getSchoolFromJwt();
+        }
+      }
+      if (!this.isPrincipal){
         this.schoolService.findAllSchools().subscribe({
-            next: (data) => {
-                this.schools = data
-            },
-            error: (error) => {
-                this.toastService.showError("error", "Lỗi", error.error.message)
-            }
+          next: (data) => {
+            this.schools = data
+          },
+          error: (error) => {
+            this.toastService.showError("error", "Lỗi", error.error.message)
+          }
         })
+      }
+
+
         this.issueService.getIssueDropDownResponse()
             .subscribe({
                 next: (result) => {

@@ -55,7 +55,7 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector || isPrincipal">
           <a class="" [routerLink]="['/schoolinitiationplan']" >
             <div>
               <i class="bi bi-clock"></i>
@@ -63,14 +63,7 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isPrincipal">
-          <a class="" [routerLink]="['/initiationplan']" >
-            <div>
-              <i class="bi bi-clock"></i>
-              &nbsp; Kế hoạch thực hiện
-            </div>
-          </a>
-        </li>
+
         <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
           <a class="" [routerLink]="['/report']">
             <div>
