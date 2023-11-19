@@ -4,6 +4,7 @@ import {NoWhitespaceValidator} from "../../../shared/validators/no-white-space.v
 import {passwordStrong} from "../../../shared/validators/password-strong";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {ToastService} from "../../../shared/toast/toast.service";
+import {AccountService} from "../../../services/account.service";
 
 @Component({
   selector: 'app-change-password',
@@ -17,21 +18,23 @@ export class ChangePasswordComponent {
   form = this.fb.group({
     password: ['', [NoWhitespaceValidator(), Validators.required]],
     changePassword : ['', [Validators.required, passwordStrong.bind(this)]],
-    confirmPassword: ['', Validators.required]
+    confirmPassword: ['',Validators.required]
   }, { validators: this.passwordMatchValidator })
   constructor(private fb: FormBuilder,
               private confirmationService: ConfirmationService,
-              private toast: ToastService
+              private toast: ToastService,
+              private accountService: AccountService
               ) {
   }
   resetVisible(){
     this.visibleChange.emit(this.visible);
-
+    console.log("I hide");
+    this.form.reset()
+    this.form.markAsPristine();
   }
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const changePassword = control.get('changePassword')?.value;
     const confirmPassword = control.get('confirmPassword')?.value;
-
     if (changePassword !== confirmPassword) {
       return { 'passwordMismatch': true };
     }
@@ -58,6 +61,21 @@ export class ChangePasswordComponent {
 
   onSubmit() {
     this.isSubmitted = true;
+    if (!this.form.invalid){
+      this.accountService.changePassword(this.form.value).subscribe({
+        next: (data) =>{
+          this.toast.showSuccess("error", "Thông báo", "Đổi mật khẩu thành công")
+          this.visible = false;
+          this.form.reset()
+          this.form.markAsPristine();
+          this.isSubmitted = false;
+        },
+        error: (error) =>{
+          this.toast.showError("error", "Lỗi", error.error.message)
+
+        }
+      })
+    }
   }
   confirm() {
     this.confirmationService.confirm({
