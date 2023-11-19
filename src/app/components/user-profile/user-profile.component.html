@@ -1,7 +1,8 @@
 <p-dialog header="Thông tin cá nhân"
           [(visible)]="visible"
-          [style]="{width: '60vw', height: '100vw'}"
+          [style]="{width: '60vw', height: '80vw'}"
           (onHide)="resetVisible()"
+          [modal]="true"
 >
   <div class="row" *ngIf="!isUpdate && this.currentUser">
     <div class="col-md-7">
@@ -142,7 +143,10 @@
         (click)="onUpdate()"
         *ngIf="!isUpdate"
 >Cập nhật</button>
-<button class="btn btn-primary"     *ngIf="!isUpdate">Thay mật khẩu</button>
+<button class="btn btn-primary"
+        *ngIf="!isUpdate"
+        (click)="onClickChangePassword()"
+>Thay mật khẩu</button>
   <button class="btn btn-primary"
           (click)="onUpdate()"
           *ngIf="isUpdate">Quay lại</button>
@@ -150,3 +154,5 @@
 </p-dialog>
 <p-toast position="top-right" key="error"></p-toast>
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<app-change-password [visible] = "isVisible"
+                     (visibleChange)="onClickChangePassword()"></app-change-password>

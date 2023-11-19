@@ -61,6 +61,7 @@ import { NotificationListComponent } from './components/notification-list/notifi
 import {StompService} from "./features/post-login/push-notification/stomp.service";
 import { UserUpdateComponent } from './features/post-login/user-list/user-update/user-update.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { ChangePasswordComponent } from './components/user-profile/change-password/change-password.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,6 +94,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     NotificationListComponent,
     UserUpdateComponent,
     UserProfileComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

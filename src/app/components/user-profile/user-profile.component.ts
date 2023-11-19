@@ -33,6 +33,7 @@ export class UserProfileComponent implements OnInit{
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
   isSubmitted = false
+  isVisible: any;
   ngOnInit(): void {
     this.accountService.getCurrentUser().subscribe({
       next: (data) =>{
@@ -112,5 +113,9 @@ export class UserProfileComponent implements OnInit{
         }
       }
     });
+  }
+
+  onClickChangePassword() {
+    this.isVisible = !this.isVisible;
   }
 }
