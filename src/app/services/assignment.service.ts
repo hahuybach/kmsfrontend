@@ -25,7 +25,7 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}load_add_school_assignment`;
     console.log(url);
     let headers = new HttpHeaders();
-    headers = headers.set('Content-Type', 'application/json'); 
+    headers = headers.set('Content-Type', 'application/json');
 
     return this.http.post<any>(url, object, { headers: headers });
   }
@@ -90,7 +90,7 @@ export class AssignmentService {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'undefined');
 
-    const url = `${this.assignmentApiUrl}update_school_assignment`;
+    const url = `${this.assignmentApiUrl}upload_document`;
     return this.http.put(url, formData, { headers });
   }
   public updateSchoolAssignment(data: object): Observable<any> {
@@ -117,16 +117,23 @@ export class AssignmentService {
   }
   public evaluateTask(data: object): Observable<any> {
     const headers = new HttpHeaders();
-    // headers.append('Content-Type', 'json');
+    headers.append('Content-Type', 'json');
 
     const url = `${this.assignmentApiUrl}evaluate_task`;
     return this.http.put(url, data, { headers });
   }
   public assignAssignment(data: object): Observable<any> {
     const headers = new HttpHeaders();
-    // headers.append('Content-Type', 'json');
+    headers.append('Content-Type', 'json');
 
     const url = `${this.assignmentApiUrl}assign_assignment`;
+    return this.http.put(url, data, { headers });
+  }
+  public confirmAssignment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
+
+    const url = `${this.assignmentApiUrl}confirm_assignment`;
     return this.http.put(url, data, { headers });
   }
 }

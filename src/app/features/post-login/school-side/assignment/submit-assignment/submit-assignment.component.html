@@ -443,10 +443,12 @@
           </p-tag>
         </td>
         <td>
-          {{ assignment.assigner.user.fullName }}
+          <span>{{ assignment.assigner.user.fullName }}</span>
         </td>
         <td>
-          {{ assignment.deadline | date : "dd/MM/yyyy" }}
+          <span>
+            {{ assignment.deadline | date : "dd/MM/yyyy" }}
+          </span>
         </td>
         <td>
           <button pButton (click)="assVisibleToggle(assignment)">
