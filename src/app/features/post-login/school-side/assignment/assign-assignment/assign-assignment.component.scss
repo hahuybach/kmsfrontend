@@ -113,9 +113,6 @@ ul {
     padding: 0;
 }
 :host ::ng-deep {
-    // .p-component {
-    //     font-size: 16px;
-    // }
     .p-dropdown {
         width: 100%;
     }
@@ -254,8 +251,14 @@ ul {
 .approvement {
     font-size: 14px;
 }
-.width-400 {
-    width: 400px;
+.width-40 {
+    width: 40%;
+}
+.width-10 {
+    width: 10%;
+}
+.width-30 {
+    width: 30%;
 }
 .width-200 {
     width: 200px;

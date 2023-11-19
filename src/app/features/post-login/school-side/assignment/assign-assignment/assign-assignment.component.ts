@@ -11,6 +11,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 @Component({
+  providers: [ConfirmationService],
   selector: 'app-assign-assignment',
   // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './assign-assignment.component.html',
@@ -28,7 +29,7 @@ export class AssignAssignmentComponent implements OnInit {
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
-    isTask: ['', Validators.required],
+    isTask: [false, Validators.required],
   });
   typeAssignmentOptions: any[] = [];
   listOfPossibleAssignees: any[] = [];
@@ -122,6 +123,7 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentForm
           .get('parentId')
           ?.setValue(this.selectedAssignment.assignmentId);
+        // this.assignmentForm.get('isTask')?.setValue(false);
         break;
       }
       case 'update':
@@ -571,6 +573,7 @@ export class AssignAssignmentComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.selectedAssignment = data;
+              this.initData();
               this.messageService.add({
                 severity: 'success',
                 summary: 'Phê duyệt',

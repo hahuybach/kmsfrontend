@@ -542,7 +542,6 @@
       <p-dropdown
         [options]="typeAssignmentOptions"
         formControlName="isTask"
-        optionValue="value"
       ></p-dropdown>
     </div>
     <div class="mb-2">
@@ -625,7 +624,6 @@
   [value]="assignments"
   [scrollable]="true"
   [style]="{ 'min-width': '50rem' }"
-  [scrollable]="true"
   scrollHeight="600px"
   class="tree-table"
 >
@@ -638,17 +636,17 @@
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
-      <th>Công việc</th>
-      <th>Người giao</th>
+      <th class="width-30">Công việc</th>
+      <!-- <th class="width-10">Người giao</th> -->
       <th>Người làm</th>
-      <th>Hạn nộp</th>
+      <!-- <th>Hạn nộp</th> -->
       <th>Trạng thái</th>
       <th></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-rowNode>
     <tr [ttRow]="rowNode">
-      <td class="folder">
+      <td class="folder width-30">
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
         <ng-container *ngIf="rowData.node.task">
           <i class="bi bi-file-earmark-check-fill file-icon"></i>
@@ -656,11 +654,13 @@
         <ng-container *ngIf="!rowData.node.task">
           <i class="bi bi-folder-fill folder-icon"></i>
         </ng-container>
-        {{ rowData.node.assignmentName }}
+        <span>
+          {{ rowData.node.assignmentName }}
+        </span>
       </td>
-      <td>{{ rowData.node.assigner?.user.fullName }}</td>
+      <!-- <td class="width-10">{{ rowData.node.assigner?.user.fullName }}</td> -->
       <td>{{ rowData.node.assignee?.user.fullName }}</td>
-      <td>{{ rowData.node?.deadline | date : "dd/MM/yyyy" }}</td>
+      <!-- <td>{{ rowData.node?.deadline | date : "dd/MM/yyyy" }}</td> -->
       <td>
         <p-tag
           [rounded]="true"
@@ -669,7 +669,7 @@
           {{ rowData.node?.status.statusName }}
         </p-tag>
       </td>
-      <td class="d-flex width-200">
+      <td class="d-flex">
         <div
           class="action-item d-flex justify-content-center align-items-center mx-2"
           (click)="openDetailRowNode(rowData.node, 'info')"
