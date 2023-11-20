@@ -2,6 +2,9 @@ import {AbstractControl} from "@angular/forms";
 
 export function passwordStrong(control: AbstractControl): { [key: string]: boolean } | null {
   const password = control.value;
+  if (!password){
+    return null
+  }
 
   // Password should be at least 8 characters long
   if (password.length < 8) {
