@@ -11,7 +11,7 @@
            class="form-control small-input fontAwesome mb-3"
            [(ngModel)]="planName"
            (keyup)="loadDocuments()"
-           placeholder="&#xF002; Tra cứu nhanh theo tên kế hoạch"
+           placeholder="&#xF002; Tra cứu nhanh theo tên kế hoạch thanh tra"
     >
   </div>
   <div *ngIf="advanceSearch" class="col-md-10">
@@ -20,7 +20,7 @@
                 optionLabel="issueName" [filter]="true"
                 filterBy="issueName"
                 [showClear]="true"
-                placeholder="Chọn 1 kế hoạch kiểm tra"
+                placeholder="Chọn 1 kế hoạch thanh tra"
                 (onChange)="loadDocuments()"
     >
       <ng-template pTemplate="selectedItem">
@@ -71,11 +71,11 @@
                name="planName"
                id="planName"
                (keyup)="loadDocuments()"
-               placeholder="(VD): Kế hoạch của Trường Mầm Non Ánh Sao"
+               placeholder="(VD): Quyết định kiểm tra Trường Mầm Non Ánh Sao"
         >
       </div>
       <div class="col-md-3">
-        <label>Ngày khởi tạo bắt đầu</label>
+        <label>Ngày bắt đầu</label>
         <input class="form-control"
                [(ngModel)]="creationStartDateTime"
                name="startDateTime"
@@ -86,7 +86,7 @@
         >
       </div>
       <div class="col-md-3">
-        <label>Ngày khởi tạo kết thúc</label>
+        <label>Ngày kết thúc</label>
         <input class="form-control"
                [(ngModel)]="creationEndDateTime"
                name="endDateTime"
@@ -128,4 +128,148 @@
   <div class="col-md-2">
     <button (click)="onAdvanceSearch()" class="btn btn-primary">{{advanceSearchButtonText}}</button>
   </div>
+</div>
+<div class="container">
+  <table class="table table-hover table-responsive table-fit">
+    <thead>
+    <tr>
+      <th (click)="onSort('inspectionPlanName')">
+        <div class="header-container">
+          <span class="icon-text">Tên kế hoạch</span>
+          <i class="bi bi-sort-up" *ngIf="sortBy === 'inspectionPlanName' && sortDirection === 'asc'"></i>
+          <i class="bi bi-sort-down" *ngIf="sortBy === 'inspectionPlanName' && sortDirection === 'desc'"></i>
+        </div>
+      </th>
+      <th (click)="onSort('issue.createdDate')">
+        <div class="header-container">
+          <span class="icon-text">Thuộc kế hoạch kiểm tra</span>
+          <i class="bi bi-sort-up" *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'asc'"></i>
+          <i class="bi bi-sort-down" *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'desc'"></i>
+        </div>
+      </th>
+
+      <th (click)="onSort('school.schoolName')">
+        <div class="header-container">
+          <span class="icon-text">Trường</span>
+          <i class="bi bi-sort-up" *ngIf="sortBy === 'school.schoolName' && sortDirection === 'asc'"></i>
+          <i class="bi bi-sort-down" *ngIf="sortBy === 'school.schoolName' && sortDirection === 'desc'"></i>
+        </div>
+
+
+      </th>
+      <th (click)="onSort('startDate')">
+        <div class="header-container">
+          <span class="icon-text">Ngày bắt đầu</span>
+          <i class="bi bi-sort-up" *ngIf="sortBy === 'startDate' && sortDirection === 'asc'"></i>
+          <i class="bi bi-sort-down" *ngIf="sortBy === 'startDate' && sortDirection === 'desc'"></i>
+        </div>
+      </th>
+      <th (click)="onSort('endDate')">
+        <div class="header-container">
+          <span class="icon-text">Ngày kết thúc</span>
+          <i class="bi bi-sort-up" *ngIf="sortBy === 'endDate' && sortDirection === 'asc'"></i>
+          <i class="bi bi-sort-down" *ngIf="sortBy === 'endDate' && sortDirection === 'desc'"></i>
+        </div>
+      </th>
+      <th (click)="onSort('status')">
+        <div class="header-container">
+          <span class="icon-text">Trạng thái</span>
+          <i class="bi bi-sort-up" *ngIf="sortBy === 'status' && sortDirection === 'asc'"></i>
+          <i class="bi bi-sort-down" *ngIf="sortBy === 'status' && sortDirection === 'desc'"></i>
+        </div>
+      </th>
+
+      <th></th>
+    </tr>
+    <span *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</span>
+
+    </thead>
+    <tbody *ngIf="inspectionPlans && inspectionPlans.length > 0">
+    <tr
+      *ngFor="
+          let plan of inspectionPlans
+            | paginate
+              : {
+                  itemsPerPage: pageSize,
+                  currentPage: pageNo,
+                  totalItems: totalElements
+                };
+          let i = index
+        "
+    >
+      <td>{{ plan.inspectionPlanName }}</td>
+      <td>{{ plan.issueName }}</td>
+      <td>{{ plan.schoolName }}</td>
+      <td>{{ plan.startDate  | date : "dd/MM/yyyy" }}</td>
+      <td>{{ plan.endDate | date : "dd/MM/yyyy" }}</td>
+      <td>{{ plan.statusName}}</td>
+      <td>
+
+        <i
+          class="bi bi-info-circle-fill"
+          (click)="onDetail(plan.inspectionPlanId)"
+        ></i>
+
+
+      </td>
+    </tr>
+    </tbody>
+
+  </table>
+  <div class="d-flex justify-content-end mt-3">
+    <div class="d-flex justify-content-center" *ngIf="inspectionPlans && inspectionPlans.length > 0">
+
+      <label for="pageNo"
+             style=" margin-right: 10px"
+      >Trang: </label>
+      <input class="form-control super-small-input mr-3" min="1" type="number" id="pageNo" name="pageNo"
+             max="{{maxPage}} "
+             style=" margin-right: 20px"
+             (keyup)="[maxPageOnKeyUp(), loadDocuments()]"
+             (mouseup)="[maxPageOnKeyUp(), loadDocuments()]"
+             [(ngModel)]="pageNo"
+      >
+
+
+      <label for="pageNo"
+             style=" margin-right: 10px"
+      >Số bản ghi trên 1 trang: </label>
+
+      <select (change)="loadDocuments()" class="form-control super-small-input ng-untouched ng-pristine ng-valid" [(ngModel)]="pageSize">
+        <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>
+      </select>
+
+      <!--      <input class="form-control super-small-input"-->
+      <!--             min="1"-->
+      <!--             type="number"-->
+      <!--             id="pageSize"-->
+      <!--             name="pageSize"-->
+      <!--             style=" margin-right: 20px"-->
+      <!--             max="{{maxPage}} "-->
+      <!--             (keyup)="loadGuidanceDocuments()"-->
+      <!--             (mouseup)=" loadGuidanceDocuments()"-->
+
+      <!--             [(ngModel)]="pageSize"-->
+      <!--      >-->
+
+
+    </div>
+
+    <div class="" *ngIf="inspectionPlans && inspectionPlans.length > 0">
+      <pagination-controls
+        previousLabel="Trước"
+        nextLabel="Sau"
+        (pageChange)="   [  onTableDataChange($event), maxPageOnKeyUp()]"
+      >
+      </pagination-controls>
+
+
+    </div>
+  </div>
+
+
+
+  <p-toast key="paging" position="bottom-right"></p-toast>
+  <p-toast key="issueId" position="top-right"></p-toast>
+
 </div>

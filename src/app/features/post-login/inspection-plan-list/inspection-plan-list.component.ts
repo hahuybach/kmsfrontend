@@ -6,6 +6,7 @@ import {SchoolResponse} from "../../../models/school-response";
 import {SchoolService} from "../../../services/school.service";
 import {IssueService} from "../../../services/issue.service";
 import {ToastService} from "../../../shared/toast/toast.service";
+import {InspectionPlanResponse} from "../../../models/inspection-plan-response";
 
 @Component({
   selector: 'app-inspection-plan-list',
@@ -13,6 +14,7 @@ import {ToastService} from "../../../shared/toast/toast.service";
   styleUrls: ['./inspection-plan-list.component.scss'],
 })
 export class InspectionPlanListComponent implements OnInit{
+  inspectionPlans: InspectionPlanResponse[]
   advanceSearch = false;
   planName: any;
   issueDropDowns: IssueDropDownResponse[];
@@ -45,7 +47,7 @@ export class InspectionPlanListComponent implements OnInit{
   selectedStatus: any;
   pageNo: number = 1;
   pageSize: number = 5;
-  sortBy: string = 'createdDate';
+  sortBy: string = 'startDate';
   sortDirection: string = 'desc';
   totalElements: number;
   maxPage: any;
@@ -76,7 +78,26 @@ export class InspectionPlanListComponent implements OnInit{
 
 
   loadDocuments() {
-
+    if ((this.creationStartDateTime != null && this.creationEndDateTime != null) && (new Date(this.creationStartDateTime) > new Date(this.creationEndDateTime))) {
+      this.creationDateError = true;
+      return
+    }
+    if ((this.deadlineStartDateTime != null && this.deadlineEndDateTime != null) && (new Date(this.deadlineStartDateTime) > new Date(this.deadlineEndDateTime))) {
+      this.deadlineDateError = true;
+      return
+    }
+    this.inspectionPlanService.filterInspectionPlan(this.pageNo, this.pageSize, this.sortBy,
+      this.sortDirection, this.planName, this.selectedStatus, this.currentIssueSelected, this.selectedSchool,
+      this.creationStartDateTime, this.creationEndDateTime, this.deadlineStartDateTime, this.deadlineEndDateTime).subscribe({
+      next: (data) =>{
+        this.inspectionPlans = data.inspectionPlanFilterDtos.content;
+        this.maxPage = data.inspectionPlanFilterDtos.totalPages;
+        this.totalElements = data.inspectionPlanFilterDtos.totalElements;
+        this.changePageSize();
+      }
+    })
+    this.creationDateError = false
+    this.deadlineDateError = false
   }
 
   onAdvanceSearch() {
@@ -119,4 +140,27 @@ export class InspectionPlanListComponent implements OnInit{
     this.loadDocuments();
   }
 
+  onDetail(initiationPlanId: any) {
+
+  }
+
+
+  maxPageOnKeyUp() {
+    if (this.pageNo > this.maxPage) {
+      this.pageNo = this.maxPage;
+      this.toastService.showWarn('paging', "Thông báo", 'Số trang bạn vừa tìm không thể vượt quá ' + this.maxPage)
+    }
+  }
+
+  changePageSize() {
+    if (this.inspectionPlans.length == 0 && this.pageNo > 1 && this.totalElements > 0) {
+      this.pageNo = this.maxPage;
+      this.loadDocuments();
+    }
+  }
+
+  onTableDataChange($event: number) {
+    this.pageNo = $event;
+    this.loadDocuments()
+  }
 }

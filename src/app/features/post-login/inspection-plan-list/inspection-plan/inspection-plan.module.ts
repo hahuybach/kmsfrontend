@@ -13,6 +13,7 @@ import {
 } from "../component/inspection-plan-inspector-popup/inspection-plan-inspector-popup.component";
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {RouterLink} from "@angular/router";
+import {NgxPaginationModule} from "ngx-pagination";
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {RouterLink} from "@angular/router";
         CommonModule,
         SharedModule,
         RouterLink,
+        NgxPaginationModule,
     ],
   exports:[
   ],
