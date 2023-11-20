@@ -18,6 +18,7 @@ import {FileSizePipePipe} from './pipes/file-size-pipe.pipe';
 import {FormsModule} from "@angular/forms";
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {LoadingCompleteDialogComponent} from "../components/loading-complete-dialog/loading-complete-dialog.component";
+import {TabMenuModule} from "primeng/tabmenu";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {LoadingCompleteDialogComponent} from "../components/loading-complete-dia
     DropdownModule,
     FormsModule,
     NgbModule,
+    TabMenuModule
   ],
   exports: [
     InputTextModule,
@@ -63,7 +65,8 @@ import {LoadingCompleteDialogComponent} from "../components/loading-complete-dia
     DropdownModule,
     FormsModule,
     NgbModule,
-    LoadingCompleteDialogComponent
+    LoadingCompleteDialogComponent,
+    TabMenuModule
   ],
 })
 export class SharedModule {

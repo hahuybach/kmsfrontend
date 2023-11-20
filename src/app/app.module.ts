@@ -64,6 +64,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ChangePasswordComponent } from './components/user-profile/change-password/change-password.component';
 import { NotificationListAllComponent } from './components/notification-list/notification-list-all/notification-list-all.component';
 import { NotificationListUnseenComponent } from './components/notification-list/notification-list-unseen/notification-list-unseen.component';
+import {InspectionModule} from "./features/post-login/inspection/inspection.module";
 @NgModule({
   declarations: [
     AppComponent,
@@ -121,7 +122,7 @@ import { NotificationListUnseenComponent } from './components/notification-list/
     ToastModule,
     AssignmentModule,
     SchoolAssignmentModule,
-
+    InspectionModule
   ],
   providers: [
     MessageService,

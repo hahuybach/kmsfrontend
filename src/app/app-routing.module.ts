@@ -36,6 +36,16 @@ import {
   UpdateInspectionPlanComponent
 } from "./features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component";
 import {UserUpdateComponent} from "./features/post-login/user-list/user-update/user-update.component";
+import {InspectionComponent} from "./features/post-login/inspection/inspection.component";
+import {
+  InspectionInformationComponent
+} from "./features/post-login/inspection/inspection-information/inspection-information.component";
+import {
+  InspectionSchoolDocumentComponent
+} from "./features/post-login/inspection/inspection-school-document/inspection-school-document.component";
+import {
+  InspectionDocumentComponent
+} from "./features/post-login/inspection/inspection-document/inspection-document.component";
 
 const routes: Routes = [
   {
@@ -158,6 +168,24 @@ const routes: Routes = [
       {
         path: 'user/:id/update',
         component: UserUpdateComponent
+      },
+      {
+        path: 'inspection',
+        component: InspectionComponent,
+        children: [
+          {
+            path: 'information',
+            component: InspectionInformationComponent
+          },
+          {
+            path: 'school-document',
+            component: InspectionSchoolDocumentComponent
+          },
+          {
+            path: 'document',
+            component: InspectionDocumentComponent
+          },
+        ]
       }
     ],
   },
