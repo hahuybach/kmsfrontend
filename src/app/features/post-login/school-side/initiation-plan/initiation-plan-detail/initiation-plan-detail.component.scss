@@ -111,6 +111,9 @@ input {
     width: 100%;
 }
 .input-file-popup {
+    .row {
+        margin: 0;
+    }
     width: 100%;
     .col-md-3 {
         padding: 0;

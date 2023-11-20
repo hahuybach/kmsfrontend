@@ -579,7 +579,6 @@ export class AssignAssignmentComponent implements OnInit {
                 summary: 'Phê duyệt',
                 detail: 'Đánh giá thành công',
               });
-              this.expandAllNode();
             },
             error: (error) => {
               this.messageService.add({
@@ -591,8 +590,5 @@ export class AssignAssignmentComponent implements OnInit {
           });
       },
     });
-  }
-  expandAllNode() {
-    this.assignments.forEach((node) => (node.expanded = false));
   }
 }

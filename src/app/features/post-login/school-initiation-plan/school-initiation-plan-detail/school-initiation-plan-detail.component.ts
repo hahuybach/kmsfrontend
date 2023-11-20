@@ -35,6 +35,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   safePdfUrl: SafeResourceUrl | undefined;
   initiationplanId: number;
   lastDocs: any;
+  isFormNull = true;
   ngOnInit(): void {
     this.minDate = new Date();
     this.route.params
@@ -145,9 +146,23 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       reject: (type: any) => {},
     });
   }
+  checkFormNull(): Boolean {
+    return (
+      this.inputFileForm.get('file')?.value == '' ||
+      this.inputFileForm.controls.documentName.errors?.['whitespace'] ||
+      this.inputFileForm.controls.documentCode.errors?.['whitespace']
+    );
+  }
   reject() {
-    console.log(1234);
-    this.resetDeadlineVisible = true;
+    if (this.checkFormNull()) {
+      this.messageService.add({
+        severity: 'error',
+        detail: 'Vui lòng điền trước đầy đủ các trường dữ liệu',
+        summary: 'Cảnh báo',
+      });
+    } else {
+      this.resetDeadlineVisible = true;
+    }
     console.log(this.resetDeadlineVisible);
   }
   upload() {
