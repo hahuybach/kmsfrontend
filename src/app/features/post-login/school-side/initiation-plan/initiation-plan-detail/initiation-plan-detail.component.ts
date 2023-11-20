@@ -32,6 +32,7 @@ export class InitiationPlanDetailComponent implements OnInit {
   initiationplanId: number;
   lastDocs: any;
   fileInputPlaceholders: string;
+  isDelete = false;
 
   ngOnInit(): void {
     this.route.params
@@ -159,55 +160,75 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.router.navigateByUrl('/issuelist/1');
   }
   deleteFile() {
-    console.log(123);
-    this.fileStatus = false;
-    this.inputFileForm.get('documentName')?.setValue('');
-    this.inputFileForm.get('documentCode')?.setValue('');
-    this.inputFileForm.get('file')?.setValue('');
-    this.fileInputPlaceholders = '';
-    this.buttonApproveStatus = false;
+    this.confirmationService.confirm({
+      header: 'Xác nhận xóa',
+      message: 'Bạn có chắc chắn muốn xóa tài liệu?',
+      key: 'confirm',
+      accept: () => {
+        this.fileStatus = false;
+        this.inputFileForm.reset();
+        this.fileInputPlaceholders = '';
+        this.buttonApproveStatus = false;
+        this.isDelete = true;
+      },
+    });
+    // console.log(123);
+    // this.inputFileForm.get('documentName')?.setValue('');
+    // this.inputFileForm.get('documentCode')?.setValue('');
+    // this.inputFileForm.get('file')?.setValue('');
   }
   confirmUpload() {
     this.confirmationService.confirm({
       message: 'Bạn có chắc chắn nộp tài liệu?',
       header: 'Xác nhận phê duyệt',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirm',
       accept: () => {
-        this.inputFileForm.get('isPasssed')?.setValue(true);
-        const formData = new FormData();
-        const initiationplan = {
-          initiationPlanId: this.schoolinitiationplan.initiationPlanId,
-          schoolDocuments: {
-            documentName: this.inputFileForm.get('documentName')?.value,
-            documentCode: this.inputFileForm.get('documentCode')?.value,
-          },
-        };
-        console.log(initiationplan);
-        formData.append(
-          'initiation_plan',
-          new Blob([JSON.stringify(initiationplan)], {
-            type: 'application/json',
-          })
-        );
-        const fileControl = this.inputFileForm.get('file');
-        if (fileControl?.value) {
-          const pdfFile = fileControl.value;
-          formData.append('files', pdfFile);
+        if (this.inputFileForm.get('file')?.value) {
+          this.inputFileForm.get('isPasssed')?.setValue(true);
+          const formData = new FormData();
+          const initiationplan = {
+            initiationPlanId: this.schoolinitiationplan.initiationPlanId,
+            schoolDocuments: {
+              documentName: this.inputFileForm.get('documentName')?.value,
+              documentCode: this.inputFileForm.get('documentCode')?.value,
+            },
+          };
+          console.log(initiationplan);
+          formData.append(
+            'initiation_plan',
+            new Blob([JSON.stringify(initiationplan)], {
+              type: 'application/json',
+            })
+          );
+          const fileControl = this.inputFileForm.get('file');
+          if (fileControl?.value) {
+            const pdfFile = fileControl.value;
+            formData.append('files', pdfFile);
+          }
+          this.initiationplanService.putUploadSchoolDoc(formData).subscribe({
+            next: (response) => {
+              console.log('Form data sent to the backend:', response);
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Đăng tải thành công',
+                detail: 'Đăng tải tài liệu thành công',
+              });
+              window.location.reload();
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          });
+        } else {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Đăng tải thành công',
+            detail: 'Đăng tải tài liệu thành công',
+          });
+          window.location.reload();
         }
-        this.initiationplanService.putUploadSchoolDoc(formData).subscribe({
-          next: (response) => {
-            console.log('Form data sent to the backend:', response);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Đăng tải thành công',
-              detail: 'Đăng tải tài liệu thành công',
-            });
-            window.location.reload();
-          },
-          error: (error) => {
-            console.log(error);
-          },
-        });
+
         // const headers = new HttpHeaders();
         // headers.append('Content-Type', 'undefined');
         // this.http

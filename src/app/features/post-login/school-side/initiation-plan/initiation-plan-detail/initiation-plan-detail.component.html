@@ -5,6 +5,7 @@
   [style]="{ width: '50vw' }"
   acceptLabel="Đồng ý"
   rejectLabel="Hủy"
+  key="confirm"
 ></p-confirmDialog>
 <!-- file preview -->
 <p-dialog
@@ -123,7 +124,7 @@
       type="text"
       placeholder="Tên tài liệu"
     />
-    <br>
+    <br />
     <span
       *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
       class="p-error"
@@ -138,7 +139,7 @@
       type="text"
       placeholder="Mã tài liệu"
     />
-    <br>
+    <br />
     <span
       *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
       class="p-error"
@@ -146,28 +147,34 @@
     >
     <br />
     <label class="mb-1 mt-1" for="">Tài liệu</label>
-    <div class="mb-3 input-file-popup">
-      <input
-        type="file"
-        #fileInput
-        style="display: none"
-        (change)="handleFileInputChange(fileInput)"
-      />
-      <input
-        pInputText
-        readonly
-        class="col-md-9"
-        placeholder="{{
-          fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'
-        }}"
-      />
-      <button
-        type="button"
-        pButton
-        label="Chọn tệp"
-        (click)="fileInput.click()"
-        class="col-md-3"
-      ></button>
+    <div class="mb-3 input-file-popup row">
+      <div class="col-md-9">
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          (change)="handleFileInputChange(fileInput)"
+        />
+        <input
+          pInputText
+          readonly
+          class="col-md-9"
+          placeholder="{{
+            fileInputPlaceholders
+              ? fileInputPlaceholders
+              : 'Chọn file để tải lên'
+          }}"
+        />
+      </div>
+      <div class="col-md-3">
+        <button
+          type="button"
+          pButton
+          label="Chọn tệp"
+          (click)="fileInput.click()"
+        ></button>
+      </div>
+
       <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
         >Vui lòng chọn tài liệu</span
       > -->
@@ -251,40 +258,39 @@
           </button>
         </div>
       </div>
-<ng-container *ngIf="lastDocs.departmentDocument">
-  <div
+      <ng-container *ngIf="lastDocs?.departmentDocument">
+        <div
           *ngIf="schoolinitiationplan?.status.statusId != 6"
           class="plan-file-item d-flex"
           (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
-  >
-    <div
+        >
+          <div
             class="plan-file-item-img d-flex justify-content-center align-items-center"
-    >
-      <img src="../../../../../assets/img/pdf.png" alt="" />
-    </div>
-    <div class="plan-file-item-content" >
-      <div class="col-md-10 p-2">
-            <span class="font-weight-bold">
-              {{ lastDocs.departmentDocument?.documentName }}
-            </span>
-        <br />
-        <span class="font-weight-bold">Mã: </span>
-        <span class="text-black-50">{{
-          lastDocs.departmentDocument.documentCode
-          }}</span>
-        <br />
-        <span class="text-black-50">{{
-          lastDocs.departmentDocument.sizeFormat
-          }}</span>
-        <br />
-        <span class="text-black-50">{{
-          lastDocs.departmentDocument.uploadedDate | date : "dd/MM/yyyy"
-          }}</span>
-      </div>
-    </div>
-  </div>
-</ng-container>
-
+          >
+            <img src="../../../../../assets/img/pdf.png" alt="" />
+          </div>
+          <div class="plan-file-item-content">
+            <div class="col-md-10 p-2">
+              <span class="font-weight-bold">
+                {{ lastDocs.departmentDocument?.documentName }}
+              </span>
+              <br />
+              <span class="font-weight-bold">Mã: </span>
+              <span class="text-black-50">{{
+                lastDocs.departmentDocument.documentCode
+              }}</span>
+              <br />
+              <span class="text-black-50">{{
+                lastDocs.departmentDocument.sizeFormat
+              }}</span>
+              <br />
+              <span class="text-black-50">{{
+                lastDocs.departmentDocument.uploadedDate | date : "dd/MM/yyyy"
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
   <div class="col-md-5">

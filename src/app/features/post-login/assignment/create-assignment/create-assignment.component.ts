@@ -200,25 +200,27 @@ export class CreateAssignmentComponent {
           id: assignment.assignmentId,
         };
         console.log(deleteAssignment);
-        this.assignmentService.deleteAssignment(deleteAssignment).subscribe({
-          next: (response) => {
-            console.log(response);
-            this.initData();
-            this.assignmentVisible = false;
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xóa thành công',
-              detail: 'Xóa thành công',
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xóa thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        this.assignmentService
+          .deleteDeptAssignment(deleteAssignment)
+          .subscribe({
+            next: (response) => {
+              console.log(response);
+              this.initData();
+              this.assignmentVisible = false;
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Xóa thành công',
+                detail: 'Xóa thành công',
+              });
+            },
+            error: (error) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Xóa thất bại',
+                detail: error.error.message,
+              });
+            },
+          });
       },
       reject: (type: any) => {},
     });
