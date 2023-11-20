@@ -8,6 +8,8 @@ import {MessageService} from "primeng/api";
 import {ToastModule} from 'primeng/toast';
 import {resolve} from "@angular/compiler-cli";
 import {switchMap} from "rxjs";
+import {AuthService} from "../../../services/auth.service";
+import {Role} from "../../../shared/enum/role";
 
 @Component({
   selector: 'app-guidance-document-list',
@@ -37,12 +39,14 @@ export class GuidanceDocumentListComponent implements OnInit {
     recordPerPageOption: number[] = [5, 15, 25];
 
   issueId: number = -1
+  isPrincipal = false;
 
   constructor(private guidanceDocumentService: GuidanceDocumentService,
               private route: Router,
               private issueService: IssueService,
               private messageService: MessageService,
-              private activateRouter: ActivatedRoute
+              private activateRouter: ActivatedRoute,
+              private auth: AuthService
   ) {
     this.guidanceDocuments = [];
   }
@@ -117,6 +121,11 @@ export class GuidanceDocumentListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    for (const role of this.auth.getRoleFromJwt()) {
+      if (role.authority === Role.PRINCIPAL){
+        this.isPrincipal = true;
+      }
+    }
     this.issueService.getIssueDropDownResponse()
       .subscribe({
         next: (result) => {
