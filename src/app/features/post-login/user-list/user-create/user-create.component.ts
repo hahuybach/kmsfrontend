@@ -11,6 +11,7 @@ import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {SchoolResponse} from "../../../../models/school-response";
 import {Role} from "../../../../shared/enum/role";
 import {SchoolService} from "../../../../services/school.service";
+import {keys} from "ag-grid-community/dist/lib/utils/map";
 
 @Component({
   selector: 'app-user-create',
@@ -239,7 +240,7 @@ export class UserCreateComponent implements OnInit {
             this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
             break;
         }
-      }
+      },key: 'popUpConfirm'
     });
   }
 
