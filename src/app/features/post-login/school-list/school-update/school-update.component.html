@@ -2,7 +2,7 @@
 
 <form [formGroup]="updateForm"
       class="row"
-      (ngSubmit)="onSubmit()"
+      (ngSubmit)="confirm()"
 >
     <div class="col-md-6" *ngIf="school">
         <h5 class="m-3">Thông tin trường</h5>
@@ -262,3 +262,4 @@
         <div class="spinner-border" role="status"></div>
     </div>
 </div>
+<p-confirmDialog key="updateSchoolConfirm" [style]="{width: '50vw'}"></p-confirmDialog>

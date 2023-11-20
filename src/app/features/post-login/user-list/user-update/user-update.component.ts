@@ -170,7 +170,7 @@ export class UserUpdateComponent implements OnInit {
                         this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật người dùng');
                         break;
                 }
-            }
+            },key: 'updateUserConfirm'
         });
     }
 

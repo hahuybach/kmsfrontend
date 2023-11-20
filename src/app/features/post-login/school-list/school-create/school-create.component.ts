@@ -177,7 +177,7 @@ export class SchoolCreateComponent implements OnInit {
             this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
             break;
         }
-      }
+      },key: 'updateConfirm'
     });
   }
 

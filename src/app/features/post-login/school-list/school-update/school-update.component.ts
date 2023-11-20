@@ -9,6 +9,7 @@ import {AccountService} from "../../../../services/account.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
 import {validateDateNotGreaterThanToday} from "../../../../shared/validators/date-not-greater-than-today";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
   selector: 'app-school-update',
@@ -42,7 +43,8 @@ export class SchoolUpdateComponent implements OnInit {
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
               private accountService: AccountService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private confirmationService: ConfirmationService) {
 
 
   }
@@ -193,5 +195,28 @@ export class SchoolUpdateComponent implements OnInit {
 
   onBack() {
     this.router.navigate(['school/' + this.school.schoolId])
+  }
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận hành động này không?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel:'Không',
+      accept: () => {
+        this.onSubmit()
+
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật');
+            break;
+          case ConfirmEventType.CANCEL:
+            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật');
+            break;
+        }
+      },key: 'updateSchoolConfirm'
+    });
   }
 }
