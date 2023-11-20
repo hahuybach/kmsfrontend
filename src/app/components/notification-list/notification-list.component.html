@@ -6,8 +6,12 @@
     <div class="notification-heading fw-bolder text-center mb-2">Thông báo</div>
     <div class="dropdown-divider"></div>
     <div class="notification-change-view ms-2 mb-2">
-      <button type="button" class="fw-medium px-3 py-1" [class.button-active]="showAllNotification" (click)="onClickAllNotification()">Toàn bộ</button>
-      <button type="button" class="fw-medium px-3 py-1" [class.button-active]="!showAllNotification" (click)="onClickUnseenNotification()">Chưa xem</button>
+      <button type="button" class="fw-medium px-3 py-1" [class.button-active]="showAllNotification"
+              (click)="onClickAllNotification()">Toàn bộ
+      </button>
+      <button type="button" class="fw-medium px-3 py-1" [class.button-active]="!showAllNotification"
+              (click)="onClickUnseenNotification()">Chưa xem
+      </button>
     </div>
     <app-notification-list-all
       *ngIf="showAllNotification"
@@ -17,6 +21,5 @@
       *ngIf="!showAllNotification"
       [unseenNotificationDtos]="unseenNotificationDtos">
     </app-notification-list-unseen>
-    <div class=""></div>
   </div>
 </div>

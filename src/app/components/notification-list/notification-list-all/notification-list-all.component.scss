@@ -1,5 +1,9 @@
 @import "../../../../assets/scss/base";
 
+* {
+  scroll-behavior: smooth;
+}
+
 .notification-item {
   text-decoration: none;
   color: black;
@@ -8,6 +12,7 @@
   justify-content: space-between;
   align-items: center;
   border-radius: 8px;
+  transition: 0.3s;
 
   &:hover {
     background-color: #D3D3D3;
@@ -17,8 +22,11 @@
     color: $primary;
     font-size: 0.5rem;
   }
+}
 
-  .unseen {
-
+.notification-item-empty {
+  p {
+    font-size: 16px;
   }
 }
+
