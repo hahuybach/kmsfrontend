@@ -123,6 +123,7 @@
       type="text"
       placeholder="Tên tài liệu"
     />
+    <br>
     <span
       *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
       class="p-error"
@@ -137,6 +138,7 @@
       type="text"
       placeholder="Mã tài liệu"
     />
+    <br>
     <span
       *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
       class="p-error"

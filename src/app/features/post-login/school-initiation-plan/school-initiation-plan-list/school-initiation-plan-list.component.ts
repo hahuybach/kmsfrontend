@@ -155,7 +155,11 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     }
 
     onDetail(id: any) {
-
+      if (this.isPrincipal){
+        this.router.navigate(['initiationplan/' + id])
+      }else {
+        this.router.navigate(['schoolinitiationplan/' + id])
+      }
     }
 
     maxPageOnKeyUp() {
