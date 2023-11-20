@@ -638,9 +638,9 @@
   <ng-template pTemplate="header">
     <tr>
       <th class="width-30">Công việc</th>
-      <!-- <th class="width-10">Người giao</th> -->
+      <th>Người giao</th>
       <th>Người làm</th>
-      <!-- <th>Hạn nộp</th> -->
+      <th>Hạn nộp</th>
       <th>Trạng thái</th>
       <th></th>
     </tr>
@@ -659,9 +659,9 @@
           {{ rowData.node.assignmentName }}
         </span>
       </td>
-      <!-- <td class="width-10">{{ rowData.node.assigner?.user.fullName }}</td> -->
+      <td>{{ rowData.node.assigner?.user.fullName }}</td>
       <td>{{ rowData.node.assignee?.user.fullName }}</td>
-      <!-- <td>{{ rowData.node?.deadline | date : "dd/MM/yyyy" }}</td> -->
+      <td>{{ rowData.node?.deadline | date : "dd/MM/yyyy" }}</td>
       <td>
         <p-tag
           [rounded]="true"
