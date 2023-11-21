@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {inspectionPlanService} from "../../../services/inspectionplan.service";
 import {IssueDropDownResponse} from "../../../models/issue-drop-down-response";
 import {SchoolResponse} from "../../../models/school-response";
@@ -37,7 +37,8 @@ export class InspectionPlanListComponent implements OnInit{
     private schoolService: SchoolService,
     private issueService: IssueService,
     private toastService: ToastService,
-    private auth: AuthService
+    private auth: AuthService,
+    private activateRouter: ActivatedRoute,
   ) {}
   statuses = [
     {label: 'Chưa bắt đầu', value: 19},
@@ -56,6 +57,56 @@ export class InspectionPlanListComponent implements OnInit{
   maxPage: any;
   recordPerPageOption: number[] = [5, 15, 25];
   isPrincipal = false;
+  initQuery(){
+    this.activateRouter.queryParams.subscribe(
+
+      value => {
+        if(value['pageNo']){
+          this.pageNo = value['pageNo'];
+        }
+        if(value['pageSize']){
+          this.pageSize = value['pageSize'];
+        }
+        if(value['sortBy']){
+          this.sortBy = value['sortBy'];
+        }
+        if(value['sortDirection']){
+          this.sortDirection = value['sortDirection'];
+        }
+        if(value['planName']){
+          this.planName = value['planName'];
+        }
+        if(value['currentIssueSelected'] && value['currentIssueSelected'] !== undefined){
+          this.currentIssueSelected.issueId = value['currentIssueSelected'];
+        }
+        if(value['creationStartDateTime']){
+          this.creationStartDateTime = value['creationStartDateTime'];
+        }
+        if(value['creationEndDateTime']){
+          this.creationEndDateTime = value['creationEndDateTime']
+        }
+        if(value['deadlineStartDateTime']){
+          this.deadlineStartDateTime = value['deadlineStartDateTime']
+        }
+        if(value['deadlineEndDateTime']){
+          this.deadlineEndDateTime = value['deadlineEndDateTime']
+        }
+        if(value['selectedSchool'] && value['selectedSchool'] !== undefined ){
+          this.selectedSchool = {}
+          this.selectedSchool.schoolId = value['selectedSchool']
+        }
+        if(value['advanceSearch']){
+          this.advanceSearch = (value['advanceSearch'] == 'true' )
+          if (this.advanceSearch){
+            this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
+          }else {
+            this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
+
+          }
+        }
+      }
+    )
+  }
   ngOnInit(): void {
 
     for (const role of this.auth.getRoleFromJwt()) {
@@ -79,6 +130,7 @@ export class InspectionPlanListComponent implements OnInit{
         next: (result) => {
           this.issueDropDowns = result.issueDropDownBoxDtos;
           this.currentIssueSelected = this.issueDropDowns.at(0);
+          this.initQuery()
           this.loadDocuments();
 
         },
@@ -106,6 +158,25 @@ export class InspectionPlanListComponent implements OnInit{
         this.maxPage = data.inspectionPlanFilterDtos.totalPages;
         this.totalElements = data.inspectionPlanFilterDtos.totalElements;
         this.changePageSize();
+        this.router.navigate([], {
+          relativeTo: this.activateRouter,
+          queryParams: {
+            pageNo: this.pageNo,
+            pageSize: this.pageSize,
+            sortBy: this.sortBy,
+            sortDirection: this.sortDirection,
+            planName: this.planName,
+            currentIssueSelected: this.currentIssueSelected?.issueId,
+            creationStartDateTime: this.creationStartDateTime,
+            creationEndDateTime: this.creationEndDateTime,
+            deadlineStartDateTime: this.deadlineStartDateTime,
+            deadlineEndDateTime: this.deadlineEndDateTime,
+            advanceSearch: this.advanceSearch,
+            selectedSchool: this.selectedSchool?.schoolId,
+            // Add other query parameters as needed
+          },
+          queryParamsHandling: 'merge'
+        });
       }
     })
     this.creationDateError = false
