@@ -88,8 +88,8 @@ export class GuidanceDocumentListComponent implements OnInit {
               startDateTime: this.startDateTime,
               endDateTime: this.endDateTime,
               fullName: this.fullName,
-              globalSearch     :this.globalSearch
-
+              globalSearch     :this.globalSearch,
+                advanceSearch: this.advanceSearch
 
               // Add other query parameters as needed
             },
@@ -162,6 +162,15 @@ export class GuidanceDocumentListComponent implements OnInit {
           if(value['globalSearch']){
             this.globalSearch = value['globalSearch']
           }
+            if(value['advanceSearch']){
+                this.advanceSearch = (value['advanceSearch'] == 'true' )
+                if (this.advanceSearch){
+                  this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
+                }else {
+                    this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
+
+                }
+            }
         }
     )
     this.loadGuidanceDocuments();

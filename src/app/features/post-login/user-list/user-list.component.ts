@@ -197,6 +197,15 @@ export class UserListComponent implements OnInit {
             if(value['advanceSearch']){
                 this.advanceSearch = (value['advanceSearch'] == 'true' )
             }
+            if(value['advanceSearch']){
+                this.advanceSearch = (value['advanceSearch'] == 'true' )
+                if (this.advanceSearch){
+                    this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
+                }else {
+                    this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
+
+                }
+            }
         })
 
         this.loadUsers();

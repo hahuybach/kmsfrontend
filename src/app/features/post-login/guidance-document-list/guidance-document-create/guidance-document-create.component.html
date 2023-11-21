@@ -4,7 +4,7 @@
   <div class="row">
     <div class="form-group col-md-7">
       <div class="m-3">
-        <label>Tiêu đề</label>
+        <label>Tiêu đề <span class="p-error">*</span></label>
       </div>
       <div class="m-3">
         <input
@@ -30,7 +30,7 @@
 
     <div class="form-group col-md-7">
       <div class="m-3">
-        <label>Lời nhắn</label>
+        <label>Lời nhắn <span class="p-error">*</span></label>
       </div>
       <div class="m-3">
         <textarea class="form-control" formControlName="description"></textarea>
@@ -47,7 +47,7 @@
       <div class="row" formGroupName="{{ i }}">
         <div class="col-md-2 form-group">
           <div class="m-2">
-            <label>Mã tài liệu</label>
+            <label>Mã tài liệu <span class="p-error">*</span></label>
           </div>
           <div class="m-2">
             <input
@@ -74,7 +74,7 @@
         </div>
         <div class="col-md-5 form-group">
           <div class="m-2">
-            <label>Tên tài liệu</label>
+            <label>Tên tài liệu <span class="p-error">*</span></label>
           </div>
           <div class="m-2">
             <input
@@ -136,7 +136,7 @@
       (click)="addGuidanceDocument()"
       type="button"
     >
-      Thêm mới
+      Thêm văn bản
     </button>
   </div>
   <div class="m-2">
