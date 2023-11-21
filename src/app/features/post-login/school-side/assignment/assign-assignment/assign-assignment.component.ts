@@ -342,6 +342,7 @@ export class AssignAssignmentComponent implements OnInit {
   }
   assignmentPopuptHideEvent() {
     this.assignmentForm.reset();
+    this.showComment = true;
     // this.initData();
   }
 

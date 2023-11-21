@@ -399,17 +399,15 @@
               </div>
               <div
                 class="col-md-1 d-flex justify-content-center align-items-center"
-                (click)="toggleMenu(item.commentId,$event)"
+                (click)="toggleMenu(item.commentId, $event)"
               >
                 <i class="bi bi-three-dots-vertical"></i>
               </div>
             </div></div
         ></ng-container>
         <ng-template #showHistory>
-          <span class="font-weight-bold">Lịch sử</span>
-
-          <ng-container *ngFor="let item of historyDtos">
-            <div class="history-item row mb-2">
+          <ng-container *ngFor="let item of historyDtos" class="mt-3">
+            <div class="history-item row mt-2">
               <div
                 class="history-item-ava col-md-1 d-flex justify-content-center align-items-center"
               >
