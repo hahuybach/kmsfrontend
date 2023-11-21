@@ -61,6 +61,15 @@
     // .p-dialog-footer {
     //     text-align: left;
     // }
+    .p-confirm-dialog-reject {
+        margin-right: 20px;
+    }
+    .p-menuitem-link {
+        text-decoration-line: none;
+    }
+    .p-menu {
+        padding: 0;
+    }
 }
 .font-weight-bold {
     font-weight: 500;
@@ -247,19 +256,21 @@ ul {
 }
 .tab {
     .p-button {
-        font-size: 14px;
         color: black;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        border: solid 1px #f8f9fa;
-        transition: all 0.5s ease;
+        font-size: 16px;
+        margin-right: 10px;
+        border-radius: 25px;
+        background-color: #fff;
+        padding: 10px 40px;
+        border: none;
         &:hover {
-            background-color: #b4b4b4;
+            background-color: $primary-hover;
+            color: white;
         }
     }
     .active {
+        background-color: $primary-hover;
         color: white;
-        background-color: $primary;
     }
 }
 .approvement {
@@ -277,6 +288,6 @@ ul {
 .width-200 {
     width: 200px;
 }
-// .tree-table {
-//     font-size: 16px;
-// }
+a {
+    text-decoration: none;
+}

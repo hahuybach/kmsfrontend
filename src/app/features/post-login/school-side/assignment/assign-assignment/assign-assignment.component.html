@@ -6,6 +6,15 @@
   rejectLabel="Hủy"
   key="confirmAssignment"
 ></p-confirmDialog>
+
+<!-- menu -->
+<p-menu
+  #menu
+  [model]="items"
+  [popup]="true"
+  [style.display]="menuVisible ? 'block' : 'none'"
+>
+</p-menu>
 <!-- popup file upload -->
 <p-dialog
   header="Tải file"
@@ -371,7 +380,7 @@
             </form>
           </div>
           <div *ngIf="comments" class="comment-content pt-2">
-            <div *ngFor="let item of comments" class="comment-item row">
+            <div *ngFor="let item of comments" class="comment-item row mb-1">
               <div
                 class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
               >
@@ -379,10 +388,10 @@
               </div>
               <div class="comment-item-content col-md-10">
                 <span class="font-weight-bold font-size-18"
-                  >{{ item.userName }}
+                  >{{ item.creator.user.fullName }}
                 </span>
                 <span class="text-black-50 comment-date">{{
-                  item.createdDate | date : "dd/MM/yyyy"
+                  item.createdDate | date : "dd/MM/yyyy hh:mm"
                 }}</span>
 
                 <br />
@@ -390,6 +399,7 @@
               </div>
               <div
                 class="col-md-1 d-flex justify-content-center align-items-center"
+                (click)="toggleMenu(item.commentId,$event)"
               >
                 <i class="bi bi-three-dots-vertical"></i>
               </div>

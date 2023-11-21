@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -10,6 +10,7 @@ import { IssueService } from 'src/app/services/issue.service';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
+import { Menu } from 'primeng/menu';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -77,6 +78,10 @@ export class AssignAssignmentComponent implements OnInit {
   });
   historyDtos: any[] = [];
   comments: any[] = [];
+  items: MenuItem[] | undefined;
+  menuVisible = false;
+  deleteCommentId = 0;
+  @ViewChild('menu') menu: Menu;
   ngOnInit(): void {
     this.user = this.authService.getSubFromCookie();
     console.log(this.user);
@@ -89,6 +94,20 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignments = data.assignmentListDtos;
       },
     });
+    this.items = [
+      {
+        label: 'Thao tác',
+        items: [
+          {
+            label: 'Xóa',
+            icon: 'bi bi-x-lg',
+            command: () => {
+              this.deleteComment();
+            },
+          },
+        ],
+      },
+    ];
   }
   constructor(
     private assignmentService: AssignmentService,
@@ -336,20 +355,7 @@ export class AssignAssignmentComponent implements OnInit {
 
     return statusSeverityMap[statusId] || 'info';
   }
-  sendComment() {
-    console.log(this.commentForm.get('content')?.value);
-    this.selectedAssignment.comments.unshift({
-      content: this.commentForm.get('content')?.value,
-      userName: 'tran le hai',
-      createdDate: new Date(),
-    });
-    this.commentForm.reset();
-  }
-  onKeyPress(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      this.sendComment();
-    }
-  }
+
   // PREVIEW PDF
   openNewTab(documentLink: string) {
     console.log(documentLink);
@@ -616,6 +622,92 @@ export class AssignAssignmentComponent implements OnInit {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Phê duyệt',
+                detail: error.error.message,
+              });
+            },
+          });
+      },
+    });
+  }
+  // Comment
+  sendComment() {
+    console.log();
+    const data = {
+      content: this.commentForm.get('content')?.value,
+      assignmentId: this.selectedAssignment.assignmentId,
+    };
+    this.assignmentService.addComment(data).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Bình luận thành công',
+          detail: 'Bình luận thành công',
+        });
+        this.refreshSelectedAssignment();
+      },
+    });
+    this.commentForm.reset();
+  }
+  onKeyPress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.sendComment();
+    }
+  }
+  private refreshSelectedAssignment() {
+    const assignmentId = this.selectedAssignment?.assignmentId;
+
+    if (assignmentId) {
+      this.assignmentService.getAssignmentsById(assignmentId).subscribe({
+        next: (data) => {
+          this.selectedAssignment = data;
+        },
+        error: (error) => {
+          console.error('Error refreshing assignment:', error);
+        },
+      });
+      this.assignmentService.getHistoryByAssignmentId(assignmentId).subscribe({
+        next: (data) => {
+          this.historyDtos = data.historyDtos;
+          console.log(this.historyDtos);
+        },
+        error: () => {},
+      });
+      this.assignmentService.getCommentsByAssignmentId(assignmentId).subscribe({
+        next: (data) => {
+          this.comments = data.commentDtos;
+        },
+        error: () => {},
+      });
+    }
+  }
+  toggleMenu(commentId: number, event: Event) {
+    if (this.menu) {
+      this.menu.toggle(event);
+    }
+    this.menuVisible = true;
+    this.deleteCommentId = commentId;
+    console.log(commentId);
+  }
+  deleteComment() {
+    this.confirmationService.confirm({
+      message: 'Bạn có muốn xóa bình luận này?',
+      header: 'Xác nhận tạo mới',
+      key: 'confirmAssignment',
+      accept: () => {
+        this.assignmentService
+          .deleteComment({
+            assignmentId: this.selectedAssignment.assignmentId,
+            commentId: this.deleteCommentId,
+          })
+          .subscribe({
+            next: () => {
+              console.log('delete success');
+              this.refreshSelectedAssignment();
+            },
+            error: (error) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Xóa bị lỗi',
                 detail: error.error.message,
               });
             },

@@ -68,6 +68,13 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}delete_document`;
     return this.http.delete(url, { headers: headers, body: data });
   }
+  public deleteComment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
+
+    const url = `${this.assignmentApiUrl}delete_comment`;
+    return this.http.delete(url, { headers: headers, body: data });
+  }
   // POST
   public initDeptRootAssignment(data: object): Observable<any> {
     const headers = new HttpHeaders();
@@ -97,6 +104,14 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}add_dept_assignment`;
     return this.http.post(url, data, { headers });
   }
+  public addComment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
+
+    const url = `${this.assignmentApiUrl}add_comment`;
+    return this.http.post(url, data, { headers });
+  }
+
   // PUT
   public uploadDocument(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
