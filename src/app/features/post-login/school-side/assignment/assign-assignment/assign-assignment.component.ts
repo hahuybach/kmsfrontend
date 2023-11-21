@@ -75,6 +75,8 @@ export class AssignAssignmentComponent implements OnInit {
     documentName: ['', Validators.required],
     file: ['', Validators.required],
   });
+  historyDtos: any[] = [];
+  comments: any[] = [];
   ngOnInit(): void {
     this.user = this.authService.getSubFromCookie();
     console.log(this.user);
@@ -153,6 +155,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn tạo mới công việc  này?',
       header: 'Xác nhận tạo mới',
+      key: 'confirmAssignment',
       accept: () => {
         const data = {
           parentId: this.selectedAssignment.assignmentId,
@@ -192,6 +195,8 @@ export class AssignAssignmentComponent implements OnInit {
       message:
         'Bạn có muốn xóa công việc ' + assignment.assignmentName + ' này?',
       header: 'Xác nhận xóa',
+      key: 'confirmAssignment',
+
       // icon: 'pi pi-info-circle',
       accept: () => {
         const deleteAssignment = {
@@ -232,6 +237,24 @@ export class AssignAssignmentComponent implements OnInit {
     //   },
     // });
     this.assignmentService
+      .getHistoryByAssignmentId(rowNode.assignmentId)
+      .subscribe({
+        next: (data) => {
+          this.historyDtos = data.historyDtos;
+          console.log(this.historyDtos);
+        },
+        error: () => {},
+      });
+    this.assignmentService
+      .getCommentsByAssignmentId(rowNode.assignmentId)
+      .subscribe({
+        next: (data) => {
+          this.comments = data.commentDtos;
+        },
+        error: () => {},
+      });
+
+    this.assignmentService
       .getAssignmentsById(rowNode.assignmentId)
       .subscribe((data) => {
         this.selectedAssignment = data;
@@ -265,6 +288,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn cập nhật công việc  này?',
       header: 'Xác nhận cập nhật',
+      key: 'confirmAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
@@ -352,6 +376,7 @@ export class AssignAssignmentComponent implements OnInit {
         (status ? 'xác nhận hoàn thành' : 'hủy xác nhận') +
         ' công việc  này?',
       header: status ? 'Xác nhận hoàn thành' : 'Xác nhận hủy',
+      key: 'confirmAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
@@ -472,6 +497,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn xóa tài liệu  này?',
       header: 'Xác nhận xóa',
+      key: 'confirmAssignment',
       accept: () => {
         this.documents.splice(index, 1);
         const deleteDocument = {
@@ -502,6 +528,7 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn nộp công việc này?',
       header: 'Xác nhận nộp',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirmAssignment',
       accept: () => {
         const jsonData = {
           assignmentId: this.selectedAssignment.assignmentId,
@@ -528,11 +555,14 @@ export class AssignAssignmentComponent implements OnInit {
       reject: (type: any) => {},
     });
   }
+  // CANCEL COMPLETE
   cancel() {
     this.confirmationService.confirm({
       message: 'Bạn có muốn hủy công việc này?',
       header: 'Xác nhận hủy',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirmAssignment',
+
       accept: () => {
         const jsonData = {
           assignmentId: this.selectedAssignment.assignmentId,
@@ -559,11 +589,13 @@ export class AssignAssignmentComponent implements OnInit {
       reject: (type: any) => {},
     });
   }
+  // EVALUATE
   evaluate(isPassed: Boolean) {
     this.confirmationService.confirm({
       message: 'Bạn có muốn đánh giá công việc này?',
       header: 'Xác nhận đánh giá',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirmAssignment',
       accept: () => {
         this.assignmentService
           .evaluateTask({

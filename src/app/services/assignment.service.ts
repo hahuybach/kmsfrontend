@@ -34,6 +34,18 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}get_dept_assignment`;
     return this.http.get<any[]>(url, { headers });
   }
+  public getCommentsByAssignmentId(id: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}get_comments_by_assignment_id/${id}`;
+    console.log(url);
+    return this.http.get<any[]>(url, { headers });
+  }
+  public getHistoryByAssignmentId(id: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}get_history_by_assignment_id/${id}`;
+    console.log(url);
+    return this.http.get<any[]>(url, { headers });
+  }
   // DELETE
   public deleteAssignment(data: object): Observable<any> {
     const headers = new HttpHeaders();
