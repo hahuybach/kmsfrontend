@@ -49,10 +49,10 @@ export class AccountService {
       params = params.set('pageNo', pageNo)
     }
     if (school) {
-      params = params.set('schoolId', school.schoolId)
+      params = params.set('schoolId', school)
     }
     if (role) {
-      params = params.set('roleId', role.roleId)
+      params = params.set('roleId', role)
     }
     if (isActive !== undefined) {
       params = params.set('isActive', isActive)

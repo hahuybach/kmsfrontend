@@ -85,7 +85,7 @@ export class UserListComponent implements OnInit {
         private accountService: AccountService,
         private schoolService: SchoolService,
         private toastService: ToastService,
-        private router: Router,
+        private route: Router,
         private activateRouter: ActivatedRoute,
         private roleService: RoleService,
         private auth: AuthService
@@ -159,6 +159,45 @@ export class UserListComponent implements OnInit {
                 }
             }
         )
+      this.activateRouter.queryParams.subscribe(
+        value => {
+          if(value['pageNo']){
+            this.pageNo = value['pageNo'];
+          }
+          if(value['pageSize']){
+            this.pageSize = value['pageSize'];
+          }
+          if(value['sortBy']){
+            this.sortBy = value['sortBy'];
+          }
+          if(value['sortDirection']){
+            this.sortDirection = value['sortDirection'];
+          }
+          if(value['phoneNumber']){
+            this.phoneNumber = value['phoneNumber'];
+          }
+          if(value['isActive']){
+            this.isActive = value['isActive'];
+          }
+          if(value['email']){
+            this.email = value['email'];
+          }
+          if(value['fullName']){
+            this.fullName = value['fullName']
+          }
+          if(value['selectedRole']){
+            this.selectedRole.roleId = value['selectedRole']
+          }
+          if(value['globalSearch']){
+            this.globalSearch = value['globalSearch']
+          }
+          if(value['currentSchool']){
+            this.currentSchool.schoolId = value['currentSchool']
+          }
+            if(value['advanceSearch']){
+                this.advanceSearch = (value['advanceSearch'] == 'true' )
+            }
+        })
 
         this.loadUsers();
     }
@@ -167,14 +206,36 @@ export class UserListComponent implements OnInit {
         this.accountService.filterAccount(
             this.pageNo, this.pageSize, this.sortBy, this.sortDirection, this.fullName,
             this.gender, this.phoneNumber, this.isActive, this.globalSearch, this.email,
-            this.selectedRole, this.currentSchool)
+            this.selectedRole?.roleId, this.currentSchool?.schoolId)
             .subscribe({
                 next: (data) => {
                     this.users = data.userDtoPage.content;
                     this.totalPages = data.userDtoPage.totalPages;
                     this.totalElements = data.userDtoPage.totalElements;
                     console.log(data);
+                  this.route.navigate([], {
+                    relativeTo: this.activateRouter,
+                    queryParams: {
+                      pageNo: this.pageNo,
+                      pageSize: this.pageSize,
+                      sortBy: this.sortBy,
+                      sortDirection: this.sortDirection,
+                      phoneNumber: this.phoneNumber,
+                      isActive: this.isActive,
+                      email: this.email,
+                      selectedRole: this.selectedRole?.roleId,
+                      currentSchool: this.currentSchool?.schoolId,
+                      fullName: this.fullName,
+                      globalSearch     :this.globalSearch,
+                        advanceSearch: this.advanceSearch
+
+
+                      // Add other query parameters as needed
+                    },
+                    queryParamsHandling: 'merge'
+                  });
                     this.onChangePageSize()
+
                 }
             })
     }
@@ -223,7 +284,7 @@ export class UserListComponent implements OnInit {
     }
 
     onDetail(userId: number | undefined) {
-        this.router.navigate(['user/' + userId])
+        this.route.navigate(['user/' + userId])
     }
 
     maxPageOnKeyUp() {
@@ -257,11 +318,11 @@ export class UserListComponent implements OnInit {
     }
 
     onCreateUser() {
-        this.router.navigate(['users/create'])
+        this.route.navigate(['users/create'])
     }
 
     onUpdate(userId: number | undefined) {
-        this.router.navigate(['user/' + userId + '/update'])
+        this.route.navigate(['user/' + userId + '/update'])
 
     }
 }
