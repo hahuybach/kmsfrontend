@@ -198,7 +198,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   };
   confirm() {
     this.confirmationService.confirm({
-      message: 'Bạn có xác nhận muốn tạo người dùng này không?',
+      message: 'Bạn có xác nhận yêu cầu này không?',
       header: 'Xác nhân',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
@@ -209,13 +209,13 @@ export class GuidanceDocumentCreateComponent implements OnInit {
       reject: (type: ConfirmEventType) => {
         switch (type) {
           case ConfirmEventType.REJECT:
-            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy yêu cầu này');
             break;
           case ConfirmEventType.CANCEL:
-            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy yêu cầu này');
             break;
         }
-      }
+      },key : 'createConfirm'
     });
   }
 
