@@ -124,9 +124,11 @@
     </div>
     <div class="col-md-2">
         <button (click)="onAdvanceSearch()" class="btn btn-primary">{{advanceSearchButtonText}}</button>
+
     </div>
 </div>
 <div class="d-flex justify-content-end mb-3">
+  <button (click)="showImportUser()" class="btn btn-info ml-3 mr-3">Nhập người dùng bằng file excel</button>
   <button class="btn btn-primary" (click)="onCreateUser()">Tạo mới</button>
 </div>
 
@@ -299,3 +301,16 @@
     <p-toast key="paging" position="bottom-right"></p-toast>
     <p-toast key="issueId" position="top-right"></p-toast>
 
+<p-dialog header="Tạo người dùng bằng file excel" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  <div>
+    <input
+      class="form-control"
+      required
+      (change)="onSubmitFile($event)"
+      type="file"
+    />
+    <button class="btn btn-primary mt-3" (click)="onCreateUserByFile()">
+      Xác nhận
+    </button>
+  </div>
+</p-dialog>

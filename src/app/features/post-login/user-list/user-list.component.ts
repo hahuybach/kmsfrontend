@@ -46,6 +46,8 @@ export class UserListComponent implements OnInit {
     isPrincipal: boolean;
     isAdmin: boolean;
     isDirector: boolean
+  excelFile: any
+  visible = false;
 
 
     setAuthority() {
@@ -334,4 +336,40 @@ export class UserListComponent implements OnInit {
         this.route.navigate(['user/' + userId + '/update'])
 
     }
+
+  onSubmitFile(event: any) {
+
+    const file = event.target.files[0];
+    if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      this.excelFile = file;
+      console.log(this.excelFile);
+
+    } else {
+      // Handle error or provide feedback to the user
+      this.toastService.showWarn('error', "Lỗi", "File tải lên phải ở dưới dạng excel (.xls)")
+      event.target.value = null;
+
+    }
+  }
+
+  onCreateUserByFile() {
+      if (this.excelFile){
+        this.accountService.uploadFileExcel(this.excelFile).subscribe({
+          next: (data) =>{
+            this.toastService.showSuccess('error', "Thông báo", "Tạo người dùng thành công")
+            this.loadUsers();
+
+          },
+          error: (error) => {
+            this.toastService.showWarn('error', "Lỗi", error.error.message)
+
+          }
+        });
+      }
+
+  }
+
+  showImportUser() {
+    this.visible = true;
+  }
 }

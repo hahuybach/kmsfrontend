@@ -103,4 +103,12 @@ export class AccountService {
 
   }
 
+  uploadFileExcel(data : any){
+    const formData : FormData = new FormData();
+    formData.append("file", data);
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+   return  this.httpClient.post<any>(this.baseUrl + "excel", formData, { headers })
+  }
+
 }
