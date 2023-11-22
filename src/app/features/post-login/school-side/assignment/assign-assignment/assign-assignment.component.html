@@ -407,6 +407,7 @@
                 <span>{{ item.content }}</span>
               </div>
               <div
+                *ngIf="this.user === item.creator.email"
                 class="col-md-1 d-flex justify-content-center align-items-center"
                 (click)="toggleMenu(item.commentId, $event)"
               >

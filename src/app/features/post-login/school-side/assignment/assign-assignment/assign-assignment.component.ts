@@ -115,7 +115,7 @@ export class AssignAssignmentComponent implements OnInit {
       if (params) {
         console.log('run here');
         const id = params['id'];
-        this.openDetailRowNode({ assignmentId: id }, 'info');
+        if (id > 0) this.openDetailRowNode({ assignmentId: id }, 'info');
       }
     });
   }
@@ -652,7 +652,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.assignmentService.addComment(data).subscribe({
       next: () => {
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Bình luận thành công',
           detail: 'Bình luận thành công',
         });
@@ -715,7 +715,11 @@ export class AssignAssignmentComponent implements OnInit {
           })
           .subscribe({
             next: () => {
-              console.log('delete success');
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Xóa bình luận',
+                detail: 'Xóa bình luận thành công',
+              });
               this.refreshSelectedAssignment();
             },
             error: (error) => {
