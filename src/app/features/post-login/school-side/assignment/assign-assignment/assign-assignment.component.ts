@@ -351,6 +351,8 @@ export class AssignAssignmentComponent implements OnInit {
   assignmentPopuptHideEvent() {
     this.assignmentForm.reset();
     this.showComment = true;
+    this.stompService.unsubscribe(this.selectedAssignment.assignmentId)
+
     // this.initData();
   }
 
