@@ -35,11 +35,11 @@ export class StompService{
     })
   }
 
-  public unsubscribe(){
-    this.stompClient.unsubscribe();
+  public unsubscribe(url: string){
+    this.stompClient.unsubscribe("/comment/" + url);
   }
 
-  disconnect() {
+  public disconnect() {
     if (this.stompClient.connected) {
       this.stompClient.deactivate();
     }
