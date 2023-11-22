@@ -12,7 +12,7 @@ import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -129,7 +129,8 @@ export class AssignAssignmentComponent implements OnInit {
     private fileService: FileService,
     private sanitizer: DomSanitizer,
     private stompService: StompService,
-    private activateRouter: ActivatedRoute
+    private activateRouter: ActivatedRoute,
+    private router: Router
   ) {}
   initData() {
     this.assignmentService.getMyAssignedAssignments().subscribe({
@@ -305,6 +306,7 @@ export class AssignAssignmentComponent implements OnInit {
           console.log(this.assignmentForm.get('deadline')?.value);
         }
       });
+    console.log(rowNode.assignmentId);
     this.stompService.subscribe('/comment/' + rowNode.assignmentId, (): any => {
       this.refreshSelectedAssignment();
     });
@@ -351,8 +353,8 @@ export class AssignAssignmentComponent implements OnInit {
   assignmentPopuptHideEvent() {
     this.assignmentForm.reset();
     this.showComment = true;
-    this.stompService.unsubscribe(this.selectedAssignment.assignmentId)
-
+    this.stompService.unsubscribe(this.selectedAssignment.assignmentId);
+    this.router.navigate(['/assignassignment'], { queryParams: {} });
     // this.initData();
   }
 
