@@ -48,7 +48,7 @@ export class GuidanceDocumentListComponent implements OnInit {
   }
 
   loadGuidanceDocuments(): void {
-    if ((this.startDateTime != null && this.endDateTime != null) && (new Date(this.startDateTime) < new Date(this.endDateTime))) {
+    if ((this.startDateTime != null && this.endDateTime != null) && (new Date(this.startDateTime) > new Date(this.endDateTime))) {
       this.dateError = true;
       return
     }

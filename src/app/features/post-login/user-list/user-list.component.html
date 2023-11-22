@@ -13,7 +13,7 @@
                class="form-control small-input fontAwesome mb-3"
                [(ngModel)]="globalSearch"
                (keyup)="loadUsers()"
-               placeholder="&#xF002; Tra cứu nhanh"
+               placeholder="&#xF002; Tra cứu nhanh theo tên, số điện thoại hoặc email"
         >
     </div>
     <div *ngIf="advanceSearch" class="col-md-10">
@@ -61,16 +61,16 @@
                     </ng-template>
                 </p-dropdown>
             </div>
-            <div class="col-md-3">
-                    <p-dropdown
-                        placeholder="Chọn 1 giới tính"
-                        [options]="genders"
-                        [(ngModel)]="gender"
-                        [showClear]="true"
-                        (onChange)="loadUsers()"
-                        (onClear)="removeGender()"
-                ></p-dropdown>
-            </div>
+<!--            <div class="col-md-3">-->
+<!--                    <p-dropdown-->
+<!--                        placeholder="Chọn 1 giới tính"-->
+<!--                        [options]="genders"-->
+<!--                        [(ngModel)]="gender"-->
+<!--                        [showClear]="true"-->
+<!--                        (onChange)="loadUsers()"-->
+<!--                        (onClear)="removeGender()"-->
+<!--                ></p-dropdown>-->
+<!--            </div>-->
             <div class="col-md-3">
                 <p-dropdown
                         placeholder="Chọn 1 trạng thái"
@@ -93,9 +93,10 @@
                        id="fullName"
                        [(ngModel)]="fullName"
                        (keyup)="loadUsers()"
+                       placeholder="(VD): Lê Ngọc Hùng"
                 >
             </div>
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <label>Số điện thoại</label>
                 <input class="form-control"
                        type="text"
@@ -103,9 +104,10 @@
                        id="phoneNumber"
                        [(ngModel)]="phoneNumber"
                        (keyup)="loadUsers()"
+                       placeholder="(VD): 0394335205"
                 >
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <label>Email</label>
                 <input class="form-control"
                        name="email"
@@ -113,7 +115,7 @@
                        type="text"
                        [(ngModel)]="email"
                        (keyup)="loadUsers()"
-
+                       placeholder="(VD): hunglengoc@gmail.com"
                 >
             </div>
 
@@ -215,14 +217,26 @@
                  </td>
                 <td>   <span [class]="user.isActive ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ user.isActive ? "Đang hoạt động" : "Ngưng hoạt động" }}</span>
                 </td>
-                <td>
+              <td   style="text-align: center"
+                    class="d-flex td-action justify-content-center align-items-center">
+                <div   class="action-item d-flex justify-content-center align-items-center mx-2">
+                  <i
+                    class="bi bi-info-circle-fill"
+                    (click)="onDetail(user.userId)"
+                  ></i>
+                </div>
+                <div  class="action-item d-flex justify-content-center align-items-center mx-2"
+                *ngIf="isUpdatable(user)"
+                >
+                  <i
+                    class="bi bi-pencil-fill"
+                    (click)="onUpdate(user.userId)"
 
-                    <i
-                            class="bi bi-info-circle-fill"
-                            (click)="onDetail(user.userId)"
-                    ></i>
+                  ></i>
+                </div>
 
-                </td>
+
+              </td>
             </tr>
             </tbody>
         </ng-container>

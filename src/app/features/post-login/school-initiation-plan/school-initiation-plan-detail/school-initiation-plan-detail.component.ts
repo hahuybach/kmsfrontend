@@ -35,6 +35,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   safePdfUrl: SafeResourceUrl | undefined;
   initiationplanId: number;
   lastDocs: any;
+  isFormNull = true;
   ngOnInit(): void {
     this.minDate = new Date();
     this.route.params
@@ -98,56 +99,78 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     this.fileInputPlaceholders = '';
   }
   approve() {
-    this.confirmationService.confirm({
-      message: 'Bạn có chắc chắn phê duyệt kế hoạch này?',
-      header: 'Xác nhận phê duyệt',
-      icon: 'bi bi-exclamation-triangle-fill',
-      accept: () => {
-        this.inputFileForm.get('isPasssed')?.setValue(true);
-        const formData = new FormData();
-        const initiationplan = {
-          initiationPlanId: this.schoolinitiationplan.initiationPlanId,
-          isPassed: true,
-          deadline: null,
-          departmentDocument: {
-            documentName: this.inputFileForm.get('documentName')?.value,
-            documentCode: this.inputFileForm.get('documentCode')?.value,
-          },
-        };
-        console.log(initiationplan);
-        formData.append(
-          'initiation_plan',
-          new Blob([JSON.stringify(initiationplan)], {
-            type: 'application/json',
-          })
-        );
-        const fileControl = this.inputFileForm.get('file');
-        if (fileControl?.value) {
-          const pdfFile = fileControl.value;
-          formData.append('files', pdfFile);
-        }
-        //
-        this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
-          next: (response) => {
-            console.log('Form data sent to the backend:', response);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Phê duyệt',
-              detail: 'Đã phê duyệt thành công',
-            });
-            window.location.reload();
-          },
-          error: (error) => {
-            console.log(error);
-          },
-        });
-      },
-      reject: (type: any) => {},
-    });
+    if (this.checkFormNull()) {
+      this.messageService.add({
+        severity: 'warn',
+        detail: 'Vui lòng điền đầy đủ các trường dữ liệu',
+        summary: 'Cảnh báo',
+      });
+    } else {
+      this.confirmationService.confirm({
+        message: 'Bạn có chắc chắn phê duyệt kế hoạch này?',
+        header: 'Xác nhận phê duyệt',
+        icon: 'bi bi-exclamation-triangle-fill',
+        accept: () => {
+          this.inputFileForm.get('isPasssed')?.setValue(true);
+          const formData = new FormData();
+          const initiationplan = {
+            initiationPlanId: this.schoolinitiationplan.initiationPlanId,
+            isPassed: true,
+            deadline: null,
+            departmentDocument: {
+              documentName: this.inputFileForm.get('documentName')?.value,
+              documentCode: this.inputFileForm.get('documentCode')?.value,
+            },
+          };
+          console.log(initiationplan);
+          formData.append(
+            'initiation_plan',
+            new Blob([JSON.stringify(initiationplan)], {
+              type: 'application/json',
+            })
+          );
+          const fileControl = this.inputFileForm.get('file');
+          if (fileControl?.value) {
+            const pdfFile = fileControl.value;
+            formData.append('files', pdfFile);
+          }
+          //
+          this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
+            next: (response) => {
+              console.log('Form data sent to the backend:', response);
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Phê duyệt',
+                detail: 'Đã phê duyệt thành công',
+              });
+              window.location.reload();
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          });
+        },
+        reject: (type: any) => {},
+      });
+    }
+  }
+  checkFormNull(): Boolean {
+    return (
+      this.inputFileForm.get('file')?.value == '' ||
+      this.inputFileForm.controls.documentName.errors?.['whitespace'] ||
+      this.inputFileForm.controls.documentCode.errors?.['whitespace']
+    );
   }
   reject() {
-    console.log(1234);
-    this.resetDeadlineVisible = true;
+    if (this.checkFormNull()) {
+      this.messageService.add({
+        severity: 'warn',
+        detail: 'Vui lòng điền trước đầy đủ các trường dữ liệu',
+        summary: 'Cảnh báo',
+      });
+    } else {
+      this.resetDeadlineVisible = true;
+    }
     console.log(this.resetDeadlineVisible);
   }
   upload() {

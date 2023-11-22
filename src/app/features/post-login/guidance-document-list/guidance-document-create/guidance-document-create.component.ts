@@ -7,6 +7,7 @@ import {Observable, Observer, switchMap} from "rxjs";
 import {IssueResponse} from "../../../../models/issue-response";
 import {ToastService} from "../../../../shared/toast/toast.service";
 import {DocumentService} from "../../../../services/document.service";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
   selector: 'app-guidance-document-create',
@@ -33,7 +34,8 @@ export class GuidanceDocumentCreateComponent implements OnInit {
               private activateRoute: ActivatedRoute,
               private route: Router,
               private toast: ToastService,
-              private documentService: DocumentService
+              private documentService: DocumentService,
+              private confirmationService: ConfirmationService
   ) {
   }
 
@@ -194,6 +196,28 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     )
 
   };
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận muốn tạo người dùng này không?',
+      header: 'Xác nhân',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel: 'Không',
+      accept: () => {
+        this.onSubmit()
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
+          case ConfirmEventType.CANCEL:
+            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
+        }
+      }
+    });
+  }
 
 
 

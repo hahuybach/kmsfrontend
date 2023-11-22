@@ -5,6 +5,7 @@
 }
 
 .notification{
+  border-radius: 10px;
   button{
     margin-right: 1.5rem;
     padding: 0 20px;
@@ -32,23 +33,23 @@
   .notification-list{
     width: 370px;
     max-height: 450px;
-    .notification-item{
-      text-decoration: none;
-      color: black;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 8px;
-      &:hover {
-        background-color: #D3D3D3;
+    .notification-change-view{
+      .button-active{
+        background-color: $primary-hover;
+        color: white;
       }
-      i{
-        color: $primary;
-        font-size: 0.5rem;
-      }
-      .unseen{
 
+      button{
+        font-size: 16px;
+        margin-right: 10px;
+        padding: 0;
+        border-radius: 25px;
+
+
+        &:hover {
+          background-color: $primary-hover;
+          color: white;
+        }
       }
     }
   }
@@ -56,3 +57,4 @@
     display: none;
   }
 }
+

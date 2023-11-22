@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  baseUrl: string = 'http://localhost:8080/api/v1/user/'
+  baseUrl: string = DomainName.URL + 'api/v1/user/'
 
   constructor(private httpClient: HttpClient) {
   }
@@ -81,9 +82,25 @@ export class AccountService {
     console.log(data);
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.httpClient.post<any>(this.baseUrl + 'findByRoleNameSchoolIdAndStatus', JSON.stringify(data), {headers});
-
-
   }
 
+  updateUser(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.httpClient.put<any>(this.baseUrl + 'update', JSON.stringify(data), {headers});
+  }
+
+  updateUserDetail(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.httpClient.put<any>(this.baseUrl + 'updateUserDetail', JSON.stringify(data), {headers});
+  }
+
+  changePassword(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.httpClient.put<any>(this.baseUrl + 'changePassword', JSON.stringify(data), {headers});
+
+  }
 
 }

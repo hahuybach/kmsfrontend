@@ -13,6 +13,12 @@
       acceptLabel="Xác nhận"
       rejectLabel="Hủy bỏ"
     ></p-confirmDialog>
+    <app-loading-complete-dialog
+      [visible]="createLoadingVisibility"
+      [completed]="createComplete"
+      [category]="'Quyết định kiểm tra'"
+    >
+    </app-loading-complete-dialog>
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
       <div class="form-content col-md-8 mb-2">
         <div class="inspection-plan-name mb-3">

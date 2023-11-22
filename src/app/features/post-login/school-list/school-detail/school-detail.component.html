@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="m-3">
+    <div class="m-3" *ngIf="!(isPrincipal || isDirector)">
       <button class="btn btn-primary" (click)="onUpdate()">Cập nhật</button>
 
     </div>
@@ -100,5 +100,6 @@
 
   </div>
 </div>
+<p-toast position="top-right" key="error"></p-toast>
 
 

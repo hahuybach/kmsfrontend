@@ -41,44 +41,44 @@ export class ApproveAssignmentComponent implements OnInit {
     private confirmationService: ConfirmationService
   ) {}
   ngOnInit(): void {
-    this.issueService
-      .getCurrentActiveIssue()
-      .pipe(
-        switchMap((data) => {
-          console.log(data);
-          this.issueId = data.issueDto.issueId;
-          return this.assignmentService.getAssignmentsToApprove(
-            data.issueDto.issueId
-          );
-        })
-      )
-      .subscribe((data) => {
-        console.log(data);
-        this.assignments = data.assignmentListDtos;
-        console.log(this.assignments);
-      });
+    // this.issueService
+    //   .getCurrentActiveIssue()
+    //   .pipe(
+    //     switchMap((data) => {
+    //       console.log(data);
+    //       this.issueId = data.issueDto.issueId;
+    //       return this.assignmentService.getAssignmentsToApprove(
+    //         data.issueDto.issueId
+    //       );
+    //     })
+    //   )
+    //   .subscribe((data) => {
+    //     console.log(data);
+    //     this.assignments = data.assignmentListDtos;
+    //     console.log(this.assignments);
+    //   });
     this.assignmentForm = this.fb.group({
       status: ['', Validators.required],
     });
   }
 
   initData() {
-    this.issueService
-      .getCurrentActiveIssue()
-      .pipe(
-        switchMap((data) => {
-          console.log(data);
-          this.issueId = data.issueDto.issueId;
-          return this.assignmentService.getAssignmentsToApprove(
-            data.issueDto.issueId
-          );
-        })
-      )
-      .subscribe((data) => {
-        console.log(data);
-        this.assignments = [data];
-        console.log(this.assignments);
-      });
+    // this.issueService
+    //   .getCurrentActiveIssue()
+    //   .pipe(
+    //     switchMap((data) => {
+    //       console.log(data);
+    //       this.issueId = data.issueDto.issueId;
+    //       return this.assignmentService.getAssignmentsToApprove(
+    //         data.issueDto.issueId
+    //       );
+    //     })
+    //   )
+    //   .subscribe((data) => {
+    //     console.log(data);
+    //     this.assignments = [data];
+    //     console.log(this.assignments);
+    //   });
   }
   statusOptions = [
     {
@@ -155,26 +155,26 @@ export class ApproveAssignmentComponent implements OnInit {
   }
   onChangeStatus(event: any) {
     const selectedStatus = event.value;
-        console.log('Selected Status:', selectedStatus);
-        const data = {
-          assignmentId: this.selectedAssignment.assignmentId,
-          isPassed: selectedStatus,
-        };
-        console.log(data);
-        const formData = new FormData();
-        formData.append(
-          'task',
-          new Blob([JSON.stringify(data)], {
-            type: 'application/json',
-          })
-        );
+    console.log('Selected Status:', selectedStatus);
+    const data = {
+      assignmentId: this.selectedAssignment.assignmentId,
+      isPassed: selectedStatus,
+    };
+    console.log(data);
+    const formData = new FormData();
+    formData.append(
+      'task',
+      new Blob([JSON.stringify(data)], {
+        type: 'application/json',
+      })
+    );
 
-        this.assignmentService.evaluateAssignment(formData).subscribe({
-          next: () => {
-            console.log('success');
-          },
-          error: (error) => {
-            console.log(error.error.message);
+    this.assignmentService.evaluateTask(formData).subscribe({
+      next: () => {
+        console.log('success');
+      },
+      error: (error) => {
+        console.log(error.error.message);
       },
     });
   }

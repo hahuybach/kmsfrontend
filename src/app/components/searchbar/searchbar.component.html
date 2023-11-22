@@ -6,9 +6,15 @@
     </span>
   </div>
   <div class="col-md-6 d-flex flex-row justify-content-end align-items-center top-nav">
-    <app-notification-list [notificationItems]="notificationListDtos"></app-notification-list>
+    <app-notification-list
+      [notificationItems]="notificationListDtos"
+      [unseenNotificationDtos]="unseenNotificationListDtos"
+    ></app-notification-list>
     <a>
-      <i class="bi bi-person-circle"></i>
+      <i class="bi bi-person-circle" (click)="onClickUserProfile()"></i>
     </a>
   </div>
 </div>
+
+<app-user-profile [visible] = "isVisible"
+(visibleChange)="onClickUserProfile()"> </app-user-profile>

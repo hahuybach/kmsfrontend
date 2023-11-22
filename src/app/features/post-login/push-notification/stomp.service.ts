@@ -35,9 +35,16 @@ export class StompService{
     })
   }
 
-  public getUnseenNotificationByAccountId(): Observable<any> {
+  public getAllNotification(): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.notificationApiUrl}/list`;
     return this.http.get(url, { headers });
   }
+
+  public getAllUnseenNotification(): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.notificationApiUrl}/unseen_list`;
+    return this.http.get(url, { headers });
+  }
 }
+

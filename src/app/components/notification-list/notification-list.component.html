@@ -5,16 +5,18 @@
   <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="notification-list overflow-auto">
     <div class="notification-heading fw-bolder text-center mb-2">Thông báo</div>
     <div class="dropdown-divider"></div>
-    <a class="notification-item p-3 mx-1" *ngFor="let notification of notificationItems?.notificationListDtos; let i = index" (click)="handleCLickNotificationItem(i)">
-      <div class="notification-info">
-        <p class="mb-1 fw-bold">{{notification.notificationType}}</p>
-        <p class="mb-1">{{notification.message}}</p>
-        <p class="mb-1">{{notification.createdOn  | date : "dd/MM/yyyy | hh:mm"}}</p>
-      </div>
-      <div class="" *ngIf="!notification.isSeen">
-        <i class="bi bi-circle-fill"></i>
-      </div>
-    </a>
+    <div class="notification-change-view ms-2 mb-2">
+      <button type="button" class="fw-medium px-3 py-1" [class.button-active]="showAllNotification" (click)="onClickAllNotification()">Toàn bộ</button>
+      <button type="button" class="fw-medium px-3 py-1" [class.button-active]="!showAllNotification" (click)="onClickUnseenNotification()">Chưa xem</button>
+    </div>
+    <app-notification-list-all
+      *ngIf="showAllNotification"
+      [notificationItems]="notificationItems">
+    </app-notification-list-all>
+    <app-notification-list-unseen
+      *ngIf="!showAllNotification"
+      [unseenNotificationDtos]="unseenNotificationDtos">
+    </app-notification-list-unseen>
     <div class=""></div>
   </div>
 </div>

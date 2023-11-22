@@ -69,6 +69,8 @@ export class InspectionPlanInspectorListComponent {
   }
 
   changeInspectorVisible() {
+    console.log(this.selectedInspectors)
+    console.log(this.chiefList)
     this.toggleIssueListPopup.emit();
   }
   changeToggleStatus() {

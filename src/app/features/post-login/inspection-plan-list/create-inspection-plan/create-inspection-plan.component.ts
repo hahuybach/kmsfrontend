@@ -24,6 +24,8 @@ export class CreateInspectionPlanComponent {
   eligibleChiefList: any[];
   chiefList: any[];
   selectedInspectorList: any[] = [];
+  createLoadingVisibility: boolean = false;
+  createComplete: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -189,11 +191,14 @@ export class CreateInspectionPlanComponent {
     const file = this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.value
     formData.append(`file`, file, file.name);
 
-    console.log(inspectionPlan)
+    this.createLoadingVisibility = true;
 
     this.inspectionPlanService.saveInspectionPlan(formData).subscribe({
       next: (response) => {
-        this.router.navigateByUrl("inspection_plan/" + response.inspectionPlan.inspectionPlanId);
+        this.createComplete = true;
+        setTimeout(() => {
+          this.router.navigateByUrl("inspection_plan/" + response.inspectionPlan.inspectionPlanId);
+        }, 1500);
       },
       error: (error) => {
         console.log(error)

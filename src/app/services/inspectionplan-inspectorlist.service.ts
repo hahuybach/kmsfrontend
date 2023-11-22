@@ -38,6 +38,8 @@ export class InspectionplanInspectorlistService {
 
     this.initialInspectorList = [...inspectorList];
     this.initialPopupInspectorList = [...popupInspectorList];
+    console.log(this.inspectorList)
+    console.log(this.initialInspectorList)
   }
 
   deleteFromInspectorList(inspector: any){
@@ -59,5 +61,10 @@ export class InspectionplanInspectorlistService {
     this.initialPopupInspectorList = [...this.popupInspectorList.getValue()];
 
     return this.initialInspectorList;
+  }
+
+  clearBothList(){
+    this.inspectorList.next([]);
+    this.popupInspectorList.next([])
   }
 }

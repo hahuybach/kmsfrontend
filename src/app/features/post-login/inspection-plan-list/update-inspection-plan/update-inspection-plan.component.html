@@ -1,5 +1,10 @@
 <div class="container-fluid">
   <div class="row update-inspection-plan">
+    <p-confirmDialog
+      [style]="{width: '50vw'}"
+      acceptLabel="Xác nhận"
+      rejectLabel="Hủy bỏ"
+    ></p-confirmDialog>
     <p-dialog
       header="Xem tài liệu"
       [(visible)]="pdfPreviewVisibility"
@@ -69,10 +74,9 @@
           </div>
           <div class="col-md-6">
             <label class="fw-medium">Trưởng đoàn kiểm tra</label>
-            <p-dropdown class="full-width-dropdown" [options]="inspectorList" formControlName="chiefId"
+            <p-dropdown class="full-width-dropdown" [options]="eligibleChiefList" formControlName="chiefId"
                         optionLabel="user.fullName"
-                        [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
-                        placeholder="{{chiefInspector[0].user?.fullName}}">
+                        [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true">
             </p-dropdown>
             <div
               *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)">
