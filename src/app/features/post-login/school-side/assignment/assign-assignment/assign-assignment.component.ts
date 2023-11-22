@@ -11,7 +11,8 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 import { Menu } from 'primeng/menu';
-import {StompService} from "../../../push-notification/stomp.service";
+import { StompService } from '../../../push-notification/stomp.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -95,6 +96,7 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignments = data.assignmentListDtos;
       },
     });
+
     this.items = [
       {
         label: 'Thao tác',
@@ -109,6 +111,13 @@ export class AssignAssignmentComponent implements OnInit {
         ],
       },
     ];
+    this.activateRouter.queryParams.subscribe((params) => {
+      if (params) {
+        console.log('run here');
+        const id = params['id'];
+        this.openDetailRowNode({ assignmentId: id }, 'info');
+      }
+    });
   }
   constructor(
     private assignmentService: AssignmentService,
@@ -119,7 +128,8 @@ export class AssignAssignmentComponent implements OnInit {
     private authService: AuthService,
     private fileService: FileService,
     private sanitizer: DomSanitizer,
-    private stompService: StompService
+    private stompService: StompService,
+    private activateRouter: ActivatedRoute
   ) {}
   initData() {
     this.assignmentService.getMyAssignedAssignments().subscribe({
@@ -249,14 +259,6 @@ export class AssignAssignmentComponent implements OnInit {
   openDetailRowNode(rowNode: any, action: string) {
     console.log(rowNode);
     this.action = action;
-    // const parentIdObj = { parentId: rowNode.parentId };
-    // this.assignmentService.getPossibleAssignee(parentIdObj).subscribe({
-    //   next: (data) => {
-    //     console.log(data);
-    //     console.log(data.listOfPossibleAssignees);
-    //     this.listOfPossibleAssignees = data.listOfPossibleAssignees;
-    //   },
-    // });
 
     this.assignmentService
       .getHistoryByAssignmentId(rowNode.assignmentId)
@@ -305,7 +307,7 @@ export class AssignAssignmentComponent implements OnInit {
       });
     this.stompService.subscribe('/comment/' + rowNode.assignmentId, (): any => {
       this.refreshSelectedAssignment();
-    })
+    });
   }
   update() {
     const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
@@ -661,6 +663,7 @@ export class AssignAssignmentComponent implements OnInit {
     }
   }
   private refreshSelectedAssignment() {
+    console.log('refresh');
     const assignmentId = this.selectedAssignment?.assignmentId;
 
     if (assignmentId) {
