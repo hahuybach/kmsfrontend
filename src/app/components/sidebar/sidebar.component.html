@@ -19,7 +19,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector || isAdmin">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isDirector || isAdmin"
+        >
           <a class="" [routerLink]="['/schoolList']">
             <div>
               <i class="bi bi-building"></i>
@@ -28,14 +32,18 @@
           </a>
         </li>
         <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
-          <a class="" [routerLink]="['/school/'] +schoolId ">
+          <a class="" [routerLink]="['/school/'] + schoolId">
             <div>
               <i class="bi bi-building"></i>
               &nbsp; Trường của bạn
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/inspection_plan']">
             <div>
               <i class="bi bi-file-earmark-person"></i>
@@ -43,7 +51,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector ||isAdmin ">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector || isAdmin"
+        >
           <a class="" [routerLink]="['/userList']">
             <div>
               <i class="bi bi-people"></i>
@@ -63,8 +75,12 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf=" isDirector || isPrincipal">
-          <a class="" [routerLink]="['/schoolinitiationplan']" >
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isDirector || isPrincipal"
+        >
+          <a class="" [routerLink]="['/schoolinitiationplan']">
             <div>
               <i class="bi bi-clock"></i>
               &nbsp; Kế hoạch thực hiện
@@ -72,7 +88,11 @@
           </a>
         </li>
 
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isDirector">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector"
+        >
           <a class="" [routerLink]="['/report']">
             <div>
               <i class="bi bi-graph-up-arrow"></i>
@@ -101,7 +121,7 @@
             <div>
               <i class="bi bi-clipboard2-check"></i>
               &nbsp; Văn bản bổ sung
-              </div>
+            </div>
           </a>
         </li>
         <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
@@ -112,7 +132,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isChiefTeacher || isTeacher"
+        >
           <a class="" [routerLink]="['/assignassignment']">
             <div>
               <i class="bi bi-list-check"></i>
@@ -120,14 +144,14 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
+        <!-- <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
           <a class="" [routerLink]="['/submitassignment']">
             <div>
               <i class="bi bi-folder-plus"></i>
               &nbsp; Nộp tài liệu
             </div>
           </a>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>

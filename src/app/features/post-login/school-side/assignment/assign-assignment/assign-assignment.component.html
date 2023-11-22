@@ -175,7 +175,16 @@
           "
           class="height-100 mt-3"
         >
-          <button pButton label="Lưu" (click)="update()"></button>
+          <button
+            *ngIf="
+              assignmentForm.get('assignmentName')?.dirty ||
+              assignmentForm.get('description')?.dirty ||
+              assignmentForm.get('deadline')?.dirty
+            "
+            pButton
+            label="Lưu"
+            (click)="update()"
+          ></button>
         </div>
 
         <!-- file -->
@@ -663,7 +672,7 @@
   <ng-template pTemplate="header">
     <tr>
       <th class="width-30">Công việc</th>
-      <th>Người giao</th>
+      <!-- <th>Người giao</th> -->
       <th>Người làm</th>
       <th>Hạn nộp</th>
       <th>Trạng thái</th>
@@ -684,7 +693,7 @@
           {{ rowData.node.assignmentName }}
         </span>
       </td>
-      <td>{{ rowData.node.assigner?.user.fullName }}</td>
+      <!-- <td>{{ rowData.node.assigner?.user.fullName }}</td>   -->
       <td>{{ rowData.node.assignee?.user.fullName }}</td>
       <td>{{ rowData.node?.deadline | date : "dd/MM/yyyy" }}</td>
       <td>
