@@ -11,6 +11,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 import { Menu } from 'primeng/menu';
+import {StompService} from "../../../push-notification/stomp.service";
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -117,7 +118,8 @@ export class AssignAssignmentComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authService: AuthService,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private stompService: StompService
   ) {}
   initData() {
     this.assignmentService.getMyAssignedAssignments().subscribe({
@@ -255,6 +257,7 @@ export class AssignAssignmentComponent implements OnInit {
     //     this.listOfPossibleAssignees = data.listOfPossibleAssignees;
     //   },
     // });
+
     this.assignmentService
       .getHistoryByAssignmentId(rowNode.assignmentId)
       .subscribe({
@@ -300,6 +303,9 @@ export class AssignAssignmentComponent implements OnInit {
           console.log(this.assignmentForm.get('deadline')?.value);
         }
       });
+    this.stompService.subscribe('/comment/' + rowNode.assignmentId, (): any => {
+      this.refreshSelectedAssignment();
+    })
   }
   update() {
     const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
