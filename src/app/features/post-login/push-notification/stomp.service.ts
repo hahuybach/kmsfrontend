@@ -35,6 +35,16 @@ export class StompService{
     })
   }
 
+  public unsubscribe(){
+    this.stompClient.unsubscribe();
+  }
+
+  disconnect() {
+    if (this.stompClient.connected) {
+      this.stompClient.deactivate();
+    }
+  }
+
   public getAllNotification(): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.notificationApiUrl}/list`;
