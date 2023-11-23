@@ -84,18 +84,30 @@ export class AssignAssignmentComponent implements OnInit {
   menuVisible = false;
   deleteCommentId = 0;
   @ViewChild('menu') menu: Menu;
+
   ngOnInit(): void {
+    let issueId;
     this.user = this.authService.getSubFromCookie();
     console.log(this.user);
     this.typeAssignmentOptions = [
       { label: 'Thư mục', value: false },
       { label: 'Nộp tài liệu', value: true },
     ];
-    this.assignmentService.getMyAssignedAssignments().subscribe({
-      next: (data) => {
-        this.assignments = data.assignmentListDtos;
-      },
-    });
+    this.issueService.getCurrentActiveIssue().subscribe({
+    next: (data)=>{
+      issueId = data.issueDto.issueId;
+      this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+        next: (data) =>{
+          this.assignments = data.assignmentListDtos;
+        }
+      })
+    }
+    })
+    // this.assignmentService.getMyAssignedAssignments().subscribe({
+    //   next: (data) => {
+    //     this.assignments = data.assignmentListDtos;
+    //   },
+    // });
 
     this.items = [
       {
@@ -133,11 +145,22 @@ export class AssignAssignmentComponent implements OnInit {
     private router: Router
   ) {}
   initData() {
-    this.assignmentService.getMyAssignedAssignments().subscribe({
-      next: (data) => {
-        this.assignments = data.assignmentListDtos;
-      },
-    });
+    // this.assignmentService.getMyAssignedAssignments().subscribe({
+    //   next: (data) => {
+    //     this.assignments = data.assignmentListDtos;
+    //   },
+    // });
+      let issueId;
+      this.issueService.getCurrentActiveIssue().subscribe({
+          next: (data)=>{
+              issueId = data.issueDto.issueId;
+              this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+                  next: (data) =>{
+                      this.assignments = data.assignmentListDtos;
+                  }
+              })
+          }
+      })
   }
   // ADD
   openDetail(assignment?: any, action?: string) {

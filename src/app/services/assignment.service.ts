@@ -16,11 +16,11 @@ export class AssignmentService {
     console.log(url);
     return this.http.get<any[]>(url, { headers });
   }
-  public getMyAssignedAssignments(): Observable<any> {
-    let headers = new HttpHeaders();
-    const url = `${this.assignmentApiUrl}my_assigned_assignments`;
-    return this.http.get<any[]>(url, { headers });
-  }
+  // public getMyAssignedAssignments(): Observable<any> {
+  //   let headers = new HttpHeaders();
+  //   const url = `${this.assignmentApiUrl}my_assigned_assignments`;
+  //   return this.http.get<any[]>(url, { headers });
+  // }
   public getPossibleAssignee(object: any): Observable<any> {
     const url = `${this.assignmentApiUrl}load_add_school_assignment`;
     console.log(url);
@@ -162,5 +162,11 @@ export class AssignmentService {
 
     const url = `${this.assignmentApiUrl}confirm_assignment`;
     return this.http.put(url, data, { headers });
+  }
+
+  public getAssignmentByIssueId(issueId: any){
+    let headers = new HttpHeaders();
+    const url = this.assignmentApiUrl + "my_assigned_assignments_by_issue_id/" + issueId;
+    return this.http.get<any>(url, { headers });
   }
 }
