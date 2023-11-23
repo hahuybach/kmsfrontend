@@ -3,6 +3,13 @@
   [createRecordPopupVisible]="createRecordPopupVisible"
   (createRecordPopupVisibleChange)="changeCreateRecordVisible()">
 </app-create-record>
+<app-update-record
+  [inspectionPlanId]="inspectionId"
+  [updateRecordPopupVisible]="updateRecordPopupVisible"
+  (updateRecordPopupVisibleChange)="changeUpdateRecordVisible()"
+  [recordId]="recordId"
+>
+</app-update-record>
 <div class="container-fluid">
   <div class="row">
     <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
@@ -82,10 +89,12 @@
               <td style="text-align: center"
                   class="d-flex td-action justify-content-center align-items-center">
                 <div class="action-item d-flex justify-content-center align-items-center mx-2">
-                  <i class="bi bi-info-circle-fill"></i>
+                    <i class="bi bi-info-circle-fill"></i>
                 </div>
                 <div class="action-item d-flex justify-content-center align-items-center mx-2">
+                  <button type="button" (click)="initUpdateRecordData(taskList.taskId)">
                   <i class="bi bi-pencil-fill"></i>
+                  </button>
                 </div>
               </td>
             </tr>

@@ -10,8 +10,10 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class InspectionDocumentComponent implements OnInit {
   inspectionId: number;
+  recordId: number;
   inspectionDocument: InspectionDocument;
   createRecordPopupVisible: boolean = false;
+  updateRecordPopupVisible: boolean = false;
 
   constructor(
     private readonly inspectionService: InspectionService,
@@ -21,6 +23,14 @@ export class InspectionDocumentComponent implements OnInit {
 
   changeCreateRecordVisible() {
     this.createRecordPopupVisible = !this.createRecordPopupVisible;
+  }
+  changeUpdateRecordVisible() {
+    this.updateRecordPopupVisible = !this.updateRecordPopupVisible;
+  }
+
+  initUpdateRecordData(recordId: number){
+    this.recordId = recordId;
+    this.changeUpdateRecordVisible()
   }
 
   ngOnInit(): void {

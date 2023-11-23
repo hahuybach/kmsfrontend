@@ -79,13 +79,17 @@ export interface Inspection {
   iniDocument: IniDocument;
 }
 
-interface TaskListDto {
+export interface TaskListDto {
   taskId: number;
   taskName: string;
   assigneeName: string;
   deadline: Date;
   statusName: string;
   canManipulate: boolean;
+}
+
+export interface Record{
+
 }
 
 export interface InspectionDocument {
