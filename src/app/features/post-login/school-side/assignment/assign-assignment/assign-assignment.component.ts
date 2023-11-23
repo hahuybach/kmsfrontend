@@ -74,8 +74,8 @@ export class AssignAssignmentComponent implements OnInit {
   fileInputPlaceholders: string;
   @ViewChild('fileInput') fileInput: any;
   fileInputForm = this.fb.group({
-    documentCode: ['', NoWhitespaceValidator],
-    documentName: ['', Validators.required],
+    documentCode: ['', NoWhitespaceValidator()],
+    documentName: ['', NoWhitespaceValidator()],
     file: ['', Validators.required],
   });
   historyDtos: any[] = [];

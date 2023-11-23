@@ -36,59 +36,57 @@
   <form [formGroup]="fileInputForm">
     <div class="row">
       <div>
-        <div>
-          <span class="text-black-50">Mã tài liệu</span>
-          <br />
-          <input
-            formControlName="documentCode"
-            class="form-control"
-            type="text"
-            placeholder="Điền mã tài liệu"
-          />
-          <br />
-        </div>
-        <div>
-          <span class="text-black-50">Tên tài liệu</span>
-          <br />
-          <input
-            formControlName="documentName"
-            class="form-control"
-            type="text"
-            placeholder="Điền tên tài liệu"
-          />
-          <br />
-          <ng-container
-            *ngIf="fileInputForm.get('documentName')?.dirty && fileInputForm.controls.documentName.errors?.['whitespace']"
-          >
-            <span class="p-error">Vui lòng điền tên tài liệu</span>
-          </ng-container>
-        </div>
-        <div class="file-input">
-          <span class="text-black-50">Tệp tài liệu</span>
-          <br />
-          <input
-            type="file"
-            #fileInput
-            style="display: none"
-            (change)="handleFileInputChange(fileInput)"
-          />
-          <input
-            pInputText
-            readonly
-            class="col-md-9"
-            placeholder="{{
-              fileInputPlaceholders
-                ? fileInputPlaceholders
-                : 'Chọn file để tải lên'
-            }}"
-          />
-          <button
-            type="button"
-            pButton
-            label="Chọn tệp"
-            (click)="fileInput.click()"
-          ></button>
-        </div>
+        <span class="text-black-50">Mã tài liệu</span>
+        <br />
+        <input
+          formControlName="documentCode"
+          class="form-control"
+          type="text"
+          placeholder="Điền mã tài liệu"
+        />
+        <br />
+      </div>
+      <div>
+        <span class="text-black-50">Tên tài liệu</span>
+        <br />
+        <input
+          formControlName="documentName"
+          class="form-control"
+          type="text"
+          placeholder="Điền tên tài liệu"
+        />
+        <br />
+        <span
+          *ngIf="fileInputForm.get('documentName')?.dirty && fileInputForm.controls.documentName.errors?.['whitespace']"
+          class="p-error"
+          >Vui lòng điền tên tài liệu</span
+        >
+      </div>
+      <div class="file-input">
+        <span class="text-black-50">Tệp tài liệu</span>
+        <br />
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          (change)="handleFileInputChange(fileInput)"
+        />
+        <input
+          pInputText
+          readonly
+          class="col-md-9"
+          placeholder="{{
+            fileInputPlaceholders
+              ? fileInputPlaceholders
+              : 'Chọn file để tải lên'
+          }}"
+        />
+        <button
+          type="button"
+          pButton
+          label="Chọn tệp"
+          (click)="fileInput.click()"
+        ></button>
       </div>
     </div>
     <div class="mt-5">
@@ -482,7 +480,7 @@
             </ng-template>
             <ng-template let-option pTemplate="item">
               <div>
-                {{ option.user.fullName }}
+                {{ option?.user.fullName }}
               </div>
             </ng-template>
           </p-dropdown>
@@ -619,17 +617,17 @@
       >
         <ng-template let-option pTemplate="selectedItem">
           <div>
-            <span> {{ option.user.fullName }} </span>&nbsp;<span
+            <span> {{ option?.user.fullName }} </span>&nbsp;<span
               class="text-black-50"
             >
-              {{ option.email }}</span
+              {{ option?.email }}</span
             >
           </div>
         </ng-template>
         <ng-template let-option pTemplate="item">
           <div>
-            <span> {{ option.user.fullName }} </span>&nbsp;<span>
-              {{ option.email }}</span
+            <span> {{ option?.user.fullName }} </span>&nbsp;<span>
+              {{ option?.email }}</span
             >
           </div>
         </ng-template>
@@ -757,4 +755,4 @@
       </td>
     </tr>
   </ng-template>
-</p-treeTable>  
+</p-treeTable>
