@@ -34,6 +34,7 @@ export class NotificationListAllComponent {
       }
     });
     let link: string = this.notificationItems.notificationListDtos[index].link;
+    console.log(link.toString())
     this.router.navigateByUrl(link.toString());
   }
 }

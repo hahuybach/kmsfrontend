@@ -115,7 +115,7 @@
     header="Chỉnh sửa hạn nộp"
     [(visible)]="resetDeadlineVisible"
     [modal]="true"
-    [style]="{ width: '60vw', height: '800px' }"
+    [style]="{ width: '60vw', height: '820px' }"
     [draggable]="false"
     [resizable]="false"
   >
@@ -169,28 +169,34 @@
     >
     <br />
     <label class="mb-1 mt-1" for="">Tài liệu</label>
-    <div class="mb-3 input-file-popup">
-      <input
-        type="file"
-        #fileInput
-        style="display: none"
-        (change)="handleFileInputChange(fileInput)"
-      />
-      <input
-        pInputText
-        readonly
-        class="col-md-9"
-        placeholder="{{
-          fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'
-        }}"
-      />
-      <button
-        type="button"
-        pButton
-        label="Chọn tệp"
-        (click)="fileInput.click()"
-        class="col-md-3"
-      ></button>
+    <div class="mb-3 input-file-popup row">
+      <div class="col-md-9">
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          (change)="handleFileInputChange(fileInput)"
+        />
+        <input
+          pInputText
+          readonly
+          class="col-md-9"
+          placeholder="{{
+            fileInputPlaceholders
+              ? fileInputPlaceholders
+              : 'Chọn file để tải lên'
+          }}"
+        />
+      </div>
+      <div class="col-md-3">
+        <button
+          type="button"
+          pButton
+          label="Chọn tệp"
+          (click)="fileInput.click()"
+        ></button>
+      </div>
+
       <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
         >Vui lòng chọn tài liệu</span
       > -->

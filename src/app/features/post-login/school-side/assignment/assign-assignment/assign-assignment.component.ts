@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -10,7 +10,11 @@ import { IssueService } from 'src/app/services/issue.service';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
+import { Menu } from 'primeng/menu';
+import { StompService } from '../../../push-notification/stomp.service';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
+  providers: [ConfirmationService],
   selector: 'app-assign-assignment',
   // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './assign-assignment.component.html',
@@ -28,7 +32,7 @@ export class AssignAssignmentComponent implements OnInit {
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
-    isTask: ['', Validators.required],
+    isTask: [false, Validators.required],
   });
   typeAssignmentOptions: any[] = [];
   listOfPossibleAssignees: any[] = [];
@@ -70,10 +74,16 @@ export class AssignAssignmentComponent implements OnInit {
   fileInputPlaceholders: string;
   @ViewChild('fileInput') fileInput: any;
   fileInputForm = this.fb.group({
-    documentCode: ['', NoWhitespaceValidator],
-    documentName: ['', Validators.required],
+    documentCode: ['', NoWhitespaceValidator()],
+    documentName: ['', NoWhitespaceValidator()],
     file: ['', Validators.required],
   });
+  historyDtos: any[] = [];
+  comments: any[] = [];
+  items: MenuItem[] | undefined;
+  menuVisible = false;
+  deleteCommentId = 0;
+  @ViewChild('menu') menu: Menu;
   ngOnInit(): void {
     this.user = this.authService.getSubFromCookie();
     console.log(this.user);
@@ -86,6 +96,28 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignments = data.assignmentListDtos;
       },
     });
+
+    this.items = [
+      {
+        label: 'Thao tác',
+        items: [
+          {
+            label: 'Xóa',
+            icon: 'bi bi-x-lg',
+            command: () => {
+              this.deleteComment();
+            },
+          },
+        ],
+      },
+    ];
+    this.activateRouter.queryParams.subscribe((params) => {
+      if (params) {
+        console.log('run here');
+        const id = params['id'];
+        if (id > 0) this.openDetailRowNode({ assignmentId: id }, 'info');
+      }
+    });
   }
   constructor(
     private assignmentService: AssignmentService,
@@ -95,7 +127,10 @@ export class AssignAssignmentComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private authService: AuthService,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private stompService: StompService,
+    private activateRouter: ActivatedRoute,
+    private router: Router
   ) {}
   initData() {
     this.assignmentService.getMyAssignedAssignments().subscribe({
@@ -122,6 +157,7 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentForm
           .get('parentId')
           ?.setValue(this.selectedAssignment.assignmentId);
+        // this.assignmentForm.get('isTask')?.setValue(false);
         break;
       }
       case 'update':
@@ -151,6 +187,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn tạo mới công việc  này?',
       header: 'Xác nhận tạo mới',
+      key: 'confirmAssignment',
       accept: () => {
         const data = {
           parentId: this.selectedAssignment.assignmentId,
@@ -190,6 +227,8 @@ export class AssignAssignmentComponent implements OnInit {
       message:
         'Bạn có muốn xóa công việc ' + assignment.assignmentName + ' này?',
       header: 'Xác nhận xóa',
+      key: 'confirmAssignment',
+
       // icon: 'pi pi-info-circle',
       accept: () => {
         const deleteAssignment = {
@@ -221,14 +260,32 @@ export class AssignAssignmentComponent implements OnInit {
   openDetailRowNode(rowNode: any, action: string) {
     console.log(rowNode);
     this.action = action;
-    // const parentIdObj = { parentId: rowNode.parentId };
-    // this.assignmentService.getPossibleAssignee(parentIdObj).subscribe({
-    //   next: (data) => {
-    //     console.log(data);
-    //     console.log(data.listOfPossibleAssignees);
-    //     this.listOfPossibleAssignees = data.listOfPossibleAssignees;
-    //   },
-    // });
+
+    this.assignmentService
+      .getHistoryByAssignmentId(rowNode.assignmentId)
+      .subscribe({
+        next: (data) => {
+          this.historyDtos = data.historyDtos;
+          console.log(this.historyDtos);
+        },
+        error: () => {},
+      });
+    this.assignmentService
+      .getCommentsByAssignmentId(rowNode.assignmentId)
+      .subscribe({
+        next: (data) => {
+          this.comments = data.commentDtos;
+        },
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Không tìm thấy công việc',
+            detail: error.error.message,
+          });
+          this.router.navigate(['/assignassignment'], { queryParams: {} });
+        },
+      });
+
     this.assignmentService
       .getAssignmentsById(rowNode.assignmentId)
       .subscribe((data) => {
@@ -256,6 +313,10 @@ export class AssignAssignmentComponent implements OnInit {
           console.log(this.assignmentForm.get('deadline')?.value);
         }
       });
+    console.log(rowNode.assignmentId);
+    this.stompService.subscribe('/comment/' + rowNode.assignmentId, (): any => {
+      this.refreshSelectedAssignment();
+    });
   }
   update() {
     const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
@@ -263,6 +324,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn cập nhật công việc  này?',
       header: 'Xác nhận cập nhật',
+      key: 'confirmAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
@@ -297,6 +359,9 @@ export class AssignAssignmentComponent implements OnInit {
   }
   assignmentPopuptHideEvent() {
     this.assignmentForm.reset();
+    this.showComment = true;
+    this.stompService.unsubscribe(this.selectedAssignment.assignmentId);
+    this.router.navigate(['/assignassignment'], { queryParams: {} });
     // this.initData();
   }
 
@@ -310,20 +375,7 @@ export class AssignAssignmentComponent implements OnInit {
 
     return statusSeverityMap[statusId] || 'info';
   }
-  sendComment() {
-    console.log(this.commentForm.get('content')?.value);
-    this.selectedAssignment.comments.unshift({
-      content: this.commentForm.get('content')?.value,
-      userName: 'tran le hai',
-      createdDate: new Date(),
-    });
-    this.commentForm.reset();
-  }
-  onKeyPress(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      this.sendComment();
-    }
-  }
+
   // PREVIEW PDF
   openNewTab(documentLink: string) {
     console.log(documentLink);
@@ -350,6 +402,7 @@ export class AssignAssignmentComponent implements OnInit {
         (status ? 'xác nhận hoàn thành' : 'hủy xác nhận') +
         ' công việc  này?',
       header: status ? 'Xác nhận hoàn thành' : 'Xác nhận hủy',
+      key: 'confirmAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
@@ -470,6 +523,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn xóa tài liệu  này?',
       header: 'Xác nhận xóa',
+      key: 'confirmAssignment',
       accept: () => {
         this.documents.splice(index, 1);
         const deleteDocument = {
@@ -500,6 +554,7 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn nộp công việc này?',
       header: 'Xác nhận nộp',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirmAssignment',
       accept: () => {
         const jsonData = {
           assignmentId: this.selectedAssignment.assignmentId,
@@ -526,11 +581,14 @@ export class AssignAssignmentComponent implements OnInit {
       reject: (type: any) => {},
     });
   }
+  // CANCEL COMPLETE
   cancel() {
     this.confirmationService.confirm({
       message: 'Bạn có muốn hủy công việc này?',
       header: 'Xác nhận hủy',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirmAssignment',
+
       accept: () => {
         const jsonData = {
           assignmentId: this.selectedAssignment.assignmentId,
@@ -557,11 +615,13 @@ export class AssignAssignmentComponent implements OnInit {
       reject: (type: any) => {},
     });
   }
+  // EVALUATE
   evaluate(isPassed: Boolean) {
     this.confirmationService.confirm({
       message: 'Bạn có muốn đánh giá công việc này?',
       header: 'Xác nhận đánh giá',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirmAssignment',
       accept: () => {
         this.assignmentService
           .evaluateTask({
@@ -571,6 +631,7 @@ export class AssignAssignmentComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.selectedAssignment = data;
+              this.initData();
               this.messageService.add({
                 severity: 'success',
                 summary: 'Phê duyệt',
@@ -581,6 +642,97 @@ export class AssignAssignmentComponent implements OnInit {
               this.messageService.add({
                 severity: 'success',
                 summary: 'Phê duyệt',
+                detail: error.error.message,
+              });
+            },
+          });
+      },
+    });
+  }
+  // Comment
+  sendComment() {
+    console.log();
+    const data = {
+      content: this.commentForm.get('content')?.value,
+      assignmentId: this.selectedAssignment.assignmentId,
+    };
+    this.assignmentService.addComment(data).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Bình luận thành công',
+          detail: 'Bình luận thành công',
+        });
+        this.refreshSelectedAssignment();
+      },
+    });
+    this.commentForm.reset();
+  }
+  onKeyPress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.sendComment();
+    }
+  }
+  private refreshSelectedAssignment() {
+    console.log('refresh');
+    const assignmentId = this.selectedAssignment?.assignmentId;
+
+    if (assignmentId) {
+      this.assignmentService.getAssignmentsById(assignmentId).subscribe({
+        next: (data) => {
+          this.selectedAssignment = data;
+        },
+        error: (error) => {
+          console.error('Error refreshing assignment:', error);
+        },
+      });
+      this.assignmentService.getHistoryByAssignmentId(assignmentId).subscribe({
+        next: (data) => {
+          this.historyDtos = data.historyDtos;
+          console.log(this.historyDtos);
+        },
+        error: () => {},
+      });
+      this.assignmentService.getCommentsByAssignmentId(assignmentId).subscribe({
+        next: (data) => {
+          this.comments = data.commentDtos;
+        },
+        error: () => {},
+      });
+    }
+  }
+  toggleMenu(commentId: number, event: Event) {
+    if (this.menu) {
+      this.menu.toggle(event);
+    }
+    this.menuVisible = true;
+    this.deleteCommentId = commentId;
+    console.log(commentId);
+  }
+  deleteComment() {
+    this.confirmationService.confirm({
+      message: 'Bạn có muốn xóa bình luận này?',
+      header: 'Xác nhận tạo mới',
+      key: 'confirmAssignment',
+      accept: () => {
+        this.assignmentService
+          .deleteComment({
+            assignmentId: this.selectedAssignment.assignmentId,
+            commentId: this.deleteCommentId,
+          })
+          .subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Xóa bình luận',
+                detail: 'Xóa bình luận thành công',
+              });
+              this.refreshSelectedAssignment();
+            },
+            error: (error) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Xóa bị lỗi',
                 detail: error.error.message,
               });
             },

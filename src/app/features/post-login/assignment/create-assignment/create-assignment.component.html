@@ -52,6 +52,7 @@
     [style]="{ width: '50vw' }"
     acceptLabel="Đồng ý"
     rejectLabel="Hủy"
+    key="confirm"
   ></p-confirmDialog>
   <h4>Tạo template công việc cho các trường mầm non</h4>
   <p-treeTable
@@ -94,7 +95,7 @@
         </td>
         <!-- <td>{{ rowData.node.assigner.user.fullName }}</td> -->
         <!-- <td>{{ rowData.node.deadline | date : "dd/MM/yyyy" }}</td> -->
-        <ng-container *ngIf="!data.sent; else td">
+        <ng-container>
           <td class="d-flex">
             <div
               class="action-item d-flex justify-content-center align-items-center mx-2"

@@ -129,14 +129,12 @@ export class CreateAssignmentComponent {
       };
     } else {
       addedAssignment = {
-        addAssignmentDto: {
-          assignmentName: this.assignmentForm.get('assignmentName')?.value,
-          description: this.assignmentForm.get('description')?.value,
-          // deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
-          parentId: this.assignmentForm.get('parentId')?.value,
-          issueId: this.issueId,
-          isTask: false,
-        },
+        assignmentName: this.assignmentForm.get('assignmentName')?.value,
+        description: this.assignmentForm.get('description')?.value,
+        // deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
+        parentId: this.assignmentForm.get('parentId')?.value,
+        // issueId: this.issueId,
+        // isTask: false,
       };
     }
     console.log(addedAssignment);
@@ -163,12 +161,9 @@ export class CreateAssignmentComponent {
   }
   update() {
     const updateAssignment = {
-      updateAssignmentDto: {
-        assignmentId: this.selectedAssignment.assignmentId,
-        assignmentName: this.assignmentForm.get('assignmentName')?.value,
-        description: this.assignmentForm.get('description')?.value,
-        // deadline: this.assignmentForm.get('deadline')?.value + 'T23:59',
-      },
+      assignmentId: this.selectedAssignment.assignmentId,
+      assignmentName: this.assignmentForm.get('assignmentName')?.value,
+      description: this.assignmentForm.get('description')?.value,
     };
     console.log(updateAssignment);
     this.assignmentService.updateDeptAssignment(updateAssignment).subscribe({
@@ -199,30 +194,33 @@ export class CreateAssignmentComponent {
       message: 'Bạn có muốn xóa công việc này?',
       header: 'Xác nhận xóa',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirm',
       accept: () => {
         const deleteAssignment = {
           id: assignment.assignmentId,
         };
         console.log(deleteAssignment);
-        this.assignmentService.deleteAssignment(deleteAssignment).subscribe({
-          next: (response) => {
-            console.log(response);
-            this.initData();
-            this.assignmentVisible = false;
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xóa thành công',
-              detail: 'Xóa thành công',
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xóa thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        this.assignmentService
+          .deleteDeptAssignment(deleteAssignment)
+          .subscribe({
+            next: (response) => {
+              console.log(response);
+              this.initData();
+              this.assignmentVisible = false;
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Xóa thành công',
+                detail: 'Xóa thành công',
+              });
+            },
+            error: (error) => {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Xóa thất bại',
+                detail: error.error.message,
+              });
+            },
+          });
       },
       reject: (type: any) => {},
     });
@@ -260,6 +258,7 @@ export class CreateAssignmentComponent {
         message: 'Bạn có muốn gửi template?',
         header: 'Xác nhận gửi',
         icon: 'bi bi-exclamation-triangle-fill',
+        key: 'confirm',
         accept: () => {
           this.assignmentService.sendAssignmentsToSchool().subscribe({
             next: () => {

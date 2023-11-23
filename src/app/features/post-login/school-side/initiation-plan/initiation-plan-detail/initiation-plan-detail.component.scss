@@ -108,12 +108,23 @@ p-calendar.p-calendar-inline {
 }
 input {
     border-radius: 8px;
-    width: 800px;
+    width: 100%;
 }
 .input-file-popup {
-    width: 800px;
+    .row {
+        margin: 0;
+    }
+    width: 100%;
+    .col-md-3 {
+        padding: 0;
+        button {
+            width: 100%;
+        }
+    }
+    .col-md-9 {
+        padding-right: 0;
+    }
     input {
-        width: 600px;
         border-radius: 8px 0 0 8px;
     }
     button {
