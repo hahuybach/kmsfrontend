@@ -372,4 +372,18 @@ export class UserListComponent implements OnInit {
   showImportUser() {
     this.visible = true;
   }
+
+  downloadTemplate() {
+    this.accountService.getUserTemplate().subscribe({
+      next: (data) => {
+        const blob = new Blob([data.body as BlobPart], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'template.xlsx'; // Set the desired filename for the downloaded file
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  }
 }

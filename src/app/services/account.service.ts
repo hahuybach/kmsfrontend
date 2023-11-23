@@ -111,4 +111,11 @@ export class AccountService {
    return  this.httpClient.post<any>(this.baseUrl + "excel", formData, { headers })
   }
 
+  getUserTemplate(){
+    return this.httpClient.get(this.baseUrl + "exportTemplate", {
+      responseType: 'blob',
+      observe: 'response',
+    });
+  }
+
 }
