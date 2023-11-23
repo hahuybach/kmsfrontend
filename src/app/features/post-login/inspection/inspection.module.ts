@@ -5,6 +5,8 @@ import {InspectionInformationComponent} from "./inspection-information/inspectio
 import {SharedModule} from "../../../shared/shared.module";
 import { InspectionSchoolDocumentComponent } from './inspection-school-document/inspection-school-document.component';
 import { InspectionDocumentComponent } from './inspection-document/inspection-document.component';
+import { FileItemComponent } from './component/file-item/file-item.component';
+import {InspectionPlanModule} from "../inspection-plan-list/inspection-plan/inspection-plan.module";
 
 
 
@@ -13,11 +15,13 @@ import { InspectionDocumentComponent } from './inspection-document/inspection-do
     InspectionComponent,
     InspectionInformationComponent,
     InspectionSchoolDocumentComponent,
-    InspectionDocumentComponent
+    InspectionDocumentComponent,
+    FileItemComponent
   ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    InspectionPlanModule
   ]
 })
 export class InspectionModule { }

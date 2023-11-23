@@ -28,8 +28,9 @@ import {RouterLink} from "@angular/router";
         SharedModule,
         RouterLink,
     ],
-  exports:[
-  ],
+    exports: [
+        InspectionPlanInspectorListComponent
+    ],
   providers:[
     inspectionPlanService
   ]

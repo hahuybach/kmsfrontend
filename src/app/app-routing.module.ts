@@ -170,7 +170,7 @@ const routes: Routes = [
         component: UserUpdateComponent
       },
       {
-        path: 'inspection',
+        path: 'inspection/:id',
         component: InspectionComponent,
         children: [
           {
