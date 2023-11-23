@@ -1,0 +1,24 @@
+@import "../../../../../../assets/scss/base";
+
+
+::ng-deep .p-dropdown{
+  width: 100%;
+  border-radius: 8px;
+}
+
+
+.save-button {
+  button {
+    font-size: 16px;
+    background-color: $primary;
+    border-radius: 8px;
+    padding: 10px 40px;
+    border: none;
+
+    &:hover,
+    &:active {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+<p-dialog header="Danh sách đoàn kiểm tra"
+          [(visible)]="createRecordPopupVisible"
+          [modal]="true"
+          [style]="{ width: '80vw' }"
+          [draggable]="false"
+          [resizable]="false"
+          (onHide)="resetCreateRecordPopupVisible()"
+>
+  <div class="container-fluid" [formGroup]="recordForm">
+    <div class="row">
+      <div class="record-name col-md-12 mt-1">
+        <label class="fw-medium">Mục kiểm tra<span class="p-error">*</span></label>
+        <input
+          type="text"
+          pInputText
+          placeholder="Mục kiểm tra"
+          class="w-100"
+          formControlName="recordName"
+        />
+        <!--        <div-->
+        <!--          *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">-->
+        <!--            <span-->
+        <!--              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">-->
+        <!--              Vui lòng điền tên quyết định kiểm tra-->
+        <!--            </span>-->
+        <!--          <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxLength']" class="p-error">-->
+        <!--              Tên quyết định kiểm tra quá dài-->
+        <!--            </span>-->
+        <!--        </div>-->
+      </div>
+      <div class="record-description col-md-12 mt-1">
+        <label class="fw-medium">Chi tiết<span class="p-error">*</span></label>
+        <textarea
+          type="text"
+          pInputTextarea
+          placeholder="Chi tiết về về mục kiểm tra"
+          rows="5"
+          class="w-100"
+          formControlName="recordDescription"
+        ></textarea>
+        <!--        <div-->
+        <!--          *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">-->
+        <!--            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">-->
+        <!--              Vui lòng điền chi tiết quyết định kiểm tra-->
+        <!--            </span>-->
+        <!--        </div>-->
+      </div>
+      <div class="record-deadline col-md-6 mt-1">
+        <label for="deadline" class="fw-medium">Hạn nộp<span class="p-error">*</span></label>
+        <input id="deadline" class="form-control" type="date" formControlName="deadline"/>
+      </div>
+      <div class="record-assignee col-md-6 mt-1" *ngIf="inspectionPlan">
+        <label for="deadline" class="fw-medium">Người thực hiện<span class="p-error">*</span></label>
+        <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors" formControlName="assigneeId"
+                    optionLabel="user.fullName"
+                    [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
+                    placeholder="Chọn người thực hiện">
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="mt-5 mb-3 row w-100">
+      <div class="col-12 save-button d-flex w-100 justify-content-center">
+        <button class="btn text-white">Lưu </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>

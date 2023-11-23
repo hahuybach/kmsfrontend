@@ -7,6 +7,7 @@ import { InspectionSchoolDocumentComponent } from './inspection-school-document/
 import { InspectionDocumentComponent } from './inspection-document/inspection-document.component';
 import { FileItemComponent } from './component/file-item/file-item.component';
 import {InspectionPlanModule} from "../inspection-plan-list/inspection-plan/inspection-plan.module";
+import { CreateRecordComponent } from './record/create-record/create-record.component';
 
 
 
@@ -16,7 +17,8 @@ import {InspectionPlanModule} from "../inspection-plan-list/inspection-plan/insp
     InspectionInformationComponent,
     InspectionSchoolDocumentComponent,
     InspectionDocumentComponent,
-    FileItemComponent
+    FileItemComponent,
+    CreateRecordComponent
   ],
   imports: [
     CommonModule,
