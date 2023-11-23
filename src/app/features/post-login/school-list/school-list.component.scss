@@ -1,4 +1,27 @@
 .fontAwesome {
-  font-family: Arial, 'Font Awesome 5 Free'
+  font-family: Arial, "Font Awesome 5 Free";
 }
-
+:host ::ng-deep {
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  // th,
+  // td {
+  //   font-size: 16px;
+  //   white-space: wrap; /* Prevent text from wrapping */
+  //   overflow: hidden; /* Hide overflowing text */
+  //   text-overflow: ellipsis; /* Display ellipsis for overflowing text */
+  // }
+  ul {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .p-dropdown {
+    width: 100%;
+  }
+  .p-column-filter-row-items {
+    padding: 0;
+    margin: 0;
+  }
+}
