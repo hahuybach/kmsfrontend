@@ -48,4 +48,7 @@ export class FileService {
       observe: 'response',
     });
   }
+  getBlob(url: string): Observable<Blob> {
+    return this.http.get(url, { responseType: 'blob' });
+  }
 }

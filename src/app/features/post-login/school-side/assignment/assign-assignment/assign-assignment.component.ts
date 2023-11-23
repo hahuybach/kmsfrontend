@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  SafeUrl,
+} from '@angular/platform-browser';
 import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
@@ -48,6 +52,7 @@ export class AssignAssignmentComponent implements OnInit {
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
+  documentUrl: SafeUrl;
   statusOptions = [
     {
       label: 'Chờ phê duyệt',
@@ -407,6 +412,16 @@ export class AssignAssignmentComponent implements OnInit {
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
+    });
+  }
+  // preview docx and excel
+  previewFile(documentLink: string) {
+    this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
+      const blobUrl = window.URL.createObjectURL(data.body as Blob);
+      this.pdfUrl = blobUrl;
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      this.pdfLoaded = true;
+      console.log(this.safePdfUrl);
     });
   }
   // check authorities
