@@ -276,7 +276,14 @@ export class AssignAssignmentComponent implements OnInit {
         next: (data) => {
           this.comments = data.commentDtos;
         },
-        error: () => {},
+        error: (error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Không tìm thấy công việc',
+            detail: error.error.message,
+          });
+          this.router.navigate(['/assignassignment'], { queryParams: {} });
+        },
       });
 
     this.assignmentService

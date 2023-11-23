@@ -6,7 +6,17 @@
   rejectLabel="Hủy"
   key="confirmAssignment"
 ></p-confirmDialog>
-
+<!-- file preview -->
+<p-dialog
+[(visible)]="pdfLoaded"
+[style]="{ width: '80vw' }"
+[draggable]="false"
+[resizable]="false"
+>
+<div *ngIf="pdfLoaded">
+  <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
+</div>
+</p-dialog>
 <!-- menu -->
 <p-menu
   #menu

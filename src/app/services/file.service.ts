@@ -27,4 +27,16 @@ export class FileService {
       observe: 'response',
     });
   }
+  readDocumentPDFById(
+    id: string,
+    urlInput: string
+  ): Observable<HttpResponse<Blob>> {
+    const url = urlInput + '/' + id; // Replace with your API endpoint
+    console.log(url);
+    // Set the response type as 'blob' to handle binary files
+    return this.http.get(url, {
+      responseType: 'blob',
+      observe: 'response',
+    });
+  }
 }
