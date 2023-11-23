@@ -39,4 +39,13 @@ export class FileService {
       observe: 'response',
     });
   }
+  readAssignmentPDF(id: string): Observable<HttpResponse<Blob>> {
+    const url = `http://localhost:8080/api/v1/assignment/view/document/${id}`; // Replace with your API endpoint
+    console.log(url);
+    // Set the response type as 'blob' to handle binary files
+    return this.http.get(url, {
+      responseType: 'blob',
+      observe: 'response',
+    });
+  }
 }

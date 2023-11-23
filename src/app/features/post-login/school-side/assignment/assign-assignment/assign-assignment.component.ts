@@ -94,15 +94,15 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Nộp tài liệu', value: true },
     ];
     this.issueService.getCurrentActiveIssue().subscribe({
-    next: (data)=>{
-      issueId = data.issueDto.issueId;
-      this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-        next: (data) =>{
-          this.assignments = data.assignmentListDtos;
-        }
-      })
-    }
-    })
+      next: (data) => {
+        issueId = data.issueDto.issueId;
+        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+          next: (data) => {
+            this.assignments = data.assignmentListDtos;
+          },
+        });
+      },
+    });
     // this.assignmentService.getMyAssignedAssignments().subscribe({
     //   next: (data) => {
     //     this.assignments = data.assignmentListDtos;
@@ -150,17 +150,17 @@ export class AssignAssignmentComponent implements OnInit {
     //     this.assignments = data.assignmentListDtos;
     //   },
     // });
-      let issueId;
-      this.issueService.getCurrentActiveIssue().subscribe({
-          next: (data)=>{
-              issueId = data.issueDto.issueId;
-              this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-                  next: (data) =>{
-                      this.assignments = data.assignmentListDtos;
-                  }
-              })
-          }
-      })
+    let issueId;
+    this.issueService.getCurrentActiveIssue().subscribe({
+      next: (data) => {
+        issueId = data.issueDto.issueId;
+        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+          next: (data) => {
+            this.assignments = data.assignmentListDtos;
+          },
+        });
+      },
+    });
   }
   // ADD
   openDetail(assignment?: any, action?: string) {
@@ -402,7 +402,7 @@ export class AssignAssignmentComponent implements OnInit {
   // PREVIEW PDF
   openNewTab(documentLink: string) {
     console.log(documentLink);
-    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
+    this.fileService.readAssignmentPDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
@@ -762,5 +762,23 @@ export class AssignAssignmentComponent implements OnInit {
           });
       },
     });
+  }
+  getIconFileType(fileExtension: string): string {
+    let url = '';
+    switch (fileExtension) {
+      case 'application/pdf':
+        url = '../../../../../assets/img/pdf.png';
+        break;
+      case 'application/msword':
+        url = '../../../../../assets/img/doc.png';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        url = '../../../../../assets/img/doc.png';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        url = '../../../../../assets/img/xls.png';
+        break;
+    }
+    return url;
   }
 }

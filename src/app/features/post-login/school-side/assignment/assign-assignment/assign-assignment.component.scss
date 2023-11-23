@@ -70,6 +70,9 @@
     .p-menu {
         padding: 0;
     }
+    .p-dropdown {
+        height: 52px;
+    }
 }
 .font-weight-bold {
     font-weight: 500;
@@ -255,9 +258,9 @@ ul {
 }
 .row {
     margin: 0;
-    div {
-        padding: 0;
-    }
+    // div {
+    //     padding: 0;
+    // }
 }
 .tab {
     .p-button {

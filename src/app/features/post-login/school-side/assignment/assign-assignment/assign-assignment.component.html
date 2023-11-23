@@ -224,7 +224,10 @@
                         <div
                           class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
                         >
-                          <img src="../../../../../assets/img/pdf.png" alt="" />
+                          <img
+                            [src]="getIconFileType(item.fileExtension)"
+                            alt=""
+                          />
                         </div>
                         <div class="file-item-content">
                           <div class="row ms-2">
@@ -288,7 +291,10 @@
                       <div
                         class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
                       >
-                        <img src="../../../../../assets/img/pdf.png" alt="" />
+                        <img
+                          [src]="getIconFileType(item.fileExtension)"
+                          alt=""
+                        />
                       </div>
                       <div class="file-item-content">
                         <div class="row ms-2">
@@ -611,9 +617,12 @@
       <span class="mb-1 font-weight-bold">Người làm</span>
       <br />
       <p-dropdown
+        class="assignee-dropdown"
         [options]="listOfPossibleAssignees"
         formControlName="assigneeId"
         optionValue="accountId"
+        filterBy="user.fullName"
+        [filter]="true"
       >
         <ng-template let-option pTemplate="selectedItem">
           <div>
