@@ -1,4 +1,4 @@
-<div *ngIf="notificationItems.notificationListDtos.length > 0; else notificationEmpty">
+<div *ngIf="notificationItems &&  notificationItems.notificationListDtos.length > 0; else notificationEmpty">
   <a class="notification-item p-3 mx-1 my-1"
      *ngFor="let notification of notificationItems?.notificationListDtos; let i = index"
      (click)="handleCLickNotificationItem(i)">

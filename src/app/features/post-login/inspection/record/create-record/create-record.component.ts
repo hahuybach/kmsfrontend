@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AccountResponse} from "../../../../../models/account-response";
 import {inspectionPlanService} from "../../../../../services/inspectionplan.service";
+import {RecordService} from "../../../../../services/record.service";
 
 @Component({
   selector: 'app-create-record',
@@ -21,6 +22,7 @@ export class CreateRecordComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly inspectionPlanService: inspectionPlanService,
+    private readonly recordService: RecordService,
   ) {
   }
 
@@ -44,6 +46,30 @@ export class CreateRecordComponent implements OnInit {
       recordDescription: [null, Validators.compose([Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
       assigneeId: [0, Validators.compose([Validators.required])]
+    })
+  }
+
+  onSubmit() {
+    if (this.recordForm.invalid) {
+      this.recordForm.markAllAsTouched();
+      return;
+    }
+    const formData = new FormData();
+    const record = {
+      inspectionPlanId: this.inspectionPlanId,
+      taskName: this.recordForm.get('recordName')?.value,
+      description: this.recordForm.get('recordDescription')?.value,
+      deadline: new Date(this.recordForm.get('deadline')?.value).toISOString(),
+      assigneeId: this.recordForm.get('assigneeId')?.value,
+    }
+
+    this.recordService.saveTask(record).subscribe({
+      next: (response) => {
+        console.log(response)
+      },
+      error: (error) => {
+        console.log(error)
+      }
     })
   }
 

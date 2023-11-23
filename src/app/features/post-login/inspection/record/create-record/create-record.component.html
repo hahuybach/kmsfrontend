@@ -6,7 +6,7 @@
           [resizable]="false"
           (onHide)="resetCreateRecordPopupVisible()"
 >
-  <div class="container-fluid" [formGroup]="recordForm">
+  <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="record-name col-md-12 mt-1">
         <label class="fw-medium">Mục kiểm tra<span class="p-error">*</span></label>
@@ -63,5 +63,5 @@
         <button class="btn text-white">Lưu </button>
       </div>
     </div>
-  </div>
+  </form>
 </p-dialog>
