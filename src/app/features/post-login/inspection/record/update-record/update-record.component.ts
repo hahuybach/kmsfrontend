@@ -5,6 +5,7 @@ import {RecordService} from "../../../../../services/record.service";
 import {inspectionPlanService} from "../../../../../services/inspectionplan.service";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {TaskListDto} from "../../../../../models/inspection";
+import {TaskDetailDto} from "../../../../../models/task";
 
 @Component({
   selector: 'app-update-record',
@@ -17,6 +18,8 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   @Input() updateRecordPopupVisible: boolean;
   @Output() updateRecordPopupVisibleChange = new EventEmitter<boolean>();
   recordForm: FormGroup;
+  task: TaskDetailDto;
+  taskId: number;
   inspectionPlan: {
     inspectors: AccountResponse[];
     endDate: Date;
@@ -37,7 +40,6 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
-        console.log(this.inspectionPlan)
       },
       error: (error) => {
         console.log(error);
@@ -58,14 +60,14 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     }
     const formData = new FormData();
     const record = {
-      inspectionPlanId: this.inspectionPlanId,
+      taskId: this.taskId,
       taskName: this.recordForm.get('recordName')?.value,
       description: this.recordForm.get('recordDescription')?.value,
       deadline: new Date(this.recordForm.get('deadline')?.value).toISOString(),
       assigneeId: this.recordForm.get('assigneeId')?.value,
     }
 
-    this.recordService.saveTask(record).subscribe({
+    this.recordService.updateTask(record).subscribe({
       next: (response) => {
         console.log(response)
       },
@@ -78,7 +80,14 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
-        console.log(data)
+        this.task = data.taskDetailDto;
+        this.taskId = data.taskDetailDto.taskId;
+        this.recordForm.patchValue({
+          recordName: this.task.taskName,
+          recordDescription: this.task.description,
+          deadline: new Date(this.task.deadline).toISOString().split('T')[0],
+          assigneeId: this.task.assignee?.accountId
+        })
       },
       error: (error) => {
         console.log(error);

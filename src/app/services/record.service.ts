@@ -18,6 +18,11 @@ export class RecordService {
     const url = `${this.taskApiUrl}/save`;
     return this.http.post(url, record, { headers });
   }
+  public updateTask(record?: any): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const url = `${this.taskApiUrl}/update`;
+    return this.http.put(url, record, { headers });
+  }
 
   public getRecordById(recordId: number): Observable<any> {
     let headers = new HttpHeaders();
