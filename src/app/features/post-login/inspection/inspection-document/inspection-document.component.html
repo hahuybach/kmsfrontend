@@ -9,6 +9,11 @@
   (updateRecordPopupVisibleChange)="changeUpdateRecordVisible()"
   [recordId]="recordId"
 >
+  <app-record-detail
+  [recordId]="recordId"
+  [detailRecordPopupVisible]="detailRecordPopupVisible"
+  (detailRecordPopupVisibleChange)="changeDetailRecordVisible()">
+  </app-record-detail>
 </app-update-record>
 <div class="container-fluid">
   <div class="row">
@@ -89,7 +94,9 @@
               <td style="text-align: center"
                   class="d-flex td-action justify-content-center align-items-center">
                 <div class="action-item d-flex justify-content-center align-items-center mx-2">
+                  <button type="button" (click)="initDetailRecordData(taskList.taskId)">
                     <i class="bi bi-info-circle-fill"></i>
+                  </button>
                 </div>
                 <div class="action-item d-flex justify-content-center align-items-center mx-2">
                   <button type="button" (click)="initUpdateRecordData(taskList.taskId)">

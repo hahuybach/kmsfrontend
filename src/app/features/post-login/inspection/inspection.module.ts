@@ -9,6 +9,7 @@ import { FileItemComponent } from './component/file-item/file-item.component';
 import {InspectionPlanModule} from "../inspection-plan-list/inspection-plan/inspection-plan.module";
 import { CreateRecordComponent } from './record/create-record/create-record.component';
 import { UpdateRecordComponent } from './record/update-record/update-record.component';
+import { RecordDetailComponent } from './record/record-detail/record-detail.component';
 
 
 
@@ -20,7 +21,8 @@ import { UpdateRecordComponent } from './record/update-record/update-record.comp
     InspectionDocumentComponent,
     FileItemComponent,
     CreateRecordComponent,
-    UpdateRecordComponent
+    UpdateRecordComponent,
+    RecordDetailComponent
   ],
   imports: [
     CommonModule,

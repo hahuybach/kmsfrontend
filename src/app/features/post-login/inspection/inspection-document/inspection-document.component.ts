@@ -14,6 +14,7 @@ export class InspectionDocumentComponent implements OnInit {
   inspectionDocument: InspectionDocument;
   createRecordPopupVisible: boolean = false;
   updateRecordPopupVisible: boolean = false;
+  detailRecordPopupVisible: boolean = false;
 
   constructor(
     private readonly inspectionService: InspectionService,
@@ -31,6 +32,15 @@ export class InspectionDocumentComponent implements OnInit {
   initUpdateRecordData(recordId: number){
     this.recordId = recordId;
     this.changeUpdateRecordVisible()
+  }
+
+  changeDetailRecordVisible() {
+    this.detailRecordPopupVisible = !this.detailRecordPopupVisible;
+  }
+
+  initDetailRecordData(recordId: number){
+    this.recordId = recordId;
+    this.changeDetailRecordVisible()
   }
 
   ngOnInit(): void {
