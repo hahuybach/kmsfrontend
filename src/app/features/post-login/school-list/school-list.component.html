@@ -3,7 +3,10 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <h2>Danh sách các trường</h2>
 <div class="d-flex justify-content-end mb-3" *ngIf="!isDirector">
+  <button (click)="showImportSchool()" class="btn btn-info ml-3 mr-3">Nhập trường bằng file excel</button>
+
   <button class="btn btn-primary" (click)="onCreateSchool()">Tạo mới</button>
+
 </div>
 <div class="card">
   <p-table
@@ -110,3 +113,19 @@
 
   </p-table>
 </div>
+<p-dialog header="Tạo trường bằng file excel" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+  <div>
+    <input
+            class="form-control"
+            required
+            (change)="onSubmitFile($event)"
+            type="file"
+    />
+    <button class="btn btn-primary mt-3" (click)="onCreateSchoolByFile()">
+      Xác nhận
+    </button>
+    <button class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
+      Tải file mẫu
+    </button>
+  </div>
+</p-dialog>

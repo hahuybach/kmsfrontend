@@ -92,7 +92,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
             this.deadlineEndDateTime = value['deadlineEndDateTime']
           }
           if(value['selectedSchool'] && value['selectedSchool'] !== undefined ){
-            this.selectedSchool = {}
             this.selectedSchool.schoolId = value['selectedSchool']
           }
           if(value['advanceSearch']){

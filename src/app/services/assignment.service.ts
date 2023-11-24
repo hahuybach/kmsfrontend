@@ -169,4 +169,6 @@ export class AssignmentService {
     const url = this.assignmentApiUrl + "my_assigned_assignments_by_issue_id/" + issueId;
     return this.http.get<any>(url, { headers });
   }
+
+
 }

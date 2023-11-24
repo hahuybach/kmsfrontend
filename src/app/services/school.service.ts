@@ -48,4 +48,18 @@ export class SchoolService {
     const url = `${this.baseUrl}list`;
     return this.httpClient.get<any[]>(url, {headers});
   }
+  uploadFileExcel(data : any){
+    const formData : FormData = new FormData();
+    formData.append("file", data);
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+    return  this.httpClient.post<any>(this.baseUrl + "excel", formData, { headers })
+  }
+
+  getSchoolTemplate(){
+    return this.httpClient.get(this.baseUrl + "exportTemplate", {
+      responseType: 'blob',
+      observe: 'response',
+    });
+  }
 }
