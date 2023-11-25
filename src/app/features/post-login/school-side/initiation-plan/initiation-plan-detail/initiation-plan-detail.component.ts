@@ -163,7 +163,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.confirmationService.confirm({
       header: 'Xác nhận xóa',
       message: 'Bạn có chắc chắn muốn xóa tài liệu?',
-      key: 'confirm',
+      key: 'confirmInitiationplan',
       accept: () => {
         this.fileStatus = false;
         this.inputFileForm.reset();
@@ -182,7 +182,7 @@ export class InitiationPlanDetailComponent implements OnInit {
       message: 'Bạn có chắc chắn nộp tài liệu?',
       header: 'Xác nhận phê duyệt',
       icon: 'bi bi-exclamation-triangle-fill',
-      key: 'confirm',
+      key: 'confirmInitiationplan',
       accept: () => {
         if (this.inputFileForm.get('file')?.value) {
           this.inputFileForm.get('isPasssed')?.setValue(true);

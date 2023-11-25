@@ -110,6 +110,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
         message: 'Bạn có chắc chắn phê duyệt kế hoạch này?',
         header: 'Xác nhận phê duyệt',
         icon: 'bi bi-exclamation-triangle-fill',
+        key: 'confirmSchoolInitiationplan',
         accept: () => {
           this.inputFileForm.get('isPasssed')?.setValue(true);
           const formData = new FormData();
@@ -204,6 +205,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
         '?',
       header: 'Xác nhận không phê duyệt',
       icon: 'bi bi-exclamation-triangle-fill',
+      key: 'confirmSchoolInitiationplan',
       accept: () => {
         const formData = new FormData();
         const initiationplan = {

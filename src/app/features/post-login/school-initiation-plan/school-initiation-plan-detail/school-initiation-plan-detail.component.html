@@ -5,6 +5,7 @@
   [style]="{ width: '50vw' }"
   acceptLabel="Đồng ý"
   rejectLabel="Hủy"
+  key="confirmSchoolInitiationplan"
 ></p-confirmDialog>
 <!-- file preview -->
 <p-dialog
@@ -173,6 +174,7 @@
       <div class="col-md-9">
         <input
           type="file"
+          accept="application/pdf"
           #fileInput
           style="display: none"
           (change)="handleFileInputChange(fileInput)"

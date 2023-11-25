@@ -17,6 +17,7 @@ import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.
 import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -53,6 +54,10 @@ export class AssignAssignmentComponent implements OnInit {
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
   documentUrl: SafeUrl;
+  fileUrl: string;
+  docxUrl: string;
+  safeDocxUrl: SafeResourceUrl;
+  documentContent: string | null = null;
   statusOptions = [
     {
       label: 'Chờ phê duyệt',
@@ -104,6 +109,13 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
           next: (data) => {
             this.assignments = data.assignmentListDtos;
+          },
+          error: (error) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Xảy ra lỗi',
+              detail: error.error.message,
+            });
           },
         });
       },
@@ -415,11 +427,14 @@ export class AssignAssignmentComponent implements OnInit {
     });
   }
   // preview docx and excel
-  previewFile(documentLink: string) {
+  previewFile(documentLink: string, fileExtension: string) {
     this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
       const blobUrl = window.URL.createObjectURL(data.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      if (this.safePdfUrl !== undefined) {
+        this.fileUrl = this.safePdfUrl + '';
+      }
       this.pdfLoaded = true;
       console.log(this.safePdfUrl);
     });
@@ -543,8 +558,7 @@ export class AssignAssignmentComponent implements OnInit {
     }
     this.assignmentService.uploadDocument(formData).subscribe({
       next: (data) => {
-        this.documents = data.documents;
-        console.log(this.documents);
+        this.refreshSelectedAssignment();
         this.fileVisible = false;
       },
       error: (error) => {},
@@ -796,4 +810,27 @@ export class AssignAssignmentComponent implements OnInit {
     }
     return url;
   }
+  // viewDocxFile(documentLink: string) {
+  //   this.fileService
+  //     .readAssignmentPDF(documentLink)
+  //     .subscribe((response: HttpResponse<Blob>) => {
+  //       const fileName = this.getFileNameFromResponseHeaders(response);
+  //       const blobUrl = window.URL.createObjectURL(response.body);
+  //       this.docxUrl = blobUrl;
+  //       this.safeDocxUrl =
+  //         this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+  //       saveAs(response.body, fileName);
+  //     });
+  // }
+  // readWordDocument(blobData: Blob): void {
+  //   this.wordDocService
+  //     .readWordBlob(blobData)
+  //     .then((content) => {
+  //       console.log(content);
+  //       this.documentContent = content;
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error reading Word document:', error);
+  //     });
+  // }
 }
