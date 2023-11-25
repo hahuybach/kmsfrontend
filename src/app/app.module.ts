@@ -67,6 +67,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ChangePasswordComponent } from './components/user-profile/change-password/change-password.component';
 import { NotificationListAllComponent } from './components/notification-list/notification-list-all/notification-list-all.component';
 import { NotificationListUnseenComponent } from './components/notification-list/notification-list-unseen/notification-list-unseen.component';
+import { SchoolListModule } from './features/post-login/school-list/school-list.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,10 +90,6 @@ import { NotificationListUnseenComponent } from './components/notification-list/
     GuidanceDocumentDetailComponent,
     GuidanceDocumentFilesComponent,
     GuidanceDocumentCreateComponent,
-    SchoolListComponent,
-    SchoolDetailComponent,
-    SchoolCreateComponent,
-    SchoolUpdateComponent,
     UserListComponent,
     UserDetailComponent,
     UserCreateComponent,
@@ -124,6 +121,7 @@ import { NotificationListUnseenComponent } from './components/notification-list/
     ToastModule,
     AssignmentModule,
     SchoolAssignmentModule,
+    SchoolListModule,
   ],
   providers: [
     MessageService,

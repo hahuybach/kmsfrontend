@@ -24,8 +24,6 @@
     currentPageReportTemplate="Hiện từ {first} đến {last} trong tổng {totalRecords} bản ghi"
     [rowsPerPageOptions]="[5, 10, 20]"
     [globalFilterFields]="['schoolId', 'schoolName', 'exactAddress']"
-    [scrollable]="true"
-    scrollHeight="400px"
     [(selection)]="selectedSchool"
     selectionMode="single"
   >
@@ -124,7 +122,15 @@
       <tr>
         <td>{{ school.schoolId }}</td>
         <td>{{ school.schoolName }}</td>
-        <td>{{ school.exactAddress }}</td>
+        <td>
+          <div
+            class="td-content"
+            pTooltip="Enter your username"
+            tooltipPosition="top"
+          >
+            {{ school.exactAddress }}
+          </div>
+        </td>
         <td>
           <p-tag
             class="status"
@@ -140,20 +146,16 @@
         >
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="onDetail(school.schoolId)"
           >
-            <i
-              class="bi bi-info-circle-fill"
-              (click)="onDetail(school.schoolId)"
-            ></i>
+            <i class="bi bi-info-circle-fill"></i>
           </div>
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="onUpdate(school.schoolId)"
             *ngIf="!isDirector"
           >
-            <i
-              class="bi bi-pencil-fill"
-              (click)="onUpdate(school.schoolId)"
-            ></i>
+            <i class="bi bi-pencil-fill"></i>
           </div>
         </td>
       </tr>
