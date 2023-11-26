@@ -1,7 +1,7 @@
 <p-dialog header="Danh sách đoàn kiểm tra"
           [(visible)]="detailRecordPopupVisible"
           [modal]="true"
-          [style]="{ width: '80vw' }"
+          [style]="{ width: '40%' }"
           [draggable]="false"
           [resizable]="false"
           (onHide)="resetDetailRecordPopupVisible()"
@@ -13,18 +13,20 @@
         <p class="fw-bolder">{{task.taskName}}</p>
       </div>
       <div class="record-description col-md-12 mt-1">
-        <span class="fw-medium">Chi tiết</span>
+        <span>Chi tiết</span>
         <p class="fw-bolder">{{task.description}}</p>
       </div>
-      <div class="record-deadline col-md-6 mt-1">
+      <div class="record-deadline col-md-12 mt-1">
         <span>Hạn nộp</span>
         <p class="fw-bolder"> {{task.deadline | date: "dd/MM/yyyy"}}</p>
       </div>
-      <div class="record-assignee col-md-6 mt-1">
+      <div class="record-assignee col-md-12 mt-1">
         <span>Người thực hiện</span>
-        <select readonly="true">
-          <option selected>{{task.assignee.user.fullName}}</option>
-        </select>
+        <p class="fw-bolder">{{task.assignee.user.fullName}}</p>
+      </div>
+      <div class="record-document col-md-12 mt-1">
+        <span>Tài liệu</span>
+        <app-file-item></app-file-item>
       </div>
     </div>
   </div>

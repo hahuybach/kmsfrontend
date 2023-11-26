@@ -14,7 +14,7 @@
   </ng-template>
 </p-dialog>
 
-<div class="file-item py-3 d-flex" *ngIf="document" (click)="openNewTab(document.documentLink)">
+<div class="file-item py-3 d-flex" *ngIf="document; else documentEmpty" (click)="openNewTab(document.documentLink)">
   <div class="file-item-icon d-flex justify-content-center align-items-center">
     <img src="assets/img/pdf_logo.svg" alt=""/>
   </div>
@@ -44,3 +44,9 @@
     </div>
   </div>
 </div>
+<ng-template #documentEmpty>
+  <div class="file-item-empty mt-2 py-3 d-flex flex-column justify-content-around align-items-center">
+    <i class="bi bi-file-earmark-x-fill"></i>
+    <p class="fw-bolder mt-2">Tài liệu hiện đang không tồn tại</p>
+  </div>
+</ng-template>

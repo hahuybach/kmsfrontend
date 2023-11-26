@@ -49,7 +49,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
       recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       recordDescription: [null, Validators.compose([Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
-      assigneeId: [0, Validators.compose([Validators.required])]
+      assigneeId: [null, Validators.compose([Validators.required])]
     })
   }
 
@@ -75,6 +75,17 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
         console.log(error)
       }
     })
+  }
+
+  public findInvalidControls() {
+    const invalid = [];
+    const controls = this.recordForm.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    return invalid;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

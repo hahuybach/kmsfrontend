@@ -45,7 +45,7 @@ export class CreateRecordComponent implements OnInit {
       recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       recordDescription: [null, Validators.compose([Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
-      assigneeId: [0, Validators.compose([Validators.required])]
+      assigneeId: [null, Validators.compose([Validators.required])]
     })
   }
 
