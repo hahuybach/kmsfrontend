@@ -23,7 +23,6 @@ export class SchoolUpdateComponent implements OnInit {
     address: ['', NoWhitespaceValidator()],
     isActive: [false, Validators.required],
     principalEmail: ['', [Validators.email], [this.validateEmailUnique.bind(this)]],
-
     fullName: ['', [NoWhitespaceValidator(), Validators.required]],
     gender: ['MALE'],
     phoneNumber: [null, [Validators.pattern("^[0-9]{10}$")]],
@@ -164,9 +163,7 @@ export class SchoolUpdateComponent implements OnInit {
 
     const email = control.value;
     return new Promise<ValidationErrors | null>((resolve, reject) => {
-      if (this.principal?.email == email) {
-        resolve(null)
-      }
+
       this.accountService.isUnique(email).subscribe({
         next: (result) => {
           console.log(result);

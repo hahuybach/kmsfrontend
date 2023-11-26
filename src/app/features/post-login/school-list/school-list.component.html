@@ -121,7 +121,7 @@
             (change)="onSubmitFile($event)"
             type="file"
     />
-    <button class="btn btn-primary mt-3" (click)="onCreateSchoolByFile()">
+    <button class="btn btn-primary mt-3" (click)="confirm()">
       Xác nhận
     </button>
     <button class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
@@ -129,3 +129,5 @@
     </button>
   </div>
 </p-dialog>
+<p-confirmDialog key="createSchoolByExcel" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-toast position="top-right" key="error"></p-toast>
