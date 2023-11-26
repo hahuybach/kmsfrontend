@@ -4,7 +4,34 @@
   [style]="{ width: '50vw' }"
   acceptLabel="Đồng ý"
   rejectLabel="Hủy"
+  key="confirmAssignment"
 ></p-confirmDialog>
+<!-- file preview -->
+<p-dialog
+  [(visible)]="pdfLoaded"
+  [style]="{ width: '80vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <ngx-doc-viewer [url]="fileUrl"></ngx-doc-viewer>
+  <div *ngIf="documentContent">
+    <div [innerHTML]="documentContent"></div>
+  </div>
+  <!-- app.component.html -->
+  <!-- <app-document-viewer></app-document-viewer> -->
+
+  <!-- <div *ngIf="pdfLoaded">
+    <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
+  </div> -->
+</p-dialog>
+<!-- menu -->
+<p-menu
+  #menu
+  [model]="items"
+  [popup]="true"
+  [style.display]="menuVisible ? 'block' : 'none'"
+>
+</p-menu>
 <!-- popup file upload -->
 <p-dialog
   header="Tải file"
@@ -16,59 +43,57 @@
   <form [formGroup]="fileInputForm">
     <div class="row">
       <div>
-        <div>
-          <span class="text-black-50">Mã tài liệu</span>
-          <br />
-          <input
-            formControlName="documentCode"
-            class="form-control"
-            type="text"
-            placeholder="Điền mã tài liệu"
-          />
-          <br />
-        </div>
-        <div>
-          <span class="text-black-50">Tên tài liệu</span>
-          <br />
-          <input
-            formControlName="documentName"
-            class="form-control"
-            type="text"
-            placeholder="Điền tên tài liệu"
-          />
-          <br />
-          <ng-container
-            *ngIf="fileInputForm.get('documentName')?.dirty && fileInputForm.controls.documentName.errors?.['whitespace']"
-          >
-            <span class="p-error">Vui lòng điền tên tài liệu</span>
-          </ng-container>
-        </div>
-        <div class="file-input">
-          <span class="text-black-50">Tệp tài liệu</span>
-          <br />
-          <input
-            type="file"
-            #fileInput
-            style="display: none"
-            (change)="handleFileInputChange(fileInput)"
-          />
-          <input
-            pInputText
-            readonly
-            class="col-md-9"
-            placeholder="{{
-              fileInputPlaceholders
-                ? fileInputPlaceholders
-                : 'Chọn file để tải lên'
-            }}"
-          />
-          <button
-            type="button"
-            pButton
-            label="Chọn tệp"
-            (click)="fileInput.click()"
-          ></button>
-        </div>
+        <span class="text-black-50">Mã tài liệu</span>
+        <br />
+        <input
+          formControlName="documentCode"
+          class="form-control"
+          type="text"
+          placeholder="Điền mã tài liệu"
+        />
+        <br />
+      </div>
+      <div>
+        <span class="text-black-50">Tên tài liệu</span>
+        <br />
+        <input
+          formControlName="documentName"
+          class="form-control"
+          type="text"
+          placeholder="Điền tên tài liệu"
+        />
+        <br />
+        <span
+          *ngIf="fileInputForm.get('documentName')?.dirty && fileInputForm.controls.documentName.errors?.['whitespace']"
+          class="p-error"
+          >Vui lòng điền tên tài liệu</span
+        >
+      </div>
+      <div class="file-input">
+        <span class="text-black-50">Tệp tài liệu</span>
+        <br />
+        <input
+          type="file"
+          #fileInput
+          style="display: none"
+          (change)="handleFileInputChange(fileInput)"
+        />
+        <input
+          pInputText
+          readonly
+          class="col-md-9"
+          placeholder="{{
+            fileInputPlaceholders
+              ? fileInputPlaceholders
+              : 'Chọn file để tải lên'
+          }}"
+        />
+        <button
+          type="button"
+          pButton
+          label="Chọn tệp"
+          (click)="fileInput.click()"
+        ></button>
       </div>
     </div>
     <div class="mt-5">
@@ -163,45 +188,145 @@
           *ngIf="
             action === 'update' && hasAuthority('canModifyFolderAsmMetaData')
           "
-          class="height-100 mt-3"
         >
-          <button pButton label="Lưu" (click)="update()"></button>
+          <div class="mt-3">
+            <button
+              *ngIf="
+                assignmentForm.get('assignmentName')?.dirty ||
+                assignmentForm.get('description')?.dirty ||
+                assignmentForm.get('deadline')?.dirty
+              "
+              pButton
+              label="Lưu"
+              (click)="update()"
+            ></button>
+          </div>
         </div>
 
         <!-- file -->
         <div class="mt-2" *ngIf="selectedAssignment.task">
-          <div
+          <ng-container
             *ngIf="
               action === 'update' &&
-              (hasAuthority('canUploadDocument') ||
-                hasAuthority('canDeleteDocument'))
+                (hasAuthority('canUploadDocument') ||
+                  hasAuthority('canDeleteDocument'));
+              else fileTemplate
             "
           >
-            <div class="d-flex justify-content-between">
-              <div>
-                <span class="text-black-50">Tài liệu</span>
+            <div>
+              <div class="d-flex justify-content-between">
+                <div>
+                  <span class="text-black-50">Tài liệu</span>
+                </div>
+                <div
+                  class="add-file-item d-flex align-items-center justify-content-center"
+                  (click)="showFilePopup()"
+                >
+                  <i class="bi bi-plus-circle-fill"></i>
+                </div>
               </div>
-              <div
-                class="add-file-item d-flex align-items-center justify-content-center"
-                (click)="showFilePopup()"
-              >
-                <i class="bi bi-plus-circle-fill"></i>
-              </div>
-            </div>
-            <ng-container *ngIf="hasAuthority('canSubmit')">
-              <ng-container *ngFor="let item of documents; let i = index">
-                <div class="row mb-3">
-                  <div class="col-md-11">
-                    <div (click)="openNewTab(item.documentLink)">
-                      <div class="file-item px-3 py-1 d-flex">
-                        <div
-                          class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
-                        >
-                          <img src="../../../../../assets/img/pdf.png" alt="" />
+              <ng-container *ngIf="hasAuthority('canSubmit')">
+                <ng-container
+                  *ngFor="
+                    let item of selectedAssignment.documents;
+                    let i = index
+                  "
+                >
+                  <div class="row mb-3">
+                    <div class="col-md-11">
+                      <!-- <div (click)="openNewTab(item.documentLink)"> -->
+                      <div
+                        (click)="
+                          previewFile(item.documentLink, item.fileExtension)
+                        "
+                      >
+                        <div class="file-item px-3 py-1 row">
+                          <div
+                            class="col-md-2 file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                          >
+                            <img
+                              [src]="getIconFileType(item.fileExtension)"
+                              alt=""
+                            />
+                          </div>
+                          <div class="col-md-10 file-item-content">
+                            <div class="row ms-2">
+                              <div class="col-md-10">
+                                <span class="font-weight-bold font-size-18">{{
+                                  item.documentName
+                                }}</span>
+                                <br />
+                                <span
+                                  ><span class="font-weight-bold">Mã:</span>
+                                  {{ item.documentCode }}</span
+                                >
+                              </div>
+                              <!-- <div class="col-md-2">
+                              <span class="text-black-50">{{
+                                item.sizeFormat || item.file.size
+                              }}</span>
+                              <br />
+                              <span>{{
+                                item.uploadedDate | date : "MM/dd/yyyy"
+                              }}</span>
+                            </div> -->
+                            </div>
+                          </div>
                         </div>
-                        <div class="file-item-content">
+                      </div>
+                    </div>
+                    <div
+                      class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
+                      (click)="removeDoc(i, item.documentId)"
+                    >
+                      <i class="bi bi-x-lg"></i>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    selectedAssignment.documents.length != 0 &&
+                    hasAuthority('canSubmit')
+                  "
+                >
+                  <button pButton (click)="submit()">Xác nhận nộp</button>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+          <ng-template #fileTemplate>
+            <div>
+              <div class="d-flex justify-content-between">
+                <div>
+                  <span class="text-black-50">Tài liệu</span>
+                </div>
+              </div>
+              <br />
+              <div *ngIf="selectedAssignment.documents.length > 0">
+                <ng-container
+                  *ngFor="
+                    let item of selectedAssignment.documents;
+                    let i = index
+                  "
+                >
+                  <div class="row mb-3">
+                    <div
+                      (click)="
+                        previewFile(item.documentLink, item.fileExtension)
+                      "
+                    >
+                      <div class="file-item px-3 py-1 row">
+                        <div
+                          class="col-md-1 file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            [src]="getIconFileType(item.fileExtension)"
+                            alt=""
+                          />
+                        </div>
+                        <div class="col-md-11 file-item-content">
                           <div class="row ms-2">
-                            <div class="col-md-10">
+                            <div class="col-md-8">
                               <span class="font-weight-bold font-size-18">{{
                                 item.documentName
                               }}</span>
@@ -211,7 +336,7 @@
                                 {{ item.documentCode }}</span
                               >
                             </div>
-                            <!-- <div class="col-md-2">
+                            <div class="col-md-4">
                               <span class="text-black-50">{{
                                 item.sizeFormat || item.file.size
                               }}</span>
@@ -219,88 +344,25 @@
                               <span>{{
                                 item.uploadedDate | date : "MM/dd/yyyy"
                               }}</span>
-                            </div> -->
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div
-                    class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
-                    (click)="removeDoc(i, item.documentId)"
-                  >
-                    <i class="bi bi-x-lg"></i>
-                  </div>
-                </div>
-              </ng-container>
-              <ng-container
-                *ngIf="documents.length != 0 && hasAuthority('canSubmit')"
-              >
-                <button pButton (click)="submit()">Xác nhận nộp</button>
-              </ng-container>
-            </ng-container>
-          </div>
-
-          <div
-            *ngIf="
-              action === 'info' ||
-              (action === 'update' && hasAuthority('canUnSubmit'))
-            "
-          >
-            <div class="d-flex justify-content-between">
-              <div>
-                <span class="text-black-50">Tài liệu</span>
+                </ng-container>
               </div>
-            </div>
-            <br />
-            <div *ngIf="documents.length > 0">
-              <ng-container *ngFor="let item of documents; let i = index">
-                <div class="row mb-3">
-                  <div (click)="openNewTab(item.documentLink)">
-                    <div class="file-item px-3 py-1 d-flex">
-                      <div
-                        class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
-                      >
-                        <img src="../../../../../assets/img/pdf.png" alt="" />
-                      </div>
-                      <div class="file-item-content">
-                        <div class="row ms-2">
-                          <div class="col-md-10">
-                            <span class="font-weight-bold font-size-18">{{
-                              item.documentName
-                            }}</span>
-                            <br />
-                            <span
-                              ><span class="font-weight-bold">Mã:</span>
-                              {{ item.documentCode }}</span
-                            >
-                          </div>
-                          <!-- <div class="col-md-2">
-                          <span class="text-black-50">{{
-                            item.sizeFormat || item.file.size
-                          }}</span>
-                          <br />
-                          <span>{{
-                            item.uploadedDate | date : "MM/dd/yyyy"
-                          }}</span>
-                        </div> -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <ng-container
+                *ngIf="
+                  selectedAssignment.documents.length != 0 &&
+                  hasAuthority('canUnSubmit') &&
+                  action === 'update'
+                "
+              >
+                <button pButton (click)="cancel()">Hủy</button>
               </ng-container>
             </div>
-            <ng-container
-              *ngIf="
-                documents.length != 0 &&
-                hasAuthority('canUnSubmit') &&
-                action === 'update'
-              "
-            >
-              <button pButton (click)="cancel()">Hủy</button>
-            </ng-container>
-          </div>
+          </ng-template>
         </div>
         <div class="mt-2" *ngIf="!selectedAssignment.task">
           <span class="text-black-50"> Danh sách thư mục/công việc con </span>
@@ -369,11 +431,8 @@
               </div>
             </form>
           </div>
-          <div *ngIf="selectedAssignment.comments" class="comment-content pt-2">
-            <div
-              *ngFor="let item of selectedAssignment.comments"
-              class="comment-item row"
-            >
+          <div *ngIf="comments" class="comment-content pt-2">
+            <div *ngFor="let item of comments" class="comment-item row mb-1">
               <div
                 class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
               >
@@ -381,24 +440,43 @@
               </div>
               <div class="comment-item-content col-md-10">
                 <span class="font-weight-bold font-size-18"
-                  >{{ item.userName }}
+                  >{{ item.creator.user.fullName }}
                 </span>
                 <span class="text-black-50 comment-date">{{
-                  item.createdDate | date : "dd/MM/yyyy"
+                  item.createdDate | date : "dd/MM/yyyy hh:mm"
                 }}</span>
 
                 <br />
                 <span>{{ item.content }}</span>
               </div>
               <div
+                *ngIf="this.user === item.creator.email"
                 class="col-md-1 d-flex justify-content-center align-items-center"
+                (click)="toggleMenu(item.commentId, $event)"
               >
                 <i class="bi bi-three-dots-vertical"></i>
               </div>
             </div></div
         ></ng-container>
         <ng-template #showHistory>
-          <span class="font-weight-bold">Lịch sử</span>
+          <ng-container *ngFor="let item of historyDtos" class="mt-3">
+            <div class="history-item row mt-2">
+              <div
+                class="history-item-ava col-md-1 d-flex justify-content-center align-items-center"
+              >
+                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+              </div>
+              <div class="col-md-11 history-item-content">
+                <span>
+                  {{ item.actionDescription }}
+                </span>
+                <br />
+                <span class="text-black-50 history-date">
+                  {{ item.createdDate | date : "dd/MM/yyyy  hh:mm" }}
+                </span>
+              </div>
+            </div>
+          </ng-container>
         </ng-template>
       </div>
 
@@ -437,7 +515,7 @@
             </ng-template>
             <ng-template let-option pTemplate="item">
               <div>
-                {{ option.user.fullName }}
+                {{ option?.user.fullName }}
               </div>
             </ng-template>
           </p-dropdown>
@@ -495,7 +573,11 @@
           <button pButton (click)="completeOrCancelCF(false)">Hủy</button>
         </div>
         <div
-          *ngIf="selectedAssignment.task && hasAuthority('canEvaluate')"
+          *ngIf="
+            selectedAssignment.task &&
+            hasAuthority('canEvaluate') &&
+            action === 'info'
+          "
           class="height-100 approvement"
         >
           <h6>Đánh giá</h6>
@@ -542,7 +624,6 @@
       <p-dropdown
         [options]="typeAssignmentOptions"
         formControlName="isTask"
-        optionValue="value"
       ></p-dropdown>
     </div>
     <div class="mb-2">
@@ -569,23 +650,26 @@
       <span class="mb-1 font-weight-bold">Người làm</span>
       <br />
       <p-dropdown
+        class="assignee-dropdown"
         [options]="listOfPossibleAssignees"
         formControlName="assigneeId"
         optionValue="accountId"
+        filterBy="user.fullName"
+        [filter]="true"
       >
         <ng-template let-option pTemplate="selectedItem">
           <div>
-            <span> {{ option.user.fullName }} </span>&nbsp;<span
+            <span> {{ option?.user.fullName }} </span>&nbsp;<span
               class="text-black-50"
             >
-              {{ option.email }}</span
+              {{ option?.email }}</span
             >
           </div>
         </ng-template>
         <ng-template let-option pTemplate="item">
           <div>
-            <span> {{ option.user.fullName }} </span>&nbsp;<span>
-              {{ option.email }}</span
+            <span> {{ option?.user.fullName }} </span>&nbsp;<span>
+              {{ option?.email }}</span
             >
           </div>
         </ng-template>
@@ -622,10 +706,10 @@
 
 <h4>Danh sách công việc</h4>
 <p-treeTable
+  #treeTable
   [value]="assignments"
   [scrollable]="true"
   [style]="{ 'min-width': '50rem' }"
-  [scrollable]="true"
   scrollHeight="600px"
   class="tree-table"
 >
@@ -638,8 +722,8 @@
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
-      <th>Công việc</th>
-      <th>Người giao</th>
+      <th class="width-30">Công việc</th>
+      <!-- <th>Người giao</th> -->
       <th>Người làm</th>
       <th>Hạn nộp</th>
       <th>Trạng thái</th>
@@ -648,17 +732,19 @@
   </ng-template>
   <ng-template pTemplate="body" let-rowData let-rowNode>
     <tr [ttRow]="rowNode">
-      <td class="folder">
+      <td class="folder width-30">
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
         <ng-container *ngIf="rowData.node.task">
           <i class="bi bi-file-earmark-check-fill file-icon"></i>
         </ng-container>
         <ng-container *ngIf="!rowData.node.task">
-          <i class="bi bi-folder-fill folder-icon"></i>
+          <i class="bi bi-file-earmark-text file-icon"></i>
         </ng-container>
-        {{ rowData.node.assignmentName }}
+        <span>
+          {{ rowData.node.assignmentName }}
+        </span>
       </td>
-      <td>{{ rowData.node.assigner?.user.fullName }}</td>
+      <!-- <td>{{ rowData.node.assigner?.user.fullName }}</td>   -->
       <td>{{ rowData.node.assignee?.user.fullName }}</td>
       <td>{{ rowData.node?.deadline | date : "dd/MM/yyyy" }}</td>
       <td>
@@ -669,7 +755,7 @@
           {{ rowData.node?.status.statusName }}
         </p-tag>
       </td>
-      <td class="d-flex width-200">
+      <td class="d-flex">
         <div
           class="action-item d-flex justify-content-center align-items-center mx-2"
           (click)="openDetailRowNode(rowData.node, 'info')"

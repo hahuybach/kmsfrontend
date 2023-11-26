@@ -9,6 +9,7 @@ import {AccountService} from "../../../../services/account.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
 import {validateDateNotGreaterThanToday} from "../../../../shared/validators/date-not-greater-than-today";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
   selector: 'app-school-update',
@@ -22,7 +23,6 @@ export class SchoolUpdateComponent implements OnInit {
     address: ['', NoWhitespaceValidator()],
     isActive: [false, Validators.required],
     principalEmail: ['', [Validators.email], [this.validateEmailUnique.bind(this)]],
-
     fullName: ['', [NoWhitespaceValidator(), Validators.required]],
     gender: ['MALE'],
     phoneNumber: [null, [Validators.pattern("^[0-9]{10}$")]],
@@ -35,6 +35,7 @@ export class SchoolUpdateComponent implements OnInit {
   isLoading: boolean = false;
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
+  submitCompleted = false;
 
 
   constructor(private router: Router,
@@ -42,7 +43,8 @@ export class SchoolUpdateComponent implements OnInit {
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
               private accountService: AccountService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private confirmationService: ConfirmationService) {
 
 
   }
@@ -81,7 +83,10 @@ export class SchoolUpdateComponent implements OnInit {
       this.schoolService.updateSchool(this.updateForm.value).subscribe(
         {
           next: (data) => {
-            this.router.navigate(['school/' + this.school.schoolId])
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.router.navigate(['school/' + this.school.schoolId])
+            }, 1500)
           },
           error: (err) => {
             this.isLoading = false;
@@ -162,9 +167,7 @@ export class SchoolUpdateComponent implements OnInit {
 
     const email = control.value;
     return new Promise<ValidationErrors | null>((resolve, reject) => {
-      if (this.principal?.email == email) {
-        resolve(null)
-      }
+
       this.accountService.isUnique(email).subscribe({
         next: (result) => {
           console.log(result);
@@ -194,4 +197,29 @@ export class SchoolUpdateComponent implements OnInit {
   onBack() {
     this.router.navigate(['school/' + this.school.schoolId])
   }
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận hành động này không?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel:'Không',
+      accept: () => {
+        this.onSubmit()
+
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật');
+            break;
+          case ConfirmEventType.CANCEL:
+            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật');
+            break;
+        }
+      },key: 'updateSchoolConfirm'
+    });
+  }
+
+
 }

@@ -3,7 +3,7 @@
 </div>
 <p-toast position="top-right" key="error"></p-toast>
 <p-toast position="center" key="confirm"></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog key="popUpConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
 
 <form [formGroup]="createUserForm" >
   <div class="row">
@@ -172,8 +172,15 @@
     <button (click)="confirm()" type="submit" class="btn btn-primary">Tạo</button>
   </div>
 </form>
-<div class="overlay" *ngIf="isLoading">
-  <div class="spinner-container">
-    <div class="spinner-border" role="status"></div>
-  </div>
-</div>
+<!--<div class="overlay" *ngIf="isLoading">-->
+<!--  <div class="spinner-container">-->
+<!--    <div class="spinner-border" role="status"></div>-->
+<!--  </div>-->
+<!--</div>-->
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Tạo mới người dùng'"
+  [progress]="'Đang tạo mới người dùng'"
+  [complete]="'Tạo mới người dùng thành công'"
+></app-loading-complete-dialog>

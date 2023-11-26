@@ -6,7 +6,7 @@ import {SchoolService} from "../../../../services/school.service";
 import {IssueService} from "../../../../services/issue.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
 import {InitiationPlanResponse} from "../../../../models/initiation-plan-response";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../../../services/auth.service";
 import {Role} from "../../../../shared/enum/role";
 
@@ -52,7 +52,59 @@ export class SchoolInitiationPlanListComponent implements OnInit {
                 private issueService: IssueService,
                 private toastService: ToastService,
                 private router: Router,
-                private auth: AuthService) {
+                private auth: AuthService,
+                private activateRouter: ActivatedRoute,
+                ) {
+    }
+
+    initQuery(){
+      this.activateRouter.queryParams.subscribe(
+
+        value => {
+          if(value['pageNo']){
+            this.pageNo = value['pageNo'];
+          }
+          if(value['pageSize']){
+            this.pageSize = value['pageSize'];
+          }
+          if(value['sortBy']){
+            this.sortBy = value['sortBy'];
+          }
+          if(value['sortDirection']){
+            this.sortDirection = value['sortDirection'];
+          }
+          if(value['planName']){
+            this.planName = value['planName'];
+          }
+          if(value['currentIssueSelected'] && value['currentIssueSelected'] !== undefined){
+            this.currentIssueSelected.issueId = value['currentIssueSelected'];
+          }
+          if(value['creationStartDateTime']){
+            this.creationStartDateTime = value['creationStartDateTime'];
+          }
+          if(value['creationEndDateTime']){
+            this.creationEndDateTime = value['creationEndDateTime']
+          }
+          if(value['deadlineStartDateTime']){
+            this.deadlineStartDateTime = value['deadlineStartDateTime']
+          }
+          if(value['deadlineEndDateTime']){
+            this.deadlineEndDateTime = value['deadlineEndDateTime']
+          }
+          if(value['selectedSchool'] && value['selectedSchool'] !== undefined ){
+            this.selectedSchool.schoolId = value['selectedSchool']
+          }
+          if(value['advanceSearch']){
+            this.advanceSearch = (value['advanceSearch'] == 'true' )
+            if (this.advanceSearch){
+              this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
+            }else {
+              this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
+
+            }
+          }
+        }
+      )
     }
 
     ngOnInit(): void {
@@ -79,6 +131,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
                 next: (result) => {
                     this.issueDropDowns = result.issueDropDownBoxDtos;
                     this.currentIssueSelected = this.issueDropDowns.at(0);
+                    this.initQuery()
                     this.loadDocuments();
 
                 },
@@ -107,6 +160,25 @@ export class SchoolInitiationPlanListComponent implements OnInit {
                     this.totalElements = data.initiationPlanDtoPage.totalElements;
                     console.log(data);
                     this.changePageSize();
+                  this.router.navigate([], {
+                    relativeTo: this.activateRouter,
+                    queryParams: {
+                      pageNo: this.pageNo,
+                      pageSize: this.pageSize,
+                      sortBy: this.sortBy,
+                      sortDirection: this.sortDirection,
+                      planName: this.planName,
+                      currentIssueSelected: this.currentIssueSelected?.issueId,
+                      creationStartDateTime: this.creationStartDateTime,
+                      creationEndDateTime: this.creationEndDateTime,
+                      deadlineStartDateTime: this.deadlineStartDateTime,
+                      deadlineEndDateTime: this.deadlineEndDateTime,
+                      advanceSearch: this.advanceSearch,
+                      selectedSchool: this.selectedSchool?.schoolId,
+                      // Add other query parameters as needed
+                    },
+                    queryParamsHandling: 'merge'
+                  });
                 }
             })
         this.creationDateError = false
@@ -155,7 +227,11 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     }
 
     onDetail(id: any) {
-
+      if (this.isPrincipal){
+        this.router.navigate(['initiationplan/' + id])
+      }else {
+        this.router.navigate(['schoolinitiationplan/' + id])
+      }
     }
 
     maxPageOnKeyUp() {

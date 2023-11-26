@@ -11,6 +11,7 @@ import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {SchoolResponse} from "../../../../models/school-response";
 import {Role} from "../../../../shared/enum/role";
 import {SchoolService} from "../../../../services/school.service";
+import {keys} from "ag-grid-community/dist/lib/utils/map";
 
 @Component({
   selector: 'app-user-create',
@@ -38,6 +39,7 @@ export class UserCreateComponent implements OnInit {
   isLoading: boolean = false;
   schools: SchoolResponse[]
   selectedSchool: any
+  submitCompleted = false;
 
   constructor(private accountService: AccountService,
               private route: Router,
@@ -141,9 +143,10 @@ export class UserCreateComponent implements OnInit {
       console.log("is valid")
       this.accountService.saveUser(this.createUserForm).subscribe({
         next: (data) => {
-
-          console.log(data);
-          this.route.navigate(['user/' + data.userDto.userId])
+          this.submitCompleted = true;
+          setTimeout(() => {
+            this.route.navigate(['user/' + data.userDto.userId])
+          }, 1500)
         },
         error: (err) => {
           this.isLoading = false;
@@ -239,7 +242,7 @@ export class UserCreateComponent implements OnInit {
             this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
             break;
         }
-      }
+      },key: 'popUpConfirm'
     });
   }
 

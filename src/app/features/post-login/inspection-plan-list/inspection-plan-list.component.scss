@@ -102,3 +102,36 @@
         padding: 0;
     }
 }
+.small-input {
+  width: 700px;
+}
+
+.super-small-input{
+  width: 60px;
+
+}
+.loading{
+  z-index: 100;
+}
+.fontAwesome {
+  font-family: Arial, 'Font Awesome 5 Free'
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+}
+
+.icon-text {
+  margin-right: 5px; /* Adjust the margin as needed */
+}
+table.table-fit {
+  width: auto !important;
+  table-layout: auto !important;
+}
+table.table-fit thead th,
+table.table-fit tbody td,
+table.table-fit tfoot th,
+table.table-fit tfoot td {
+  width: auto !important;
+}

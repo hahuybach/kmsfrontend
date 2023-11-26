@@ -9,6 +9,7 @@ import {ToastService} from "../../../shared/toast/toast.service";
 import {RoleService} from "../../../services/role.service";
 import {AuthService} from "../../../services/auth.service";
 import {Role} from "../../../shared/enum/role";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
     selector: 'app-user-list',
@@ -46,6 +47,10 @@ export class UserListComponent implements OnInit {
     isPrincipal: boolean;
     isAdmin: boolean;
     isDirector: boolean
+  excelFile: any
+  visible = false;
+  isLoading = false;
+  submitCompleted = false;
 
 
     setAuthority() {
@@ -85,10 +90,11 @@ export class UserListComponent implements OnInit {
         private accountService: AccountService,
         private schoolService: SchoolService,
         private toastService: ToastService,
-        private router: Router,
+        private route: Router,
         private activateRouter: ActivatedRoute,
         private roleService: RoleService,
-        private auth: AuthService
+        private auth: AuthService,
+        private confirmationService: ConfirmationService
     ) {
     }
 
@@ -159,6 +165,54 @@ export class UserListComponent implements OnInit {
                 }
             }
         )
+      this.activateRouter.queryParams.subscribe(
+        value => {
+          if(value['pageNo']){
+            this.pageNo = value['pageNo'];
+          }
+          if(value['pageSize']){
+            this.pageSize = value['pageSize'];
+          }
+          if(value['sortBy']){
+            this.sortBy = value['sortBy'];
+          }
+          if(value['sortDirection']){
+            this.sortDirection = value['sortDirection'];
+          }
+          if(value['phoneNumber']){
+            this.phoneNumber = value['phoneNumber'];
+          }
+          if(value['isActive']){
+            this.isActive = value['isActive'];
+          }
+          if(value['email']){
+            this.email = value['email'];
+          }
+          if(value['fullName']){
+            this.fullName = value['fullName']
+          }
+          if(value['selectedRole']){
+            this.selectedRole.roleId = value['selectedRole']
+          }
+          if(value['globalSearch']){
+            this.globalSearch = value['globalSearch']
+          }
+          if(value['currentSchool']){
+            this.currentSchool.schoolId = value['currentSchool']
+          }
+            if(value['advanceSearch']){
+                this.advanceSearch = (value['advanceSearch'] == 'true' )
+            }
+            if(value['advanceSearch']){
+                this.advanceSearch = (value['advanceSearch'] == 'true' )
+                if (this.advanceSearch){
+                    this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
+                }else {
+                    this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
+
+                }
+            }
+        })
 
         this.loadUsers();
     }
@@ -167,14 +221,36 @@ export class UserListComponent implements OnInit {
         this.accountService.filterAccount(
             this.pageNo, this.pageSize, this.sortBy, this.sortDirection, this.fullName,
             this.gender, this.phoneNumber, this.isActive, this.globalSearch, this.email,
-            this.selectedRole, this.currentSchool)
+            this.selectedRole?.roleId, this.currentSchool?.schoolId)
             .subscribe({
                 next: (data) => {
                     this.users = data.userDtoPage.content;
                     this.totalPages = data.userDtoPage.totalPages;
                     this.totalElements = data.userDtoPage.totalElements;
                     console.log(data);
+                  this.route.navigate([], {
+                    relativeTo: this.activateRouter,
+                    queryParams: {
+                      pageNo: this.pageNo,
+                      pageSize: this.pageSize,
+                      sortBy: this.sortBy,
+                      sortDirection: this.sortDirection,
+                      phoneNumber: this.phoneNumber,
+                      isActive: this.isActive,
+                      email: this.email,
+                      selectedRole: this.selectedRole?.roleId,
+                      currentSchool: this.currentSchool?.schoolId,
+                      fullName: this.fullName,
+                      globalSearch     :this.globalSearch,
+                        advanceSearch: this.advanceSearch
+
+
+                      // Add other query parameters as needed
+                    },
+                    queryParamsHandling: 'merge'
+                  });
                     this.onChangePageSize()
+
                 }
             })
     }
@@ -223,7 +299,7 @@ export class UserListComponent implements OnInit {
     }
 
     onDetail(userId: number | undefined) {
-        this.router.navigate(['user/' + userId])
+        this.route.navigate(['user/' + userId])
     }
 
     maxPageOnKeyUp() {
@@ -257,11 +333,96 @@ export class UserListComponent implements OnInit {
     }
 
     onCreateUser() {
-        this.router.navigate(['users/create'])
+        this.route.navigate(['users/create'])
     }
 
     onUpdate(userId: number | undefined) {
-        this.router.navigate(['user/' + userId + '/update'])
+        this.route.navigate(['user/' + userId + '/update'])
 
     }
+
+  onSubmitFile(event: any) {
+
+    const file = event.target.files[0];
+    if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+      this.excelFile = file;
+      console.log(this.excelFile);
+
+    } else {
+      // Handle error or provide feedback to the user
+      this.toastService.showWarn('error', "Lỗi", "File tải lên phải ở dưới dạng excel (.xls)")
+      event.target.value = null;
+
+    }
+  }
+
+  onCreateUserByFile() {
+      if (!this.excelFile){
+        this.toastService.showError('error', 'Thông báo', "Vui lòng chọn 1 file")
+      }
+      if (this.excelFile){
+        this.isLoading = true
+        this.accountService.uploadFileExcel(this.excelFile).subscribe({
+          next: (data) =>{
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.toastService.showSuccess('error', "Thông báo", "Tạo " + data.length + " người dùng thành công")
+              this.loadUsers();
+            }, 1500)
+            this.isLoading = false;
+
+
+          },
+          error: (error) => {
+            this.toastService.showWarn('error', "Lỗi", error.error.message)
+
+          }
+        });
+      }
+
+  }
+
+
+
+  showImportUser() {
+    this.visible = true;
+  }
+
+  downloadTemplate() {
+    this.accountService.getUserTemplate().subscribe({
+      next: (data) => {
+        const blob = new Blob([data.body as BlobPart], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'template.xlsx'; // Set the desired filename for the downloaded file
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  }
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận việc tạo người dùng bằng file excel này không?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel:'Không',
+      accept: () => {
+        this.onCreateUserByFile()
+
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
+          case ConfirmEventType.CANCEL:
+            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
+        }
+      },key: 'createUserByExcel'
+    });
+  }
+
 }

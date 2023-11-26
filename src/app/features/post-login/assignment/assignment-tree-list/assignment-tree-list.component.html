@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
 <p-toast key="error" position="top-right"></p-toast>
-<h2>Tra cứu kế hoạch thực hiện</h2>
+<h2>Tra cứu tài liệu các trường</h2>
 
 <div class="row mt-4">
   <div class="form-group col-md-7" *ngIf="!advanceSearch">
@@ -8,9 +8,9 @@
            name="globalSearch"
            id="globalSearch"
            class="form-control small-input fontAwesome mb-3"
-           [(ngModel)]="planName"
+           [(ngModel)]="assignmentName"
            (keyup)="loadDocuments()"
-           placeholder="&#xF002; Tra cứu nhanh theo tên kế hoạch"
+           placeholder="&#xF002; Tra cứu nhanh"
     >
   </div>
   <div *ngIf="advanceSearch" class="col-md-10">
@@ -66,61 +66,19 @@
       <div class="col-md-5">
         <label>Tên kế hoạch</label>
         <input class="form-control"
-               [(ngModel)]="planName"
+               [(ngModel)]="assignmentName"
                name="planName"
                id="planName"
                (keyup)="loadDocuments()"
-               placeholder="(VD): Kế hoạch của Trường Mầm Non Ánh Sao"
+               placeholder="(VD): VIMECO Mẫu công việc 2023 - 2024"
         >
       </div>
-      <div class="col-md-3">
-        <label>Ngày khởi tạo bắt đầu</label>
-        <input class="form-control"
-               [(ngModel)]="creationStartDateTime"
-               name="startDateTime"
-               id="startDateTime"
-               type="date"
-               (change)="loadDocuments()"
 
-        >
-      </div>
-      <div class="col-md-3">
-        <label>Ngày khởi tạo kết thúc</label>
-        <input class="form-control"
-               [(ngModel)]="creationEndDateTime"
-               name="endDateTime"
-               id="endDateTime"
-               type="date"
-               (change)="loadDocuments()"
 
-        >
-        <span class="p-error" *ngIf="creationDateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
-
-      </div>
       <div class="col-md-5">
 
       </div>
-      <div class="col-md-3">
 
-        <label>Ngày deadline bắt đầu</label>
-        <input class="form-control"
-               [(ngModel)]="deadlineStartDateTime"
-               type="date"
-               (change)="loadDocuments()"
-
-        >
-      </div>
-      <div class="col-md-3">
-        <label>Ngày deadline kết thúc</label>
-        <input class="form-control"
-               [(ngModel)]="deadlineEndDateTime"
-               type="date"
-               (change)="loadDocuments()"
-
-        >
-        <span class="p-error" *ngIf="deadlineDateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
-
-      </div>
 
     </div>
   </div>
@@ -132,11 +90,11 @@
   <table class="table table-hover table-responsive table-fit">
     <thead>
     <tr>
-      <th (click)="onSort('initiationPlanName')">
+      <th (click)="onSort('assignmentName')">
         <div class="header-container">
-          <span class="icon-text">Tên kế hoạch</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'initiationPlanName' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'initiationPlanName' && sortDirection === 'desc'"></i>
+          <span class="icon-text">Tên công việc tổng</span>
+          <i class="bi bi-sort-up" *ngIf="sortBy === 'assignmentName' && sortDirection === 'asc'"></i>
+          <i class="bi bi-sort-down" *ngIf="sortBy === 'assignmentName' && sortDirection === 'desc'"></i>
         </div>
       </th>
       <th (click)="onSort('issue.createdDate')">
@@ -156,20 +114,6 @@
 
 
       </th>
-      <th (click)="onSort('createdDate')">
-        <div class="header-container">
-          <span class="icon-text">Ngày tạo</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"></i>
-        </div>
-      </th>
-      <th (click)="onSort('deadline')">
-        <div class="header-container">
-          <span class="icon-text">Hạn nộp</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'deadline' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'deadline' && sortDirection === 'desc'"></i>
-        </div>
-      </th>
       <th (click)="onSort('status')">
         <div class="header-container">
           <span class="icon-text">Trạng thái</span>
@@ -183,10 +127,10 @@
     <span *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</span>
 
     </thead>
-    <tbody *ngIf="schoolInitPlans && schoolInitPlans.length > 0">
+    <tbody *ngIf="taskTrees && taskTrees.length > 0">
     <tr
       *ngFor="
-          let plan of schoolInitPlans
+          let task of taskTrees
             | paginate
               : {
                   itemsPerPage: pageSize,
@@ -196,17 +140,15 @@
           let i = index
         "
     >
-      <td>{{ plan.initiationPlanName }}</td>
-      <td>{{ plan.issueName }}</td>
-      <td>{{ plan.schoolName }}</td>
-      <td>{{ plan.createdDate  | date : "dd/MM/yyyy" }}</td>
-      <td>{{ plan.deadline | date : "dd/MM/yyyy" }}</td>
-      <td>{{ plan.statusName}}</td>
+      <td>{{ task.rootAssignmentName }}</td>
+      <td>{{ task.issue?.issueName }}</td>
+      <td>{{ task.school?.schoolName }}</td>
+      <td>{{ task.rootAssignmentStatus?.statusName }}</td>
       <td>
 
         <i
           class="bi bi-info-circle-fill"
-          (click)="onDetail(plan.initiationPlanId)"
+          (click)="onDetail(task.issue?.issueId)"
         ></i>
 
 
@@ -216,7 +158,7 @@
 
   </table>
   <div class="d-flex justify-content-end mt-3">
-    <div class="d-flex justify-content-center" *ngIf="schoolInitPlans && schoolInitPlans.length > 0">
+    <div class="d-flex justify-content-center" *ngIf="taskTrees && taskTrees.length > 0">
 
       <label for="pageNo"
              style=" margin-right: 10px"
@@ -254,7 +196,7 @@
 
     </div>
 
-    <div class="" *ngIf="schoolInitPlans && schoolInitPlans.length > 0">
+    <div class="" *ngIf="taskTrees && taskTrees.length > 0">
       <pagination-controls
         previousLabel="Trước"
         nextLabel="Sau"

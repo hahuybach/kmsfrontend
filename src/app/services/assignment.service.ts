@@ -16,11 +16,11 @@ export class AssignmentService {
     console.log(url);
     return this.http.get<any[]>(url, { headers });
   }
-  public getMyAssignedAssignments(): Observable<any> {
-    let headers = new HttpHeaders();
-    const url = `${this.assignmentApiUrl}my_assigned_assignments`;
-    return this.http.get<any[]>(url, { headers });
-  }
+  // public getMyAssignedAssignments(): Observable<any> {
+  //   let headers = new HttpHeaders();
+  //   const url = `${this.assignmentApiUrl}my_assigned_assignments`;
+  //   return this.http.get<any[]>(url, { headers });
+  // }
   public getPossibleAssignee(object: any): Observable<any> {
     const url = `${this.assignmentApiUrl}load_add_school_assignment`;
     console.log(url);
@@ -32,6 +32,18 @@ export class AssignmentService {
   public getDeptAssignments(): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.assignmentApiUrl}get_dept_assignment`;
+    return this.http.get<any[]>(url, { headers });
+  }
+  public getCommentsByAssignmentId(id: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}get_comments_by_assignment_id/${id}`;
+    console.log(url);
+    return this.http.get<any[]>(url, { headers });
+  }
+  public getHistoryByAssignmentId(id: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.assignmentApiUrl}get_history_by_assignment_id/${id}`;
+    console.log(url);
     return this.http.get<any[]>(url, { headers });
   }
   // DELETE
@@ -54,6 +66,13 @@ export class AssignmentService {
     headers.append('Content-Type', 'json');
 
     const url = `${this.assignmentApiUrl}delete_document`;
+    return this.http.delete(url, { headers: headers, body: data });
+  }
+  public deleteComment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
+
+    const url = `${this.assignmentApiUrl}delete_comment`;
     return this.http.delete(url, { headers: headers, body: data });
   }
   // POST
@@ -85,6 +104,14 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}add_dept_assignment`;
     return this.http.post(url, data, { headers });
   }
+  public addComment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
+
+    const url = `${this.assignmentApiUrl}add_comment`;
+    return this.http.post(url, data, { headers });
+  }
+
   // PUT
   public uploadDocument(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
@@ -136,4 +163,12 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}confirm_assignment`;
     return this.http.put(url, data, { headers });
   }
+
+  public getAssignmentByIssueId(issueId: any){
+    let headers = new HttpHeaders();
+    const url = this.assignmentApiUrl + "my_assigned_assignments_by_issue_id/" + issueId;
+    return this.http.get<any>(url, { headers });
+  }
+
+
 }

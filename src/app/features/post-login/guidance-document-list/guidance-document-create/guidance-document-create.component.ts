@@ -27,6 +27,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   isLoading: boolean = false;
   isFileAllSubmit = true;
   issue: IssueResponse;
+  submitCompleted: boolean = false;
 
   constructor(private guidanceService: GuidanceDocumentService,
               private issueService: IssueService,
@@ -96,7 +97,10 @@ export class GuidanceDocumentCreateComponent implements OnInit {
 
       this.guidanceService.saveGuidanceDocument(this.guidanceForm.value, this.selectedFiles).subscribe({
         next: (result) => {
-          this.route.navigate(['guidanceDocument/' + result.guidanceDocumentDto.guidanceDocumentId])
+          this.submitCompleted = true;
+          setTimeout(() => {
+            this.route.navigate(['guidanceDocument/' + result.guidanceDocumentDto.guidanceDocumentId])
+          }, 1500)
         },
         error: (error) => {
           this.toast.showWarn('error', 'Lỗi', error.error.message)
@@ -198,7 +202,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   };
   confirm() {
     this.confirmationService.confirm({
-      message: 'Bạn có xác nhận muốn tạo người dùng này không?',
+      message: 'Bạn có xác nhận yêu cầu này không?',
       header: 'Xác nhân',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
@@ -209,13 +213,13 @@ export class GuidanceDocumentCreateComponent implements OnInit {
       reject: (type: ConfirmEventType) => {
         switch (type) {
           case ConfirmEventType.REJECT:
-            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy yêu cầu này');
             break;
           case ConfirmEventType.CANCEL:
-            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy yêu cầu này');
             break;
         }
-      }
+      },key : 'createConfirm'
     });
   }
 

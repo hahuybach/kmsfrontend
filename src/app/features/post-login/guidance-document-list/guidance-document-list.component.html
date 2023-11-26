@@ -10,7 +10,7 @@
            class="form-control small-input fontAwesome mb-3"
            [(ngModel)]="globalSearch"
            (keyup)="loadGuidanceDocuments()"
-           placeholder="&#xF002; Tra cứu nhanh"
+           placeholder="&#xF002; Tra cứu nhanh theo tiêu đề hoặc người tạo"
     >
   </div>
   <div *ngIf="advanceSearch" class="col-md-10">
@@ -41,15 +41,17 @@
                name="fullName"
                id="fullName"
                (keyup)="loadGuidanceDocuments()"
+               placeholder="(VD): Trần Lê Hải"
         >
       </div>
       <div class="col-md-5">
-        <label>Về việc</label>
+        <label>Tiêu đề</label>
         <input class="form-control"
                [(ngModel)]="guidanceDocumentName"
                name="guidanceDocumentName"
                id="guidanceDocumentName"
                (keyup)="loadGuidanceDocuments()"
+               placeholder="(VD): Kế hoạch PCCC"
         >
       </div>
       <div class="col-md-2">
@@ -86,10 +88,10 @@
 
 
 <div class="d-flex justify-content-end mb-3">
-  <button class="btn btn-primary" (click)="onCreateGuidanceDocument()">Tạo mới</button>
+  <button class="btn btn-primary" (click)="onCreateGuidanceDocument()" *ngIf="!isPrincipal">Tạo mới</button>
 </div>
 <div class="container">
-  <table class="table table-hover table-responsive">
+  <table class="table table-hover table-fit">
     <thead>
     <tr>
       <th (click)="onSort('guidanceDocumentId')">
@@ -224,4 +226,6 @@
   <p-toast key="issueId" position="top-right"></p-toast>
 
 </div>
+
+
 

@@ -12,7 +12,10 @@ import { IssueListComponent } from './features/post-login/issue-list/issue-list.
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
 import { MenuModule } from 'primeng/menu';
 import { AgGridModule } from 'ag-grid-angular';
-import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -27,7 +30,7 @@ import { ForgotPasswordComponent } from './features/login/forgot-password/forgot
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
-import {FormsModule} from "@angular/forms";
+import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.interceptor';
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
@@ -44,8 +47,8 @@ import { GuidanceDocumentListComponent } from './features/post-login/guidance-do
 import { GuidanceDocumentDetailComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component';
 import { GuidanceDocumentFilesComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-files/guidance-document-files.component';
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
-import {NgxPaginationModule} from "ngx-pagination";
-import {ToastModule} from "primeng/toast";
+import { NgxPaginationModule } from 'ngx-pagination';
+import { ToastModule } from 'primeng/toast';
 import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component';
 import { AssignmentModule } from './features/post-login/assignment/assignment.module';
 import { SchoolAssignmentModule } from './features/post-login/school-side/assignment/school-assignment.module';
@@ -58,13 +61,14 @@ import { UserDetailComponent } from './features/post-login/user-list/user-detail
 import { UserCreateComponent } from './features/post-login/user-list/user-create/user-create.component';
 
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
-import {StompService} from "./features/post-login/push-notification/stomp.service";
+import { StompService } from './features/post-login/push-notification/stomp.service';
 import { UserUpdateComponent } from './features/post-login/user-list/user-update/user-update.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ChangePasswordComponent } from './components/user-profile/change-password/change-password.component';
 import { NotificationListAllComponent } from './components/notification-list/notification-list-all/notification-list-all.component';
 import { NotificationListUnseenComponent } from './components/notification-list/notification-list-unseen/notification-list-unseen.component';
 import {InspectionModule} from "./features/post-login/inspection/inspection.module";
+import { SchoolListModule } from './features/post-login/school-list/school-list.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -87,10 +91,6 @@ import {InspectionModule} from "./features/post-login/inspection/inspection.modu
     GuidanceDocumentDetailComponent,
     GuidanceDocumentFilesComponent,
     GuidanceDocumentCreateComponent,
-    SchoolListComponent,
-    SchoolDetailComponent,
-    SchoolCreateComponent,
-    SchoolUpdateComponent,
     UserListComponent,
     UserDetailComponent,
     UserCreateComponent,
@@ -122,7 +122,8 @@ import {InspectionModule} from "./features/post-login/inspection/inspection.modu
     ToastModule,
     AssignmentModule,
     SchoolAssignmentModule,
-    InspectionModule
+    InspectionModule,
+    SchoolListModule,
   ],
   providers: [
     MessageService,
@@ -147,7 +148,5 @@ import {InspectionModule} from "./features/post-login/inspection/inspection.modu
     provideAnimations(),
   ],
   bootstrap: [AppComponent],
-  exports: [
-  ]
 })
 export class AppModule {}

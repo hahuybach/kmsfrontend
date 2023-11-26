@@ -8,6 +8,8 @@ import {MessageService} from "primeng/api";
 import {ToastModule} from 'primeng/toast';
 import {resolve} from "@angular/compiler-cli";
 import {switchMap} from "rxjs";
+import {AuthService} from "../../../services/auth.service";
+import {Role} from "../../../shared/enum/role";
 
 @Component({
   selector: 'app-guidance-document-list',
@@ -37,12 +39,14 @@ export class GuidanceDocumentListComponent implements OnInit {
     recordPerPageOption: number[] = [5, 15, 25];
 
   issueId: number = -1
+  isPrincipal = false;
 
   constructor(private guidanceDocumentService: GuidanceDocumentService,
               private route: Router,
               private issueService: IssueService,
               private messageService: MessageService,
-              private activateRouter: ActivatedRoute
+              private activateRouter: ActivatedRoute,
+              private auth: AuthService
   ) {
     this.guidanceDocuments = [];
   }
@@ -84,8 +88,8 @@ export class GuidanceDocumentListComponent implements OnInit {
               startDateTime: this.startDateTime,
               endDateTime: this.endDateTime,
               fullName: this.fullName,
-              globalSearch     :this.globalSearch
-
+              globalSearch     :this.globalSearch,
+                advanceSearch: this.advanceSearch
 
               // Add other query parameters as needed
             },
@@ -117,6 +121,11 @@ export class GuidanceDocumentListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    for (const role of this.auth.getRoleFromJwt()) {
+      if (role.authority === Role.PRINCIPAL){
+        this.isPrincipal = true;
+      }
+    }
     this.issueService.getIssueDropDownResponse()
       .subscribe({
         next: (result) => {
@@ -153,6 +162,15 @@ export class GuidanceDocumentListComponent implements OnInit {
           if(value['globalSearch']){
             this.globalSearch = value['globalSearch']
           }
+            if(value['advanceSearch']){
+                this.advanceSearch = (value['advanceSearch'] == 'true' )
+                if (this.advanceSearch){
+                  this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
+                }else {
+                    this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
+
+                }
+            }
         }
     )
     this.loadGuidanceDocuments();

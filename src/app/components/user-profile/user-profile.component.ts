@@ -34,6 +34,8 @@ export class UserProfileComponent implements OnInit{
     {label: 'Nữ', value: 'FEMALE'}]
   isSubmitted = false
   isVisible: any;
+  isLoading = false;
+  submitCompleted = false;
   ngOnInit(): void {
     this.accountService.getCurrentUser().subscribe({
       next: (data) =>{
@@ -82,12 +84,19 @@ export class UserProfileComponent implements OnInit{
 
   onSubmit() {
     if (!this.form.invalid){
+      this.isLoading = true
       this.accountService.updateUserDetail(this.form.value).subscribe({
         next: (data) =>{
           this.isUpdate = false;
-          this.toastService.showSuccess("error","Thông báo", "Cập nhật người dùng thành công")
-          this.ngOnInit();
+          this.submitCompleted = true;
+          setTimeout(() => {
+            this.ngOnInit();
+          }, 1500)
+          setTimeout(() => {
+            this.isLoading = false
+          }, 1500)
         }
+
       })
     }
   }

@@ -2,7 +2,7 @@
 
 <form [formGroup]="updateForm"
       class="row"
-      (ngSubmit)="onSubmit()"
+      (ngSubmit)="confirm()"
 >
     <div class="col-md-6" *ngIf="school">
         <h5 class="m-3">Thông tin trường</h5>
@@ -257,8 +257,16 @@
 
 </form>
 <p-toast position="top-right" key="error"></p-toast>
-<div class="overlay" *ngIf="isLoading">
-    <div class="spinner-container">
-        <div class="spinner-border" role="status"></div>
-    </div>
-</div>
+<!--<div class="overlay" *ngIf="isLoading">-->
+<!--    <div class="spinner-container">-->
+<!--        <div class="spinner-border" role="status"></div>-->
+<!--    </div>-->
+<!--</div>-->
+<p-confirmDialog key="updateSchoolConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Cập nhật trường học'"
+  [progress]="'Đang cập nhật trường học'"
+  [complete]="'Cập nhật trường học thành công'"
+></app-loading-complete-dialog>

@@ -20,6 +20,7 @@ export class SchoolCreateComponent implements OnInit {
   isLoading: boolean = false;
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
+  submitCompleted = false;
 
 
   constructor(private formBuilder: FormBuilder,
@@ -69,7 +70,10 @@ export class SchoolCreateComponent implements OnInit {
       this.schoolService.saveSchool(saveSchoolRequest)
         .subscribe({
           next: (result) => {
-            this.router.navigate(['school/' + result.school.schoolId])
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.router.navigate(['school/' + result.school.schoolId])
+            }, 1500)
           },
           error: (error) => {
             this.isLoading = false;
@@ -177,7 +181,7 @@ export class SchoolCreateComponent implements OnInit {
             this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
             break;
         }
-      }
+      },key: 'updateConfirm'
     });
   }
 

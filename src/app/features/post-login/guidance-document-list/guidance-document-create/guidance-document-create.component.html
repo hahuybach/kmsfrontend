@@ -1,10 +1,16 @@
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Tạo mới văn bản bổ sung'"
+  [progress]="'Đang tạo mới văn bản bổ sung'"
+  [complete]="'Tạo mới văn bản bổ sung thành công'"
+></app-loading-complete-dialog>
 <h2>Tạo văn bản bổ sung</h2>
-
 <form [formGroup]="guidanceForm">
   <div class="row">
     <div class="form-group col-md-7">
       <div class="m-3">
-        <label>Tiêu đề</label>
+        <label>Tiêu đề <span class="p-error">*</span></label>
       </div>
       <div class="m-3">
         <input
@@ -13,7 +19,7 @@
           class="form-control"
         />
         <span *ngIf="isBlank('guidanceDocumentName')" class="p-error"
-          >Không được để trống mục này</span
+        >Không được để trống mục này</span
         >
       </div>
     </div>
@@ -23,19 +29,19 @@
       </div>
       <div class="m-3">
         <span class="font-weight-bold" style="font-weight: bold" *ngIf="issue"
-          >{{ issue.issueName }}
+        >{{ issue.issueName }}
         </span>
       </div>
     </div>
 
     <div class="form-group col-md-7">
       <div class="m-3">
-        <label>Lời nhắn</label>
+        <label>Lời nhắn <span class="p-error">*</span></label>
       </div>
       <div class="m-3">
         <textarea class="form-control" formControlName="description"></textarea>
         <span *ngIf="isBlank('description')" class="p-error"
-          >Không được để trống mục này</span
+        >Không được để trống mục này</span
         >
       </div>
     </div>
@@ -47,7 +53,7 @@
       <div class="row" formGroupName="{{ i }}">
         <div class="col-md-2 form-group">
           <div class="m-2">
-            <label>Mã tài liệu</label>
+            <label>Mã tài liệu <span class="p-error">*</span></label>
           </div>
           <div class="m-2">
             <input
@@ -58,7 +64,7 @@
             <span
               *ngIf="isBlankForGuidanceDocuments('documentCode', i)"
               class="p-error"
-              >Không được để trống mục này</span
+            >Không được để trống mục này</span
             >
             <span
               class="p-error"
@@ -68,13 +74,13 @@
                   i
                 )
               "
-              >Trùng lặp mã văn bản</span
+            >Trùng lặp mã văn bản</span
             >
           </div>
         </div>
         <div class="col-md-5 form-group">
           <div class="m-2">
-            <label>Tên tài liệu</label>
+            <label>Tên tài liệu <span class="p-error">*</span></label>
           </div>
           <div class="m-2">
             <input
@@ -85,7 +91,7 @@
             <span
               *ngIf="isBlankForGuidanceDocuments('documentName', i)"
               class="p-error"
-              >Không được để trống mục này</span
+            >Không được để trống mục này</span
             >
           </div>
         </div>
@@ -136,7 +142,7 @@
       (click)="addGuidanceDocument()"
       type="button"
     >
-      Thêm mới
+      Thêm văn bản
     </button>
   </div>
   <div class="m-2">
@@ -146,11 +152,11 @@
   </div>
 
 </form>
-<div class="overlay" *ngIf="isLoading">
-  <div class="spinner-container">
-    <div class="spinner-border" role="status"></div>
-  </div>
-</div>
+<!--<div class="overlay" *ngIf="isLoading">-->
+<!--  <div class="spinner-container">-->
+<!--    <div class="spinner-border" role="status"></div>-->
+<!--  </div>-->
+<!--</div>-->
 
 <p-toast position="top-right" key="error"></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog key="createConfirm" [style]="{width: '50vw'}"></p-confirmDialog>

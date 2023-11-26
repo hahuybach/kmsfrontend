@@ -36,6 +36,10 @@ import {
   UpdateInspectionPlanComponent
 } from "./features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component";
 import {UserUpdateComponent} from "./features/post-login/user-list/user-update/user-update.component";
+import {
+  AssignmentTreeListComponent
+} from "./features/post-login/assignment/assignment-tree-list/assignment-tree-list.component";
+
 import {InspectionComponent} from "./features/post-login/inspection/inspection.component";
 import {
   InspectionInformationComponent
@@ -170,6 +174,10 @@ const routes: Routes = [
         component: UserUpdateComponent
       },
       {
+        path: 'listAssignment',
+        component: AssignmentTreeListComponent
+
+      },{
         path: 'inspection/:id',
         component: InspectionComponent,
         children: [

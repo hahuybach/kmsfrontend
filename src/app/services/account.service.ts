@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  baseUrl: string = 'http://localhost:8080/api/v1/user/'
+  baseUrl: string = DomainName.URL + 'api/v1/user/'
 
   constructor(private httpClient: HttpClient) {
   }
@@ -48,10 +49,10 @@ export class AccountService {
       params = params.set('pageNo', pageNo)
     }
     if (school) {
-      params = params.set('schoolId', school.schoolId)
+      params = params.set('schoolId', school)
     }
     if (role) {
-      params = params.set('roleId', role.roleId)
+      params = params.set('roleId', role)
     }
     if (isActive !== undefined) {
       params = params.set('isActive', isActive)
@@ -93,6 +94,28 @@ export class AccountService {
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
     return this.httpClient.put<any>(this.baseUrl + 'updateUserDetail', JSON.stringify(data), {headers});
+  }
+
+  changePassword(data : any){
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.httpClient.put<any>(this.baseUrl + 'changePassword', JSON.stringify(data), {headers});
+
+  }
+
+  uploadFileExcel(data : any){
+    const formData : FormData = new FormData();
+    formData.append("file", data);
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+   return  this.httpClient.post<any>(this.baseUrl + "excel", formData, { headers })
+  }
+
+  getUserTemplate(){
+    return this.httpClient.get(this.baseUrl + "exportTemplate", {
+      responseType: 'blob',
+      observe: 'response',
+    });
   }
 
 }
