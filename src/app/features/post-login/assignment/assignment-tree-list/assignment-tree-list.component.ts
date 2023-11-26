@@ -206,8 +206,8 @@ export class AssignmentTreeListComponent implements OnInit{
         }
     }
 
-    onDetail(rootAssignmentId: number | undefined) {
-
+    onDetail(issueId: number | undefined) {
+        this.router.navigate([])
     }
 
     onTableDataChange($event: number) {

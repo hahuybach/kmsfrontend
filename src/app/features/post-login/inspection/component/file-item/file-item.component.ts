@@ -23,7 +23,6 @@ export class FileItemComponent {
   }
 
   openNewTab(documentLink: string) {
-    console.log(documentLink);
     this.pdfPreviewVisibility = true;
     this.fileService.readInitiationplanPDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);

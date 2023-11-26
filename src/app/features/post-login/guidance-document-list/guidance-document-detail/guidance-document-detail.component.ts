@@ -16,6 +16,8 @@ export class GuidanceDocumentDetailComponent implements OnInit {
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
   pdfUrl: string | undefined;
+  pdfPreviewVisibility: boolean = false;
+
 
   constructor(private guidanceDocumentService: GuidanceDocumentService
     , private route: ActivatedRoute,
@@ -38,7 +40,7 @@ export class GuidanceDocumentDetailComponent implements OnInit {
   }
 
   openNewTab(documentLink: string) {
-    console.log(documentLink);
+    this.pdfPreviewVisibility = true;
     this.guidanceDocumentService.readIssuePDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
