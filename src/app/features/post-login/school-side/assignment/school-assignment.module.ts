@@ -7,6 +7,7 @@ import { AssignAssignmentComponent } from './assign-assignment/assign-assignment
 import { ApproveAssignmentComponent } from './approve-assignment/approve-assignment.component';
 import { SubmitAssignmentComponent } from './submit-assignment/submit-assignment.component';
 import { FormsModule } from '@angular/forms';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 @NgModule({
   declarations: [
     AssignmentListComponent,
@@ -14,7 +15,8 @@ import { FormsModule } from '@angular/forms';
     ApproveAssignmentComponent,
     SubmitAssignmentComponent,
   ],
-  imports: [CommonModule, SharedModule, FormsModule],
+  imports: [CommonModule, SharedModule, FormsModule, NgxDocViewerModule],
   providers: [AssignmentService],
+  exports: [NgxDocViewerModule],
 })
 export class SchoolAssignmentModule {}

@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  SafeUrl,
+} from '@angular/platform-browser';
 import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { switchMap } from 'rxjs';
 import { AssignmentService } from 'src/app/services/assignment.service';
@@ -13,6 +17,7 @@ import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.
 import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -48,6 +53,11 @@ export class AssignAssignmentComponent implements OnInit {
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
+  documentUrl: SafeUrl;
+  fileUrl: string;
+  docxUrl: string;
+  safeDocxUrl: SafeResourceUrl;
+  documentContent: string | null = null;
   statusOptions = [
     {
       label: 'Chờ phê duyệt',
@@ -94,15 +104,22 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Nộp tài liệu', value: true },
     ];
     this.issueService.getCurrentActiveIssue().subscribe({
-    next: (data)=>{
-      issueId = data.issueDto.issueId;
-      this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-        next: (data) =>{
-          this.assignments = data.assignmentListDtos;
-        }
-      })
-    }
-    })
+      next: (data) => {
+        issueId = data.issueDto.issueId;
+        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+          next: (data) => {
+            this.assignments = data.assignmentListDtos;
+          },
+          error: (error) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Xảy ra lỗi',
+              detail: error.error.message,
+            });
+          },
+        });
+      },
+    });
     // this.assignmentService.getMyAssignedAssignments().subscribe({
     //   next: (data) => {
     //     this.assignments = data.assignmentListDtos;
@@ -150,17 +167,17 @@ export class AssignAssignmentComponent implements OnInit {
     //     this.assignments = data.assignmentListDtos;
     //   },
     // });
-      let issueId;
-      this.issueService.getCurrentActiveIssue().subscribe({
-          next: (data)=>{
-              issueId = data.issueDto.issueId;
-              this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-                  next: (data) =>{
-                      this.assignments = data.assignmentListDtos;
-                  }
-              })
-          }
-      })
+    let issueId;
+    this.issueService.getCurrentActiveIssue().subscribe({
+      next: (data) => {
+        issueId = data.issueDto.issueId;
+        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+          next: (data) => {
+            this.assignments = data.assignmentListDtos;
+          },
+        });
+      },
+    });
   }
   // ADD
   openDetail(assignment?: any, action?: string) {
@@ -402,11 +419,24 @@ export class AssignAssignmentComponent implements OnInit {
   // PREVIEW PDF
   openNewTab(documentLink: string) {
     console.log(documentLink);
-    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
+    this.fileService.readAssignmentPDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
+    });
+  }
+  // preview docx and excel
+  previewFile(documentLink: string, fileExtension: string) {
+    this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
+      const blobUrl = window.URL.createObjectURL(data.body as Blob);
+      this.pdfUrl = blobUrl;
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+      if (this.safePdfUrl !== undefined) {
+        this.fileUrl = this.safePdfUrl + '';
+      }
+      this.pdfLoaded = true;
+      console.log(this.safePdfUrl);
     });
   }
   // check authorities
@@ -528,8 +558,7 @@ export class AssignAssignmentComponent implements OnInit {
     }
     this.assignmentService.uploadDocument(formData).subscribe({
       next: (data) => {
-        this.documents = data.documents;
-        console.log(this.documents);
+        this.refreshSelectedAssignment();
         this.fileVisible = false;
       },
       error: (error) => {},
@@ -763,4 +792,45 @@ export class AssignAssignmentComponent implements OnInit {
       },
     });
   }
+  getIconFileType(fileExtension: string): string {
+    let url = '';
+    switch (fileExtension) {
+      case 'application/pdf':
+        url = '../../../../../assets/img/pdf.png';
+        break;
+      case 'application/msword':
+        url = '../../../../../assets/img/doc.png';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        url = '../../../../../assets/img/doc.png';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        url = '../../../../../assets/img/xls.png';
+        break;
+    }
+    return url;
+  }
+  // viewDocxFile(documentLink: string) {
+  //   this.fileService
+  //     .readAssignmentPDF(documentLink)
+  //     .subscribe((response: HttpResponse<Blob>) => {
+  //       const fileName = this.getFileNameFromResponseHeaders(response);
+  //       const blobUrl = window.URL.createObjectURL(response.body);
+  //       this.docxUrl = blobUrl;
+  //       this.safeDocxUrl =
+  //         this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+  //       saveAs(response.body, fileName);
+  //     });
+  // }
+  // readWordDocument(blobData: Blob): void {
+  //   this.wordDocService
+  //     .readWordBlob(blobData)
+  //     .then((content) => {
+  //       console.log(content);
+  //       this.documentContent = content;
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error reading Word document:', error);
+  //     });
+  // }
 }

@@ -31,6 +31,7 @@
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "net": "^1.0.2",
+    "ngx-doc-viewer": "^15.0.1",
     "ngx-pagination": "^6.0.3",
     "primeicons": "^6.0.1",
     "primeng": "^16.9.0",
