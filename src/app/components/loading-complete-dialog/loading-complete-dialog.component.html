@@ -1,5 +1,5 @@
 <p-dialog
-  header="Tạo mới {{categoryLowerCase}}"
+  header="{{header}}"
   [(visible)]="visible"
   [style]="{ width: '40%', height: '50%' }"
   [draggable]="false"
@@ -8,10 +8,10 @@
 >
   <div *ngIf="!completed" class="spinner">
     <div class="spinner-border text-center" role="status"></div>
-    <p>Đang tạo {{categoryLowerCase}}</p>
+    <p>Đang tạo {{progress}}</p>
   </div>
   <div *ngIf="completed" class="d-flex flex-column justify-content-center align-items-center mt-5">
     <i class="bi bi-check-circle-fill icon"></i>
-    <p class="mt-1 icon-text">Tạo {{categoryLowerCase}} thành công</p>
+    <p class="mt-1 icon-text">{{complete}}</p>
   </div>
 </p-dialog>

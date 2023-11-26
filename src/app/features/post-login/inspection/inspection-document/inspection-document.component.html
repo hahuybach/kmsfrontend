@@ -7,14 +7,13 @@
   [inspectionPlanId]="inspectionId"
   [updateRecordPopupVisible]="updateRecordPopupVisible"
   (updateRecordPopupVisibleChange)="changeUpdateRecordVisible()"
-  [recordId]="recordId"
->
-  <app-record-detail
+  [recordId]="recordId">
+</app-update-record>
+<app-record-detail
   [recordId]="recordId"
   [detailRecordPopupVisible]="detailRecordPopupVisible"
   (detailRecordPopupVisibleChange)="changeDetailRecordVisible()">
-  </app-record-detail>
-</app-update-record>
+</app-record-detail>
 <div class="container-fluid">
   <div class="row">
     <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
@@ -92,7 +91,7 @@
                 {{ taskList.deadline | date: "dd/MM/yyyy" }}
               </td>
               <td style="text-align: center"
-                  class="d-flex td-action justify-content-center align-items-center">
+                  class="d-flex td-action justify-content-center align-items-center action-button">
                 <div class="action-item d-flex justify-content-center align-items-center mx-2">
                   <button type="button" (click)="initDetailRecordData(taskList.taskId)">
                     <i class="bi bi-info-circle-fill"></i>
@@ -100,7 +99,12 @@
                 </div>
                 <div class="action-item d-flex justify-content-center align-items-center mx-2">
                   <button type="button" (click)="initUpdateRecordData(taskList.taskId)">
-                  <i class="bi bi-pencil-fill"></i>
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                </div>
+                <div class="action-item d-flex justify-content-center align-items-center mx-2">
+                  <button type="button" (click)="initUpdateRecordData(taskList.taskId)">
+                    <i class="bi bi-trash-fill"></i>
                   </button>
                 </div>
               </td>

@@ -16,7 +16,9 @@
     <app-loading-complete-dialog
       [visible]="createLoadingVisibility"
       [completed]="createComplete"
-      [category]="'Quyết định kiểm tra'"
+      [header]="'Tạo mới quyết định kiểm tra'"
+      [progress]="'Đang tạo quyết định kiểm tra'"
+      [complete]="'Tạo quyết định kiểm tra thành công'"
     >
     </app-loading-complete-dialog>
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">

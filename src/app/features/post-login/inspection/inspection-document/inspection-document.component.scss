@@ -1,0 +1,12 @@
+@import "../../../../../assets/scss/base";
+
+
+.action-button{
+  button{
+    border: none;
+    background: $primary;
+    i{
+      color: white;
+    }
+  }
+}
