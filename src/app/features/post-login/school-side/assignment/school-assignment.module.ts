@@ -4,7 +4,6 @@ import { AssignmentListComponent } from './assignment-list/assignment-list.compo
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AssignAssignmentComponent } from './assign-assignment/assign-assignment.component';
-import { ApproveAssignmentComponent } from './approve-assignment/approve-assignment.component';
 import { SubmitAssignmentComponent } from './submit-assignment/submit-assignment.component';
 import { FormsModule } from '@angular/forms';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
@@ -12,7 +11,6 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
   declarations: [
     AssignmentListComponent,
     AssignAssignmentComponent,
-    ApproveAssignmentComponent,
     SubmitAssignmentComponent,
   ],
   imports: [CommonModule, SharedModule, FormsModule, NgxDocViewerModule],

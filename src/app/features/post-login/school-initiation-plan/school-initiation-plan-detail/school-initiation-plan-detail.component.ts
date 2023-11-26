@@ -74,6 +74,19 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     private route: ActivatedRoute,
     protected http: HttpClient
   ) {}
+  initData() {
+    this.initiationplanService
+      .getInitiationPlanById(this.initiationplanId)
+      .subscribe((data) => {
+        this.schoolinitiationplan = data;
+        console.log(this.schoolinitiationplan);
+        this.lastDocs =
+          this.schoolinitiationplan.documents[
+            this.schoolinitiationplan.documents.length - 1
+          ];
+        console.log(this.lastDocs);
+      });
+  }
   inputFileForm = this.fb.group({
     documentName: ['', NoWhitespaceValidator()],
     documentCode: ['', NoWhitespaceValidator()],
@@ -144,7 +157,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
                 summary: 'Phê duyệt',
                 detail: 'Đã phê duyệt thành công',
               });
-              window.location.reload();
+              this.initData();
+              this.uploadFileVisible = false;
             },
             error: (error) => {
               console.log(error);
@@ -236,7 +250,9 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
               summary: 'Đã gửi đánh giá',
               detail: 'Đã gửi đánh giá thành công',
             });
-            window.location.reload();
+            this.initData();
+            this.uploadFileVisible = false;
+            this.resetDeadlineVisible = false;
           },
           error: (error) => {
             console.log(error);

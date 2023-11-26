@@ -394,90 +394,98 @@
         </div>
 
         <!-- comment and history -->
-        <div class="tab mt-5">
-          <button
-            pButton
-            (click)="showComment = true"
-            [ngClass]="{ active: showComment }"
-          >
-            Bình luận
-          </button>
-          <button
-            pButton
-            (click)="showComment = false"
-            [ngClass]="{ active: !showComment }"
-          >
-            Lịch sử
-          </button>
-        </div>
-        <ng-container *ngIf="showComment; else showHistory">
-          <div class="height-100">
-            <br />
-            <form [formGroup]="commentForm">
-              <div class="comment d-flex">
-                <input
-                  formControlName="content"
-                  pInputText
-                  type="text"
-                  placeholder="Gửi bình luận"
-                  (keydown)="onKeyPress($event)"
-                />
+        <ng-container *ngIf="action === 'info'">
+          <div class="tab mt-5">
+            <button
+              pButton
+              (click)="showComment = true"
+              [ngClass]="{ active: showComment }"
+            >
+              Bình luận
+            </button>
+            <button
+              pButton
+              (click)="showComment = false"
+              [ngClass]="{ active: !showComment }"
+            >
+              Lịch sử
+            </button>
+          </div>
+          <ng-container *ngIf="showComment; else showHistory">
+            <div class="height-100">
+              <br />
+              <form [formGroup]="commentForm">
+                <div class="comment d-flex">
+                  <input
+                    formControlName="content"
+                    pInputText
+                    type="text"
+                    placeholder="Gửi bình luận"
+                    (keydown)="onKeyPress($event)"
+                  />
+                  <div
+                    class="d-flex justify-content-center align-items-center p-2"
+                    (click)="sendComment()"
+                  >
+                    <i class="bi bi-send"></i>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div *ngIf="comments" class="comment-content pt-2">
+              <div *ngFor="let item of comments" class="comment-item row mb-1">
                 <div
-                  class="d-flex justify-content-center align-items-center p-2"
-                  (click)="sendComment()"
+                  class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
                 >
-                  <i class="bi bi-send"></i>
+                  <img
+                    src="../../../../../../assets/img/user_icon.svg"
+                    alt=""
+                  />
+                </div>
+                <div class="comment-item-content col-md-10">
+                  <span class="font-weight-bold font-size-18"
+                    >{{ item.creator.user.fullName }}
+                  </span>
+                  <span class="text-black-50 comment-date">{{
+                    item.createdDate | date : "dd/MM/yyyy hh:mm"
+                  }}</span>
+
+                  <br />
+                  <span>{{ item.content }}</span>
+                </div>
+                <div
+                  *ngIf="this.user === item.creator.email"
+                  class="col-md-1 d-flex justify-content-center align-items-center"
+                  (click)="toggleMenu(item.commentId, $event)"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </div>
+              </div></div
+          ></ng-container>
+          <ng-template #showHistory>
+            <ng-container *ngFor="let item of historyDtos" class="mt-3">
+              <div class="history-item row mt-2">
+                <div
+                  class="history-item-ava col-md-1 d-flex justify-content-center align-items-center"
+                >
+                  <img
+                    src="../../../../../../assets/img/user_icon.svg"
+                    alt=""
+                  />
+                </div>
+                <div class="col-md-11 history-item-content">
+                  <span>
+                    {{ item.actionDescription }}
+                  </span>
+                  <br />
+                  <span class="text-black-50 history-date">
+                    {{ item.createdDate | date : "dd/MM/yyyy  hh:mm" }}
+                  </span>
                 </div>
               </div>
-            </form>
-          </div>
-          <div *ngIf="comments" class="comment-content pt-2">
-            <div *ngFor="let item of comments" class="comment-item row mb-1">
-              <div
-                class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
-              >
-                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
-              </div>
-              <div class="comment-item-content col-md-10">
-                <span class="font-weight-bold font-size-18"
-                  >{{ item.creator.user.fullName }}
-                </span>
-                <span class="text-black-50 comment-date">{{
-                  item.createdDate | date : "dd/MM/yyyy hh:mm"
-                }}</span>
-
-                <br />
-                <span>{{ item.content }}</span>
-              </div>
-              <div
-                *ngIf="this.user === item.creator.email"
-                class="col-md-1 d-flex justify-content-center align-items-center"
-                (click)="toggleMenu(item.commentId, $event)"
-              >
-                <i class="bi bi-three-dots-vertical"></i>
-              </div>
-            </div></div
-        ></ng-container>
-        <ng-template #showHistory>
-          <ng-container *ngFor="let item of historyDtos" class="mt-3">
-            <div class="history-item row mt-2">
-              <div
-                class="history-item-ava col-md-1 d-flex justify-content-center align-items-center"
-              >
-                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
-              </div>
-              <div class="col-md-11 history-item-content">
-                <span>
-                  {{ item.actionDescription }}
-                </span>
-                <br />
-                <span class="text-black-50 history-date">
-                  {{ item.createdDate | date : "dd/MM/yyyy  hh:mm" }}
-                </span>
-              </div>
-            </div>
-          </ng-container>
-        </ng-template>
+            </ng-container>
+          </ng-template>
+        </ng-container>
       </div>
 
       <div class="col-md-4 right-box">

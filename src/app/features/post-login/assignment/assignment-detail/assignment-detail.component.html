@@ -1,0 +1,43 @@
+<p-treeTable
+  [value]="assignments"
+  [scrollable]="true"
+  [style]="{ 'min-width': '50rem' }"
+  [scrollable]="true"
+  scrollHeight="600px"
+>
+  <ng-template pTemplate="caption">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h6>Danh sách công việc</h6>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Công việc</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-rowNode>
+    <tr [ttRow]="rowNode" class="d-flex justify-content-between">
+      <td class="folder">
+        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+        <i class="bi bi-folder-fill"></i>
+        {{ rowData.node.assignmentName }}
+      </td>
+      <ng-container>
+        <td class="d-flex">
+          <div
+            class="action-item d-flex justify-content-center align-items-center mx-2"
+            (click)="openDetail(rowData.node)"
+          >
+            <i class="bi bi-info-circle-fill"></i>
+          </div>
+        </td>
+      </ng-container>
+      <ng-template #td>
+        <td></td>
+      </ng-template>
+    </tr>
+  </ng-template>
+</p-treeTable>

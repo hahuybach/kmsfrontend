@@ -108,6 +108,40 @@ export class InitiationPlanDetailComponent implements OnInit {
     isPasssed: [false, Validators.required],
     file: ['', Validators.required],
   });
+  initData() {
+    this.initiationplanService
+      .getInitiationPlanById(this.initiationplanId)
+      .subscribe((data) => {
+        this.schoolinitiationplan = data;
+        console.log(this.schoolinitiationplan);
+        if (
+          this.schoolinitiationplan.documents.length >= 2 &&
+          this.schoolinitiationplan.status.statusId == 7
+        ) {
+          this.lastDocs = {
+            schoolDocument:
+              this.schoolinitiationplan.documents[
+                this.schoolinitiationplan.documents.length - 1
+              ].schoolDocument,
+            departmentDocument:
+              this.schoolinitiationplan.documents[
+                this.schoolinitiationplan.documents.length - 2
+              ].departmentDocument,
+          };
+        } else {
+          this.lastDocs =
+            this.schoolinitiationplan.documents[
+              this.schoolinitiationplan.documents.length - 1
+            ];
+        }
+        if (
+          this.lastDocs.schoolDocument != null &&
+          this.schoolinitiationplan.status.statusId != 9
+        ) {
+          this.fileStatus = true;
+        }
+      });
+  }
   displayNewFileUpload(file: File) {
     const blobUrl = window.URL.createObjectURL(file as Blob);
     this.pdfUrl = blobUrl;
@@ -214,7 +248,7 @@ export class InitiationPlanDetailComponent implements OnInit {
                 summary: 'Đăng tải thành công',
                 detail: 'Đăng tải tài liệu thành công',
               });
-              window.location.reload();
+              this.initData();
             },
             error: (error) => {
               console.log(error);
@@ -226,7 +260,7 @@ export class InitiationPlanDetailComponent implements OnInit {
             summary: 'Đăng tải thành công',
             detail: 'Đăng tải tài liệu thành công',
           });
-          window.location.reload();
+          this.initData();
         }
 
         // const headers = new HttpHeaders();
