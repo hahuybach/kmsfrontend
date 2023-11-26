@@ -131,11 +131,18 @@
 
 
 </form>
-<div class="overlay" *ngIf="isLoading">
-    <div class="spinner-container">
-        <div class="spinner-border" role="status"></div>
-    </div>
-</div>
+<!--<div class="overlay" *ngIf="isLoading">-->
+<!--    <div class="spinner-container">-->
+<!--        <div class="spinner-border" role="status"></div>-->
+<!--    </div>-->
+<!--</div>-->
 
 <p-toast position="top-right" key="error"></p-toast>
 <p-confirmDialog key="updateConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Tạo mới trường học'"
+  [progress]="'Đang tạo mới trường học'"
+  [complete]="'Tạo mới trường học thành công'"
+></app-loading-complete-dialog>
