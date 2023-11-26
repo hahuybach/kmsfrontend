@@ -30,4 +30,9 @@ export class RecordService {
     return this.http.get(url, {headers});
   }
 
+  public deleteRecordById(recordId: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.taskApiUrl}/delete/${recordId}`;
+    return this.http.delete(url, {headers});
+  }
 }

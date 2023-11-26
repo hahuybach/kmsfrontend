@@ -13,7 +13,7 @@ export class InspectionService {
     this.loggerService.log('Inspection service constructed');
   }
 
-  public getInspectionInfomation(inspectionId: number | null): Observable<any> {
+  public getInspectionInformation(inspectionId: number | null): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.inspectionApiUrl}/info/${inspectionId}`;
     return this.http.get(url, {headers});

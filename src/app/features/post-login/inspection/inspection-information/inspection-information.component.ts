@@ -32,7 +32,7 @@ export class InspectionInformationComponent implements OnInit {
     this.route.parent?.params.subscribe(parentParams => {
       this.inspectionId = parentParams['id'];
     })
-    this.inspectionService.getInspectionInfomation(this.inspectionId).subscribe({
+    this.inspectionService.getInspectionInformation(this.inspectionId).subscribe({
       next: (data) => {
         this.inspection = data;
         console.log(this.inspection)
