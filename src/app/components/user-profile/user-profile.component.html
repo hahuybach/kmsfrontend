@@ -156,3 +156,10 @@
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
 <app-change-password [visible] = "isVisible"
                      (visibleChange)="onClickChangePassword()"></app-change-password>
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Cập nhật người dùng'"
+  [progress]="'Đang cập nhật người dùng'"
+  [complete]="'Cập nhật người dùng thành công'"
+></app-loading-complete-dialog>
