@@ -10,6 +10,7 @@ import {InspectionPlanModule} from "../inspection-plan-list/inspection-plan/insp
 import { CreateRecordComponent } from './record/create-record/create-record.component';
 import { UpdateRecordComponent } from './record/update-record/update-record.component';
 import { RecordDetailComponent } from './record/record-detail/record-detail.component';
+import { InspectionMytaskComponent } from './inspection-mytask/inspection-mytask.component';
 
 
 
@@ -22,7 +23,8 @@ import { RecordDetailComponent } from './record/record-detail/record-detail.comp
     FileItemComponent,
     CreateRecordComponent,
     UpdateRecordComponent,
-    RecordDetailComponent
+    RecordDetailComponent,
+    InspectionMytaskComponent
   ],
   imports: [
     CommonModule,
