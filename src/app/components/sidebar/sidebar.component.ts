@@ -23,6 +23,7 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.auth.getRoleFromJwt());
+    console.log(this.auth.getRolesFromCookie())
     this.schoolId = this.auth.getSchoolFromJwt().schoolId;
     for (const argument of this.auth.getRoleFromJwt()) {
       if (argument.authority === 'Trưởng Phòng') {

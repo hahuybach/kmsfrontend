@@ -30,7 +30,6 @@ import {SchoolUpdateComponent} from "./features/post-login/school-list/school-up
 import {UserListComponent} from "./features/post-login/user-list/user-list.component";
 import {UserDetailComponent} from "./features/post-login/user-list/user-detail/user-detail.component";
 import {UserCreateComponent} from "./features/post-login/user-list/user-create/user-create.component";
-import { ApproveAssignmentComponent } from './features/post-login/school-side/assignment/approve-assignment/approve-assignment.component';
 import { AssignAssignmentComponent } from './features/post-login/school-side/assignment/assign-assignment/assign-assignment.component';
 import {
   UpdateInspectionPlanComponent
@@ -160,11 +159,7 @@ const routes: Routes = [
         path: 'users/create',
         component: UserCreateComponent
       },
-      {
-
-        path: 'approveassignment',
-        component: ApproveAssignmentComponent,
-      },
+     
       {
         path: 'assignassignment',
         component: AssignAssignmentComponent,

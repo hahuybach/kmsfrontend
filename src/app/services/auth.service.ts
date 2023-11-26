@@ -56,8 +56,12 @@ export class AuthService {
   setJwtInCookie(jwt: string) {
     const decodedToken = this.getDecodedJWT(jwt);
     document.cookie = `exp=${decodedToken.exp}`;
+    console.log(decodedToken.exp)
     document.cookie = `iat=${decodedToken.iat}`;
+    console.log(decodedToken.iat)
     document.cookie = `sub=${decodedToken.sub}`;
+    console.log(decodedToken.sub)
+    document.cookie = `roles=${decodedToken.roles}`;
     document.cookie = `jwtToken=${jwt}`;
   }
 
@@ -82,6 +86,13 @@ export class AuthService {
       .find((row) => row.startsWith('iat='));
     return iat ? iat.split('=')[1] : null;
   }
+  getRolesFromCookie(): string | null {
+    const roles = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('roles='));
+    console.log(roles)
+    return roles ? roles.split('=')[1] : null;
+  }
   getRoleFromJwt(): any | null {
     const jwt = this.getJwtFromCookie();
     if (jwt) {
@@ -90,6 +101,7 @@ export class AuthService {
     }
     return null;
   }
+
   getSchoolFromJwt(): any | null {
     const jwt = this.getJwtFromCookie();
     if (jwt) {
@@ -98,7 +110,6 @@ export class AuthService {
     }
     return null;
   }
-
 
   getSubFromCookie(): string | null {
     const sub = document.cookie
@@ -121,7 +132,5 @@ export class AuthService {
     return this.http.post<any>(this.baseUrl + 'checkToken',JSON.stringify(data), {headers})
 
   }
-
-
 
 }
