@@ -73,14 +73,18 @@
           <p-columnFilter
             type="text"
             field="schoolName"
-            placeholder="(VD): Trường mầm non Ánh Sao"
+            pTooltip="(VD): Trường mầm non Ánh Sao"
+            tooltipPosition="top"
+            placeholder="Tên trường"
           ></p-columnFilter>
         </th>
         <th>
           <p-columnFilter
             type="text"
             field="exactAddress"
-            placeholder="(VD): Số 2, Nguyễn Khánh Toàn"
+            pTooltip="(VD): Số 2, Nguyễn Khánh Toàn"
+            tooltipPosition="top"
+            placeholder="Địa chỉ"
           ></p-columnFilter>
         </th>
 
@@ -125,7 +129,7 @@
         <td>
           <div
             class="td-content"
-            pTooltip="Enter your username"
+            pTooltip="{{ school.exactAddress }}"
             tooltipPosition="top"
           >
             {{ school.exactAddress }}
