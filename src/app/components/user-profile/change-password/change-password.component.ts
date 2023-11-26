@@ -20,6 +20,7 @@ export class ChangePasswordComponent {
     changePassword : ['', [Validators.required, passwordStrong.bind(this)]],
     confirmPassword: ['',Validators.required]
   }, { validators: this.passwordMatchValidator })
+
   constructor(private fb: FormBuilder,
               private confirmationService: ConfirmationService,
               private toast: ToastService,
@@ -64,11 +65,12 @@ export class ChangePasswordComponent {
     if (!this.form.invalid){
       this.accountService.changePassword(this.form.value).subscribe({
         next: (data) =>{
-          this.toast.showSuccess("error", "Thông báo", "Đổi mật khẩu thành công")
           this.visible = false;
           this.form.reset()
           this.form.markAsPristine();
           this.isSubmitted = false;
+          this.toast.showSuccess("error", "Thông báo", "Đổi mật khẩu thành công")
+
         },
         error: (error) =>{
           this.toast.showError("error", "Lỗi", error.error.message)
@@ -80,7 +82,7 @@ export class ChangePasswordComponent {
   confirm() {
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận việc thay đổi này không?',
-      header: 'Xác nhân',
+      header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
       rejectLabel: 'Không',
