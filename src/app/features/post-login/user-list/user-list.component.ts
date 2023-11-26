@@ -49,6 +49,8 @@ export class UserListComponent implements OnInit {
     isDirector: boolean
   excelFile: any
   visible = false;
+  isLoading = false;
+  submitCompleted = false;
 
 
     setAuthority() {
@@ -359,10 +361,16 @@ export class UserListComponent implements OnInit {
         this.toastService.showError('error', 'Thông báo', "Vui lòng chọn 1 file")
       }
       if (this.excelFile){
+        this.isLoading = true
         this.accountService.uploadFileExcel(this.excelFile).subscribe({
           next: (data) =>{
-            this.toastService.showSuccess('error', "Thông báo", "Tạo người dùng thành công")
-            this.loadUsers();
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.toastService.showSuccess('error', "Thông báo", "Tạo người " + data.length + " dùng thành công")
+              this.loadUsers();
+            }, 1500)
+            this.isLoading = false;
+
 
           },
           error: (error) => {

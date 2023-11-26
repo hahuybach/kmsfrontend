@@ -172,8 +172,15 @@
     <button (click)="confirm()" type="submit" class="btn btn-primary">Tạo</button>
   </div>
 </form>
-<div class="overlay" *ngIf="isLoading">
-  <div class="spinner-container">
-    <div class="spinner-border" role="status"></div>
-  </div>
-</div>
+<!--<div class="overlay" *ngIf="isLoading">-->
+<!--  <div class="spinner-container">-->
+<!--    <div class="spinner-border" role="status"></div>-->
+<!--  </div>-->
+<!--</div>-->
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Tạo mới người dùng'"
+  [progress]="'Đang tạo mới người dùng'"
+  [complete]="'Tạo mới người dùng thành công'"
+></app-loading-complete-dialog>
