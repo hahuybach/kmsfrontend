@@ -1,1 +1,31 @@
-<p>record-detail works!</p>
+<p-dialog header="Danh sách đoàn kiểm tra"
+          [(visible)]="detailRecordPopupVisible"
+          [modal]="true"
+          [style]="{ width: '80vw' }"
+          [draggable]="false"
+          [resizable]="false"
+          (onHide)="resetDetailRecordPopupVisible()"
+>
+  <div class="container-fluid" *ngIf="task">
+    <div class="row">
+      <div class="record-name col-md-12 mt-1">
+        <span>Mục kiểm tra</span>
+        <p class="fw-bolder">{{task.taskName}}</p>
+      </div>
+      <div class="record-description col-md-12 mt-1">
+        <span class="fw-medium">Chi tiết</span>
+        <p class="fw-bolder">{{task.description}}</p>
+      </div>
+      <div class="record-deadline col-md-6 mt-1">
+        <span>Hạn nộp</span>
+        <p class="fw-bolder"> {{task.deadline | date: "dd/MM/yyyy"}}</p>
+      </div>
+      <div class="record-assignee col-md-6 mt-1">
+        <span>Người thực hiện</span>
+        <select readonly="true">
+          <option selected>{{task.assignee.user.fullName}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</p-dialog>

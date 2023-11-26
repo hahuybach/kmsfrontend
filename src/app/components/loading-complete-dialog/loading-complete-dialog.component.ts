@@ -5,13 +5,11 @@ import {Component, Input, OnInit} from '@angular/core';
   templateUrl: './loading-complete-dialog.component.html',
   styleUrls: ['./loading-complete-dialog.component.scss']
 })
-export class LoadingCompleteDialogComponent implements OnInit{
+export class LoadingCompleteDialogComponent{
   @Input({required: true}) visible: boolean = false;
   @Input({required: true})  completed: boolean = false;
-  @Input() category: string = "";
-  categoryLowerCase: string = "";
-  ngOnInit(): void {
-    this.categoryLowerCase  = this.category.toLowerCase();
-  }
+  @Input({required: true}) header: string = ""; //Ex: Tạo mới quyết định kiểm tra
+  @Input({required: true}) progress: string = ""; //Ex: Đang tạo quyết định kiểm tra
+  @Input({required: true}) complete: string = ""; //Ex: Tạo quyết định kiểm tra thành công
 
 }

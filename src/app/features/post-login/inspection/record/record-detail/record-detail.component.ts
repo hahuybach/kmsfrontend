@@ -12,7 +12,7 @@ import {inspectionPlanService} from "../../../../../services/inspectionplan.serv
 })
 export class RecordDetailComponent implements OnChanges{
   @Input() recordId: number;
-  @Input() detailRecordPopupVisible: boolean;
+  @Input() detailRecordPopupVisible: boolean = true;
   @Output() detailRecordPopupVisibleChange = new EventEmitter<boolean>();
   task: TaskDetailDto;
 
@@ -30,6 +30,7 @@ export class RecordDetailComponent implements OnChanges{
       next: (data) => {
         this.task = data.taskDetailDto;
         console.log(this.task)
+        console.log(this.detailRecordPopupVisible)
       },
       error: (error) => {
         console.log(error);
