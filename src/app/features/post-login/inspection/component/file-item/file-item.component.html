@@ -4,6 +4,7 @@
   [style]="{ width: '90vw', height: '100vh' }"
   [draggable]="false"
   [resizable]="false"
+  appendTo="body"
 >
   <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
     <div class="spinner-border text-center" role="status"></div>

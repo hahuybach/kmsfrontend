@@ -25,9 +25,9 @@ export class RecordService {
   }
 
   public updateTaskDocument(formData: FormData): Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'undefined');
+    const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data');
     const url = `${this.taskApiUrl}/updateDoc`;
-    return this.http.put(url, formData, { headers });
+    return this.http.put(url, formData);
   }
 
   public getRecordById(recordId: number): Observable<any> {

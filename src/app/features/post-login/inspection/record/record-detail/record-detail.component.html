@@ -93,8 +93,10 @@
             <button pButton type="submit">Lưu công việc</button>
           </div>
         </div>
-        <div *ngIf="!canUploadDocument">
-          <app-file-item></app-file-item>
+        <div *ngIf="!canUploadDocument || task.document != null">
+          <app-file-item
+          [document]="task.document"
+          ></app-file-item>
         </div>
       </form>
     </div>

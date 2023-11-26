@@ -8,7 +8,7 @@ import {RecordService} from "../../../../../services/record.service";
   templateUrl: './record-detail.component.html',
   styleUrls: ['./record-detail.component.scss']
 })
-export class RecordDetailComponent implements OnChanges, OnInit{
+export class RecordDetailComponent implements OnChanges, OnInit {
   @Input() canUploadDocument: boolean = false;
   @Input() recordId: number;
   @Input() detailRecordPopupVisible: boolean = true;
@@ -24,7 +24,7 @@ export class RecordDetailComponent implements OnChanges, OnInit{
   ) {
   }
 
-  resetDetailRecordPopupVisible(){
+  resetDetailRecordPopupVisible() {
     this.detailRecordPopupVisibleChange.emit(this.detailRecordPopupVisible);
   }
 
@@ -54,8 +54,8 @@ export class RecordDetailComponent implements OnChanges, OnInit{
 
   }
 
-  onSubmit(){
-    if (this.documentForm.invalid){
+  onSubmit() {
+    if (this.documentForm.invalid) {
       this.documentForm.markAllAsTouched();
       return;
     }
@@ -63,8 +63,10 @@ export class RecordDetailComponent implements OnChanges, OnInit{
     const formData = new FormData();
     const document = {
       taskId: this.recordId,
-      documentName: this.documentForm.get('documentName')?.value,
-      documentCode: this.documentForm.get('documentCode')?.value
+      documentTaskDto: {
+        documentName: this.documentForm.get('documentName')?.value,
+        documentCode: this.documentForm.get('documentCode')?.value
+      }
     }
 
     formData.append("request", new Blob([JSON.stringify(document)], {type: "application/json"}))
