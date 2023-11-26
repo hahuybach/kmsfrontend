@@ -24,6 +24,12 @@ export class RecordService {
     return this.http.put(url, record, { headers });
   }
 
+  public updateTaskDocument(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'undefined');
+    const url = `${this.taskApiUrl}/updateDoc`;
+    return this.http.put(url, formData, { headers });
+  }
+
   public getRecordById(recordId: number): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.taskApiUrl}/detail/${recordId}`;

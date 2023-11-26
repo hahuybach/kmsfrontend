@@ -24,19 +24,80 @@
         <span>Người thực hiện</span>
         <p class="fw-bolder">{{task.assignee.user.fullName}}</p>
       </div>
-      <div class="record-document col-md-12 mt-1">
+      <form class="record-document col-md-12 mt-1" [formGroup]="documentForm" (ngSubmit)="onSubmit()">
         <span>Tài liệu</span>
         <div *ngIf="canUploadDocument && task.document === null">
           <div class="row">
-            <div class="col-md-8">Tên</div>
-            <div class="col-md-4">Mã</div>
-            <div class="col-md-12">Tài liệu</div>
+            <div class="col-md-8">
+              <label class="fw-medium">Tên tài liệu<span class="p-error">*</span></label><br/>
+              <input
+                pInputText
+                placeholder="Điền tên tài liệu"
+                formControlName="documentName"
+              />
+              <div
+                *ngIf="documentForm.controls?.['documentName']?.invalid && (documentForm.controls?.['documentName']?.touched || documentForm.controls?.['documentName']?.dirty)">
+                <span *ngIf="documentForm.controls?.['documentName']?.errors?.['required']" class="p-error">
+                  Vui lòng điền tên tài liệu
+                </span>
+                <span *ngIf="documentForm.controls?.['documentName']?.errors?.['maxLength']" class="p-error">
+                  Tên tài liệu quá dài
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-medium">Mã tài liệu<span class="p-error">*</span></label><br/>
+              <input
+                pInputText
+                placeholder="Điền mã tài liệu"
+                formControlName="documentCode"
+              />
+              <div
+                *ngIf="documentForm.controls?.['documentCode']?.invalid && (documentForm.controls?.['documentCode']?.touched || documentForm.controls?.['documentCode']?.dirty)">
+                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['required']" class="p-error">
+                  Vui lòng điền mã tài liệu
+                </span>
+                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['maxLength']" class="p-error">
+                  Mã tài liệu quá dài
+                </span>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="fw-medium">Tài liệu<span class="p-error">*</span></label><br/>
+              <div class="input-file">
+                <input
+                  type="file"
+                  #fileInput
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput)"
+                />
+                <input pInputText readonly class="col-md-10"
+                       placeholder="{{fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'}}"/>
+                <button
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput.click()"
+                  class="col-md-2"
+                ></button>
+              </div>
+              <div
+                *ngIf="documentForm.controls?.['documentFile']?.invalid && (documentForm.controls?.['documentFile']?.touched || documentForm.controls?.['documentFile']?.dirty)">
+                <span *ngIf="documentForm.controls?.['documentFile']?.errors?.['required']" class="p-error">
+                  Vui lòng chọn tài liệu
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="w-100 text-center mt-3">
+            <button pButton type="submit">Lưu công việc</button>
           </div>
         </div>
         <div *ngIf="!canUploadDocument">
           <app-file-item></app-file-item>
         </div>
-      </div>
+      </form>
     </div>
+
   </div>
 </p-dialog>

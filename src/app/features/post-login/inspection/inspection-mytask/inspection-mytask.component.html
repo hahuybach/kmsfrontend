@@ -57,11 +57,11 @@
         <th class="th-small"></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-taskList let-index="index" >
+    <ng-template pTemplate="body" let-taskList >
       <tr class="p-selectable-row">
         <td>
           <span class="p-column-title">STT</span>
-          {{ index + 1 }}
+          {{ taskList.index + 1 }}
         </td>
         <td>
           <span class="p-column-title">Tên</span>
