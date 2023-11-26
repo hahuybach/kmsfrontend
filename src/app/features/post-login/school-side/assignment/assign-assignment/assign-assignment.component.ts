@@ -18,6 +18,7 @@ import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
+import { isUnionTypeNode } from 'typescript';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -103,23 +104,35 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Thư mục', value: false },
       { label: 'Nộp tài liệu', value: true },
     ];
-    this.issueService.getCurrentActiveIssue().subscribe({
-      next: (data) => {
-        issueId = data.issueDto.issueId;
-        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-          next: (data) => {
-            this.assignments = data.assignmentListDtos;
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xảy ra lỗi',
-              detail: error.error.message,
-            });
-          },
-        });
-      },
-    });
+
+    // lay issueId tu url goi theo issueId
+    this.activateRouter.params
+      .pipe(
+        switchMap((params) => {
+          this.issueId = +params['issueId'];
+          return this.assignmentService.getAssignmentByIssueId(this.issueId);
+        })
+      )
+      .subscribe((data) => {
+        this.assignments = data.assignmentListDtos;
+      });
+    // this.issueService.getCurrentActiveIssue().subscribe({
+    //   next: (data) => {
+    //     issueId = data.issueDto.issueId;
+    //     this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+    //       next: (data) => {
+    //         this.assignments = data.assignmentListDtos;
+    //       },
+    //       error: (error) => {
+    //         this.messageService.add({
+    //           severity: 'error',
+    //           summary: 'Xảy ra lỗi',
+    //           detail: error.error.message,
+    //         });
+    //       },
+    //     });
+    //   },
+    // });
     // this.assignmentService.getMyAssignedAssignments().subscribe({
     //   next: (data) => {
     //     this.assignments = data.assignmentListDtos;
@@ -162,20 +175,9 @@ export class AssignAssignmentComponent implements OnInit {
     private router: Router
   ) {}
   initData() {
-    // this.assignmentService.getMyAssignedAssignments().subscribe({
-    //   next: (data) => {
-    //     this.assignments = data.assignmentListDtos;
-    //   },
-    // });
-    let issueId;
-    this.issueService.getCurrentActiveIssue().subscribe({
+    this.assignmentService.getAssignmentByIssueId(this.issueId).subscribe({
       next: (data) => {
-        issueId = data.issueDto.issueId;
-        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-          next: (data) => {
-            this.assignments = data.assignmentListDtos;
-          },
-        });
+        this.assignments = data.assignmentListDtos;
       },
     });
   }
@@ -322,7 +324,9 @@ export class AssignAssignmentComponent implements OnInit {
             summary: 'Không tìm thấy công việc',
             detail: error.error.message,
           });
-          this.router.navigate(['/assignassignment'], { queryParams: {} });
+          this.router.navigate(['/assignassignment/' + this.issueId], {
+            queryParams: {},
+          });
         },
       });
 
@@ -401,7 +405,9 @@ export class AssignAssignmentComponent implements OnInit {
     this.assignmentForm.reset();
     this.showComment = true;
     this.stompService.unsubscribe(this.selectedAssignment.assignmentId);
-    this.router.navigate(['/assignassignment'], { queryParams: {} });
+    this.router.navigate(['/assignassignment/' + this.issueId], {
+      queryParams: {},
+    });
     // this.initData();
   }
 

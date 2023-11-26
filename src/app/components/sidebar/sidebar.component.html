@@ -137,7 +137,7 @@
           routerLinkActive="active"
           *ngIf="isPrincipal || isChiefTeacher || isTeacher"
         >
-          <a class="" [routerLink]="['/assignassignment']">
+          <a class="" [routerLink]="['/assignassignment/' + issueId]">
             <div>
               <i class="bi bi-list-check"></i>
               &nbsp; Danh sách công việc
