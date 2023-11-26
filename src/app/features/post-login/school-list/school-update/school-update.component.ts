@@ -35,6 +35,7 @@ export class SchoolUpdateComponent implements OnInit {
   isLoading: boolean = false;
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
+  submitCompleted = false;
 
 
   constructor(private router: Router,
@@ -82,7 +83,10 @@ export class SchoolUpdateComponent implements OnInit {
       this.schoolService.updateSchool(this.updateForm.value).subscribe(
         {
           next: (data) => {
-            this.router.navigate(['school/' + this.school.schoolId])
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.router.navigate(['school/' + this.school.schoolId])
+            }, 1500)
           },
           error: (err) => {
             this.isLoading = false;
@@ -216,4 +220,6 @@ export class SchoolUpdateComponent implements OnInit {
       },key: 'updateSchoolConfirm'
     });
   }
+
+
 }
