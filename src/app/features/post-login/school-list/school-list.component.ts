@@ -20,6 +20,8 @@ export class SchoolListComponent implements OnInit {
   isDirector: boolean;
   visible = false;
   excelFile: any
+  isLoading = false;
+  submitCompleted  = false;
 
   constructor(private schoolService: SchoolService,
               private config: PrimeNGConfig,
@@ -121,16 +123,21 @@ export class SchoolListComponent implements OnInit {
       this.toastService.showError('error', 'Thông báo', "Vui lòng chọn 1 file")
     }
     if (this.excelFile) {
+      this.isLoading = true
       this.schoolService.uploadFileExcel(this.excelFile).subscribe({
         next: (data) => {
-          this.toastService.showSuccess('error', "Thông báo", "Tạo " + data.length + " trường thành công")
-          this.schoolService.findAllSchools().subscribe({
+          this.submitCompleted = true;
+          setTimeout(() => {
+            this.toastService.showSuccess('error', "Thông báo", "Tạo " + data.length + " trường thành công")
+            this.schoolService.findAllSchools().subscribe({
 
-            next: (value) => {
-              this.schools = value;
-              console.log(this.schools);
-            }
-          })
+              next: (value) => {
+                this.schools = value;
+                console.log(this.schools);
+              }
+            })
+          }, 1500)
+          this.isLoading = false;
         },
         error: (error) => {
           this.toastService.showWarn('error', "Lỗi", error.error.message)
