@@ -27,6 +27,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   isLoading: boolean = false;
   isFileAllSubmit = true;
   issue: IssueResponse;
+  submitCompleted: boolean = false;
 
   constructor(private guidanceService: GuidanceDocumentService,
               private issueService: IssueService,
@@ -96,7 +97,10 @@ export class GuidanceDocumentCreateComponent implements OnInit {
 
       this.guidanceService.saveGuidanceDocument(this.guidanceForm.value, this.selectedFiles).subscribe({
         next: (result) => {
-          this.route.navigate(['guidanceDocument/' + result.guidanceDocumentDto.guidanceDocumentId])
+          this.submitCompleted = true;
+          setTimeout(() => {
+            this.route.navigate(['guidanceDocument/' + result.guidanceDocumentDto.guidanceDocumentId])
+          }, 1500)
         },
         error: (error) => {
           this.toast.showWarn('error', 'Lỗi', error.error.message)
