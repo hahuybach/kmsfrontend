@@ -1,15 +1,17 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AccountResponse} from "../../../../../models/account-response";
 import {inspectionPlanService} from "../../../../../services/inspectionplan.service";
 import {RecordService} from "../../../../../services/record.service";
+import {Subscription} from "rxjs";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-create-record',
   templateUrl: './create-record.component.html',
   styleUrls: ['./create-record.component.scss']
 })
-export class CreateRecordComponent implements OnInit {
+export class CreateRecordComponent implements OnInit, OnDestroy {
   @Input() inspectionPlanId: number;
   @Input() createRecordPopupVisible: boolean;
   @Output() createRecordPopupVisibleChange = new EventEmitter<boolean>();
@@ -24,6 +26,7 @@ export class CreateRecordComponent implements OnInit {
     endDate: Date;
     startDate: Date;
   }
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -75,6 +78,7 @@ export class CreateRecordComponent implements OnInit {
       assigneeId: this.recordForm.get('assigneeId')?.value,
     }
     this.formSubmitted = true;
+    const saveTask =
     this.recordService.saveTask(record).subscribe({
       next: (response) => {
         this.formCompleted = true;
@@ -86,7 +90,17 @@ export class CreateRecordComponent implements OnInit {
       error: (error) => {
         console.log(error)
       }
-    })
+    });
+    this.subscriptions.push(saveTask);
   }
 
+  private unsubscribeAll(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
+  }
 }
