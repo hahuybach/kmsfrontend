@@ -9,6 +9,7 @@ import {ToastService} from "../../../shared/toast/toast.service";
 import {RoleService} from "../../../services/role.service";
 import {AuthService} from "../../../services/auth.service";
 import {Role} from "../../../shared/enum/role";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
     selector: 'app-user-list',
@@ -90,7 +91,8 @@ export class UserListComponent implements OnInit {
         private route: Router,
         private activateRouter: ActivatedRoute,
         private roleService: RoleService,
-        private auth: AuthService
+        private auth: AuthService,
+        private confirmationService: ConfirmationService
     ) {
     }
 
@@ -353,6 +355,9 @@ export class UserListComponent implements OnInit {
   }
 
   onCreateUserByFile() {
+      if (!this.excelFile){
+        this.toastService.showError('error', 'Thông báo', "Vui lòng chọn 1 file")
+      }
       if (this.excelFile){
         this.accountService.uploadFileExcel(this.excelFile).subscribe({
           next: (data) =>{
@@ -368,6 +373,8 @@ export class UserListComponent implements OnInit {
       }
 
   }
+
+
 
   showImportUser() {
     this.visible = true;
@@ -386,4 +393,28 @@ export class UserListComponent implements OnInit {
       }
     });
   }
+  confirm() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận việc tạo người dùng bằng file excel này không?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel:'Không',
+      accept: () => {
+        this.onCreateUserByFile()
+
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
+          case ConfirmEventType.CANCEL:
+            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            break;
+        }
+      },key: 'createUserByExcel'
+    });
+  }
+
 }
