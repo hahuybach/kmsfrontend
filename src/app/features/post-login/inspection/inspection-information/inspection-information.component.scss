@@ -1,0 +1,11 @@
+@import "../../../../../assets/scss/base";
+
+.inspection-detail {
+  font-size: 16px;
+}
+
+:host ::ng-deep .p-tag{
+  font-size: 15px;
+}
+
+

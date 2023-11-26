@@ -40,6 +40,16 @@ import {
   AssignmentTreeListComponent
 } from "./features/post-login/assignment/assignment-tree-list/assignment-tree-list.component";
 
+import {InspectionComponent} from "./features/post-login/inspection/inspection.component";
+import {
+  InspectionInformationComponent
+} from "./features/post-login/inspection/inspection-information/inspection-information.component";
+import {
+  InspectionSchoolDocumentComponent
+} from "./features/post-login/inspection/inspection-school-document/inspection-school-document.component";
+import {
+  InspectionDocumentComponent
+} from "./features/post-login/inspection/inspection-document/inspection-document.component";
 
 const routes: Routes = [
   {
@@ -166,6 +176,24 @@ const routes: Routes = [
       {
         path: 'listAssignment',
         component: AssignmentTreeListComponent
+
+      },{
+        path: 'inspection/:id',
+        component: InspectionComponent,
+        children: [
+          {
+            path: 'information',
+            component: InspectionInformationComponent
+          },
+          {
+            path: 'school-document',
+            component: InspectionSchoolDocumentComponent
+          },
+          {
+            path: 'document',
+            component: InspectionDocumentComponent
+          },
+        ]
       }
     ],
   },

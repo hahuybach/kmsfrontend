@@ -1,0 +1,59 @@
+<div class="container-fluid">
+  <div class="row">
+    <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
+    <div class="row" *ngIf="inspection">
+      <div class="form-content col-md-8 d-flex flex-column justify-content-between">
+        <div class="row mb-2">
+          <div class="col-md-9">
+            <div class="inspection-plan-name mb-1">
+              <span>Tên phiên kiểm tra</span>
+              <p class="fw-bolder">{{inspection.inspectionName}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <span>Ngày bắt đầu</span>
+            <p class="fw-bolder">{{inspection.startDate | date: "dd/MM/yyyy"}}</p>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-md-9">
+            <div class="inspection-plan-name mb-1">
+              <span>Tên trường</span>
+              <p class="fw-bolder">{{inspection.schoolName}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <span>Ngày kết thúc</span>
+            <p class="fw-bolder">{{inspection.endDate | date: "dd/MM/yyyy"}}</p>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-md-3">
+            <span>Trạng thái</span>
+            <p-tag
+              class="status"
+              [severity]="getStatusSeverity(inspection.statusName)"
+              [rounded]="true"
+            >
+              {{ inspection.statusName }}
+            </p-tag>
+          </div>
+        </div>
+        <h5 class="mb-2">Tài liệu công văn</h5>
+        <app-file-item [document]="inspection.iniDocument"></app-file-item>
+        <app-file-item [document]="inspection.inspectionPlanDocument"></app-file-item>
+        <div *ngFor="let doc of inspection.issueDocuments; let i = index">
+          <app-file-item [document]="inspection.issueDocuments[i]"></app-file-item>
+        </div>
+      </div>
+      <div class="col-md-4 d-flex justify-content-center h-100">
+        <app-inspection-plan-inspector-list
+          class="w-100 h-100"
+          [listEditable]="false"
+          [selectedInspectors]="inspection.inspectorDtos">
+        </app-inspection-plan-inspector-list>
+      </div>
+    </div>
+  </div>
+</div>
+

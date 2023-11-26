@@ -20,6 +20,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingCompleteDialogComponent } from '../components/loading-complete-dialog/loading-complete-dialog.component';
 import { MenuModule } from 'primeng/menu';
 import { ChartModule } from 'primeng/chart';
+import {TabMenuModule} from "primeng/tabmenu";
 @NgModule({
   declarations: [FileSizePipePipe, LoadingCompleteDialogComponent],
   imports: [
@@ -43,6 +44,7 @@ import { ChartModule } from 'primeng/chart';
     NgbModule,
     MenuModule,
     ChartModule,
+    TabMenuModule
   ],
   exports: [
     InputTextModule,
@@ -66,6 +68,7 @@ import { ChartModule } from 'primeng/chart';
     LoadingCompleteDialogComponent,
     MenuModule,
     ChartModule,
+    TabMenuModule
   ],
 })
 export class SharedModule {}

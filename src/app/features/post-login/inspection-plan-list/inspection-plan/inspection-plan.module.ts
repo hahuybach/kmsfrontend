@@ -30,8 +30,9 @@ import {NgxPaginationModule} from "ngx-pagination";
         RouterLink,
         NgxPaginationModule,
     ],
-  exports:[
-  ],
+    exports: [
+        InspectionPlanInspectorListComponent
+    ],
   providers:[
     inspectionPlanService
   ]
