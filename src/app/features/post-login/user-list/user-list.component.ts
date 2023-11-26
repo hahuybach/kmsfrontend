@@ -366,7 +366,7 @@ export class UserListComponent implements OnInit {
           next: (data) =>{
             this.submitCompleted = true;
             setTimeout(() => {
-              this.toastService.showSuccess('error', "Thông báo", "Tạo người " + data.length + " dùng thành công")
+              this.toastService.showSuccess('error', "Thông báo", "Tạo " + data.length + " người dùng thành công")
               this.loadUsers();
             }, 1500)
             this.isLoading = false;
