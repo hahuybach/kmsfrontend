@@ -26,7 +26,16 @@
       </div>
       <div class="record-document col-md-12 mt-1">
         <span>Tài liệu</span>
-        <app-file-item></app-file-item>
+        <div *ngIf="canUploadDocument && task.document === null">
+          <div class="row">
+            <div class="col-md-8">Tên</div>
+            <div class="col-md-4">Mã</div>
+            <div class="col-md-12">Tài liệu</div>
+          </div>
+        </div>
+        <div *ngIf="!canUploadDocument">
+          <app-file-item></app-file-item>
+        </div>
       </div>
     </div>
   </div>

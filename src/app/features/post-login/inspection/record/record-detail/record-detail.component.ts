@@ -11,6 +11,7 @@ import {inspectionPlanService} from "../../../../../services/inspectionplan.serv
   styleUrls: ['./record-detail.component.scss']
 })
 export class RecordDetailComponent implements OnChanges{
+  @Input() canUploadDocument: boolean = false;
   @Input() recordId: number;
   @Input() detailRecordPopupVisible: boolean = true;
   @Output() detailRecordPopupVisibleChange = new EventEmitter<boolean>();
@@ -26,12 +27,13 @@ export class RecordDetailComponent implements OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['recordId'].currentValue === undefined){
+    if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
       return;
     }
     this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;
+        console.log(this.task.document);
       },
       error: (error) => {
         console.log(error);

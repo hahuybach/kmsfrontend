@@ -23,4 +23,10 @@ export class InspectionService {
     const url = `${this.inspectionApiUrl}/inspection_doc/${inspectionId}`;
     return this.http.get(url, {headers});
   }
+
+  public getInspectionMyTask(inspectionId: number | null): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.inspectionApiUrl}/my_task/${inspectionId}`;
+    return this.http.get(url, {headers});
+  }
 }

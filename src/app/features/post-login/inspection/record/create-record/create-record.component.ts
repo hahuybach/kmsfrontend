@@ -43,12 +43,9 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
     this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
-        console.log(data.inspectionPlan)
         this.startDate = data.inspectionPlan.startDate.slice(0, 10);
         this.endDate = data.inspectionPlan.endDate.slice(0, 10);
-
         this.defaultDeadline = data.inspectionPlan.startDate;
-        console.log(this.defaultDeadline)
         this.recordForm.get('deadline')?.setValue(this.defaultDeadline.split('T')[0]);
       },
       error: (error) => {

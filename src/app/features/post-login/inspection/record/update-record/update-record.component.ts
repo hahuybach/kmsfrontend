@@ -78,7 +78,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['recordId'].currentValue === undefined){
+    if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
       return;
     }
     this.recordService.getRecordById(this.recordId).subscribe({
