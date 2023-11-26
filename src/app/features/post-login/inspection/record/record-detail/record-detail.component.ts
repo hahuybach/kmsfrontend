@@ -26,11 +26,12 @@ export class RecordDetailComponent implements OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['recordId'].currentValue === undefined){
+      return;
+    }
     this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;
-        console.log(this.task)
-        console.log(this.detailRecordPopupVisible)
       },
       error: (error) => {
         console.log(error);

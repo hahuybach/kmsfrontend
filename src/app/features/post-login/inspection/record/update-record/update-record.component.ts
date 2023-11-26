@@ -77,18 +77,10 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     })
   }
 
-  public findInvalidControls() {
-    const invalid = [];
-    const controls = this.recordForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    return invalid;
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['recordId'].currentValue === undefined){
+      return;
+    }
     this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;

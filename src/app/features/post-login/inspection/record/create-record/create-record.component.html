@@ -6,6 +6,13 @@
           [resizable]="false"
           (onHide)="resetCreateRecordPopupVisible()"
 >
+  <app-loading-complete-dialog
+    [visible]="formSubmitted"
+    [completed]="formCompleted"
+    [header]="'Tạo mới mục kiểm tra'"
+    [progress]="'Đang tạo mới mục kiểm tra'"
+    [complete]="'Tạo mới mục kiểm tra thành công'"
+  ></app-loading-complete-dialog>
   <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="record-name col-md-12 mt-1">
@@ -47,11 +54,11 @@
       </div>
       <div class="record-deadline col-md-6 mt-1">
         <label for="deadline" class="fw-medium">Hạn nộp<span class="p-error">*</span></label>
-        <input id="deadline" class="form-control" type="date" formControlName="deadline"/>
+        <input id="deadline" class="form-control" type="date" formControlName="deadline" [min]="startDate" [max]="endDate"/>
         <div
           *ngIf="recordForm.controls?.['deadline']?.invalid && (recordForm.controls?.['deadline']?.touched ||recordForm.controls?.['deadline']?.dirty)">
                     <span *ngIf="recordForm.controls?.['deadline']?.errors?.['required']" class="p-error">
-                      Vui lòng hạn nộp mục kiểm tra
+                      Vui lòng chọn hạn nộp mục kiểm tra
                     </span>
         </div>
       </div>

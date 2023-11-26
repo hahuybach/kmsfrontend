@@ -1,8 +1,14 @@
 @import "../../../../../assets/scss/base";
 
+.th-small{
+  width: 100px;
+}
 
 .action-button{
   button{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     border: none;
     background: $primary;
     i{
@@ -26,4 +32,8 @@
       border-color: $primary-hover;
     }
   }
+}
+
+.create-button{
+  width: auto;
 }

@@ -28,22 +28,22 @@
           [rows]="5"
           [showCurrentPageReport]="true"
           [paginator]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
           [filterDelay]="0"
           [globalFilterFields]="['name', 'role', 'school']"
         >
           <ng-template pTemplate="caption">
-            <div class="table-header">
-          <span class="p-input-icon-left">
-            <i class="fa-solid fa-search"></i>
-            <input
-              pInputText
-              type="text"
-              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-              placeholder="Tìm kiếm"
-            />
-          </span>
-              <button pButton (click)="changeCreateRecordVisible()">Tạo mới</button>
+            <div class="table-header d-flex justify-content-between flex-row align-items-center">
+            <span class="p-input-icon-left">
+              <i class="fa-solid fa-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Tìm kiếm"
+              />
+            </span>
+              <button class="create-button" pButton (click)="changeCreateRecordVisible()">Tạo mới</button>
             </div>
           </ng-template>
           <ng-template pTemplate="header">
@@ -69,14 +69,14 @@
                   <p-sortIcon field="deadline"></p-sortIcon>
                 </div>
               </th>
-              <th></th>
+              <th class="th-small"></th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-taskList let-rowIndex="rowIndex">
+          <ng-template pTemplate="body" let-taskList let-index="index" >
             <tr class="p-selectable-row">
               <td>
                 <span class="p-column-title">STT</span>
-                {{ rowIndex + 1 }}
+                {{ index + 1 }}
               </td>
               <td>
                 <span class="p-column-title">Tên</span>
@@ -118,7 +118,8 @@
         </p-table>
       </div>
       <div class="col-md-2 d-flex flex-column justify-content-start align-items-center">
-        <button type="button" class="mb-3" pButton (click)="initDetailRecordData(inspectionDocument.reportId)">Báo cáo</button>
+        <button type="button" class="mb-3" pButton (click)="initDetailRecordData(inspectionDocument.reportId)">Báo cáo
+        </button>
         <button type="button" pButton (click)="initDetailRecordData(inspectionDocument.conclusionId)">Kết luận</button>
       </div>
     </div>

@@ -9,7 +9,6 @@ export class AuthService {
   private baseUrl = DomainName.URL + "api/v1/auth/"
   constructor(private http: HttpClient) {}
 
-
   login(email: string, password: string) {
     const userInfo = { email: email, password: password };
     const headers = new HttpHeaders().set('Content-Type', 'application/json');

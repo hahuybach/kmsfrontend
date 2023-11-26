@@ -13,10 +13,16 @@ export class CreateRecordComponent implements OnInit {
   @Input() inspectionPlanId: number;
   @Input() createRecordPopupVisible: boolean;
   @Output() createRecordPopupVisibleChange = new EventEmitter<boolean>();
+  formSubmitted:boolean = false;
+  formCompleted:boolean = false;
   recordForm: FormGroup;
+  startDate: string;
+  endDate: string;
+  defaultDeadline: string;
   inspectionPlan: {
     inspectors: AccountResponse[];
     endDate: Date;
+    startDate: Date;
   }
 
   constructor(
@@ -34,7 +40,13 @@ export class CreateRecordComponent implements OnInit {
     this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
-        console.log(this.inspectionPlan)
+        console.log(data.inspectionPlan)
+        this.startDate = data.inspectionPlan.startDate.slice(0, 10);
+        this.endDate = data.inspectionPlan.endDate.slice(0, 10);
+
+        this.defaultDeadline = data.inspectionPlan.startDate;
+        console.log(this.defaultDeadline)
+        this.recordForm.get('deadline')?.setValue(this.defaultDeadline.split('T')[0]);
       },
       error: (error) => {
         console.log(error);
@@ -62,10 +74,14 @@ export class CreateRecordComponent implements OnInit {
       deadline: new Date(this.recordForm.get('deadline')?.value).toISOString(),
       assigneeId: this.recordForm.get('assigneeId')?.value,
     }
-
+    this.formSubmitted = true;
     this.recordService.saveTask(record).subscribe({
       next: (response) => {
-        console.log(response)
+        this.formCompleted = true;
+        setTimeout(() =>{
+          this.createRecordPopupVisible = false;
+          this.resetCreateRecordPopupVisible();
+        },1500)
       },
       error: (error) => {
         console.log(error)
