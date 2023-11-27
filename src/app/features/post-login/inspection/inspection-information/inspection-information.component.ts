@@ -70,6 +70,5 @@ export class InspectionInformationComponent implements OnInit {
       { label: 'Quyết định kiểm tra',command: (click) => {this.inspectionPlanDocumentVisible()}},
     ];
     this.activeTab = this.tabs[0];
-
   }
 }

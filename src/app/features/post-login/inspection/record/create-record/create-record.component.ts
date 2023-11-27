@@ -36,11 +36,19 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
   }
 
   resetCreateRecordPopupVisible() {
+    this.resetForm();
     this.createRecordPopupVisibleChange.emit(this.createRecordPopupVisible);
+    this.initInspectionPlan();
   }
 
-  ngOnInit(): void {
-    this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
+  resetForm() {
+    this.recordForm.reset();
+    this.formSubmitted = false;
+    this.formCompleted = false;
+  }
+
+  initInspectionPlan(){
+    const initInspectionPlan = this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
         this.startDate = data.inspectionPlan.startDate.slice(0, 10);
@@ -52,6 +60,11 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     })
+    this.subscriptions.push(initInspectionPlan);
+  }
+
+  ngOnInit(): void {
+    this.initInspectionPlan()
 
     this.recordForm = this.fb.group({
       recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
@@ -75,8 +88,7 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
       assigneeId: this.recordForm.get('assigneeId')?.value,
     }
     this.formSubmitted = true;
-    const saveTask =
-    this.recordService.saveTask(record).subscribe({
+    const saveTask = this.recordService.saveTask(record).subscribe({
       next: (response) => {
         this.formCompleted = true;
         setTimeout(() =>{
