@@ -144,6 +144,18 @@
             </div>
           </a>
         </li>
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isDirector || isPrincipal || isChiefTeacher || isTeacher"
+        >
+          <a class="" [routerLink]="['/listAssignment']">
+            <div>
+              <i class="bi bi-list-check"></i>
+              &nbsp; Hồ sơ các năm
+            </div>
+          </a>
+        </li>
         <!-- <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
           <a class="" [routerLink]="['/submitassignment']">
             <div>

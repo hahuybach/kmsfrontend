@@ -1,0 +1,32 @@
+@import "../../../../../assets/scss/base.scss";
+.height-100 {
+    height: 100px;
+}
+:host ::ng-deep {
+    .folder-icon {
+        color: rgb(255, 196, 0);
+    }
+    .file-icon {
+        color: $primary;
+    }
+}
+
+.action-item {
+    width: 40px;
+    height: 40px;
+    background-color: $primary;
+    border-color: $primary;
+    border-radius: 50%;
+    font-size: 16px;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+    }
+    i {
+        color: #fff;
+        align-items: center;
+    }
+}
+.font-weight-bold {
+    font-weight: 500;
+}

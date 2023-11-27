@@ -1,3 +1,88 @@
+<p-dialog
+  header="Chi tiết hồ sơ"
+  [(visible)]="detailVisible"
+  [style]="{ width: '40vw', height: '500px' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="height-100">
+    <span class="font-weight-bold">Tên hồ sơ</span>
+    <br />
+    <span class="text-black-50"> {{ selectedAssignment?.assignmentName }}</span>
+  </div>
+  <div class="height-100">
+    <span class="font-weight-bold">Chi tiết hồ sơ</span>
+    <br />
+    <span class="text-black-50"> {{ selectedAssignment?.description }}</span>
+  </div>
+  <ng-container *ngIf="selectedAssignment?.task; else isTaskFalse">
+    <div>
+      <div class="d-flex justify-content-between">
+        <div>
+          <span class="text-black-50">Tài liệu</span>
+        </div>
+      </div>
+      <br />
+      <div *ngIf="selectedAssignment.documents.length > 0">
+        <div *ngFor="let item of selectedAssignment.documents; let i = index">
+          <div class="row mb-3">
+            <div (click)="previewFile(item.documentLink, item.fileExtension)">
+              <div class="file-item px-3 py-1 row">
+                <div
+                  class="col-md-1 file-item-icon ml-5 d-flex justify-content-center align-items-center"
+                >
+                  <img [src]="getIconFileType(item.fileExtension)" alt="" />
+                </div>
+                <div class="col-md-11 file-item-content">
+                  <div class="row ms-2">
+                    <div class="col-md-8">
+                      <span class="font-weight-bold font-size-18">{{
+                        item.documentName
+                      }}</span>
+                      <br />
+                      <span
+                        ><span class="font-weight-bold">Mã:</span>
+                        {{ item.documentCode }}</span
+                      >
+                    </div>
+                    <div class="col-md-4">
+                      <span class="text-black-50">{{
+                        item.sizeFormat || item.file.size
+                      }}</span>
+                      <br />
+                      <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #isTaskFalse>
+    <div *ngIf="selectedAssignment?.children">
+      <span class="font-weight-bold">Danh sách thư mục/tài liệu</span>
+      <br />
+      <ul class="mt-1" *ngFor="let item of selectedAssignment.children">
+        <div class="row">
+          <div class="col-md-1">
+            <ng-container *ngIf="item.task">
+              <i class="bi bi-file-earmark-check-fill file-icon"></i>
+            </ng-container>
+            <ng-container *ngIf="!item.task">
+              <i class="bi bi-folder-fill folder-icon"></i>
+            </ng-container>
+          </div>
+          <div class="col-md-7">
+            {{ item.assignmentName }}
+          </div>
+        </div>
+      </ul>
+    </div>
+  </ng-template>
+</p-dialog>
 <p-treeTable
   [value]="assignments"
   [scrollable]="true"
@@ -8,13 +93,13 @@
   <ng-template pTemplate="caption">
     <div class="d-flex justify-content-between align-items-center">
       <div>
-        <h6>Danh sách công việc</h6>
+        <h6>Danh sách hồ sơ {{ school?.schoolName }}</h6>
       </div>
     </div>
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
-      <th>Công việc</th>
+      <th>Hồ sơ</th>
       <th></th>
     </tr>
   </ng-template>
@@ -22,14 +107,14 @@
     <tr [ttRow]="rowNode" class="d-flex justify-content-between">
       <td class="folder">
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-        <i class="bi bi-folder-fill"></i>
+        <i class="bi bi-folder-fill folder-icon"></i>
         {{ rowData.node.assignmentName }}
       </td>
       <ng-container>
         <td class="d-flex">
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
-            (click)="openDetail(rowData.node)"
+            (click)="openDetail(rowData.node?.assignmentId)"
           >
             <i class="bi bi-info-circle-fill"></i>
           </div>

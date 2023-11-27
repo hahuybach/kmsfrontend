@@ -20,7 +20,7 @@ export class DocumentService {
       { params }
     );
   }
-  filterTreeTask(
+  public filterTreeTask(
     pageNo: number = 0,
     pageSize: number = 5,
     sortBy: string = 'School.schoolName',
