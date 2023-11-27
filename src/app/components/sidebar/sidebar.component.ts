@@ -39,21 +39,23 @@ export class SidebarComponent implements OnInit {
         console.log(error.error.message);
       },
     });
-    for (const argument of this.auth.getRoleFromJwt()) {
-      if (argument.authority === 'Trưởng Phòng') {
-        this.isDirector = true;
-      }
-      if (argument.authority === 'Hiệu Trưởng') {
-        this.isPrincipal = true;
-      }
-      if (argument.authority === Role.ADMIN) {
-        this.isAdmin = true;
-      }
-      if (argument.authority === Role.TEACHER) {
-        this.isTeacher = true;
-      }
-      if (argument.authority === Role.CHIEF_TEACHER) {
-        this.isChiefTeacher = true;
+    if (this.auth.getRoleFromJwt()) {
+      for (const argument of this.auth.getRoleFromJwt()) {
+        if (argument.authority === 'Trưởng Phòng') {
+          this.isDirector = true;
+        }
+        if (argument.authority === 'Hiệu Trưởng') {
+          this.isPrincipal = true;
+        }
+        if (argument.authority === Role.ADMIN) {
+          this.isAdmin = true;
+        }
+        if (argument.authority === Role.TEACHER) {
+          this.isTeacher = true;
+        }
+        if (argument.authority === Role.CHIEF_TEACHER) {
+          this.isChiefTeacher = true;
+        }
       }
     }
   }

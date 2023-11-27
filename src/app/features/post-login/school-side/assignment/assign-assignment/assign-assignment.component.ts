@@ -157,6 +157,7 @@ export class AssignAssignmentComponent implements OnInit {
       if (params) {
         console.log('run here');
         const id = params['id'];
+        console.log('****ID:' + id + '*****');
         if (id > 0) this.openDetailRowNode({ assignmentId: id }, 'info');
       }
     });

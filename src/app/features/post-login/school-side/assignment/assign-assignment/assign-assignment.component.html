@@ -110,7 +110,7 @@
 <form [formGroup]="assignmentForm">
   <!-- Popup detail/update -->
   <p-dialog
-    header="Chi tiết công việc"
+    [header]="action === 'update' ? 'Cập nhật công việc' : 'Chi tiết công việc'"
     [(visible)]="detailVisible"
     [style]="{ width: '70vw', height: '1080px' }"
     [draggable]="false"
@@ -119,50 +119,55 @@
   >
     <div *ngIf="selectedAssignment" class="row assignment-container">
       <div class="col-md-8 left-box">
-        <div class="height-100">
-          <span class="text-black-50">Tên công việc</span>
-          <br />
-          <span
-            *ngIf="
-              action === 'info' ||
-              (action === 'update' &&
-                !hasAuthority('canModifyFolderAsmMetaData'))
-            "
-            class="font-weight-bold mt-1"
-            >{{ selectedAssignment.assignmentName }}</span
-          >
-          <input
-            *ngIf="
-              action === 'update' && hasAuthority('canModifyFolderAsmMetaData')
-            "
-            pInputText
-            type="text"
-            formControlName="assignmentName"
-            [readonly]="isReadOnly()"
-          />
-        </div>
-        <div class="height-100">
-          <span class="text-black-50">Chi tiết công việc</span>
-          <br />
-          <span
-            *ngIf="
-              action === 'info' ||
-              (action === 'update' &&
-                !hasAuthority('canModifyFolderAsmMetaData'))
-            "
-            class="font-weight-bold mt-1"
-            >{{ selectedAssignment.description }}</span
-          >
-          <textarea
-            *ngIf="
-              action === 'update' && hasAuthority('canModifyFolderAsmMetaData')
-            "
-            class="mb-1 mt-1"
-            pInputTextarea
-            formControlName="description"
-            [readonly]="isReadOnly()"
-          ></textarea>
-        </div>
+        <ng-container
+          *ngIf="
+            action === 'update' &&
+              hasAuthority('canModifyFolderAsmMetaData') &&
+              !selectedAssignment.template;
+            else cannotEdit
+          "
+        >
+          <div class="height-100">
+            <span class="text-black-50">Tên công việc</span>
+            <br />
+            <input
+              *ngIf="
+                action === 'update' &&
+                hasAuthority('canModifyFolderAsmMetaData') &&
+                !selectedAssignment.template
+              "
+              pInputText
+              type="text"
+              formControlName="assignmentName"
+            />
+          </div>
+          <div class="height-100">
+            <span class="text-black-50">Chi tiết công việc</span>
+            <br />
+            <textarea
+              class="mb-1 mt-1"
+              pInputTextarea
+              formControlName="description"
+            ></textarea>
+          </div>
+        </ng-container>
+        <ng-template #cannotEdit>
+          <div class="height-100">
+            <span class="text-black-50">Tên công việc</span>
+            <br />
+            <span class="font-weight-bold mt-1">{{
+              selectedAssignment.assignmentName
+            }}</span>
+          </div>
+          <div class="height-100">
+            <span class="text-black-50">Chi tiết công việc</span>
+            <br />
+            <span class="font-weight-bold mt-1">{{
+              selectedAssignment.description
+            }}</span>
+          </div>
+        </ng-template>
+
         <div class="height-100 mt-3">
           <span class="text-black-50">Hạn nộp</span>
           <br />
@@ -531,16 +536,21 @@
             class="row"
             *ngIf="action === 'info' || !hasAuthority('canChangeAssignee')"
           >
-            <div
-              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
-            >
-              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
-            </div>
-            <div class="col-md-10 d-flex align-items-center">
-              <span class="font-weight-bold">{{
-                selectedAssignment.assignee?.user.fullName
-              }}</span>
-            </div>
+            <ng-container *ngIf="selectedAssignment.assignee; else noAssignee">
+              <div
+                class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+              >
+                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+              </div>
+              <div class="col-md-10 d-flex align-items-center">
+                <span class="font-weight-bold">{{
+                  selectedAssignment.assignee?.user.fullName
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-template #noAssignee>
+              <span class="font-weight-bold">Chưa có người làm</span>
+            </ng-template>
           </div>
         </div>
 
