@@ -36,7 +36,7 @@ export class ForgotPasswordComponent {
     if (!this.form.invalid){
       this.auth.sendResetPasswordToken(this.form.value).subscribe({
         next: (data) => {
-          this.toastService.showSuccess('error', "Lỗi", data.message)
+          this.toastService.showSuccess('error', "Thông báo", data.message)
           this.isLoading = false;
           this.isConfirm = true;
           this.confirmForm.patchValue({
