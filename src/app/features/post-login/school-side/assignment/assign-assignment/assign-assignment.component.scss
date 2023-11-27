@@ -17,18 +17,27 @@
 .action-item {
     width: 40px;
     height: 40px;
-    background-color: $primary;
-    border-color: $primary;
+    background-color: #bfc5ff;
+    border-color: #bfc5ff;
     border-radius: 50%;
     font-size: 16px;
     &:hover {
-        background-color: $primary-hover;
-        border-color: $primary-hover;
+        background-color: #bfc5ff;
+        border-color: #bfc5ff;
         cursor: pointer;
     }
     i {
         color: #fff;
         align-items: center;
+    }
+}
+.action-item-active {
+    background-color: $primary;
+    border-color: $primary;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+        cursor: pointer;
     }
 }
 .folder-icon {

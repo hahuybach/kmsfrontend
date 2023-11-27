@@ -817,6 +817,24 @@ export class AssignAssignmentComponent implements OnInit {
     }
     return url;
   }
+  getFileExtension(fileExtension: string): string {
+    let extension = '';
+    switch (fileExtension) {
+      case 'application/pdf':
+        extension = 'pdf';
+        break;
+      case 'application/msword':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        extension = 'xlsx';
+        break;
+    }
+    return extension;
+  }
   // viewDocxFile(documentLink: string) {
   //   this.fileService
   //     .readAssignmentPDF(documentLink)

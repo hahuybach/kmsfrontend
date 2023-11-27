@@ -168,7 +168,13 @@
           </div>
         </ng-template>
 
-        <div class="height-100 mt-3">
+        <div
+          class="height-100"
+          [ngClass]="{
+            'mt-4':
+              action === 'update' && hasAuthority('canModifyFolderAsmMetaData')
+          }"
+        >
           <span class="text-black-50">Hạn nộp</span>
           <br />
           <span
@@ -212,7 +218,7 @@
         <div class="mt-2" *ngIf="selectedAssignment.task">
           <ng-container
             *ngIf="
-              action === 'update' &&
+              action === 'info' &&
                 (hasAuthority('canUploadDocument') ||
                   hasAuthority('canDeleteDocument'));
               else fileTemplate
@@ -256,7 +262,7 @@
                           </div>
                           <div class="col-md-10 file-item-content">
                             <div class="row ms-2">
-                              <div class="col-md-10">
+                              <div class="col-md-9">
                                 <span class="font-weight-bold font-size-18">{{
                                   item.documentName
                                 }}</span>
@@ -266,15 +272,15 @@
                                   {{ item.documentCode }}</span
                                 >
                               </div>
-                              <!-- <div class="col-md-2">
-                              <span class="text-black-50">{{
-                                item.sizeFormat || item.file.size
-                              }}</span>
-                              <br />
-                              <span>{{
-                                item.uploadedDate | date : "MM/dd/yyyy"
-                              }}</span>
-                            </div> -->
+                              <div class="col-md-3">
+                                <span class="text-black-50">{{
+                                  item.sizeFormat || item.file.size
+                                }}</span>
+                                <br />
+                                <span class="text-black-50">{{
+                                  item.uploadedDate | date : "MM/dd/yyyy"
+                                }}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -332,9 +338,11 @@
                         <div class="col-md-11 file-item-content">
                           <div class="row ms-2">
                             <div class="col-md-8">
-                              <span class="font-weight-bold font-size-18">{{
-                                item.documentName
-                              }}</span>
+                              <span class="font-weight-bold font-size-18"
+                                >{{ item.documentName }}.{{
+                                  getFileExtension(item.fileExtension)
+                                }}</span
+                              >
                               <br />
                               <span
                                 ><span class="font-weight-bold">Mã:</span>
@@ -346,7 +354,7 @@
                                 item.sizeFormat || item.file.size
                               }}</span>
                               <br />
-                              <span>{{
+                              <span class="text-black-50">{{
                                 item.uploadedDate | date : "MM/dd/yyyy"
                               }}</span>
                             </div>
@@ -361,7 +369,7 @@
                 *ngIf="
                   selectedAssignment.documents.length != 0 &&
                   hasAuthority('canUnSubmit') &&
-                  action === 'update'
+                  action === 'info'
                 "
               >
                 <button pButton (click)="cancel()">Hủy</button>
@@ -369,8 +377,13 @@
             </div>
           </ng-template>
         </div>
-        <div class="mt-2" *ngIf="!selectedAssignment.task">
-          <span class="text-black-50"> Danh sách thư mục/công việc con </span>
+        <div
+          class="mt-2"
+          *ngIf="
+            !selectedAssignment.task && selectedAssignment.children.length > 0
+          "
+        >
+          <span class="text-black-50"> Danh sách công việc con </span>
           <ul class="mt-1" *ngFor="let item of selectedAssignment.children">
             <div
               class="row children d-flex justify-content-center align-items-center"
@@ -380,7 +393,7 @@
                   <i class="bi bi-file-earmark-check-fill file-icon"></i>
                 </ng-container>
                 <ng-container *ngIf="!item.task">
-                  <i class="bi bi-folder-fill folder-icon"></i>
+                  <i class="bi bi-file-earmark-text file-icon"></i>
                 </ng-container>
               </div>
               <div class="col-md-7">
@@ -775,40 +788,68 @@
       </td>
       <td class="d-flex">
         <div
-          class="action-item d-flex justify-content-center align-items-center mx-2"
+          pTooltip="Chi tiết"
+          tooltipPosition="top"
+          class="action-item action-item-active d-flex justify-content-center align-items-center mx-2"
           (click)="openDetailRowNode(rowData.node, 'info')"
         >
           <i class="bi bi-info-circle-fill"></i>
         </div>
         <div
-          *ngIf="hasAuthorityByRowNode('canCreateFolderAsm', rowData.node)"
+          pTooltip="Tạo"
+          tooltipPosition="top"
           class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="openDetail(rowData.node, 'addchild')"
+          (click)="
+            hasAuthorityByRowNode('canCreateFolderAsm', rowData.node) &&
+              openDetail(rowData.node, 'addchild')
+          "
+          [ngClass]="{
+            'action-item-active': hasAuthorityByRowNode(
+              'canCreateFolderAsm',
+              rowData.node
+            )
+          }"
         >
           <i class="bi bi-plus-circle-fill"></i>
         </div>
 
         <div
-          *ngIf="
-            hasAuthorityByRowNode('canModifyFolderAsmMetaData', rowData.node) ||
-            hasAuthorityByRowNode('canChangeAssignee', rowData.node) ||
-            hasAuthorityByRowNode('canSubmit', rowData.node) ||
-            hasAuthorityByRowNode('canUnSubmit', rowData.node) ||
-            hasAuthorityByRowNode('canUploadDocument', rowData.node)
-          "
+          pTooltip="Chỉnh sửa"
+          tooltipPosition="top"
           class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="openDetailRowNode(rowData.node, 'update')"
+          [ngClass]="{
+            'action-item-active':
+              hasAuthorityByRowNode(
+                'canModifyFolderAsmMetaData',
+                rowData.node
+              ) || hasAuthorityByRowNode('canChangeAssignee', rowData.node)
+          }"
+          (click)="
+            (hasAuthorityByRowNode(
+              'canModifyFolderAsmMetaData',
+              rowData.node
+            ) ||
+              hasAuthorityByRowNode('canChangeAssignee', rowData.node)) &&
+              openDetailRowNode(rowData.node, 'update')
+          "
         >
           <i class="bi bi-pencil-fill"></i>
         </div>
 
         <div
-          *ngIf="
-            hasAuthorityByRowNode('canDeleteFolder', rowData.node) ||
-            hasAuthorityByRowNode('canDeleteAsm', rowData.node)
-          "
+          pTooltip="Xóa"
+          tooltipPosition="top"
           class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="deleteNode(rowData.node)"
+          [ngClass]="{
+            'action-item-active':
+              hasAuthorityByRowNode('canDeleteFolder', rowData.node) ||
+              hasAuthorityByRowNode('canDeleteAsm', rowData.node)
+          }"
+          (click)="
+            (hasAuthorityByRowNode('canDeleteFolder', rowData.node) ||
+              hasAuthorityByRowNode('canDeleteAsm', rowData.node)) &&
+              deleteNode(rowData.node)
+          "
         >
           <i class="bi bi-x-circle-fill"></i>
         </div>
