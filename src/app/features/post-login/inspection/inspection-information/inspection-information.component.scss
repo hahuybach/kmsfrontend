@@ -8,4 +8,13 @@
   font-size: 15px;
 }
 
+:host ::ng-deep .p-tabmenu-nav{
+  .p-menuitem-link{
+    text-decoration: none;
+    color: $primary;
+  }
+  .p-menuitem-link-active{
+    border-bottom-color: $primary;
+  }
+}
 

@@ -3,18 +3,11 @@ import {Inspection} from "../../../../models/inspection";
 import {InspectionService} from "../../../../services/inspection.service";
 import {ActivatedRoute} from "@angular/router";
 import {MenuItem, MenuItemCommandEvent} from "primeng/api";
-import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-inspection-information',
   templateUrl: './inspection-information.component.html',
   styleUrls: ['./inspection-information.component.scss'],
-  animations: [
-    trigger('fadeInOut', [
-      state('void', style({ opacity: 0 })),
-      transition(':enter, :leave', [animate('0.3s')]),
-    ]),
-  ]
 })
 export class InspectionInformationComponent implements OnInit {
   inspectionId: number | null;
@@ -24,7 +17,6 @@ export class InspectionInformationComponent implements OnInit {
   issueDocumentVisibility: boolean = true;
   initiationDocumentVisibility: boolean = false;
   inspectionPlanDocumentVisibility: boolean = false;
-  fileItemContainerVisible: boolean = true;
 
   constructor(
     private readonly inspectionService: InspectionService,
@@ -32,22 +24,17 @@ export class InspectionInformationComponent implements OnInit {
   ) {
   }
 
-  issueDocumentVisible() {
-    this.fileItemContainerVisible = true;
+  issueDocumentVisible(){
     this.issueDocumentVisibility = true;
     this.initiationDocumentVisibility = false;
     this.inspectionPlanDocumentVisibility = false;
   }
-
-  initiationDocumentVisible() {
-    this.fileItemContainerVisible = true;
+  initiationDocumentVisible(){
     this.issueDocumentVisibility = false;
     this.initiationDocumentVisibility = true;
     this.inspectionPlanDocumentVisibility = false;
   }
-
-  inspectionPlanDocumentVisible() {
-    this.fileItemContainerVisible = true;
+  inspectionPlanDocumentVisible(){
     this.issueDocumentVisibility = false;
     this.initiationDocumentVisibility = false;
     this.inspectionPlanDocumentVisibility = true;

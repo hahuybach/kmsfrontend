@@ -26,7 +26,12 @@
   <div class="row">
     <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
     <div class="row">
-      <div class="form-content col-md-10 h-100">
+      <div class="col-md-12 d-flex flex-row ">
+        <button type="button" pButton (click)="initDetailRecordData(inspectionDocument.reportId)">Báo cáo
+        </button>
+        <button type="button" pButton (click)="initDetailRecordData(inspectionDocument.conclusionId)">Kết luận</button>
+      </div>
+      <div class="form-content col-md-12 h-100">
         <p-table
           #dt
           *ngIf="inspectionDocument"
@@ -124,11 +129,6 @@
             </tr>
           </ng-template>
         </p-table>
-      </div>
-      <div class="col-md-2 d-flex flex-column justify-content-start align-items-center">
-        <button type="button" class="mb-3" pButton (click)="initDetailRecordData(inspectionDocument.reportId)">Báo cáo
-        </button>
-        <button type="button" pButton (click)="initDetailRecordData(inspectionDocument.conclusionId)">Kết luận</button>
       </div>
     </div>
   </div>
