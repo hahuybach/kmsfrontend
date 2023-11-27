@@ -51,6 +51,7 @@
           </div>
           <div class="col-md-3">
             <span>Trạng thái</span>
+            <br/>
             <p-tag
               class="status"
               [severity]="getStatusSeverity(inspectionPlanDetail.inspectionPlan.status.statusName)"
@@ -99,11 +100,6 @@
       <div class="col-md-4 d-flex justify-content-center h-100">
         <app-inspection-plan-inspector-list class="w-100 h-100" [selectedInspectors]="inspectionPlanDetail.inspectors"
         ></app-inspection-plan-inspector-list>
-      </div>
-    </div>
-    <div class="mt-5 row w-100">
-      <div class="col-12 save-button w-100 text-center">
-        <button pButton class="btn text-white" routerLink="/inspection_plan">Xác nhận</button>
       </div>
     </div>
   </div>
