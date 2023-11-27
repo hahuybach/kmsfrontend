@@ -2,20 +2,55 @@ import {Component, OnInit} from '@angular/core';
 import {Inspection} from "../../../../models/inspection";
 import {InspectionService} from "../../../../services/inspection.service";
 import {ActivatedRoute} from "@angular/router";
+import {MenuItem, MenuItemCommandEvent} from "primeng/api";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-inspection-information',
   templateUrl: './inspection-information.component.html',
-  styleUrls: ['./inspection-information.component.scss']
+  styleUrls: ['./inspection-information.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('void', style({ opacity: 0 })),
+      transition(':enter, :leave', [animate('0.3s')]),
+    ]),
+  ]
 })
 export class InspectionInformationComponent implements OnInit {
   inspectionId: number | null;
   inspection: Inspection;
+  tabs: MenuItem[] | undefined;
+  activeTab: MenuItem | undefined;
+  issueDocumentVisibility: boolean = true;
+  initiationDocumentVisibility: boolean = false;
+  inspectionPlanDocumentVisibility: boolean = false;
+  fileItemContainerVisible: boolean = true;
 
   constructor(
     private readonly inspectionService: InspectionService,
     private readonly route: ActivatedRoute,
   ) {
+  }
+
+  issueDocumentVisible() {
+    this.fileItemContainerVisible = true;
+    this.issueDocumentVisibility = true;
+    this.initiationDocumentVisibility = false;
+    this.inspectionPlanDocumentVisibility = false;
+  }
+
+  initiationDocumentVisible() {
+    this.fileItemContainerVisible = true;
+    this.issueDocumentVisibility = false;
+    this.initiationDocumentVisibility = true;
+    this.inspectionPlanDocumentVisibility = false;
+  }
+
+  inspectionPlanDocumentVisible() {
+    this.fileItemContainerVisible = true;
+    this.issueDocumentVisibility = false;
+    this.initiationDocumentVisibility = false;
+    this.inspectionPlanDocumentVisibility = true;
   }
 
   getStatusSeverity(status: string): string {
@@ -41,5 +76,13 @@ export class InspectionInformationComponent implements OnInit {
         console.log(error)
       }
     })
+
+    this.tabs = [
+      { label: 'Kế hoạch kiểm tra', command: (click) => {this.issueDocumentVisible()}},
+      { label: 'Kế hoạch thực hiện năm học', command: (click) => {this.initiationDocumentVisible()}},
+      { label: 'Quyết định kiểm tra',command: (click) => {this.inspectionPlanDocumentVisible()}},
+    ];
+    this.activeTab = this.tabs[0];
+
   }
 }
