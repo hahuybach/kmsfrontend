@@ -1,48 +1,60 @@
 @import "../../../assets/scss/base";
 
 .sidebar-content {
-    height: 100vh;
+  height: 100vh;
+  position: fixed;
+  width: 15% !important;
 }
+
 .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .sidebar-logo {
-        height: 70px;
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .sidebar-logo {
+    height: 70px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
+  }
 }
+
 ul {
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-left: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 0;
 }
+
 li {
-    box-sizing: border-box;
-    background-color: #fff;
-    margin-bottom: 12px;
-    font-size: 16px;
-    &:hover {
-        transition: all 0.5s ease;
-        background-color: $primary-hover;
-        a {
-            color: #fff;
-        }
-    }
+  box-sizing: border-box;
+  background-color: #fff;
+  margin-bottom: 12px;
+  font-size: 16px;
+
+  &:hover {
+    transition: all 0.5s ease;
+    background-color: $primary-hover;
+
     a {
-        color: $primary;
-        text-decoration: none;
+      color: #fff;
     }
+  }
+
+  a {
+    color: $primary;
+    text-decoration: none;
+  }
 }
+
 .active {
-    background-color: $primary;
-    a {
-        color: #fff;
-    }
+  background-color: $primary;
+
+  a {
+    color: #fff;
+  }
 }
