@@ -7,6 +7,13 @@
   rejectLabel="Hủy"
   key="confirmInitiationplan"
 ></p-confirmDialog>
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Nộp tài liệu'"
+  [progress]="'Vui lòng đợi trong giây lát'"
+  [complete]="'Nộp thành công'"
+></app-loading-complete-dialog>
 <!-- file preview -->
 <p-dialog
   [(visible)]="pdfLoaded"

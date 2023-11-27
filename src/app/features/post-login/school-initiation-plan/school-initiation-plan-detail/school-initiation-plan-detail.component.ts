@@ -13,8 +13,8 @@ import { InitiationplanService } from 'src/app/services/initiationplan.service';
 import { switchMap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
-import {AuthService} from "../../../../services/auth.service";
-import {ToastService} from "../../../../shared/toast/toast.service";
+import { AuthService } from '../../../../services/auth.service';
+import { ToastService } from '../../../../shared/toast/toast.service';
 @Component({
   selector: 'app-school-initiation-plan-detail',
   templateUrl: './school-initiation-plan-detail.component.html',
@@ -38,8 +38,10 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   initiationplanId: number;
   lastDocs: any;
   isFormNull = true;
+  isLoading = false;
+  submitCompleted = false;
   ngOnInit(): void {
-    console.log("on init " + this.auth.getJwtFromCookie());
+    console.log('on init ' + this.auth.getJwtFromCookie());
     this.minDate = new Date();
     this.route.params
       .pipe(
@@ -76,7 +78,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     private initiationplanService: InitiationplanService,
     private route: ActivatedRoute,
     protected http: HttpClient,
-    private auth : AuthService,
+    private auth: AuthService,
     private toastService: ToastService
   ) {}
   initData() {
@@ -155,19 +157,25 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
             formData.append('files', pdfFile);
           }
           //
-          console.log("before approve " + this.auth.getJwtFromCookie());
+          console.log('before approve ' + this.auth.getJwtFromCookie());
 
           this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
             next: (response) => {
               console.log('Form data sent to the backend:', response);
-              console.log("after approve " + this.auth.getJwtFromCookie());
+              console.log('after approve ' + this.auth.getJwtFromCookie());
 
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Phê duyệt',
-                detail: 'Đã phê duyệt thành công',
-              });
-              this.initData();
+              // this.messageService.add({
+              //   severity: 'success',
+              //   summary: 'Phê duyệt',
+              //   detail: 'Đã phê duyệt thành công',
+              // });
+              this.submitCompleted = true;
+              setTimeout(() => {
+                this.initData();
+              }, 1500);
+              setTimeout(() => {
+                this.isLoading = false;
+              }, 1500);
               this.uploadFileVisible = false;
             },
             error: (error) => {
@@ -231,6 +239,9 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmSchoolInitiationplan',
       accept: () => {
+        this.uploadFileVisible = false;
+        this.resetDeadlineVisible = false;
+        this.isLoading = true;
         const formData = new FormData();
         const initiationplan = {
           initiationPlanId: this.schoolinitiationplan.initiationPlanId,
@@ -252,20 +263,22 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
           const pdfFile = fileControl.value;
           formData.append('files', pdfFile);
         }
-        console.log("before submit deadline " + this.auth.getJwtFromCookie());
+        console.log('before submit deadline ' + this.auth.getJwtFromCookie());
 
         this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
           next: (response) => {
             console.log('Form data sent to the backend:', response);
-            console.log("after submit deadline " + this.auth.getJwtFromCookie());
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Đã gửi đánh giá',
-              detail: 'Đã gửi đánh giá thành công',
-            });
+            console.log(
+              'after submit deadline ' + this.auth.getJwtFromCookie()
+            );
+
+            this.submitCompleted = true;
+            // setTimeout(() => {
             this.initData();
-            this.uploadFileVisible = false;
-            this.resetDeadlineVisible = false;
+            // }, 1500);
+            // setTimeout(() => {
+            this.isLoading = false;
+            // }, 1500);
           },
           error: (error) => {
             console.log(error);

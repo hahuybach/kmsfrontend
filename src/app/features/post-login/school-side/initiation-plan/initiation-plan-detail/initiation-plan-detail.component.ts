@@ -33,7 +33,8 @@ export class InitiationPlanDetailComponent implements OnInit {
   lastDocs: any;
   fileInputPlaceholders: string;
   isDelete = false;
-
+  isLoading = false;
+  submitCompleted = false;
   ngOnInit(): void {
     this.route.params
       .pipe(
@@ -218,6 +219,7 @@ export class InitiationPlanDetailComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmInitiationplan',
       accept: () => {
+        this.isLoading = true;
         if (this.inputFileForm.get('file')?.value) {
           this.inputFileForm.get('isPasssed')?.setValue(true);
           const formData = new FormData();
@@ -243,24 +245,25 @@ export class InitiationPlanDetailComponent implements OnInit {
           this.initiationplanService.putUploadSchoolDoc(formData).subscribe({
             next: (response) => {
               console.log('Form data sent to the backend:', response);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Đăng tải thành công',
-                detail: 'Đăng tải tài liệu thành công',
-              });
-              this.initData();
+              this.submitCompleted = true;
+              setTimeout(() => {
+                this.initData();
+              }, 1500);
+              setTimeout(() => {
+                this.isLoading = false;
+              }, 1500);
             },
             error: (error) => {
               console.log(error);
             },
           });
         } else {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Đăng tải thành công',
-            detail: 'Đăng tải tài liệu thành công',
-          });
-          this.initData();
+          this.submitCompleted = true;
+          setTimeout(() => {
+            this.initData();
+            this.iconStatus = false;
+            this.isLoading = false;
+          }, 1500);
         }
 
         // const headers = new HttpHeaders();

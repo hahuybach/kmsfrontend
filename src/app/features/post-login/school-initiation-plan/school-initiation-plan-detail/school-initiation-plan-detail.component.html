@@ -1,6 +1,13 @@
 <span>breadcrumb</span>
 <h4 class="mb-4">Kế hoạch thực hiện nhiệm vụ năm học</h4>
 <p-toast></p-toast>
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Đánh giá'"
+  [progress]="'Vui lòng đợi trong giây lát'"
+  [complete]="'Đánh giá thành công'"
+></app-loading-complete-dialog>
 <p-confirmDialog
   [style]="{ width: '50vw' }"
   acceptLabel="Đồng ý"
@@ -232,19 +239,19 @@
   <div class="col-md-7 plan">
     <div class="plan-content row">
       <div class="col-md-8">
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Tên kế hoạch</span>
           <p class="font-weight-bold">
             {{ schoolinitiationplan.initiationPlanName }}
           </p>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Trường</span>
           <p class="font-weight-bold">
             {{ schoolinitiationplan.school.schoolName }}
           </p>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Ngày tạo</span>
           <p class="font-weight-bold">
             {{ schoolinitiationplan.createdDate | date : "dd/MM/yyyy" }}
@@ -252,11 +259,11 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Người lên kế hoạch</span>
           <p class="font-weight-bold">{{ schoolinitiationplan.createdBy }}</p>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Trạng thái</span>
           <br />
           <p-tag
@@ -273,7 +280,7 @@
             {{ schoolinitiationplan?.status.statusName }}
           </p-tag>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Hạn nộp</span>
           <p class="font-weight-bold p-error">
             {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
