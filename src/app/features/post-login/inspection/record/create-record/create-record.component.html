@@ -7,6 +7,8 @@
           (onHide)="resetCreateRecordPopupVisible()"
 >
   <app-loading-complete-dialog
+    [height]="70"
+    [width]="80"
     [visible]="formSubmitted"
     [completed]="formCompleted"
     [header]="'Tạo mới mục kiểm tra'"
