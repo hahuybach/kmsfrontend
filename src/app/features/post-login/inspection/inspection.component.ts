@@ -26,6 +26,7 @@ export class InspectionComponent implements OnInit{
     this.tabs = [
       { label: 'Thông tin', routerLink:`information`},
       { label: 'Văn bản của trường', routerLink:`school-document`},
+      { label: 'Công việc của tôi', routerLink:`my-task`},
       { label: 'Văn bản kiểm tra', routerLink:`document`},
     ];
     this.activeTab = this.tabs[0];

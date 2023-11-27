@@ -1,11 +1,20 @@
 <p-dialog header="Danh sách đoàn kiểm tra"
           [(visible)]="createRecordPopupVisible"
           [modal]="true"
-          [style]="{ width: '80vw' }"
+          [style]="{ width: '60%' }"
           [draggable]="false"
           [resizable]="false"
           (onHide)="resetCreateRecordPopupVisible()"
 >
+  <app-loading-complete-dialog
+    [height]="70"
+    [width]="80"
+    [visible]="formSubmitted"
+    [completed]="formCompleted"
+    [header]="'Tạo mới mục kiểm tra'"
+    [progress]="'Đang tạo mới mục kiểm tra'"
+    [complete]="'Tạo mới mục kiểm tra thành công'"
+  ></app-loading-complete-dialog>
   <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="record-name col-md-12 mt-1">
@@ -17,16 +26,16 @@
           class="w-100"
           formControlName="recordName"
         />
-        <!--        <div-->
-        <!--          *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">-->
-        <!--            <span-->
-        <!--              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">-->
-        <!--              Vui lòng điền tên quyết định kiểm tra-->
-        <!--            </span>-->
-        <!--          <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxLength']" class="p-error">-->
-        <!--              Tên quyết định kiểm tra quá dài-->
-        <!--            </span>-->
-        <!--        </div>-->
+        <div
+          *ngIf="recordForm.controls?.['recordName']?.invalid && (recordForm.controls?.['recordName']?.touched ||recordForm.controls?.['recordName']?.dirty)">
+                    <span
+                      *ngIf="recordForm.controls?.['recordName']?.errors?.['required']" class="p-error">
+                      Vui lòng điền tên mục kiểm tra
+                    </span>
+          <span *ngIf="recordForm.controls?.['recordName']?.errors?.['maxLength']" class="p-error">
+                      Tên mục kiểm tra quá dài
+                    </span>
+        </div>
       </div>
       <div class="record-description col-md-12 mt-1">
         <label class="fw-medium">Chi tiết<span class="p-error">*</span></label>
@@ -38,16 +47,22 @@
           class="w-100"
           formControlName="recordDescription"
         ></textarea>
-        <!--        <div-->
-        <!--          *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">-->
-        <!--            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">-->
-        <!--              Vui lòng điền chi tiết quyết định kiểm tra-->
-        <!--            </span>-->
-        <!--        </div>-->
+        <div
+          *ngIf="recordForm.controls?.['recordDescription']?.invalid && (recordForm.controls?.['recordDescription']?.touched ||recordForm.controls?.['recordDescription']?.dirty)">
+                    <span *ngIf="recordForm.controls?.['recordDescription']?.errors?.['required']" class="p-error">
+                      Vui lòng điền chi tiết mục kiểm tra
+                    </span>
+        </div>
       </div>
       <div class="record-deadline col-md-6 mt-1">
         <label for="deadline" class="fw-medium">Hạn nộp<span class="p-error">*</span></label>
-        <input id="deadline" class="form-control" type="date" formControlName="deadline"/>
+        <input id="deadline" class="form-control" type="date" formControlName="deadline" [min]="startDate" [max]="endDate"/>
+        <div
+          *ngIf="recordForm.controls?.['deadline']?.invalid && (recordForm.controls?.['deadline']?.touched ||recordForm.controls?.['deadline']?.dirty)">
+                    <span *ngIf="recordForm.controls?.['deadline']?.errors?.['required']" class="p-error">
+                      Vui lòng chọn hạn nộp mục kiểm tra
+                    </span>
+        </div>
       </div>
       <div class="record-assignee col-md-6 mt-1" *ngIf="inspectionPlan">
         <label for="deadline" class="fw-medium">Người thực hiện<span class="p-error">*</span></label>
@@ -56,6 +71,12 @@
                     [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
                     placeholder="Chọn người thực hiện">
         </p-dropdown>
+        <div
+          *ngIf="recordForm.controls?.['assigneeId']?.invalid && (recordForm.controls?.['assigneeId']?.touched ||recordForm.controls?.['assigneeId']?.dirty)">
+                    <span *ngIf="recordForm.controls?.['assigneeId']?.errors?.['required']" class="p-error">
+                      Vui lòng chọn người thực hiện mục kiểm tra
+                    </span>
+        </div>
       </div>
     </div>
     <div class="mt-5 mb-3 row w-100">

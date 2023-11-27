@@ -40,6 +40,9 @@ import { InspectionInformationComponent } from './features/post-login/inspection
 import { InspectionSchoolDocumentComponent } from './features/post-login/inspection/inspection-school-document/inspection-school-document.component';
 import { InspectionDocumentComponent } from './features/post-login/inspection/inspection-document/inspection-document.component';
 import { AssignmentDetailComponent } from './features/post-login/assignment/assignment-detail/assignment-detail.component';
+import {
+  InspectionMytaskComponent
+} from "./features/post-login/inspection/inspection-mytask/inspection-mytask.component";
 
 const routes: Routes = [
   {
@@ -171,6 +174,11 @@ const routes: Routes = [
         component: InspectionComponent,
         children: [
           {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'information'
+          },
+          {
             path: 'information',
             component: InspectionInformationComponent,
           },
@@ -182,8 +190,12 @@ const routes: Routes = [
             path: 'document',
             component: InspectionDocumentComponent,
           },
-        ],
-      },
+          {
+            path: 'my-task',
+            component: InspectionMytaskComponent
+          }
+        ]
+      }
     ],
   },
   {

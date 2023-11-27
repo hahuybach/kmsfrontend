@@ -33,8 +33,8 @@ export class AssignAssignmentComponent implements OnInit {
   selectedAssignment: any;
   action: string | undefined;
   assignmentForm = this.fb.group({
-    assignmentName: ['', Validators.required],
-    description: ['', Validators.required],
+    assignmentName: ['', NoWhitespaceValidator()],
+    description: [''],
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
@@ -46,7 +46,7 @@ export class AssignAssignmentComponent implements OnInit {
   detailVisible = false;
   canSubmit = true;
   commentForm = this.fb.group({
-    content: ['', Validators.required],
+    content: [''],
     userName: ['', Validators.required],
     createdDate: ['', Validators.required],
   });

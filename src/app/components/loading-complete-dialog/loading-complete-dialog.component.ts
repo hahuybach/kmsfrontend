@@ -6,6 +6,8 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./loading-complete-dialog.component.scss']
 })
 export class LoadingCompleteDialogComponent{
+  @Input() width: number = 40;
+  @Input() height: number = 50;
   @Input({required: true}) visible: boolean = false;
   @Input({required: true})  completed: boolean = false;
   @Input({required: true}) header: string = ""; //Ex: Tạo mới quyết định kiểm tra

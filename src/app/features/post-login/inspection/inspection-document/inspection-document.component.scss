@@ -1,8 +1,17 @@
 @import "../../../../../assets/scss/base";
+*{
+  font-size: 16px;
+}
 
+.th-small{
+  width: 100px;
+}
 
 .action-button{
   button{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     border: none;
     background: $primary;
     i{
@@ -10,3 +19,34 @@
     }
   }
 }
+
+:host ::ng-deep {
+  .p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}
+
+.create-button{
+  width: auto;
+}
+
+:host ::ng-deep .p-dialog-footer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  .p-button{
+    margin-left: 30px;
+  }
+}
+

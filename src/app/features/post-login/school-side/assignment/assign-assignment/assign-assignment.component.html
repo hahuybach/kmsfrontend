@@ -215,12 +215,11 @@
         </div>
 
         <!-- file -->
-        <div class="mt-2" *ngIf="selectedAssignment.task">
+        <div class="mt-2" *ngIf="selectedAssignment.task && action === 'info'">
           <ng-container
             *ngIf="
-              action === 'info' &&
-                (hasAuthority('canUploadDocument') ||
-                  hasAuthority('canDeleteDocument'));
+              hasAuthority('canUploadDocument') ||
+                hasAuthority('canDeleteDocument');
               else fileTemplate
             "
           >
@@ -638,89 +637,108 @@
   </p-dialog>
   <!-- Popup addroot/addchild -->
   <p-dialog
-    header="Thêm mới công việc"
+    header="Tạo mới công việc"
     [(visible)]="assignmentVisible"
-    [style]="{ width: '70vw', height: '1080px' }"
+    [style]="{ width: '70vw', height: '640px' }"
     [draggable]="false"
     [resizable]="false"
     (onHide)="assignmentPopuptHideEvent()"
   >
-    <div *ngIf="selectedAssignment && action == 'addchild'" class="mb-2">
-      <span class="mb-1 font-weight-bold">Thuộc</span>
-      <br />
-      <span class="text-black-50">{{ selectedAssignment.assignmentName }}</span>
-      <br />
-      <span class="mb-1 font-weight-bold">Loại công việc</span>
-      <br />
-      <p-dropdown
-        [options]="typeAssignmentOptions"
-        formControlName="isTask"
-      ></p-dropdown>
+    <div *ngIf="selectedAssignment" class="row assignment-container">
+      <div class="col-md-8 left-box">
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold"
+            >Tên công việc<span class="p-error">*</span></span
+          >
+          <br />
+          <input
+            class="mb-1"
+            pInputText
+            type="text"
+            formControlName="assignmentName"
+          />
+        </div>
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold">Mô tả chi tiết</span>
+          <br />
+          <textarea
+            class="mb-1"
+            pInputTextarea
+            formControlName="description"
+          ></textarea>
+        </div>
+        <div class="height-100 mt-4">
+          <span class="mb-1 font-weight-bold"
+            >Hạn nộp<span class="p-error">*</span></span
+          ><br />
+          <!-- <p-calendar formControlName="deadline" [showIcon]="true"></p-calendar> -->
+          <input pInputText type="date" formControlName="deadline" />
+        </div>
+      </div>
+
+      <div class="col-md-4 right-box">
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold">Thuộc</span>
+          <br />
+          <span class="text-black-50">{{
+            selectedAssignment.assignmentName
+          }}</span>
+        </div>
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold"
+            >Người làm<span class="p-error">*</span></span
+          >
+          <br />
+          <p-dropdown
+            class="assignee-dropdown"
+            [options]="listOfPossibleAssignees"
+            formControlName="assigneeId"
+            optionValue="accountId"
+            filterBy="user.fullName"
+            [filter]="true"
+          >
+            <ng-template let-option pTemplate="selectedItem">
+              <div>
+                <span> {{ option?.user.fullName }} </span>&nbsp;
+                <!-- <span class="text-black-50"> {{ option?.email }}</span> -->
+              </div>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              <div>
+                <span> {{ option?.user.fullName }} </span>&nbsp;
+                <span class="text-black-50 font-size-14">
+                  {{ option?.email }}</span
+                >
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="height-100">
+          <br />
+          <span class="mb-1 font-weight-bold"
+            >Loại công việc<span class="p-error">*</span></span
+          >
+          <br />
+          <p-dropdown
+            [options]="typeAssignmentOptions"
+            formControlName="isTask"
+          ></p-dropdown>
+        </div>
+      </div>
     </div>
-    <div class="mb-2">
-      <span class="mb-1 font-weight-bold">Tên công việc</span>
-      <br />
-      <input
-        class="mb-1"
-        pInputText
-        type="text"
-        formControlName="assignmentName"
-      />
-    </div>
-    <div class="mb-2">
-      <span class="mb-1 font-weight-bold">Mô tả chi tiết</span>
-      <br />
-      <textarea
-        class="mb-1"
-        rows="3"
-        pInputTextarea
-        formControlName="description"
-      ></textarea>
-    </div>
-    <div class="mb-2">
-      <span class="mb-1 font-weight-bold">Người làm</span>
-      <br />
-      <p-dropdown
-        class="assignee-dropdown"
-        [options]="listOfPossibleAssignees"
-        formControlName="assigneeId"
-        optionValue="accountId"
-        filterBy="user.fullName"
-        [filter]="true"
+    <ng-template pTemplate="footer">
+      <button
+        *ngIf="action == 'addchild'"
+        pButton
+        (click)="add()"
+        [disabled]="assignmentForm.controls.assignmentName.errors?.['whitespace'] || 
+        assignmentForm.controls.assigneeId.errors?.['required'] || 
+        assignmentForm.controls.deadline.errors?.['required']  
+        "
       >
-        <ng-template let-option pTemplate="selectedItem">
-          <div>
-            <span> {{ option?.user.fullName }} </span>&nbsp;<span
-              class="text-black-50"
-            >
-              {{ option?.email }}</span
-            >
-          </div>
-        </ng-template>
-        <ng-template let-option pTemplate="item">
-          <div>
-            <span> {{ option?.user.fullName }} </span>&nbsp;<span>
-              {{ option?.email }}</span
-            >
-          </div>
-        </ng-template>
-      </p-dropdown>
-    </div>
-    <div class="mb-4">
-      <span class="mb-1 font-weight-bold">Hạn nộp</span><br />
-      <!-- <p-calendar formControlName="deadline" [showIcon]="true"></p-calendar> -->
-      <input pInputText type="date" formControlName="deadline" />
-    </div>
-    <button *ngIf="action == 'update'" pButton (click)="update()">
-      Cập nhật
-    </button>
-    <button
-      *ngIf="action == 'addroot' || action == 'addchild'"
-      pButton
-      (click)="add()"
-    >
-      Thêm mới
-    </button>
+        Tạo mới
+      </button>
+    </ng-template>
   </p-dialog>
 </form>
 <!-- Popup file preview -->

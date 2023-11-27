@@ -66,6 +66,7 @@
     ul {
         padding: 0;
         margin-bottom: 0;
+        font-size: 16px;
     }
     // .p-dialog-footer {
     //     text-align: left;
@@ -194,7 +195,7 @@ ul {
     // flex-direction: column;
     .right-box {
         height: 100%;
-        padding: 0 60px;
+        padding: 0 40px;
         // border: #495057 solid 1px;
 
         // // background-color: #f8f9fa;
@@ -313,4 +314,7 @@ a {
 td,
 th {
     font-size: 16px;
+}
+.font-size-14 {
+    font-size: 14px;
 }

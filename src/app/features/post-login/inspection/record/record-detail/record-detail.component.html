@@ -1,7 +1,7 @@
 <p-dialog header="Danh sách đoàn kiểm tra"
           [(visible)]="detailRecordPopupVisible"
           [modal]="true"
-          [style]="{ width: '80vw' }"
+          [style]="{ width: '40%' }"
           [draggable]="false"
           [resizable]="false"
           (onHide)="resetDetailRecordPopupVisible()"
@@ -13,19 +13,93 @@
         <p class="fw-bolder">{{task.taskName}}</p>
       </div>
       <div class="record-description col-md-12 mt-1">
-        <span class="fw-medium">Chi tiết</span>
+        <span>Chi tiết</span>
         <p class="fw-bolder">{{task.description}}</p>
       </div>
-      <div class="record-deadline col-md-6 mt-1">
+      <div class="record-deadline col-md-12 mt-1">
         <span>Hạn nộp</span>
         <p class="fw-bolder"> {{task.deadline | date: "dd/MM/yyyy"}}</p>
       </div>
-      <div class="record-assignee col-md-6 mt-1">
+      <div class="record-assignee col-md-12 mt-1">
         <span>Người thực hiện</span>
-        <select readonly="true">
-          <option selected>{{task.assignee.user.fullName}}</option>
-        </select>
+        <p class="fw-bolder">{{task.assignee.user.fullName}}</p>
       </div>
+      <form class="record-document col-md-12 mt-1" [formGroup]="documentForm" (ngSubmit)="onSubmit()">
+        <span>Tài liệu</span>
+        <div *ngIf="canUploadDocument && task.document === null">
+          <div class="row">
+            <div class="col-md-8">
+              <label class="fw-medium">Tên tài liệu<span class="p-error">*</span></label><br/>
+              <input
+                pInputText
+                placeholder="Điền tên tài liệu"
+                formControlName="documentName"
+              />
+              <div
+                *ngIf="documentForm.controls?.['documentName']?.invalid && (documentForm.controls?.['documentName']?.touched || documentForm.controls?.['documentName']?.dirty)">
+                <span *ngIf="documentForm.controls?.['documentName']?.errors?.['required']" class="p-error">
+                  Vui lòng điền tên tài liệu
+                </span>
+                <span *ngIf="documentForm.controls?.['documentName']?.errors?.['maxLength']" class="p-error">
+                  Tên tài liệu quá dài
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="fw-medium">Mã tài liệu<span class="p-error">*</span></label><br/>
+              <input
+                pInputText
+                placeholder="Điền mã tài liệu"
+                formControlName="documentCode"
+              />
+              <div
+                *ngIf="documentForm.controls?.['documentCode']?.invalid && (documentForm.controls?.['documentCode']?.touched || documentForm.controls?.['documentCode']?.dirty)">
+                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['required']" class="p-error">
+                  Vui lòng điền mã tài liệu
+                </span>
+                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['maxLength']" class="p-error">
+                  Mã tài liệu quá dài
+                </span>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="fw-medium">Tài liệu<span class="p-error">*</span></label><br/>
+              <div class="input-file">
+                <input
+                  type="file"
+                  #fileInput
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput)"
+                />
+                <input pInputText readonly class="col-md-10"
+                       placeholder="{{fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'}}"/>
+                <button
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput.click()"
+                  class="col-md-2"
+                ></button>
+              </div>
+              <div
+                *ngIf="documentForm.controls?.['documentFile']?.invalid && (documentForm.controls?.['documentFile']?.touched || documentForm.controls?.['documentFile']?.dirty)">
+                <span *ngIf="documentForm.controls?.['documentFile']?.errors?.['required']" class="p-error">
+                  Vui lòng chọn tài liệu
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="w-100 text-center mt-3">
+            <button pButton type="submit">Lưu công việc</button>
+          </div>
+        </div>
+        <div *ngIf="!canUploadDocument || task.document != null">
+          <app-file-item
+          [document]="task.document"
+          ></app-file-item>
+        </div>
+      </form>
     </div>
+
   </div>
 </p-dialog>
