@@ -18,6 +18,7 @@ export class InspectionDocumentComponent implements OnInit {
   createRecordPopupVisible: boolean = false;
   updateRecordPopupVisible: boolean = false;
   detailRecordPopupVisible: boolean = false;
+  canUploadDocument: boolean = false;
 
   constructor(
     private readonly inspectionService: InspectionService,
@@ -29,7 +30,9 @@ export class InspectionDocumentComponent implements OnInit {
   }
 
   changeCreateRecordVisible() {
+    console.log(this.createRecordPopupVisible);
     this.createRecordPopupVisible = !this.createRecordPopupVisible;
+    console.log(this.createRecordPopupVisible);
   }
 
   changeUpdateRecordVisible() {
@@ -47,6 +50,11 @@ export class InspectionDocumentComponent implements OnInit {
 
   initDetailRecordData(recordId: number) {
     this.recordId = recordId;
+    if ( this.inspectionDocument.isChief && (recordId === this.inspectionDocument.reportId || recordId === this.inspectionDocument.conclusionId)) {
+      this.canUploadDocument = true;
+    } else {
+      this.canUploadDocument = false;
+    }
     this.changeDetailRecordVisible()
   }
 

@@ -1,7 +1,7 @@
-<p-dialog header="Danh sách đoàn kiểm tra"
+<p-dialog header="Mục kiểm tra"
           [(visible)]="detailRecordPopupVisible"
           [modal]="true"
-          [style]="{ width: '40%' }"
+          [style]="{ width: '45%' }"
           [draggable]="false"
           [resizable]="false"
           (onHide)="resetDetailRecordPopupVisible()"
@@ -71,14 +71,14 @@
                   style="display: none"
                   (change)="handleFileInputChange(fileInput)"
                 />
-                <input pInputText readonly class="col-md-10"
+                <input pInputText readonly class="col-md-9"
                        placeholder="{{fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'}}"/>
                 <button
                   type="button"
                   pButton
                   label="Chọn tệp"
                   (click)="fileInput.click()"
-                  class="col-md-2"
+                  class="col-md-3"
                 ></button>
               </div>
               <div
@@ -95,7 +95,7 @@
         </div>
         <div *ngIf="!canUploadDocument || task.document != null">
           <app-file-item
-          [document]="task.document"
+            [document]="task.document"
           ></app-file-item>
         </div>
       </form>
