@@ -14,6 +14,7 @@
   [progress]="'Vui lòng đợi trong giây lát'"
   [complete]="'Nộp thành công'"
 ></app-loading-complete-dialog>
+<app-file-loading [visible]="isFileLoading" [progress]="''"></app-file-loading>
 <!-- file preview -->
 <p-dialog
   [(visible)]="pdfLoaded"
@@ -100,8 +101,7 @@
               field="departmentDocument.account.user.fullName"
             ></p-sortIcon>
           </th>
-          <th>
-          </th>
+          <th></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-plan let-i="rowIndex">

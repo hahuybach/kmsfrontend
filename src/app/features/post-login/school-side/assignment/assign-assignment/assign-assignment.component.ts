@@ -95,7 +95,7 @@ export class AssignAssignmentComponent implements OnInit {
   menuVisible = false;
   deleteCommentId = 0;
   @ViewChild('menu') menu: Menu;
-
+  isFileLoading = false;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -435,6 +435,7 @@ export class AssignAssignmentComponent implements OnInit {
   }
   // preview docx and excel
   previewFile(documentLink: string, fileExtension: string) {
+    this.isFileLoading = true;
     this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
       const blobUrl = window.URL.createObjectURL(data.body as Blob);
       this.pdfUrl = blobUrl;
@@ -442,6 +443,7 @@ export class AssignAssignmentComponent implements OnInit {
       if (this.safePdfUrl !== undefined) {
         this.fileUrl = this.safePdfUrl + '';
       }
+      this.isFileLoading = false;
       this.pdfLoaded = true;
       console.log(this.safePdfUrl);
     });
@@ -547,6 +549,7 @@ export class AssignAssignmentComponent implements OnInit {
     }
   }
   uploadFiles() {
+    this.isFileLoading = true;
     const documentData = {
       assignmentId: this.selectedAssignment.assignmentId,
       documentCode: this.fileInputForm.get('documentCode')?.value,
@@ -567,8 +570,11 @@ export class AssignAssignmentComponent implements OnInit {
       next: (data) => {
         this.refreshSelectedAssignment();
         this.fileVisible = false;
+        this.isFileLoading = false;
       },
-      error: (error) => {},
+      error: (error) => {
+        
+      },
     });
     // this.documents.push(data);
     this.fileInputForm.reset();

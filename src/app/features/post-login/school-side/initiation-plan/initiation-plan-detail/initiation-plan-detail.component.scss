@@ -11,15 +11,14 @@
 .plan-file-item {
     cursor: pointer;
     height: 160px;
-    border-radius: 15px;
-    background-color: #f0f3f5;
+    background-color: #f9fafb;
+    border-radius: 10px;
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     transition: all 0.6s ease;
-    .font-weight-bold {
-        color: #686f73;
-    }
     &:hover {
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         cursor: pointer;
+        background-color: rgb(244, 244, 244);
     }
     .plan-file-item-img {
         width: 30%;
@@ -28,8 +27,8 @@
     .plan-file-item-content {
         width: 70%;
         // background-color: #ffd4cf;
-        border-radius: 0px 15px 15px 0px;
         font-size: 16px;
+        border-radius: 0px 15px 15px 0px;
         margin: 0;
         .delete-icon {
             i {
@@ -165,4 +164,11 @@ input {
 }
 .font-size-20 {
     font-size: 20px;
+}
+.his-file-name {
+    cursor: pointer;
+    color: blue;
+    &:hover {
+        text-decoration: underline;
+    }
 }

@@ -6,6 +6,7 @@
   rejectLabel="Hủy"
   key="confirmAssignment"
 ></p-confirmDialog>
+<app-file-loading [visible]="isFileLoading" [progress]="''"></app-file-loading>
 <!-- file preview -->
 <p-dialog
   [(visible)]="pdfLoaded"
