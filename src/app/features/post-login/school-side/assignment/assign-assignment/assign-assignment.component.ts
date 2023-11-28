@@ -55,26 +55,6 @@ export class AssignAssignmentComponent implements OnInit {
   docxUrl: string;
   safeDocxUrl: SafeResourceUrl;
   documentContent: string | null = null;
-  statusOptions = [
-    {
-      label: 'Chờ phê duyệt',
-      value: 'Chờ phê duyệt',
-      severity: 'warning',
-      disabled: true,
-    },
-    {
-      label: 'Phê duyệt',
-      value: true,
-      severity: 'success',
-      disabled: false,
-    },
-    {
-      label: 'Không phê duyệt',
-      value: false,
-      severity: 'danger',
-      disabled: false,
-    },
-  ];
   selectedAssigneeId: number;
   showComment = true;
   fileVisible = false;
@@ -92,6 +72,8 @@ export class AssignAssignmentComponent implements OnInit {
   deleteCommentId = 0;
   @ViewChild('menu') menu: Menu;
   isFileLoading = false;
+  tabs: MenuItem[];
+  activeTab: MenuItem | undefined;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -100,7 +82,23 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Thư mục', value: false },
       { label: 'Nộp tài liệu', value: true },
     ];
-
+    this.tabs = [
+      {
+        label: 'Bình luận',
+        command: (click) => {
+          console.log('Bình luận');
+          this.showComment = true;
+        },
+      },
+      {
+        label: 'Lịch sử',
+        command: (click) => {
+          console.log('Lịch sử');
+          this.showComment = false;
+        },
+      },
+    ];
+    this.activeTab = this.tabs[0];
     // lay issueId tu url goi theo issueId
     this.activateRouter.params
       .pipe(
@@ -405,7 +403,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.router.navigate(['/assignassignment/' + this.issueId], {
       queryParams: {},
     });
-    // this.initData();
+    this.activeTab = this.tabs[0];
   }
 
   getStatusSeverity(statusId: number): string {
@@ -568,9 +566,7 @@ export class AssignAssignmentComponent implements OnInit {
         this.fileVisible = false;
         this.isFileLoading = false;
       },
-      error: (error) => {
-        
-      },
+      error: (error) => {},
     });
     // this.documents.push(data);
     this.fileInputForm.reset();

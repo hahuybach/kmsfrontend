@@ -142,8 +142,18 @@ ul {
         padding: 0;
     }
 }
+.comment {
+    input {
+        border-radius: 40px;
+        border: none;
+        padding: 0 20px;
+        box-shadow:
+            rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+            rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    }
+}
 .comment-content {
-    border-top: 0.5px solid $primary;
+    // border-top: 2px solid $primary;
 }
 .comment-item {
     background-color: #ffffff;
@@ -319,4 +329,18 @@ th {
 }
 .assignee-dropdown {
     line-height: 10px;
+}
+:host ::ng-deep .p-tabmenu-nav {
+    .p-menuitem {
+        text-decoration: none;
+        color: $primary;
+    }
+    .p-menuitem-text {
+        color: $primary;
+    }
+    .p-highlight {
+        a {
+            border-bottom-color: $primary;
+        }
+    }
 }
