@@ -41,4 +41,17 @@ export class RecordService {
     const url = `${this.taskApiUrl}/delete/${recordId}`;
     return this.http.delete(url, {headers});
   }
+
+  public getInspectionMyTask(inspectionId: number | null): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.taskApiUrl}/my_task/${inspectionId}`;
+    return this.http.get(url, {headers});
+  }
+
+  public deleteDocumentById(recordId: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.taskApiUrl}/deleteDoc/${recordId}`;
+    return this.http.delete(url, {headers});
+  }
+
 }

@@ -1,3 +1,5 @@
+<p-toast position="top-right" key="updateRecordFail"></p-toast>
+<p-toast position="top-right" key="updateRecordComplete"></p-toast>
 <p-dialog header="Danh sách đoàn kiểm tra"
           [(visible)]="updateRecordPopupVisible"
           [modal]="true"
@@ -6,6 +8,15 @@
           [resizable]="false"
           (onHide)="resetUpdateRecordPopupVisible()"
 >
+  <app-loading-complete-dialog
+    [height]="70"
+    [width]="80"
+    [visible]="formSubmitted"
+    [completed]="formCompleted"
+    [header]="'Tạo mới mục kiểm tra'"
+    [progress]="'Đang tạo mới mục kiểm tra'"
+    [complete]="'Tạo mới mục kiểm tra thành công'"
+  ></app-loading-complete-dialog>
   <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="record-name col-md-12 mt-1">

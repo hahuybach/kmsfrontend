@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {InspectionService} from "../../../../services/inspection.service";
 import {ActivatedRoute} from "@angular/router";
 import {Inspection, TaskListDto} from "../../../../models/inspection";
+import {RecordService} from "../../../../services/record.service";
 
 @Component({
   selector: 'app-inspection-mytask',
@@ -15,7 +16,7 @@ export class InspectionMytaskComponent implements OnInit{
   detailRecordPopupVisible: boolean = false;
 
   constructor(
-    private readonly inspectionService: InspectionService,
+    private readonly taskService: RecordService,
     private readonly route: ActivatedRoute,
   ) {
   }
@@ -33,7 +34,7 @@ export class InspectionMytaskComponent implements OnInit{
     this.route.parent?.params.subscribe(parentParams => {
       this.inspectionId = parentParams['id'];
     })
-    this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
+    this.taskService.getInspectionMyTask(this.inspectionId).subscribe({
       next: (data) => {
         this.taskList = data.taskListDtos;
         console.log(this.taskList);

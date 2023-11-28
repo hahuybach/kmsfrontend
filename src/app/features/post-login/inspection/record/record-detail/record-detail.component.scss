@@ -45,3 +45,25 @@
     }
   }
 }
+
+.action-item {
+  button {
+    border: none;
+    background: none;
+    i {
+      font-size: 1.5rem;
+      color: red;
+    }
+  }
+}
+
+:host ::ng-deep .p-dialog-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .p-button {
+    margin-left: 30px;
+  }
+}
+
