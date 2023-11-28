@@ -6,6 +6,8 @@ import {inspectionPlanService} from "../../../../../services/inspectionplan.serv
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {TaskListDto} from "../../../../../models/inspection";
 import {TaskDetailDto} from "../../../../../models/task";
+import {Subscription} from "rxjs";
+import {ToastService} from "../../../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-update-record',
@@ -18,17 +20,24 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   @Input() updateRecordPopupVisible: boolean;
   @Output() updateRecordPopupVisibleChange = new EventEmitter<boolean>();
   recordForm: FormGroup;
+  startDate: string;
+  endDate: string;
+  defaultDeadline: string;
+  formSubmitted: boolean = false;
+  formCompleted: boolean = false;
   task: TaskDetailDto;
   taskId: number;
   inspectionPlan: {
     inspectors: AccountResponse[];
     endDate: Date;
   }
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly recordService: RecordService,
+    private readonly toastService: ToastService
   ) {
   }
 
@@ -36,15 +45,32 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     this.updateRecordPopupVisibleChange.emit(this.updateRecordPopupVisible);
   }
 
-  ngOnInit(): void {
-    this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
+  initInspectionPlan(){
+    const initInspectionPlan = this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
+        this.startDate = data.inspectionPlan.startDate.slice(0, 10);
+        this.endDate = data.inspectionPlan.endDate.slice(0, 10);
+        this.defaultDeadline = data.inspectionPlan.startDate;
+        this.recordForm.get('deadline')?.setValue(this.defaultDeadline.split('T')[0]);
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError('updateRecordFail', "Không tìm thấy dữ liệu", error.error.message);
       }
     })
+    this.subscriptions.push(initInspectionPlan);
+  }
+
+  resetForm() {
+    this.recordForm.reset();
+    this.formSubmitted = false;
+    this.formCompleted = false;
+  }
+
+
+  ngOnInit(): void {
+    this.initInspectionPlan();
+
     this.recordForm = this.fb.group({
       recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       recordDescription: [null, Validators.compose([Validators.required])],
@@ -58,7 +84,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
       this.recordForm.markAllAsTouched();
       return;
     }
-    const formData = new FormData();
+
     const record = {
       taskId: this.taskId,
       taskName: this.recordForm.get('recordName')?.value,
@@ -67,21 +93,28 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
       assigneeId: this.recordForm.get('assigneeId')?.value,
     }
 
-    this.recordService.updateTask(record).subscribe({
+    this.formSubmitted = true;
+    const updateRecord = this.recordService.updateTask(record).subscribe({
       next: (response) => {
-        console.log(response)
+        this.formCompleted = true;
+        setTimeout(() =>{
+          this.resetForm();
+          this.updateRecordPopupVisible = false;
+          this.initInspectionPlan();
+        },1000)
       },
       error: (error) => {
-        console.log(error)
+        this.toastService.showError('updateRecordFail', "Cập nhật mục kiểm tra không thành công", error.error.message);
       }
     })
+    this.subscriptions.push(updateRecord);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
       return;
     }
-    this.recordService.getRecordById(this.recordId).subscribe({
+    const getRecordData = this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;
         this.taskId = data.taskDetailDto.taskId;
@@ -93,10 +126,20 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
         })
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError('updateRecordFail', "Không tìm thấy dữ liệu mục kiểm tra", error.error.message);
       }
     })
+    this.subscriptions.push(getRecordData);
+  }
 
+  private unsubscribeAll(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
   }
 
 }

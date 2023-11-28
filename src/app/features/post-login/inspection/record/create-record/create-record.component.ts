@@ -5,6 +5,7 @@ import {inspectionPlanService} from "../../../../../services/inspectionplan.serv
 import {RecordService} from "../../../../../services/record.service";
 import {Subscription} from "rxjs";
 import {error} from "@angular/compiler-cli/src/transformers/util";
+import {ToastService} from "../../../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-create-record',
@@ -32,6 +33,7 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly recordService: RecordService,
+    private readonly toastService: ToastService
   ) {
   }
 
@@ -57,7 +59,7 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
         this.recordForm.get('deadline')?.setValue(this.defaultDeadline.split('T')[0]);
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError('createRecordError', "Xóa không thành công", error.error.message);
       }
     })
     this.subscriptions.push(initInspectionPlan);
@@ -79,7 +81,6 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
       this.recordForm.markAllAsTouched();
       return;
     }
-    const formData = new FormData();
     const record = {
       inspectionPlanId: this.inspectionPlanId,
       taskName: this.recordForm.get('recordName')?.value,
@@ -92,11 +93,13 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.formCompleted = true;
         setTimeout(() =>{
+          this.resetForm();
           this.createRecordPopupVisible = false;
-        },1500)
+          this.initInspectionPlan();
+        },1000)
       },
       error: (error) => {
-        console.log(error)
+        this.toastService.showError('createRecordError', "Tạo mục kiểm tra không thành công", error.error.message);
       }
     });
     this.subscriptions.push(saveTask);

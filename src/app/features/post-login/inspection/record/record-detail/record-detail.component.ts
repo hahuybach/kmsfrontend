@@ -96,7 +96,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         this.task = data.taskDetailDto;
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError('deleteInComplete', "Không tìm thấy mục kiểm tra", error.error.message);
       }
     })
     this.subscriptions.push(initRecordData)
