@@ -109,7 +109,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                     console.log(this.roles);
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
@@ -123,7 +123,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                     console.log(this.schools);
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
@@ -139,7 +139,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                     console.log(this.roles);
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
@@ -165,7 +165,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
@@ -357,7 +357,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     } else {
       // Handle error or provide feedback to the user
-      this.toastService.showWarn('error', "Lỗi", "File tải lên phải ở dưới dạng excel (.xls)")
+      this.toastService.showWarn('userListError', "Lỗi", "File tải lên phải ở dưới dạng excel (.xls)")
       event.target.value = null;
 
     }
@@ -365,7 +365,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   onCreateUserByFile() {
       if (!this.excelFile){
-        this.toastService.showError('error', 'Thông báo', "Vui lòng chọn 1 file")
+        this.toastService.showError('userListError', 'Thông báo', "Vui lòng chọn 1 file")
       }
       if (this.excelFile){
         this.isLoading = true
@@ -373,7 +373,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           next: (data) =>{
             this.submitCompleted = true;
             setTimeout(() => {
-              this.toastService.showSuccess('error', "Thông báo", "Tạo " + data.length + " người dùng thành công")
+              this.toastService.showSuccess('userListError', "Thông báo", "Tạo " + data.length + " người dùng thành công")
               this.loadUsers();
             }, 1500)
             this.isLoading = false;
@@ -381,7 +381,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
           },
           error: (error) => {
-            this.toastService.showWarn('error', "Lỗi", error.error.message)
+            this.toastService.showWarn('userListError', "Lỗi", error.error.message)
 
           }
         });
@@ -424,10 +424,10 @@ export class UserListComponent implements OnInit, OnDestroy {
       reject: (type: ConfirmEventType) => {
         switch (type) {
           case ConfirmEventType.REJECT:
-            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toastService.showError('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
             break;
           case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toastService.showWarn('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
             break;
         }
       },key: 'createUserByExcel'
