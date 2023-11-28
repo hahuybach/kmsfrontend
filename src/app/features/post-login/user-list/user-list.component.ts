@@ -306,7 +306,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onDetail(userId: number | undefined) {
-        this.route.navigate(['user/' + userId])
+        this.route.navigate(['userList/' + userId])
     }
 
     maxPageOnKeyUp() {

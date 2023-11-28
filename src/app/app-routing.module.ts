@@ -146,7 +146,7 @@ const routes: Routes = [
         component: UserListComponent,
       },
       {
-        path: 'user/:id',
+        path: 'userList/:id',
         component: UserDetailComponent,
       },
       {
