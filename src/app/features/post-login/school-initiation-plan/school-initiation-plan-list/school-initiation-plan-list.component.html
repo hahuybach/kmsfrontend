@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
 <p-toast key="error" position="top-right"></p-toast>
 <h2>Tra cứu kế hoạch thực hiện</h2>
-
-<div class="row mt-4">
-  <div class="form-group col-md-7" *ngIf="!advanceSearch">
+<div class="row mt-4 container d-flex flex-row justify-content-between">
+  <div class="form-group col-md-4" *ngIf="!advanceSearch">
     <input type="text"
            name="globalSearch"
            id="globalSearch"
-           class="form-control small-input fontAwesome mb-3"
+           class="form-control fontAwesome h-100"
            [(ngModel)]="planName"
            (keyup)="loadDocuments()"
+           pInputText
            placeholder="&#xF002; Tra cứu nhanh theo tên kế hoạch"
     >
   </div>
@@ -119,13 +119,11 @@
 
         >
         <span class="p-error" *ngIf="deadlineDateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
-
       </div>
-
     </div>
   </div>
-  <div class="col-md-2">
-    <button (click)="onAdvanceSearch()" class="btn btn-primary">{{advanceSearchButtonText}}</button>
+  <div class="text-end" [ngClass]="{'col-md-2': advanceSearch, 'col-md-3 ': !advanceSearch}">
+    <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
   </div>
 </div>
 <div class="container">
@@ -215,7 +213,7 @@
     </tbody>
 
   </table>
-  <div class="d-flex justify-content-end mt-3">
+  <div class="d-flex justify-content-end my-3">
     <div class="d-flex justify-content-center" *ngIf="schoolInitPlans && schoolInitPlans.length > 0">
 
       <label for="pageNo"
@@ -234,7 +232,8 @@
              style=" margin-right: 10px"
       >Số bản ghi trên 1 trang: </label>
 
-      <select (change)="loadDocuments()" class="form-control super-small-input ng-untouched ng-pristine ng-valid" [(ngModel)]="pageSize">
+      <select (change)="loadDocuments()" class="form-control super-small-input ng-untouched ng-pristine ng-valid"
+              [(ngModel)]="pageSize">
         <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>
       </select>
 
@@ -265,7 +264,6 @@
 
     </div>
   </div>
-
 
 
   <p-toast key="paging" position="bottom-right"></p-toast>
