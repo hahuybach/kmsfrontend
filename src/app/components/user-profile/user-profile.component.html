@@ -32,7 +32,7 @@
           <label>Giới tính</label>
         </div>
         <div>
-          <p>{{this.currentUser.gender == "MALE" ?  "Nam" : "Nữ"}}</p>
+          <p>{{this.currentUser.gender == "MALE" ? "Nam" : "Nữ"}}</p>
         </div>
 
         <div>
@@ -58,9 +58,11 @@
           <label>Chức vụ</label>
         </div>
         <div>
-          <p> <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
-            {{ role.role?.roleName }}{{ last ? '' : ';' }}
-          </ng-container></p>
+          <p>
+            <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
+              {{ role.role?.roleName }}{{ last ? '' : ';' }}
+            </ng-container>
+          </p>
         </div>
       </div>
 
@@ -80,7 +82,7 @@
           <label>Tên</label>
         </div>
         <div>
-          <input type="text" formControlName = 'fullName' class="form-control">
+          <input type="text" formControlName='fullName' class="form-control">
           <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
         </div>
 
@@ -88,7 +90,7 @@
           <label>Số điện thoại</label>
         </div>
         <div>
-          <input type="text" formControlName = 'phoneNumber' class="form-control">
+          <input type="text" formControlName='phoneNumber' class="form-control">
           <span class="p-error" *ngIf="isError('phoneNumber', 'pattern')">Sai định dạng số điện thoại</span>
           <span class="p-error" *ngIf="isBlank('phoneNumber')">Mục này không được trống</span>
 
@@ -98,7 +100,7 @@
           <label>Giới tính</label>
         </div>
         <div>
-          <p-dropdown [options]="genders" formControlName = "gender" >
+          <p-dropdown [options]="genders" formControlName="gender">
 
           </p-dropdown>
         </div>
@@ -107,7 +109,7 @@
           <label>Năm sinh</label>
         </div>
         <div>
-          <input type="date" formControlName = 'dob' class="form-control">
+          <input type="date" formControlName='dob' class="form-control">
           <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
         </div>
 
@@ -127,9 +129,11 @@
           <label>Chức vụ</label>
         </div>
         <div>
-          <p> <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
-            {{ role.role?.roleName }}{{ last ? '' : ';' }}
-          </ng-container></p>
+          <p>
+            <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
+              {{ role.role?.roleName }}{{ last ? '' : ';' }}
+            </ng-container>
+          </p>
         </div>
       </div>
 
@@ -138,23 +142,27 @@
   <button class="btn btn-primary"
           (click)="confirm()"
           *ngIf="isUpdate"
-  >Lưu</button>
-<button class="btn btn-primary"
-        (click)="onUpdate()"
-        *ngIf="!isUpdate"
->Cập nhật</button>
-<button class="btn btn-primary"
-        *ngIf="!isUpdate"
-        (click)="onClickChangePassword()"
->Thay mật khẩu</button>
+  >Lưu
+  </button>
   <button class="btn btn-primary"
           (click)="onUpdate()"
-          *ngIf="isUpdate">Quay lại</button>
+          *ngIf="!isUpdate"
+  >Cập nhật
+  </button>
+  <button class="btn btn-primary"
+          *ngIf="!isUpdate"
+          (click)="onClickChangePassword()"
+  >Thay mật khẩu
+  </button>
+  <button class="btn btn-primary"
+          (click)="onUpdate()"
+          *ngIf="isUpdate">Quay lại
+  </button>
 
 </p-dialog>
 <p-toast position="top-right" key="error"></p-toast>
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
-<app-change-password [visible] = "isVisible"
+<app-change-password [visible]="isVisible"
                      (visibleChange)="onClickChangePassword()"></app-change-password>
 <app-loading-complete-dialog
   [visible]="isLoading"

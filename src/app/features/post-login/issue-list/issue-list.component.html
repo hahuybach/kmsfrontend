@@ -25,7 +25,9 @@
             placeholder="Tìm kiếm"
           />
         </span>
-        <p-button (click)="navigateToCreateIssue()" class="btn-purple"
+        <p-button (click)="navigateToCreateIssue()"
+                  *ngIf="isDirector"
+                  class="btn-purple"
           >Tạo mới
         </p-button>
       </div>
@@ -107,6 +109,7 @@
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
             (click)="navigateToUpdate(issue.issueId)"
+            *ngIf="isDirector"
           >
             <i class="bi bi-pencil-fill"></i>
           </div>

@@ -11,18 +11,21 @@ import {unSub} from "../../shared/util/util";
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+
+  schoolId: any;
+  issueId: number;
+  sub: any[] = []
   isPrincipal: boolean = false;
   isDirector: boolean = false;
   isAdmin: boolean = false;
   isInspector: boolean = false;
+  isChiefInspector: boolean = false;
   isViceDirector: boolean = false;
   isSchoolNormalEmp: boolean = false;
   isSpecialist: boolean = false;
-  schoolId: any;
-  issueId: number;
-  sub: any[] = []
-  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER,Role.CHIEF_OFFICE,Role.TEACHER,
-  Role.ACCOUNTANT,Role.MEDIC,Role.CLERICAL_ASSISTANT,Role.SECURITY]
+  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY]
+
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -35,11 +38,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('/login');
   }
 
-  ngOnInit(): void {
-    console.log(this.auth.getRoleFromJwt());
-    if (this.auth.getSchoolFromJwt()) {
-      this.schoolId = this.auth.getSchoolFromJwt().schoolId;
-    }
+  setAuth() {
     if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
         if (argument.authority === Role.DIRECTOR) {
@@ -58,19 +57,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
           this.isInspector = true;
         }
         if (argument.authority === Role.CHIEF_INSPECTOR) {
-          this.isInspector = true;
+          this.isChiefInspector = true;
         }
         if (argument.authority === Role.SPECIALIST) {
           this.isSpecialist = true;
         }
-        if (this.schoolRoles.some(value => value === argument.authority)){
+        if (this.schoolRoles.some(value => value === argument.authority)) {
           this.isSchoolNormalEmp = true;
         }
 
       }
 
     }
-    let method = this.issueService.getCurrentActiveIssue().subscribe({
+  }
+
+  ngOnInit(): void {
+    console.log(this.auth.getRoleFromJwt());
+    if (this.auth.getSchoolFromJwt()) {
+      this.schoolId = this.auth.getSchoolFromJwt().schoolId;
+    }
+    this.setAuth();
+
+    const method = this.issueService.getCurrentActiveIssue().subscribe({
       next: (data) => {
         this.issueId = data.issueDto.issueId;
       },
@@ -79,7 +87,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
       },
     });
     this.sub.push(method)
-
   }
 
 
