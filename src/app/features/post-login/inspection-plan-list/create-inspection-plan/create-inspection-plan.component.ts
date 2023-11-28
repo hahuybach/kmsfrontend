@@ -5,6 +5,7 @@ import {IssueService} from "../../../../services/issue.service";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
 import {Router} from "@angular/router";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import {ToastService} from "../../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-create-inspection-plan',
@@ -30,10 +31,10 @@ export class CreateInspectionPlanComponent {
   constructor(
     private fb: FormBuilder,
     private readonly inspectionPlanService: inspectionPlanService,
-    private readonly issueService: IssueService,
     private readonly inspectionplanInspectorService: InspectionplanInspectorlistService,
     private readonly router: Router,
     private readonly confirmationService : ConfirmationService,
+    private readonly toastService: ToastService
   ) {
   }
 
@@ -46,7 +47,7 @@ export class CreateInspectionPlanComponent {
         this.schoolList = data;
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError('deleteInComplete', "Xóa không thành công", error.error.message);
       }
     })
 
