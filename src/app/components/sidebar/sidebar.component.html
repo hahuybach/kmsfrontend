@@ -101,7 +101,7 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isDirector || isAdmin"
+          *ngIf="isDirector || isAdmin || isViceDirector || isSpecialist || isInspector || isChiefInspector "
         >
           <a class="" [routerLink]="['/schoolList']">
             <div>

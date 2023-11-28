@@ -10,9 +10,15 @@
 />
 <h2>Danh sách các trường</h2>
 <div class="d-flex justify-content-end mb-3" *ngIf="!isDirector">
-  <button (click)="showImportSchool()" class="btn btn-info ml-3 mr-3">Nhập trường bằng file excel</button>
+  <button (click)="showImportSchool()"
+          class="btn btn-info ml-3 mr-3"
+          *ngIf="isAdmin"
+  >Nhập trường bằng file excel</button>
 
-  <button class="btn btn-primary" (click)="onCreateSchool()">Tạo mới</button>
+  <button class="btn btn-primary"
+          (click)="onCreateSchool()"
+          *ngIf="isAdmin"
+  >Tạo mới</button>
 
 </div>
 <div class="card">
@@ -160,7 +166,7 @@
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
             (click)="onUpdate(school.schoolId)"
-            *ngIf="!isDirector"
+            *ngIf="isAdmin"
           >
             <i class="bi bi-pencil-fill"></i>
           </div>
