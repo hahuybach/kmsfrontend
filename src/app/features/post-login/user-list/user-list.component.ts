@@ -344,7 +344,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onUpdate(userId: number | undefined) {
-        this.route.navigate(['user/' + userId + '/update'])
+        this.route.navigate(['userList/' + userId + '/update'])
 
     }
 

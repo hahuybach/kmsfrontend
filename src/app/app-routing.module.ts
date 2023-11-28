@@ -158,7 +158,7 @@ const routes: Routes = [
         component: AssignAssignmentComponent,
       },
       {
-        path: 'user/:id/update',
+        path: 'userList/:id/update',
         component: UserUpdateComponent,
       },
       {
