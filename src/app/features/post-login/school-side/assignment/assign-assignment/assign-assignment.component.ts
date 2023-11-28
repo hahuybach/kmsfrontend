@@ -11,14 +11,10 @@ import { AssignmentService } from 'src/app/services/assignment.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { FileService } from 'src/app/services/file.service';
 import { IssueService } from 'src/app/services/issue.service';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
-import { isUnionTypeNode } from 'typescript';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',

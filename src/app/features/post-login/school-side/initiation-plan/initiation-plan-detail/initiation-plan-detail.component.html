@@ -520,11 +520,11 @@
         </div>
       </ng-container>
       <ng-container *ngIf="schoolinitiationplan?.status.statusId == 8">
-        <div
-          class="px-4 my-4"
-          (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
-        >
-          <div class="plan-file-item d-flex">
+        <div class="px-4 my-4">
+          <div
+            class="plan-file-item d-flex"
+            (click)="openNewTab(lastDocs.departmentDocument.documentLink)"
+          >
             <div
               class="plan-file-item-img d-flex justify-content-center align-items-center"
             >
