@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="m-3" *ngIf="!(isPrincipal || isDirector)">
+    <div class="m-3" *ngIf="isAdmin">
       <button class="btn btn-primary" (click)="onUpdate()">Cập nhật</button>
 
     </div>
