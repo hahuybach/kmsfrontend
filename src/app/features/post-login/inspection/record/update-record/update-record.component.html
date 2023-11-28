@@ -58,7 +58,7 @@
       </div>
       <div class="record-deadline col-md-6 mt-1">
         <label for="deadline" class="fw-medium">Hạn nộp<span class="p-error">*</span></label>
-        <input id="deadline" class="form-control" type="date" formControlName="deadline"/>
+        <input id="deadline" class="form-control" type="date" formControlName="deadline" [max]="endDate" [min]="startDate"/>
         <div
           *ngIf="recordForm.controls?.['deadline']?.invalid && (recordForm.controls?.['deadline']?.touched ||recordForm.controls?.['deadline']?.dirty)">
                     <span *ngIf="recordForm.controls?.['deadline']?.errors?.['required']" class="p-error">
