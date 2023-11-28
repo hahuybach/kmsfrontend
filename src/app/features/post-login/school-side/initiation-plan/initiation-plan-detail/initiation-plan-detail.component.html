@@ -30,32 +30,89 @@
   header="Lịch sử phê duyệt"
   [(visible)]="docHistoryVisible"
   [modal]="true"
-  [style]="{ width: '90vw' }"
+  [style]="{ width: '90vw', height: '900px' }"
   [draggable]="false"
   [resizable]="false"
 >
   <ng-container *ngIf="schoolinitiationplan?.documents">
     <p-table
+      #dthistory
       [value]="schoolinitiationplan.documents"
       [tableStyle]="{ 'min-width': '50rem' }"
+      [scrollable]="true"
+      scrollHeight="580px"
+      [paginator]="true"
+      [rows]="5"
+      [rowHover]="true"
+      [globalFilterFields]="[
+        'schoolDocument.documentName',
+        'schoolDocument.documentCode',
+        'schoolDocument.uploadedDate',
+        'schoolDocument.createdBy',
+        'schoolDocument.status.statusName',
+        'departmentDocument.uploadedDate',
+        'departmentDocument.account.user.fullName'
+      ]"
     >
+      <ng-template pTemplate="caption">
+        <input
+          class="history-search-box"
+          type="text"
+          pInputText
+          placeholder="Tìm kiếm"
+          (input)="
+            dthistory.filterGlobal($any($event.target).value, 'contains')
+          "
+        />
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th>Id</th>
-          <th>Tài liệu</th>
-          <th>Mã tài liệu</th>
-          <th>Ngày tạo</th>
-          <th>Người tạo</th>
-          <th>Trạng thái</th>
-          <th>Ngày phê duyệt</th>
-          <th>Người đánh giá</th>
-          <th></th>
+          <th>STT</th>
+          <th pSortableColumn="schoolDocument.documentName">
+            Tài liệu<p-sortIcon
+              field="schoolDocument.documentName"
+            ></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.documentCode">
+            Mã tài liệu<p-sortIcon
+              field="schoolDocument.documentCode"
+            ></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.uploadedDate">
+            Ngày tạo<p-sortIcon
+              field="schoolDocument.uploadedDate"
+            ></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.createdBy">
+            Người tạo<p-sortIcon field="schoolDocument.createdBy"></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.status.statusName">
+            Trạng thái
+            <p-sortIcon field="schoolDocument.status.statusName"></p-sortIcon>
+          </th>
+          <th pSortableColumn="departmentDocument.uploadedDate">
+            Ngày phê duyệt
+            <p-sortIcon field="departmentDocument.uploadedDate"></p-sortIcon>
+          </th>
+          <th pSortableColumn="departmentDocument.account.user.fullName">
+            Người đánh giá
+            <p-sortIcon
+              field="departmentDocument.account.user.fullName"
+            ></p-sortIcon>
+          </th>
+          <th>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-plan let-i="rowIndex">
         <tr>
           <td>{{ i + 1 }}</td>
-          <td>{{ plan.schoolDocument.documentName }}</td>
+          <td
+            class="his-file-name"
+            (click)="openNewTab(plan.schoolDocument.documentLink)"
+          >
+            {{ plan.schoolDocument.documentName }}
+          </td>
           <td>{{ plan.schoolDocument.documentCode }}</td>
           <td>{{ plan.schoolDocument.uploadedDate | date : "dd/MM/yyyy" }}</td>
           <td>{{ plan.schoolDocument.account.user.fullName }}</td>

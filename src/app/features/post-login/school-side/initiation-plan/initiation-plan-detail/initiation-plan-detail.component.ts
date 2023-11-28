@@ -261,7 +261,8 @@ export class InitiationPlanDetailComponent implements OnInit {
           this.submitCompleted = true;
           setTimeout(() => {
             this.initData();
-            this.iconStatus = false;
+          }, 1500);
+          setTimeout(() => {
             this.isLoading = false;
           }, 1500);
         }

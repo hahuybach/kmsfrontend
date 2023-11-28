@@ -130,6 +130,9 @@ input {
     }
 }
 :host ::ng-deep {
+    // table {
+    //     font-size: 16px;
+    // }
     .p-button {
         background-color: $primary;
         border-radius: 8px;
@@ -140,6 +143,17 @@ input {
             background-color: $primary-hover;
             border-color: $primary-hover;
         }
+    }
+    .p-table {
+        tr {
+            height: 100px;
+        }
+        td {
+            font-size: 16px;
+        }
+    }
+    .history-search-box {
+        width: 300px;
     }
     // .p-confirm-dialog-reject {
     //     background-color: #fff;

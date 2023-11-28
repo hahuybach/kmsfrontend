@@ -273,12 +273,12 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
             );
 
             this.submitCompleted = true;
-            // setTimeout(() => {
-            this.initData();
-            // }, 1500);
-            // setTimeout(() => {
-            this.isLoading = false;
-            // }, 1500);
+            setTimeout(() => {
+              this.initData();
+            }, 1500);
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 1500);
           },
           error: (error) => {
             console.log(error);
