@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Issue } from 'src/app/models/issue.model';
-import { IssueService } from 'src/app/services/issue.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {Issue} from 'src/app/models/issue.model';
+import {IssueService} from 'src/app/services/issue.service';
 import {ToastService} from "../../../shared/toast/toast.service";
 import {Role} from "../../../shared/enum/role";
 import {AuthService} from "../../../services/auth.service";
+import {unSub} from "../../../shared/util/util";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-issue-list',
   templateUrl: './issue-list.component.html',
   styleUrls: ['./issue-list.component.scss'],
 })
-export class IssueListComponent implements OnInit {
+export class IssueListComponent implements OnInit, OnDestroy {
   data: any;
   issues!: any[];
   loading: boolean = true;
@@ -24,15 +26,18 @@ export class IssueListComponent implements OnInit {
   isSchoolNormalEmp: boolean = false;
   isSpecialist: boolean = false;
   schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
-    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY]
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY];
+  sub: any[] = []
+
   constructor(private issueService: IssueService, private router: Router
-  ,private toastService: ToastService, private auth: AuthService
-  ) {}
+    , private toastService: ToastService, private auth: AuthService
+  ) {
+  }
 
   ngOnInit() {
     this.setAuth()
-    this.issueService.getIssues().subscribe({
-      next: (data) =>{
+    const sub = this.issueService.getIssues().subscribe({
+      next: (data) => {
         this.data = data;
         this.issues = this.data.issueTableRow;
       },
@@ -40,8 +45,9 @@ export class IssueListComponent implements OnInit {
         this.toastService.showWarn("error", "Lỗi", error.error.message);
       }
     })
-
+    this.sub.push(sub);
   }
+
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
@@ -74,13 +80,20 @@ export class IssueListComponent implements OnInit {
 
     }
   }
+
   navigateToCreateIssue() {
     this.router.navigate(['/createissue']);
   }
+
   navigateToDetail(issueId: number) {
     this.router.navigate(['/issuelist', issueId]);
   }
+
   navigateToUpdate(issueId: number) {
     this.router.navigate(['/issuelist/update', issueId]);
+  }
+
+  ngOnDestroy(): void {
+    unSub(this.sub)
   }
 }
