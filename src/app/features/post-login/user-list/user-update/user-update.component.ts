@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {AccountService} from "../../../../services/account.service";
 import {FormBuilder, Validators} from "@angular/forms";
@@ -9,13 +9,16 @@ import {ToastService} from "../../../../shared/toast/toast.service";
 import {AuthService} from "../../../../services/auth.service";
 import {RoleService} from "../../../../services/role.service";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import {unSub} from "../../../../shared/util/util";
 
 @Component({
   selector: 'app-user-update',
   templateUrl: './user-update.component.html',
   styleUrls: ['./user-update.component.scss']
 })
-export class UserUpdateComponent implements OnInit {
+export class UserUpdateComponent implements OnInit, OnDestroy {
+
+
   user: UserResponseForUserList
   roles: RoleResponse[];
   selectedRole: RoleResponse;
@@ -32,6 +35,7 @@ export class UserUpdateComponent implements OnInit {
   selectedStatus: any
   isLoading: boolean = false
   submitCompleted = false;
+  sub: any[] = []
 
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -46,7 +50,7 @@ export class UserUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.accountService.findById(this.activatedRoute.snapshot.paramMap.get('id'))
+    const accountSub = this.accountService.findById(this.activatedRoute.snapshot.paramMap.get('id'))
       .subscribe(
         {
           next: (data) => {
@@ -79,6 +83,7 @@ export class UserUpdateComponent implements OnInit {
 
         }
       )
+    this.sub.push(accountSub)
 
   }
 
@@ -91,7 +96,7 @@ export class UserUpdateComponent implements OnInit {
 
   setRoles() {
     if (this.user.school?.schoolId == 1) {
-      this.roleService.findAllDeptRoles().subscribe({
+      const roleSub = this.roleService.findAllDeptRoles().subscribe({
         next: (data) => {
           this.roles = data.roles;
           this.roles = this.roles.filter(role => role.roleName !== Role.ADMIN && role.roleName !== Role.CHIEF_INSPECTOR && role.roleName !== Role.INSPECTOR);
@@ -110,8 +115,9 @@ export class UserUpdateComponent implements OnInit {
 
         }
       })
+      this.sub.push(roleSub)
     } else {
-      this.roleService.findSchoolRole().subscribe({
+      const roleSub = this.roleService.findSchoolRole().subscribe({
         next: (data) => {
           this.roles = data.roles;
           const query = {
@@ -128,6 +134,7 @@ export class UserUpdateComponent implements OnInit {
           })
         }
       })
+      this.sub.push(roleSub)
     }
 
   }
@@ -136,11 +143,11 @@ export class UserUpdateComponent implements OnInit {
     this.isLoading = true;
     console.log(this.updateForm.value);
     if (!this.updateForm.invalid) {
-      this.accountService.updateUser(this.updateForm.value).subscribe({
+   const updateUserSub=   this.accountService.updateUser(this.updateForm.value).subscribe({
         next: (data) => {
           this.submitCompleted = true;
           setTimeout(() => {
-            this.route.navigate(['user/' + data.accountDto.accountId])
+            this.route.navigate(['userList/' + data.accountDto.accountId])
           }, 1500)
           console.log(data);
         },
@@ -150,6 +157,7 @@ export class UserUpdateComponent implements OnInit {
 
         }
       })
+      this.sub.push(updateUserSub);
     }
   }
 
@@ -167,7 +175,7 @@ export class UserUpdateComponent implements OnInit {
       reject: (type: ConfirmEventType) => {
         switch (type) {
           case ConfirmEventType.REJECT:
-            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật người dùng');
+            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật người dùng');
             break;
           case ConfirmEventType.CANCEL:
             this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật người dùng');
@@ -185,6 +193,10 @@ export class UserUpdateComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  ngOnDestroy(): void {
+    unSub(this.sub)
   }
 
 

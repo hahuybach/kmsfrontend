@@ -70,6 +70,6 @@ export class UserDetailComponent implements OnInit {
     }
 
     onUpdate() {
-        this.router.navigate(['user/' + this.user.userId + '/update'])
+        this.router.navigate(['userList/' + this.user.userId + '/update'])
     }
 }
