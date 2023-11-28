@@ -24,10 +24,21 @@ export class RecordService {
     return this.http.put(url, record, { headers });
   }
 
+  public updateTaskDocument(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'multipart/form-data');
+    const url = `${this.taskApiUrl}/updateDoc`;
+    return this.http.put(url, formData);
+  }
+
   public getRecordById(recordId: number): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.taskApiUrl}/detail/${recordId}`;
     return this.http.get(url, {headers});
   }
 
+  public deleteRecordById(recordId: number): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.taskApiUrl}/delete/${recordId}`;
+    return this.http.delete(url, {headers});
+  }
 }

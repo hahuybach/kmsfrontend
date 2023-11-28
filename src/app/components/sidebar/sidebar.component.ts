@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Role } from '../../shared/enum/role';
 import { IssueService } from 'src/app/services/issue.service';
 import { error } from '@angular/compiler-cli/src/transformers/util';
+import {unSub} from "../../shared/util/util";
 
 @Component({
   selector: 'app-sidebar',
@@ -18,7 +19,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isChiefTeacher: boolean = false;
   schoolId: any;
   issueId: number;
-  sub: any[]
+  sub: any[] = []
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -66,13 +67,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   }
 
-  unSub(){
-    for (const sub of this.sub) {
-      sub.unsubscribe();
-    }
-  }
+
 
   ngOnDestroy(): void {
-      this.unSub()
+      unSub(this.sub)
   }
 }

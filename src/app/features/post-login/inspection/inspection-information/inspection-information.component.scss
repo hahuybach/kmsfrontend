@@ -4,8 +4,20 @@
   font-size: 16px;
 }
 
-:host ::ng-deep .p-tag{
+:host ::ng-deep .p-tag {
   font-size: 15px;
 }
 
+:host ::ng-deep .p-tabmenu-nav {
+  .p-menuitem-link {
+    text-decoration: none;
+    color: $primary;
+  }
+
+  .p-highlight {
+    a {
+      border-bottom-color: $primary;
+    }
+  }
+}
 

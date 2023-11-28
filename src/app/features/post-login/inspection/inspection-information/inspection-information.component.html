@@ -39,12 +39,22 @@
             </p-tag>
           </div>
         </div>
-        <h5 class="mb-2">Tài liệu công văn</h5>
-        <app-file-item [document]="inspection.iniDocument"></app-file-item>
-        <app-file-item [document]="inspection.inspectionPlanDocument"></app-file-item>
-        <div *ngFor="let doc of inspection.issueDocuments; let i = index">
-          <app-file-item [document]="inspection.issueDocuments[i]"></app-file-item>
+        <h5 class="my-2">Tài liệu công văn</h5>
+        <p-tabMenu [model]="tabs" [activeItem]="activeTab"></p-tabMenu>
+        <div class="file-item-container">
+          <div *ngIf="issueDocumentVisibility">
+            <div *ngFor="let doc of inspection.issueDocuments; let i = index" class="mb-2">
+              <app-file-item [document]="inspection.issueDocuments[i]"></app-file-item>
+            </div>
+          </div>
+          <div *ngIf="initiationDocumentVisibility">
+            <app-file-item [document]="inspection.iniDocument"></app-file-item>
+          </div>
+          <div *ngIf="inspectionPlanDocumentVisibility">
+            <app-file-item [document]="inspection.inspectionPlanDocument"></app-file-item>
+          </div>
         </div>
+
       </div>
       <div class="col-md-4 d-flex justify-content-center h-100">
         <app-inspection-plan-inspector-list

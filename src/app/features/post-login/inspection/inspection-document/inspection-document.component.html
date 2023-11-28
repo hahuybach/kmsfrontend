@@ -14,11 +14,23 @@
   [detailRecordPopupVisible]="detailRecordPopupVisible"
   (detailRecordPopupVisibleChange)="changeDetailRecordVisible()">
 </app-record-detail>
+<p-confirmDialog
+  [style]="{width: '50%'}"
+  acceptLabel="Xác nhận"
+  rejectLabel="Hủy bỏ"
+  key="deleteRecord"
+></p-confirmDialog>
+<p-toast position="top-right" key="deleteComplete"></p-toast>
+<p-toast position="top-right" key="deleteInComplete"></p-toast>
 <div class="container-fluid">
   <div class="row">
     <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
     <div class="row">
-      <div class="form-content col-md-9">
+      <div class="col-md-12 d-flex flex-row mb-2">
+        <button type="button" class="me-2" pButton (click)="initDetailRecordData(inspectionDocument.reportId)">Báo cáo</button>
+        <button type="button" pButton (click)="initDetailRecordData(inspectionDocument.conclusionId)">Kết luận</button>
+      </div>
+      <div class="form-content col-md-12 h-100">
         <p-table
           #dt
           *ngIf="inspectionDocument"
@@ -28,22 +40,22 @@
           [rows]="5"
           [showCurrentPageReport]="true"
           [paginator]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
           [filterDelay]="0"
           [globalFilterFields]="['name', 'role', 'school']"
         >
           <ng-template pTemplate="caption">
-            <div class="table-header">
-          <span class="p-input-icon-left">
-            <i class="fa-solid fa-search"></i>
-            <input
-              pInputText
-              type="text"
-              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-              placeholder="Tìm kiếm"
-            />
-          </span>
-              <button pButton (click)="changeCreateRecordVisible()">Tạo mới</button>
+            <div class="table-header d-flex justify-content-between flex-row align-items-center">
+            <span class="p-input-icon-left">
+              <i class="fa-solid fa-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Tìm kiếm"
+              />
+            </span>
+              <button class="create-button" pButton (click)="changeCreateRecordVisible()">Tạo mới</button>
             </div>
           </ng-template>
           <ng-template pTemplate="header">
@@ -69,14 +81,14 @@
                   <p-sortIcon field="deadline"></p-sortIcon>
                 </div>
               </th>
-              <th></th>
+              <th class="th-small"></th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-taskList let-rowIndex="rowIndex">
+          <ng-template pTemplate="body" let-taskList >
             <tr class="p-selectable-row">
               <td>
                 <span class="p-column-title">STT</span>
-                {{ rowIndex + 1 }}
+                {{ taskList.index + 1 }}
               </td>
               <td>
                 <span class="p-column-title">Tên</span>
@@ -103,7 +115,7 @@
                   </button>
                 </div>
                 <div class="action-item d-flex justify-content-center align-items-center mx-2">
-                  <button type="button" (click)="initUpdateRecordData(taskList.taskId)">
+                  <button type="button" (click)="handleOnClickDeleteRecord(taskList.taskId)">
                     <i class="bi bi-trash-fill"></i>
                   </button>
                 </div>
@@ -112,14 +124,14 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="8">Không tìm thấy biên bản kiểm tra</td>
+              <td colspan="8">Không tìm thấy mục kiểm tra</td>
             </tr>
           </ng-template>
         </p-table>
       </div>
-      <div class="col-md-3">
-        <button></button>
-      </div>
     </div>
+  </div>
+  <div class="w-100 d-flex justify-content-center align-items-center mt-3">
+    <button type="button" class=" mb-1" pButton>Hoàn thành</button>
   </div>
 </div>

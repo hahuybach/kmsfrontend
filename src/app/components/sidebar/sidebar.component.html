@@ -1,4 +1,4 @@
-<div class="sidebar-content d-flex flex-column justify-content-between h-100">
+<div class="sticky-top sidebar-content d-flex flex-column justify-content-between h-100 w-100 fixed-sidebar">
   <div class="sidebar-content-top">
     <div class="logo mt-2 mb-3">
       <div class="sidebar-logo">
@@ -87,31 +87,6 @@
             </div>
           </a>
         </li>
-
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector"
-        >
-          <a class="" [routerLink]="['/report']">
-            <div>
-              <i class="bi bi-graph-up-arrow"></i>
-              &nbsp; Báo cáo
-            </div>
-          </a>
-        </li>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector"
-        >
-          <a class="" [routerLink]="['/conclusion']">
-            <div>
-              <i class="bi bi-clipboard2-check"></i>
-              &nbsp; Kết luận
-            </div>
-          </a>
-        </li>
         <li
           class="p-2 rounded"
           routerLinkActive="active"
@@ -141,6 +116,18 @@
             <div>
               <i class="bi bi-list-check"></i>
               &nbsp; Danh sách công việc
+            </div>
+          </a>
+        </li>
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isDirector || isPrincipal || isChiefTeacher || isTeacher"
+        >
+          <a class="" [routerLink]="['/listAssignment']">
+            <div>
+              <i class="bi bi-list-check"></i>
+              &nbsp; Hồ sơ các năm
             </div>
           </a>
         </li>

@@ -93,6 +93,7 @@ export interface Record{
 }
 
 export interface InspectionDocument {
+  index: number;
   taskListDtos: TaskListDto[];
   reportId: number;
   conclusionId: number;

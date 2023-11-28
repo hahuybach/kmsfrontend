@@ -110,7 +110,7 @@
 <form [formGroup]="assignmentForm">
   <!-- Popup detail/update -->
   <p-dialog
-    header="Chi tiết công việc"
+    [header]="action === 'update' ? 'Cập nhật công việc' : 'Chi tiết công việc'"
     [(visible)]="detailVisible"
     [style]="{ width: '70vw', height: '1080px' }"
     [draggable]="false"
@@ -119,51 +119,62 @@
   >
     <div *ngIf="selectedAssignment" class="row assignment-container">
       <div class="col-md-8 left-box">
-        <div class="height-100">
-          <span class="text-black-50">Tên công việc</span>
-          <br />
-          <span
-            *ngIf="
-              action === 'info' ||
-              (action === 'update' &&
-                !hasAuthority('canModifyFolderAsmMetaData'))
-            "
-            class="font-weight-bold mt-1"
-            >{{ selectedAssignment.assignmentName }}</span
-          >
-          <input
-            *ngIf="
+        <ng-container
+          *ngIf="
+            action === 'update' &&
+              hasAuthority('canModifyFolderAsmMetaData') &&
+              !selectedAssignment.template;
+            else cannotEdit
+          "
+        >
+          <div class="height-100">
+            <span class="text-black-50">Tên công việc</span>
+            <br />
+            <input
+              *ngIf="
+                action === 'update' &&
+                hasAuthority('canModifyFolderAsmMetaData') &&
+                !selectedAssignment.template
+              "
+              pInputText
+              type="text"
+              formControlName="assignmentName"
+            />
+          </div>
+          <div class="height-100">
+            <span class="text-black-50">Chi tiết công việc</span>
+            <br />
+            <textarea
+              class="mb-1 mt-1"
+              pInputTextarea
+              formControlName="description"
+            ></textarea>
+          </div>
+        </ng-container>
+        <ng-template #cannotEdit>
+          <div class="height-100">
+            <span class="text-black-50">Tên công việc</span>
+            <br />
+            <span class="font-weight-bold mt-1">{{
+              selectedAssignment.assignmentName
+            }}</span>
+          </div>
+          <div class="height-100">
+            <span class="text-black-50">Chi tiết công việc</span>
+            <br />
+            <span class="font-weight-bold mt-1">{{
+              selectedAssignment.description
+            }}</span>
+          </div>
+        </ng-template>
+
+        <div
+          class="height-100"
+          [ngClass]="{
+            'mt-4':
               action === 'update' && hasAuthority('canModifyFolderAsmMetaData')
-            "
-            pInputText
-            type="text"
-            formControlName="assignmentName"
-            [readonly]="isReadOnly()"
-          />
-        </div>
-        <div class="height-100">
-          <span class="text-black-50">Chi tiết công việc</span>
-          <br />
-          <span
-            *ngIf="
-              action === 'info' ||
-              (action === 'update' &&
-                !hasAuthority('canModifyFolderAsmMetaData'))
-            "
-            class="font-weight-bold mt-1"
-            >{{ selectedAssignment.description }}</span
-          >
-          <textarea
-            *ngIf="
-              action === 'update' && hasAuthority('canModifyFolderAsmMetaData')
-            "
-            class="mb-1 mt-1"
-            pInputTextarea
-            formControlName="description"
-            [readonly]="isReadOnly()"
-          ></textarea>
-        </div>
-        <div class="height-100 mt-3">
+          }"
+        >
           <span class="text-black-50">Hạn nộp</span>
           <br />
           <span
@@ -204,12 +215,11 @@
         </div>
 
         <!-- file -->
-        <div class="mt-2" *ngIf="selectedAssignment.task">
+        <div class="mt-2" *ngIf="selectedAssignment.task && action === 'info'">
           <ng-container
             *ngIf="
-              action === 'update' &&
-                (hasAuthority('canUploadDocument') ||
-                  hasAuthority('canDeleteDocument'));
+              hasAuthority('canUploadDocument') ||
+                hasAuthority('canDeleteDocument');
               else fileTemplate
             "
           >
@@ -251,7 +261,7 @@
                           </div>
                           <div class="col-md-10 file-item-content">
                             <div class="row ms-2">
-                              <div class="col-md-10">
+                              <div class="col-md-9">
                                 <span class="font-weight-bold font-size-18">{{
                                   item.documentName
                                 }}</span>
@@ -261,15 +271,15 @@
                                   {{ item.documentCode }}</span
                                 >
                               </div>
-                              <!-- <div class="col-md-2">
-                              <span class="text-black-50">{{
-                                item.sizeFormat || item.file.size
-                              }}</span>
-                              <br />
-                              <span>{{
-                                item.uploadedDate | date : "MM/dd/yyyy"
-                              }}</span>
-                            </div> -->
+                              <div class="col-md-3">
+                                <span class="text-black-50">{{
+                                  item.sizeFormat || item.file.size
+                                }}</span>
+                                <br />
+                                <span class="text-black-50">{{
+                                  item.uploadedDate | date : "MM/dd/yyyy"
+                                }}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -327,9 +337,11 @@
                         <div class="col-md-11 file-item-content">
                           <div class="row ms-2">
                             <div class="col-md-8">
-                              <span class="font-weight-bold font-size-18">{{
-                                item.documentName
-                              }}</span>
+                              <span class="font-weight-bold font-size-18"
+                                >{{ item.documentName }}.{{
+                                  getFileExtension(item.fileExtension)
+                                }}</span
+                              >
                               <br />
                               <span
                                 ><span class="font-weight-bold">Mã:</span>
@@ -341,7 +353,7 @@
                                 item.sizeFormat || item.file.size
                               }}</span>
                               <br />
-                              <span>{{
+                              <span class="text-black-50">{{
                                 item.uploadedDate | date : "MM/dd/yyyy"
                               }}</span>
                             </div>
@@ -356,7 +368,7 @@
                 *ngIf="
                   selectedAssignment.documents.length != 0 &&
                   hasAuthority('canUnSubmit') &&
-                  action === 'update'
+                  action === 'info'
                 "
               >
                 <button pButton (click)="cancel()">Hủy</button>
@@ -364,8 +376,13 @@
             </div>
           </ng-template>
         </div>
-        <div class="mt-2" *ngIf="!selectedAssignment.task">
-          <span class="text-black-50"> Danh sách thư mục/công việc con </span>
+        <div
+          class="mt-2"
+          *ngIf="
+            !selectedAssignment.task && selectedAssignment.children.length > 0
+          "
+        >
+          <span class="text-black-50"> Danh sách công việc con </span>
           <ul class="mt-1" *ngFor="let item of selectedAssignment.children">
             <div
               class="row children d-flex justify-content-center align-items-center"
@@ -375,7 +392,7 @@
                   <i class="bi bi-file-earmark-check-fill file-icon"></i>
                 </ng-container>
                 <ng-container *ngIf="!item.task">
-                  <i class="bi bi-folder-fill folder-icon"></i>
+                  <i class="bi bi-file-earmark-text file-icon"></i>
                 </ng-container>
               </div>
               <div class="col-md-7">
@@ -447,7 +464,7 @@
                     >{{ item.creator.user.fullName }}
                   </span>
                   <span class="text-black-50 comment-date">{{
-                    item.createdDate | date : "dd/MM/yyyy hh:mm"
+                    item.createdDate | date : "dd/MM/yyyy HH:mm"
                   }}</span>
 
                   <br />
@@ -479,7 +496,7 @@
                   </span>
                   <br />
                   <span class="text-black-50 history-date">
-                    {{ item.createdDate | date : "dd/MM/yyyy  hh:mm" }}
+                    {{ item.createdDate | date : "dd/MM/yyyy  HH:mm" }}
                   </span>
                 </div>
               </div>
@@ -531,16 +548,21 @@
             class="row"
             *ngIf="action === 'info' || !hasAuthority('canChangeAssignee')"
           >
-            <div
-              class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
-            >
-              <img src="../../../../../../assets/img/user_icon.svg" alt="" />
-            </div>
-            <div class="col-md-10 d-flex align-items-center">
-              <span class="font-weight-bold">{{
-                selectedAssignment.assignee?.user.fullName
-              }}</span>
-            </div>
+            <ng-container *ngIf="selectedAssignment.assignee; else noAssignee">
+              <div
+                class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
+              >
+                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+              </div>
+              <div class="col-md-10 d-flex align-items-center">
+                <span class="font-weight-bold">{{
+                  selectedAssignment.assignee?.user.fullName
+                }}</span>
+              </div>
+            </ng-container>
+            <ng-template #noAssignee>
+              <span class="font-weight-bold">Chưa có người làm</span>
+            </ng-template>
           </div>
         </div>
 
@@ -615,89 +637,108 @@
   </p-dialog>
   <!-- Popup addroot/addchild -->
   <p-dialog
-    header="Thêm mới công việc"
+    header="Tạo mới công việc"
     [(visible)]="assignmentVisible"
-    [style]="{ width: '70vw', height: '1080px' }"
+    [style]="{ width: '70vw', height: '640px' }"
     [draggable]="false"
     [resizable]="false"
     (onHide)="assignmentPopuptHideEvent()"
   >
-    <div *ngIf="selectedAssignment && action == 'addchild'" class="mb-2">
-      <span class="mb-1 font-weight-bold">Thuộc</span>
-      <br />
-      <span class="text-black-50">{{ selectedAssignment.assignmentName }}</span>
-      <br />
-      <span class="mb-1 font-weight-bold">Loại công việc</span>
-      <br />
-      <p-dropdown
-        [options]="typeAssignmentOptions"
-        formControlName="isTask"
-      ></p-dropdown>
+    <div *ngIf="selectedAssignment" class="row assignment-container">
+      <div class="col-md-8 left-box">
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold"
+            >Tên công việc<span class="p-error">*</span></span
+          >
+          <br />
+          <input
+            class="mb-1"
+            pInputText
+            type="text"
+            formControlName="assignmentName"
+          />
+        </div>
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold">Mô tả chi tiết</span>
+          <br />
+          <textarea
+            class="mb-1"
+            pInputTextarea
+            formControlName="description"
+          ></textarea>
+        </div>
+        <div class="height-100 mt-4">
+          <span class="mb-1 font-weight-bold"
+            >Hạn nộp<span class="p-error">*</span></span
+          ><br />
+          <!-- <p-calendar formControlName="deadline" [showIcon]="true"></p-calendar> -->
+          <input pInputText type="date" formControlName="deadline" />
+        </div>
+      </div>
+
+      <div class="col-md-4 right-box">
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold">Thuộc</span>
+          <br />
+          <span class="text-black-50">{{
+            selectedAssignment.assignmentName
+          }}</span>
+        </div>
+        <div class="height-100">
+          <span class="mb-1 font-weight-bold"
+            >Người làm<span class="p-error">*</span></span
+          >
+          <br />
+          <p-dropdown
+            class="assignee-dropdown"
+            [options]="listOfPossibleAssignees"
+            formControlName="assigneeId"
+            optionValue="accountId"
+            filterBy="user.fullName"
+            [filter]="true"
+          >
+            <ng-template let-option pTemplate="selectedItem">
+              <div>
+                <span> {{ option?.user.fullName }} </span>&nbsp;
+                <!-- <span class="text-black-50"> {{ option?.email }}</span> -->
+              </div>
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              <div>
+                <span> {{ option?.user.fullName }} </span>&nbsp;
+                <span class="text-black-50 font-size-14">
+                  {{ option?.email }}</span
+                >
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="height-100">
+          <br />
+          <span class="mb-1 font-weight-bold"
+            >Loại công việc<span class="p-error">*</span></span
+          >
+          <br />
+          <p-dropdown
+            [options]="typeAssignmentOptions"
+            formControlName="isTask"
+          ></p-dropdown>
+        </div>
+      </div>
     </div>
-    <div class="mb-2">
-      <span class="mb-1 font-weight-bold">Tên công việc</span>
-      <br />
-      <input
-        class="mb-1"
-        pInputText
-        type="text"
-        formControlName="assignmentName"
-      />
-    </div>
-    <div class="mb-2">
-      <span class="mb-1 font-weight-bold">Mô tả chi tiết</span>
-      <br />
-      <textarea
-        class="mb-1"
-        rows="3"
-        pInputTextarea
-        formControlName="description"
-      ></textarea>
-    </div>
-    <div class="mb-2">
-      <span class="mb-1 font-weight-bold">Người làm</span>
-      <br />
-      <p-dropdown
-        class="assignee-dropdown"
-        [options]="listOfPossibleAssignees"
-        formControlName="assigneeId"
-        optionValue="accountId"
-        filterBy="user.fullName"
-        [filter]="true"
+    <ng-template pTemplate="footer">
+      <button
+        *ngIf="action == 'addchild'"
+        pButton
+        (click)="add()"
+        [disabled]="assignmentForm.controls.assignmentName.errors?.['whitespace'] || 
+        assignmentForm.controls.assigneeId.errors?.['required'] || 
+        assignmentForm.controls.deadline.errors?.['required']  
+        "
       >
-        <ng-template let-option pTemplate="selectedItem">
-          <div>
-            <span> {{ option?.user.fullName }} </span>&nbsp;<span
-              class="text-black-50"
-            >
-              {{ option?.email }}</span
-            >
-          </div>
-        </ng-template>
-        <ng-template let-option pTemplate="item">
-          <div>
-            <span> {{ option?.user.fullName }} </span>&nbsp;<span>
-              {{ option?.email }}</span
-            >
-          </div>
-        </ng-template>
-      </p-dropdown>
-    </div>
-    <div class="mb-4">
-      <span class="mb-1 font-weight-bold">Hạn nộp</span><br />
-      <!-- <p-calendar formControlName="deadline" [showIcon]="true"></p-calendar> -->
-      <input pInputText type="date" formControlName="deadline" />
-    </div>
-    <button *ngIf="action == 'update'" pButton (click)="update()">
-      Cập nhật
-    </button>
-    <button
-      *ngIf="action == 'addroot' || action == 'addchild'"
-      pButton
-      (click)="add()"
-    >
-      Thêm mới
-    </button>
+        Tạo mới
+      </button>
+    </ng-template>
   </p-dialog>
 </form>
 <!-- Popup file preview -->
@@ -765,40 +806,68 @@
       </td>
       <td class="d-flex">
         <div
-          class="action-item d-flex justify-content-center align-items-center mx-2"
+          pTooltip="Chi tiết"
+          tooltipPosition="top"
+          class="action-item action-item-active d-flex justify-content-center align-items-center mx-2"
           (click)="openDetailRowNode(rowData.node, 'info')"
         >
           <i class="bi bi-info-circle-fill"></i>
         </div>
         <div
-          *ngIf="hasAuthorityByRowNode('canCreateFolderAsm', rowData.node)"
+          pTooltip="Tạo"
+          tooltipPosition="top"
           class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="openDetail(rowData.node, 'addchild')"
+          (click)="
+            hasAuthorityByRowNode('canCreateFolderAsm', rowData.node) &&
+              openDetail(rowData.node, 'addchild')
+          "
+          [ngClass]="{
+            'action-item-active': hasAuthorityByRowNode(
+              'canCreateFolderAsm',
+              rowData.node
+            )
+          }"
         >
           <i class="bi bi-plus-circle-fill"></i>
         </div>
 
         <div
-          *ngIf="
-            hasAuthorityByRowNode('canModifyFolderAsmMetaData', rowData.node) ||
-            hasAuthorityByRowNode('canChangeAssignee', rowData.node) ||
-            hasAuthorityByRowNode('canSubmit', rowData.node) ||
-            hasAuthorityByRowNode('canUnSubmit', rowData.node) ||
-            hasAuthorityByRowNode('canUploadDocument', rowData.node)
-          "
+          pTooltip="Chỉnh sửa"
+          tooltipPosition="top"
           class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="openDetailRowNode(rowData.node, 'update')"
+          [ngClass]="{
+            'action-item-active':
+              hasAuthorityByRowNode(
+                'canModifyFolderAsmMetaData',
+                rowData.node
+              ) || hasAuthorityByRowNode('canChangeAssignee', rowData.node)
+          }"
+          (click)="
+            (hasAuthorityByRowNode(
+              'canModifyFolderAsmMetaData',
+              rowData.node
+            ) ||
+              hasAuthorityByRowNode('canChangeAssignee', rowData.node)) &&
+              openDetailRowNode(rowData.node, 'update')
+          "
         >
           <i class="bi bi-pencil-fill"></i>
         </div>
 
         <div
-          *ngIf="
-            hasAuthorityByRowNode('canDeleteFolder', rowData.node) ||
-            hasAuthorityByRowNode('canDeleteAsm', rowData.node)
-          "
+          pTooltip="Xóa"
+          tooltipPosition="top"
           class="action-item d-flex justify-content-center align-items-center mx-2"
-          (click)="deleteNode(rowData.node)"
+          [ngClass]="{
+            'action-item-active':
+              hasAuthorityByRowNode('canDeleteFolder', rowData.node) ||
+              hasAuthorityByRowNode('canDeleteAsm', rowData.node)
+          }"
+          (click)="
+            (hasAuthorityByRowNode('canDeleteFolder', rowData.node) ||
+              hasAuthorityByRowNode('canDeleteAsm', rowData.node)) &&
+              deleteNode(rowData.node)
+          "
         >
           <i class="bi bi-x-circle-fill"></i>
         </div>

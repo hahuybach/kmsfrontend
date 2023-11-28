@@ -1,9 +1,14 @@
+@import "../../../../assets/scss/base";
+
 :host ::ng-deep .p-tabmenu-nav{
   border: none;
 }
 :host ::ng-deep .p-tabmenu-nav{
   .p-menuitem-link{
     text-decoration: none;
-    border: none;
+    color: $primary;
+  }
+  .p-menuitem-link-active{
+    border-bottom-color: $primary;
   }
 }

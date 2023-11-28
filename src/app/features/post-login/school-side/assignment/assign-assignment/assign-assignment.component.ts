@@ -33,8 +33,8 @@ export class AssignAssignmentComponent implements OnInit {
   selectedAssignment: any;
   action: string | undefined;
   assignmentForm = this.fb.group({
-    assignmentName: ['', Validators.required],
-    description: ['', Validators.required],
+    assignmentName: ['', NoWhitespaceValidator()],
+    description: [''],
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
@@ -46,7 +46,7 @@ export class AssignAssignmentComponent implements OnInit {
   detailVisible = false;
   canSubmit = true;
   commentForm = this.fb.group({
-    content: ['', Validators.required],
+    content: [''],
     userName: ['', Validators.required],
     createdDate: ['', Validators.required],
   });
@@ -157,6 +157,7 @@ export class AssignAssignmentComponent implements OnInit {
       if (params) {
         console.log('run here');
         const id = params['id'];
+        console.log('****ID:' + id + '*****');
         if (id > 0) this.openDetailRowNode({ assignmentId: id }, 'info');
       }
     });
@@ -815,6 +816,24 @@ export class AssignAssignmentComponent implements OnInit {
         break;
     }
     return url;
+  }
+  getFileExtension(fileExtension: string): string {
+    let extension = '';
+    switch (fileExtension) {
+      case 'application/pdf':
+        extension = 'pdf';
+        break;
+      case 'application/msword':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        extension = 'xlsx';
+        break;
+    }
+    return extension;
   }
   // viewDocxFile(documentLink: string) {
   //   this.fileService

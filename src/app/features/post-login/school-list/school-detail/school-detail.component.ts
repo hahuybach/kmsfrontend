@@ -20,7 +20,7 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
     principal: AccountResponse
     isDirector: boolean
     isPrincipal: boolean
-    sub: any[]
+    sub: any[] = []
 
     constructor(private route: ActivatedRoute,
                 private schoolService: SchoolService,
@@ -42,11 +42,11 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.setAuth()
-
-const sub=        this.route.params
+        this.route.params
             .pipe(
                 switchMap((params) => {
-                    return this.schoolService.findSchoolById(params['id']);
+                  const sub = this.schoolService.findSchoolById(params['id']);
+                    return sub;
                 })
             )
             .subscribe((data) => {
@@ -70,7 +70,6 @@ const sub=        this.route.params
                 }
 
             );
-        this.sub.push(sub);
     }
 
     findAccountWithRole(school: SchoolResponse, roleName: string): AccountResponse {

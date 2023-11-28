@@ -49,7 +49,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
       recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       recordDescription: [null, Validators.compose([Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
-      assigneeId: [0, Validators.compose([Validators.required])]
+      assigneeId: [null, Validators.compose([Validators.required])]
     })
   }
 
@@ -78,6 +78,9 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
+      return;
+    }
     this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;
