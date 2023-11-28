@@ -78,6 +78,16 @@
         <span class="p-error" *ngIf="dateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
 
       </div>
+      <mat-form-field>
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker" (change)="loadGuidanceDocuments()">
+          <input matStartDate [(ngModel)]="startDateTime" placeholder="Start date">
+          <input matEndDate    [(ngModel)]="endDateTime" placeholder="End date">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle  matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
 
     </div>
   </div>
