@@ -90,8 +90,13 @@
             color: $primary;
         }
     }
+    .p-element .p-sortable-column .p-highlight {
+        color: $primary;
+    }
     .p-paginator .p-paginator-pages .p-paginator-page {
+        background-color: $primary-hover;
         border-radius: 50%;
+        color: #fff;
     }
     .p-paginator .p-paginator-pages .p-paginator-page .p-highlight {
         background-color: $primary;

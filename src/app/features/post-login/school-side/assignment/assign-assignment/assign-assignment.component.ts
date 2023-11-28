@@ -11,14 +11,10 @@ import { AssignmentService } from 'src/app/services/assignment.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { FileService } from 'src/app/services/file.service';
 import { IssueService } from 'src/app/services/issue.service';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { error } from '@angular/compiler-cli/src/transformers/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
-import { isUnionTypeNode } from 'typescript';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -59,26 +55,6 @@ export class AssignAssignmentComponent implements OnInit {
   docxUrl: string;
   safeDocxUrl: SafeResourceUrl;
   documentContent: string | null = null;
-  statusOptions = [
-    {
-      label: 'Chờ phê duyệt',
-      value: 'Chờ phê duyệt',
-      severity: 'warning',
-      disabled: true,
-    },
-    {
-      label: 'Phê duyệt',
-      value: true,
-      severity: 'success',
-      disabled: false,
-    },
-    {
-      label: 'Không phê duyệt',
-      value: false,
-      severity: 'danger',
-      disabled: false,
-    },
-  ];
   selectedAssigneeId: number;
   showComment = true;
   fileVisible = false;
@@ -95,7 +71,9 @@ export class AssignAssignmentComponent implements OnInit {
   menuVisible = false;
   deleteCommentId = 0;
   @ViewChild('menu') menu: Menu;
-
+  isFileLoading = false;
+  tabs: MenuItem[];
+  activeTab: MenuItem | undefined;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -104,7 +82,23 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Thư mục', value: false },
       { label: 'Nộp tài liệu', value: true },
     ];
-
+    this.tabs = [
+      {
+        label: 'Bình luận',
+        command: (click) => {
+          console.log('Bình luận');
+          this.showComment = true;
+        },
+      },
+      {
+        label: 'Lịch sử',
+        command: (click) => {
+          console.log('Lịch sử');
+          this.showComment = false;
+        },
+      },
+    ];
+    this.activeTab = this.tabs[0];
     // lay issueId tu url goi theo issueId
     this.activateRouter.params
       .pipe(
@@ -409,7 +403,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.router.navigate(['/assignassignment/' + this.issueId], {
       queryParams: {},
     });
-    // this.initData();
+    this.activeTab = this.tabs[0];
   }
 
   getStatusSeverity(statusId: number): string {
@@ -435,6 +429,7 @@ export class AssignAssignmentComponent implements OnInit {
   }
   // preview docx and excel
   previewFile(documentLink: string, fileExtension: string) {
+    this.isFileLoading = true;
     this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
       const blobUrl = window.URL.createObjectURL(data.body as Blob);
       this.pdfUrl = blobUrl;
@@ -442,6 +437,7 @@ export class AssignAssignmentComponent implements OnInit {
       if (this.safePdfUrl !== undefined) {
         this.fileUrl = this.safePdfUrl + '';
       }
+      this.isFileLoading = false;
       this.pdfLoaded = true;
       console.log(this.safePdfUrl);
     });
@@ -547,6 +543,7 @@ export class AssignAssignmentComponent implements OnInit {
     }
   }
   uploadFiles() {
+    this.isFileLoading = true;
     const documentData = {
       assignmentId: this.selectedAssignment.assignmentId,
       documentCode: this.fileInputForm.get('documentCode')?.value,
@@ -567,6 +564,7 @@ export class AssignAssignmentComponent implements OnInit {
       next: (data) => {
         this.refreshSelectedAssignment();
         this.fileVisible = false;
+        this.isFileLoading = false;
       },
       error: (error) => {},
     });
