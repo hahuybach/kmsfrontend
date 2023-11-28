@@ -172,11 +172,11 @@
 
 
             </th>
-            <th (click)="onSort('user.account.accountRoles.role.roleId')">
+            <th (click)="onSort('user.account.accountRoles.role.roleName')">
                 <div class="header-container">
                     <span class="icon-text">Chức vụ</span>
-                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.accountRoles.role.roleId' && sortDirection === 'asc'"></i>
-                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.accountRoles.role.roleId' && sortDirection === 'desc'"></i>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.accountRoles.role.roleName' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.accountRoles.role.roleName' && sortDirection === 'desc'"></i>
                 </div>
             </th>
             <th (click)="onSort('user.account.isActive')">
