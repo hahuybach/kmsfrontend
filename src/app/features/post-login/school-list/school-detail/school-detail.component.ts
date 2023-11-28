@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SchoolResponse} from "../../../../models/school-response";
 import {switchMap} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,18 +7,20 @@ import {AccountResponse} from "../../../../models/account-response";
 import {Role} from "../../../../shared/enum/role";
 import {AuthService} from "../../../../services/auth.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {unSub} from "../../../../shared/util/util";
 
 @Component({
     selector: 'app-school-detail',
     templateUrl: './school-detail.component.html',
     styleUrls: ['./school-detail.component.scss']
 })
-export class SchoolDetailComponent implements OnInit {
+export class SchoolDetailComponent implements OnInit, OnDestroy {
     school: SchoolResponse;
     principal: AccountResponse
     isDirector: boolean
     isPrincipal: boolean
-
+    sub: any[]
 
     constructor(private route: ActivatedRoute,
                 private schoolService: SchoolService,
@@ -41,7 +43,7 @@ export class SchoolDetailComponent implements OnInit {
     ngOnInit(): void {
         this.setAuth()
 
-        this.route.params
+const sub=        this.route.params
             .pipe(
                 switchMap((params) => {
                     return this.schoolService.findSchoolById(params['id']);
@@ -68,6 +70,7 @@ export class SchoolDetailComponent implements OnInit {
                 }
 
             );
+        this.sub.push(sub);
     }
 
     findAccountWithRole(school: SchoolResponse, roleName: string): AccountResponse {
@@ -83,4 +86,8 @@ export class SchoolDetailComponent implements OnInit {
     onUpdate() {
         this.routeLink.navigate(['school/' + this.school.schoolId + '/update'])
     }
+
+  ngOnDestroy(): void {
+      unSub(this.sub);
+  }
 }
