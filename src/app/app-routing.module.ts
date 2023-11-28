@@ -150,7 +150,7 @@ const routes: Routes = [
         component: UserDetailComponent,
       },
       {
-        path: 'users/create',
+        path: 'userList/create/new',
         component: UserCreateComponent,
       },
       {

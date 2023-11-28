@@ -340,7 +340,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onCreateUser() {
-        this.route.navigate(['users/create'])
+        this.route.navigate(['userList/create/new'])
     }
 
     onUpdate(userId: number | undefined) {
