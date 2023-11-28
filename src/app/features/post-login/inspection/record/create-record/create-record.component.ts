@@ -92,7 +92,7 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.formCompleted = true;
         setTimeout(() =>{
-          this.resetCreateRecordPopupVisible();
+          this.createRecordPopupVisible = false;
         },1500)
       },
       error: (error) => {

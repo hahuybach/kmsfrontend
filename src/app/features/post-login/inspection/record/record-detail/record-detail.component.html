@@ -1,3 +1,11 @@
+<p-confirmDialog
+  [style]="{width: '50%'}"
+  acceptLabel="Xác nhận"
+  rejectLabel="Hủy bỏ"
+  key="deleteDocument"
+></p-confirmDialog>
+<p-toast position="top-right" key="deleteComplete"></p-toast>
+<p-toast position="top-right" key="deleteInComplete"></p-toast>
 <p-dialog header="Mục kiểm tra"
           [(visible)]="detailRecordPopupVisible"
           [modal]="true"
@@ -6,6 +14,16 @@
           [resizable]="false"
           (onHide)="resetDetailRecordPopupVisible()"
 >
+  <app-loading-complete-dialog
+  [width]="80"
+  [height]="70"
+  [visible]="updateDocumentSubmitted"
+  [completed]="updateDocumentCompleted"
+  [header]="'Cập nhật tài liệu'"
+  [progress]="'Đang cập nhật tài liệu'"
+  [complete]="'Cập nhật tài liệu thành công'"
+  >
+  </app-loading-complete-dialog>
   <div class="container-fluid" *ngIf="task">
     <div class="row">
       <div class="record-name col-md-12 mt-1">
@@ -93,10 +111,17 @@
             <button pButton type="submit">Lưu công việc</button>
           </div>
         </div>
-        <div *ngIf="!canUploadDocument || task.document != null">
-          <app-file-item
-            [document]="task.document"
-          ></app-file-item>
+        <div *ngIf="!canUploadDocument || task.document != null"  class="d-flex flex-row justify-content-between">
+          <div class="w-100">
+            <app-file-item
+              [document]="task.document"
+            ></app-file-item>
+          </div>
+          <div *ngIf="canDeleteDocument" class="action-item d-flex justify-content-center align-items-center">
+            <button type="button" (click)="handleOnClickDeleteDocument()">
+              <i class="bi bi-trash-fill"></i>
+            </button>
+          </div>
         </div>
       </form>
     </div>

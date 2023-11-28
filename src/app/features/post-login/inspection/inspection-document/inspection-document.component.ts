@@ -30,9 +30,7 @@ export class InspectionDocumentComponent implements OnInit {
   }
 
   changeCreateRecordVisible() {
-    console.log(this.createRecordPopupVisible);
     this.createRecordPopupVisible = !this.createRecordPopupVisible;
-    console.log(this.createRecordPopupVisible);
   }
 
   changeUpdateRecordVisible() {
