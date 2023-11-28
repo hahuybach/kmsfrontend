@@ -17,7 +17,6 @@ export class SchoolListComponent implements OnInit {
   schools: SchoolResponse[];
   statuses: any[];
   selectedSchool: SchoolResponse;
-  isDirector: boolean;
   visible = false;
   excelFile: any
   isLoading = false;
@@ -32,14 +31,52 @@ export class SchoolListComponent implements OnInit {
   ) {
 
   }
+  sub: any[] = []
+  isPrincipal: boolean = false;
+  isDirector: boolean = false;
+  isAdmin: boolean = false;
+  isInspector: boolean = false;
+  isChiefInspector: boolean = false;
+  isViceDirector: boolean = false;
+  isSchoolNormalEmp: boolean = false;
+  isSpecialist: boolean = false;
+  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY]
 
   setAuth() {
-    for (const role of this.auth.getRoleFromJwt()) {
-      if (role.authority === Role.DIRECTOR) {
-        this.isDirector = true;
+    if (this.auth.getRolesFromCookie()) {
+      for (const argument of this.auth.getRoleFromJwt()) {
+        if (argument.authority === Role.DIRECTOR) {
+          this.isDirector = true;
+        }
+        if (argument.authority === Role.PRINCIPAL) {
+          this.isPrincipal = true;
+        }
+        if (argument.authority === Role.ADMIN) {
+          this.isAdmin = true;
+        }
+        if (argument.authority === Role.VICE_DIRECTOR) {
+          this.isViceDirector = true;
+        }
+        if (argument.authority === Role.INSPECTOR) {
+          this.isInspector = true;
+        }
+        if (argument.authority === Role.CHIEF_INSPECTOR) {
+          this.isChiefInspector = true;
+        }
+        if (argument.authority === Role.SPECIALIST) {
+          this.isSpecialist = true;
+        }
+        if (this.schoolRoles.some(value => value === argument.authority)) {
+          this.isSchoolNormalEmp = true;
+        }
+
       }
+
     }
   }
+
+
 
   ngOnInit(): void {
     this.setAuth()

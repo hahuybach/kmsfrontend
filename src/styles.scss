@@ -63,6 +63,20 @@
 $theme-colors: (
   "primary": #4253f0
 );
+.p-toast-message {
+  white-space: pre-line;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", sans-serif;
+}
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family:  "Helvetica Neue", sans-serif; }
+.mat-typography {
+  font-family: inherit !important;
+}

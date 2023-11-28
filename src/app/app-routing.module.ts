@@ -146,11 +146,11 @@ const routes: Routes = [
         component: UserListComponent,
       },
       {
-        path: 'user/:id',
+        path: 'userList/:id',
         component: UserDetailComponent,
       },
       {
-        path: 'users/create',
+        path: 'userList/create/new',
         component: UserCreateComponent,
       },
       {
@@ -158,7 +158,7 @@ const routes: Routes = [
         component: AssignAssignmentComponent,
       },
       {
-        path: 'user/:id/update',
+        path: 'userList/:id/update',
         component: UserUpdateComponent,
       },
       {

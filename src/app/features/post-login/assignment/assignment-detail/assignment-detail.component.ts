@@ -1,7 +1,7 @@
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { School } from 'src/app/models/task';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { DocumentService } from 'src/app/services/document.service';
@@ -31,7 +31,8 @@ export class AssignmentDetailComponent implements OnInit {
     private toastService: ToastService,
     private fileService: FileService,
     private sanitizer: DomSanitizer,
-    private schoolService: SchoolService
+    private schoolService: SchoolService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -46,6 +47,7 @@ export class AssignmentDetailComponent implements OnInit {
           },
           error: (error) => {
             this.toastService.showError('error', 'Lỗi', error.error.message);
+            this.router.navigate(['/listAssignment']);
           },
         });
       this.schoolService.findSchoolById(schoolId).subscribe({

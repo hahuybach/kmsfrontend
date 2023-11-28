@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {UserResponseForUserList} from "../../../models/user-response-for-user-list";
 import {SchoolResponse} from "../../../models/school-response";
 import {RoleResponse} from "../../../models/role-response";
@@ -10,13 +10,15 @@ import {RoleService} from "../../../services/role.service";
 import {AuthService} from "../../../services/auth.service";
 import {Role} from "../../../shared/enum/role";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import {unSub} from "../../../shared/util/util";
+
 
 @Component({
     selector: 'app-user-list',
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, OnDestroy {
     users: UserResponseForUserList[];
     schools: SchoolResponse[];
     roles: RoleResponse[];
@@ -51,7 +53,7 @@ export class UserListComponent implements OnInit {
   visible = false;
   isLoading = false;
   submitCompleted = false;
-
+  sub: any[] = []
 
     setAuthority() {
         for (const argument of this.auth.getRoleFromJwt()) {
@@ -100,52 +102,55 @@ export class UserListComponent implements OnInit {
 
 
     loadSelectionForAdminAndDirector() {
-        this.roleService.findAll().subscribe(
+     const roleSub =   this.roleService.findAll().subscribe(
             {
                 next: (data) => {
                     this.roles = data.roles;
                     console.log(this.roles);
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
         );
+     this.sub.push(roleSub)
 
-        this.schoolService.findAll().subscribe(
+    const schoolSub =    this.schoolService.findAll().subscribe(
             {
                 next: (data) => {
                     this.schools = data;
                     console.log(this.schools);
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
         )
+      this.sub.push(schoolSub)
     }
 
     loadSelectionForPrincipal() {
-        this.roleService.findSchoolRole().subscribe(
+     const roleSub =   this.roleService.findSchoolRole().subscribe(
             {
                 next: (data) => {
                     this.roles = data.roles;
                     console.log(this.roles);
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
         );
         this.currentSchool = this.currentUser.school;
+        this.sub.push(roleSub)
     }
 
     ngOnInit(): void {
         this.setAuthority();
-        this.accountService.getCurrentUser().subscribe(
+    const currentUserSub=    this.accountService.getCurrentUser().subscribe(
             {
                 next: (data) => {
                     this.currentUser = data.userDto;
@@ -160,11 +165,12 @@ export class UserListComponent implements OnInit {
 
                 },
                 error: (err) => {
-                    this.toastService.showWarn('error', "Lỗi", err.error.message)
+                    this.toastService.showWarn('userListError', "Lỗi", err.error.message)
                     console.log(err);
                 }
             }
         )
+      this.sub.push(currentUserSub)
       this.activateRouter.queryParams.subscribe(
         value => {
           if(value['pageNo']){
@@ -218,7 +224,7 @@ export class UserListComponent implements OnInit {
     }
 
     loadUsers() {
-        this.accountService.filterAccount(
+    const usersLoadSub=    this.accountService.filterAccount(
             this.pageNo, this.pageSize, this.sortBy, this.sortDirection, this.fullName,
             this.gender, this.phoneNumber, this.isActive, this.globalSearch, this.email,
             this.selectedRole?.roleId, this.currentSchool?.schoolId)
@@ -253,6 +259,7 @@ export class UserListComponent implements OnInit {
 
                 }
             })
+      this.sub.push(usersLoadSub);
     }
 
     onAdvanceSearch() {
@@ -299,7 +306,7 @@ export class UserListComponent implements OnInit {
     }
 
     onDetail(userId: number | undefined) {
-        this.route.navigate(['user/' + userId])
+        this.route.navigate(['userList/' + userId])
     }
 
     maxPageOnKeyUp() {
@@ -333,11 +340,11 @@ export class UserListComponent implements OnInit {
     }
 
     onCreateUser() {
-        this.route.navigate(['users/create'])
+        this.route.navigate(['userList/create/new'])
     }
 
     onUpdate(userId: number | undefined) {
-        this.route.navigate(['user/' + userId + '/update'])
+        this.route.navigate(['userList/' + userId + '/update'])
 
     }
 
@@ -350,7 +357,7 @@ export class UserListComponent implements OnInit {
 
     } else {
       // Handle error or provide feedback to the user
-      this.toastService.showWarn('error', "Lỗi", "File tải lên phải ở dưới dạng excel (.xls)")
+      this.toastService.showWarn('userListError', "Lỗi", "File tải lên phải ở dưới dạng excel (.xls)")
       event.target.value = null;
 
     }
@@ -358,15 +365,15 @@ export class UserListComponent implements OnInit {
 
   onCreateUserByFile() {
       if (!this.excelFile){
-        this.toastService.showError('error', 'Thông báo', "Vui lòng chọn 1 file")
+        this.toastService.showError('userListError', 'Thông báo', "Vui lòng chọn 1 file")
       }
       if (this.excelFile){
         this.isLoading = true
-        this.accountService.uploadFileExcel(this.excelFile).subscribe({
+     const uploadExcelSub =   this.accountService.uploadFileExcel(this.excelFile).subscribe({
           next: (data) =>{
             this.submitCompleted = true;
             setTimeout(() => {
-              this.toastService.showSuccess('error', "Thông báo", "Tạo " + data.length + " người dùng thành công")
+              this.toastService.showSuccess('userListError', "Thông báo", "Tạo " + data.length + " người dùng thành công")
               this.loadUsers();
             }, 1500)
             this.isLoading = false;
@@ -374,10 +381,11 @@ export class UserListComponent implements OnInit {
 
           },
           error: (error) => {
-            this.toastService.showWarn('error', "Lỗi", error.error.message)
+            this.toastService.showWarn('userListError', "Lỗi", error.error.message)
 
           }
         });
+        this.sub.push(uploadExcelSub)
       }
 
   }
@@ -389,7 +397,7 @@ export class UserListComponent implements OnInit {
   }
 
   downloadTemplate() {
-    this.accountService.getUserTemplate().subscribe({
+  const getUserTemplateSub =  this.accountService.getUserTemplate().subscribe({
       next: (data) => {
         const blob = new Blob([data.body as BlobPart], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const url = window.URL.createObjectURL(blob);
@@ -400,6 +408,7 @@ export class UserListComponent implements OnInit {
         window.URL.revokeObjectURL(url);
       }
     });
+  this.sub.push(getUserTemplateSub)
   }
   confirm() {
     this.confirmationService.confirm({
@@ -415,14 +424,18 @@ export class UserListComponent implements OnInit {
       reject: (type: ConfirmEventType) => {
         switch (type) {
           case ConfirmEventType.REJECT:
-            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toastService.showError('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
             break;
           case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
+            this.toastService.showWarn('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
             break;
         }
       },key: 'createUserByExcel'
     });
+  }
+
+  ngOnDestroy(): void {
+    unSub(this.sub)
   }
 
 }

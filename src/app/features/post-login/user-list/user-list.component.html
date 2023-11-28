@@ -172,11 +172,11 @@
 
 
             </th>
-            <th (click)="onSort('user.account.accountRoles.role.roleId')">
+            <th (click)="onSort('user.account.accountRoles.role.roleName')">
                 <div class="header-container">
                     <span class="icon-text">Chức vụ</span>
-                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.accountRoles.role.roleId' && sortDirection === 'asc'"></i>
-                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.accountRoles.role.roleId' && sortDirection === 'desc'"></i>
+                    <i class="bi bi-sort-up" *ngIf="sortBy === 'user.account.accountRoles.role.roleName' && sortDirection === 'asc'"></i>
+                    <i class="bi bi-sort-down" *ngIf="sortBy === 'user.account.accountRoles.role.roleName' && sortDirection === 'desc'"></i>
                 </div>
             </th>
             <th (click)="onSort('user.account.isActive')">
@@ -299,7 +299,7 @@
 
     <p-toast key="paging" position="bottom-right"></p-toast>
     <p-toast key="issueId" position="top-right"></p-toast>
-<p-toast position="top-right" key="error"></p-toast>
+<p-toast position="top-right" key="userListError"></p-toast>
 
 <p-dialog header="Tạo người dùng bằng file excel" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
   <div>

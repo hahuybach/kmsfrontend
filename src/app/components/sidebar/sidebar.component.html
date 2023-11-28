@@ -11,10 +11,10 @@
           class="p-2 rounded"
           routerLinkActive="active"
         >
-          <a routerLink="" [routerLink]="['/dashboard']">
+          <a routerLink="" [routerLink]="['/dashboard']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-bar-chart"></i>
-              &nbsp; Dashboard
+              &nbsp; Trang chủ
             </div>
           </a>
         </li>
@@ -59,7 +59,7 @@
           routerLinkActive="active"
 
         >
-          <a class="" [routerLink]="['/guidanceDocument']">
+          <a class="" [routerLink]="['/guidanceDocument']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-clipboard2-check"></i>
               &nbsp; Văn bản bổ sung
@@ -101,7 +101,7 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isDirector || isAdmin"
+          *ngIf="isDirector || isAdmin || isViceDirector || isSpecialist "
         >
           <a class="" [routerLink]="['/schoolList']">
             <div>

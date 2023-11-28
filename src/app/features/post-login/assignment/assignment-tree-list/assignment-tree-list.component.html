@@ -3,6 +3,7 @@
   href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css"
 />
 <p-toast key="error" position="top-right"></p-toast>
+<!-- <p-toast key="errorAssDetail" position="top-right"></p-toast> -->
 <h2>Tra cứu tài liệu các trường</h2>
 
 <div class="row mt-4">
@@ -172,7 +173,13 @@
         <td>
           <i
             class="bi bi-info-circle-fill"
-            (click)="onDetail(task.school?.schoolId, task.issue?.issueId)"
+            (click)="
+              onDetail(
+                task.school?.schoolId,
+                task.issue?.issueId,
+                task.rootAssignmentStatus?.statusId
+              )
+            "
           ></i>
         </td>
       </tr>

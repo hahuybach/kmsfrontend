@@ -40,6 +40,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   isFormNull = true;
   isLoading = false;
   submitCompleted = false;
+  isFileLoading = false;
   ngOnInit(): void {
     console.log('on init ' + this.auth.getJwtFromCookie());
     this.minDate = new Date();
@@ -318,6 +319,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     this.pdfLoaded = true;
   }
   openNewTab(documentLink: string) {
+    this.isFileLoading = true;
     console.log(documentLink);
     this.fileService
       .readInitiationplanPDF(documentLink)
@@ -326,6 +328,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
         this.pdfUrl = blobUrl;
         this.safePdfUrl =
           this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        this.isFileLoading = false;
         this.pdfLoaded = true;
       });
   }

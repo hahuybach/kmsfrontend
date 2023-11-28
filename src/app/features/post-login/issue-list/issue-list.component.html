@@ -6,11 +6,11 @@
     [value]="issues"
     dataKey="id"
     [rowHover]="true"
-    [rows]="7"
+    [rows]="5"
     [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[7, 10, 15]"
+    [rowsPerPageOptions]="[5, 10, 15]"
     [paginator]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    currentPageReportTemplate="Hiển thị {first} đến {last} trong số {totalRecords} bản ghi"
     [filterDelay]="0"
     [globalFilterFields]="['name', 'school', 'role']"
   >
@@ -25,9 +25,10 @@
             placeholder="Tìm kiếm"
           />
         </span>
-        <p-button (click)="navigateToCreateIssue()"
-                  *ngIf="isDirector"
-                  class="btn-purple"
+        <p-button
+          (click)="navigateToCreateIssue()"
+          *ngIf="isDirector"
+          class="btn-purple"
           >Tạo mới
         </p-button>
       </div>
@@ -78,7 +79,7 @@
         </td>
         <td>
           <span class="p-column-title">Tên văn bản</span>
-          {{ issue.issueName }}
+          <div class="three-dot-text">{{ issue.issueName }}</div>
         </td>
         <td class="td-createdby">
           <span class="p-column-title">Người đăng</span>
