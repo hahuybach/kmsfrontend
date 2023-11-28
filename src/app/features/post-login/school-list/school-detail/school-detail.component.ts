@@ -19,6 +19,7 @@ export class SchoolDetailComponent implements OnInit {
     isDirector: boolean
     isPrincipal: boolean
 
+
     constructor(private route: ActivatedRoute,
                 private schoolService: SchoolService,
                 private routeLink: Router,
@@ -39,6 +40,7 @@ export class SchoolDetailComponent implements OnInit {
 
     ngOnInit(): void {
         this.setAuth()
+
         this.route.params
             .pipe(
                 switchMap((params) => {
@@ -53,7 +55,16 @@ export class SchoolDetailComponent implements OnInit {
                 console.log(this.principal)
             },
                 error => {
-                    this.toastService.showWarn('error', "Lỗi", error.error.message)
+                    this.toastService.showWarn('error', "Lỗi", error.error.message);
+                    this.schoolService.findSchoolById(this.auth.getSchoolFromJwt().schoolId).subscribe({
+                      next: (data) => {
+                        this.school = data;
+                        this.principal = data.principal;
+                      },error: (error) => {
+                        this.toastService.showWarn('error', "Lỗi", error.error.message);
+                      }
+                    })
+
                 }
 
             );
