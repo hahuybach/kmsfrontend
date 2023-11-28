@@ -18,8 +18,16 @@ import {unSub} from "../../../../shared/util/util";
 export class SchoolDetailComponent implements OnInit, OnDestroy {
     school: SchoolResponse;
     principal: AccountResponse
-    isDirector: boolean
-    isPrincipal: boolean
+  isPrincipal: boolean = false;
+  isDirector: boolean = false;
+  isAdmin: boolean = false;
+  isInspector: boolean = false;
+  isChiefInspector: boolean = false;
+  isViceDirector: boolean = false;
+  isSchoolNormalEmp: boolean = false;
+  isSpecialist: boolean = false;
+  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY];
     sub: any[] = []
 
     constructor(private route: ActivatedRoute,
@@ -29,20 +37,42 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
                 private toastService: ToastService) {
     }
 
-    setAuth() {
-        for (const role of this.auth.getRoleFromJwt()) {
-            if (role.authority === Role.DIRECTOR) {
-                this.isDirector = true;
-            }
-            if (role.authority === Role.PRINCIPAL) {
-                this.isPrincipal = true;
-            }
+  setAuth() {
+    if (this.auth.getRolesFromCookie()) {
+      for (const argument of this.auth.getRoleFromJwt()) {
+        if (argument.authority === Role.DIRECTOR) {
+          this.isDirector = true;
         }
+        if (argument.authority === Role.PRINCIPAL) {
+          this.isPrincipal = true;
+        }
+        if (argument.authority === Role.ADMIN) {
+          this.isAdmin = true;
+        }
+        if (argument.authority === Role.VICE_DIRECTOR) {
+          this.isViceDirector = true;
+        }
+        if (argument.authority === Role.INSPECTOR) {
+          this.isInspector = true;
+        }
+        if (argument.authority === Role.CHIEF_INSPECTOR) {
+          this.isChiefInspector = true;
+        }
+        if (argument.authority === Role.SPECIALIST) {
+          this.isSpecialist = true;
+        }
+        if (this.schoolRoles.some(value => value === argument.authority)) {
+          this.isSchoolNormalEmp = true;
+        }
+
+      }
+
     }
+  }
 
     ngOnInit(): void {
         this.setAuth()
-        this.route.params
+    const sub =    this.route.params
             .pipe(
                 switchMap((params) => {
                   const sub = this.schoolService.findSchoolById(params['id']);
@@ -70,6 +100,7 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
                 }
 
             );
+        this.sub.push(sub);
     }
 
     findAccountWithRole(school: SchoolResponse, roleName: string): AccountResponse {
