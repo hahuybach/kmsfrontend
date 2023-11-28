@@ -8,6 +8,7 @@ import {MessageService} from "primeng/api";
 import {AuthService} from "../../../services/auth.service";
 import {Role} from "../../../shared/enum/role";
 import {unSub} from "../../../shared/util/util";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-guidance-document-list',
@@ -85,10 +86,11 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
               private issueService: IssueService,
               private messageService: MessageService,
               private activateRouter: ActivatedRoute,
-              private auth: AuthService
+              private auth: AuthService,
   ) {
     this.guidanceDocuments = [];
   }
+
 
   loadGuidanceDocuments(): void {
     if ((this.startDateTime != null && this.endDateTime != null) && (new Date(this.startDateTime) > new Date(this.endDateTime))) {
@@ -186,12 +188,12 @@ this.setAuth()
           if(value['guidanceDocumentName']){
             this.guidanceDocumentName = value['guidanceDocumentName'];
           }
-          if(value['startDateTime']){
-            this.startDateTime = value['startDateTime'];
-          }
-          if(value['endDateTime']){
-            this.endDateTime = value['endDateTime'];
-          }
+          // if(value['startDateTime']){
+          //   this.startDateTime = value['startDateTime'];
+          // }
+          // if(value['endDateTime']){
+          //   this.endDateTime = value['endDateTime'];
+          // }
           if(value['fullName']){
             this.fullName = value['fullName']
           }

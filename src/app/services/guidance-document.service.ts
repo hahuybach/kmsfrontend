@@ -32,7 +32,7 @@ export class GuidanceDocumentService {
       params = params.set('issueId', issueId)
     }
     if (startDateTime) {
-      params = params.set('startDateTime', new Date(startDateTime.toString()).toISOString());
+      params = params.set('startDateTime', new Date(startDateTime).toISOString());
     }
 
     if (endDateTime) {
