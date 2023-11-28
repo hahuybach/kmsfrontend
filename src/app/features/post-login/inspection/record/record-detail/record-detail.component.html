@@ -15,13 +15,23 @@
           (onHide)="resetDetailRecordPopupVisible()"
 >
   <app-loading-complete-dialog
-  [width]="80"
-  [height]="70"
-  [visible]="updateDocumentSubmitted"
-  [completed]="updateDocumentCompleted"
-  [header]="'Cập nhật tài liệu'"
-  [progress]="'Đang cập nhật tài liệu'"
-  [complete]="'Cập nhật tài liệu thành công'"
+    [width]="80"
+    [height]="70"
+    [visible]="updateDocumentSubmitted"
+    [completed]="updateDocumentCompleted"
+    [header]="'Cập nhật tài liệu'"
+    [progress]="'Đang cập nhật tài liệu'"
+    [complete]="'Cập nhật tài liệu thành công'"
+  >
+  </app-loading-complete-dialog>
+  <app-loading-complete-dialog
+    [width]="80"
+    [height]="70"
+    [visible]="deleteDocumentSubmitted"
+    [completed]="deleteDocumentCompleted"
+    [header]="'Xóa tài liệu'"
+    [progress]="'Đang đang xóa tài liệu'"
+    [complete]="'Xóa tài liệu thành công'"
   >
   </app-loading-complete-dialog>
   <div class="container-fluid" *ngIf="task">
@@ -111,7 +121,7 @@
             <button pButton type="submit">Lưu công việc</button>
           </div>
         </div>
-        <div *ngIf="!canUploadDocument || task.document != null"  class="d-flex flex-row justify-content-between">
+        <div *ngIf="!canUploadDocument || task.document != null" class="d-flex flex-row justify-content-between">
           <div class="w-100">
             <app-file-item
               [document]="task.document"

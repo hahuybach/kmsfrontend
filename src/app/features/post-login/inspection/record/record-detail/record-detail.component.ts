@@ -22,6 +22,8 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   documentForm: FormGroup;
   updateDocumentSubmitted: boolean = false;
   updateDocumentCompleted: boolean = false;
+  deleteDocumentSubmitted: boolean = false;
+  deleteDocumentCompleted: boolean = false;
   private subscriptions: Subscription[] = [];
 
 
@@ -65,12 +67,13 @@ export class RecordDetailComponent implements OnChanges, OnInit {
 
   deleteDocument() {
     console.log('delete')
+    this.deleteDocumentSubmitted = true;
     const deleteDocument = this.recordService.deleteDocumentById(this.recordId).subscribe({
       next: (response) => {
-        this.toastService.showSuccess('deleteComplete', "Xóa thành công", "Tài liệu đã được xóa thành công");
+        this.deleteDocumentCompleted = true;
         setTimeout(() => {
-          this.detailRecordPopupVisible = false;
           this.initRecordData();
+          this.detailRecordPopupVisible = false;
         }, 1000);
       },
       error: (error) => {
@@ -87,7 +90,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     this.fileInputPlaceholders = '';
   }
 
-  initRecordData(){
+  initRecordData() {
     const initRecordData = this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;
