@@ -23,33 +23,23 @@ import { CreateAssignmentComponent } from './features/post-login/assignment/crea
 import { SchoolInitiationPlanListComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-list/school-initiation-plan-list.component';
 import { AssignmentListComponent } from './features/post-login/school-side/assignment/assignment-list/assignment-list.component';
 import { SubmitAssignmentComponent } from './features/post-login/school-side/assignment/submit-assignment/submit-assignment.component';
-import {SchoolListComponent} from "./features/post-login/school-list/school-list.component";
-import {SchoolDetailComponent} from "./features/post-login/school-list/school-detail/school-detail.component";
-import {SchoolCreateComponent} from "./features/post-login/school-list/school-create/school-create.component";
-import {SchoolUpdateComponent} from "./features/post-login/school-list/school-update/school-update.component";
-import {UserListComponent} from "./features/post-login/user-list/user-list.component";
-import {UserDetailComponent} from "./features/post-login/user-list/user-detail/user-detail.component";
-import {UserCreateComponent} from "./features/post-login/user-list/user-create/user-create.component";
-import { ApproveAssignmentComponent } from './features/post-login/school-side/assignment/approve-assignment/approve-assignment.component';
+import { SchoolListComponent } from './features/post-login/school-list/school-list.component';
+import { SchoolDetailComponent } from './features/post-login/school-list/school-detail/school-detail.component';
+import { SchoolCreateComponent } from './features/post-login/school-list/school-create/school-create.component';
+import { SchoolUpdateComponent } from './features/post-login/school-list/school-update/school-update.component';
+import { UserListComponent } from './features/post-login/user-list/user-list.component';
+import { UserDetailComponent } from './features/post-login/user-list/user-detail/user-detail.component';
+import { UserCreateComponent } from './features/post-login/user-list/user-create/user-create.component';
 import { AssignAssignmentComponent } from './features/post-login/school-side/assignment/assign-assignment/assign-assignment.component';
-import {
-  UpdateInspectionPlanComponent
-} from "./features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component";
-import {UserUpdateComponent} from "./features/post-login/user-list/user-update/user-update.component";
-import {
-  AssignmentTreeListComponent
-} from "./features/post-login/assignment/assignment-tree-list/assignment-tree-list.component";
+import { UpdateInspectionPlanComponent } from './features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component';
+import { UserUpdateComponent } from './features/post-login/user-list/user-update/user-update.component';
+import { AssignmentTreeListComponent } from './features/post-login/assignment/assignment-tree-list/assignment-tree-list.component';
 
-import {InspectionComponent} from "./features/post-login/inspection/inspection.component";
-import {
-  InspectionInformationComponent
-} from "./features/post-login/inspection/inspection-information/inspection-information.component";
-import {
-  InspectionSchoolDocumentComponent
-} from "./features/post-login/inspection/inspection-school-document/inspection-school-document.component";
-import {
-  InspectionDocumentComponent
-} from "./features/post-login/inspection/inspection-document/inspection-document.component";
+import { InspectionComponent } from './features/post-login/inspection/inspection.component';
+import { InspectionInformationComponent } from './features/post-login/inspection/inspection-information/inspection-information.component';
+import { InspectionSchoolDocumentComponent } from './features/post-login/inspection/inspection-school-document/inspection-school-document.component';
+import { InspectionDocumentComponent } from './features/post-login/inspection/inspection-document/inspection-document.component';
+import { AssignmentDetailComponent } from './features/post-login/assignment/assignment-detail/assignment-detail.component';
 import {
   InspectionMytaskComponent
 } from "./features/post-login/inspection/inspection-mytask/inspection-mytask.component";
@@ -137,50 +127,49 @@ const routes: Routes = [
       },
       {
         path: 'schoolList',
-        component: SchoolListComponent
+        component: SchoolListComponent,
       },
       {
         path: 'school/:id',
-        component: SchoolDetailComponent
+        component: SchoolDetailComponent,
       },
       {
         path: 'schools/create',
-        component: SchoolCreateComponent
+        component: SchoolCreateComponent,
       },
       {
         path: 'school/:id/update',
-        component: SchoolUpdateComponent
+        component: SchoolUpdateComponent,
       },
       {
         path: 'userList',
-        component: UserListComponent
+        component: UserListComponent,
       },
       {
         path: 'user/:id',
-        component: UserDetailComponent
+        component: UserDetailComponent,
       },
       {
         path: 'users/create',
-        component: UserCreateComponent
+        component: UserCreateComponent,
       },
       {
-
-        path: 'approveassignment',
-        component: ApproveAssignmentComponent,
-      },
-      {
-        path: 'assignassignment',
+        path: 'assignassignment/:issueId',
         component: AssignAssignmentComponent,
       },
       {
         path: 'user/:id/update',
-        component: UserUpdateComponent
+        component: UserUpdateComponent,
       },
       {
         path: 'listAssignment',
-        component: AssignmentTreeListComponent
-
-      },{
+        component: AssignmentTreeListComponent,
+      },
+      {
+        path: 'detailAssignment',
+        component: AssignmentDetailComponent,
+      },
+      {
         path: 'inspection/:id',
         component: InspectionComponent,
         children: [
@@ -191,15 +180,15 @@ const routes: Routes = [
           },
           {
             path: 'information',
-            component: InspectionInformationComponent
+            component: InspectionInformationComponent,
           },
           {
             path: 'school-document',
-            component: InspectionSchoolDocumentComponent
+            component: InspectionSchoolDocumentComponent,
           },
           {
             path: 'document',
-            component: InspectionDocumentComponent
+            component: InspectionDocumentComponent,
           },
           {
             path: 'my-task',

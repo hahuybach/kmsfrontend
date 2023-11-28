@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SchoolResponse} from "../../../../models/school-response";
 import {switchMap} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,17 +7,28 @@ import {AccountResponse} from "../../../../models/account-response";
 import {Role} from "../../../../shared/enum/role";
 import {AuthService} from "../../../../services/auth.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {unSub} from "../../../../shared/util/util";
 
 @Component({
     selector: 'app-school-detail',
     templateUrl: './school-detail.component.html',
     styleUrls: ['./school-detail.component.scss']
 })
-export class SchoolDetailComponent implements OnInit {
+export class SchoolDetailComponent implements OnInit, OnDestroy {
     school: SchoolResponse;
     principal: AccountResponse
-    isDirector: boolean
-    isPrincipal: boolean
+  isPrincipal: boolean = false;
+  isDirector: boolean = false;
+  isAdmin: boolean = false;
+  isInspector: boolean = false;
+  isChiefInspector: boolean = false;
+  isViceDirector: boolean = false;
+  isSchoolNormalEmp: boolean = false;
+  isSpecialist: boolean = false;
+  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY];
+    sub: any[] = []
 
     constructor(private route: ActivatedRoute,
                 private schoolService: SchoolService,
@@ -26,23 +37,46 @@ export class SchoolDetailComponent implements OnInit {
                 private toastService: ToastService) {
     }
 
-    setAuth() {
-        for (const role of this.auth.getRoleFromJwt()) {
-            if (role.authority === Role.DIRECTOR) {
-                this.isDirector = true;
-            }
-            if (role.authority === Role.PRINCIPAL) {
-                this.isPrincipal = true;
-            }
+  setAuth() {
+    if (this.auth.getRolesFromCookie()) {
+      for (const argument of this.auth.getRoleFromJwt()) {
+        if (argument.authority === Role.DIRECTOR) {
+          this.isDirector = true;
         }
+        if (argument.authority === Role.PRINCIPAL) {
+          this.isPrincipal = true;
+        }
+        if (argument.authority === Role.ADMIN) {
+          this.isAdmin = true;
+        }
+        if (argument.authority === Role.VICE_DIRECTOR) {
+          this.isViceDirector = true;
+        }
+        if (argument.authority === Role.INSPECTOR) {
+          this.isInspector = true;
+        }
+        if (argument.authority === Role.CHIEF_INSPECTOR) {
+          this.isChiefInspector = true;
+        }
+        if (argument.authority === Role.SPECIALIST) {
+          this.isSpecialist = true;
+        }
+        if (this.schoolRoles.some(value => value === argument.authority)) {
+          this.isSchoolNormalEmp = true;
+        }
+
+      }
+
     }
+  }
 
     ngOnInit(): void {
         this.setAuth()
-        this.route.params
+    const sub =    this.route.params
             .pipe(
                 switchMap((params) => {
-                    return this.schoolService.findSchoolById(params['id']);
+                  const sub = this.schoolService.findSchoolById(params['id']);
+                    return sub;
                 })
             )
             .subscribe((data) => {
@@ -53,10 +87,20 @@ export class SchoolDetailComponent implements OnInit {
                 console.log(this.principal)
             },
                 error => {
-                    this.toastService.showWarn('error', "Lỗi", error.error.message)
+                    this.toastService.showWarn('error', "Lỗi", error.error.message);
+                    this.schoolService.findSchoolById(this.auth.getSchoolFromJwt().schoolId).subscribe({
+                      next: (data) => {
+                        this.school = data;
+                        this.principal = data.principal;
+                      },error: (error) => {
+                        this.toastService.showWarn('error', "Lỗi", error.error.message);
+                      }
+                    })
+
                 }
 
             );
+        this.sub.push(sub);
     }
 
     findAccountWithRole(school: SchoolResponse, roleName: string): AccountResponse {
@@ -72,4 +116,8 @@ export class SchoolDetailComponent implements OnInit {
     onUpdate() {
         this.routeLink.navigate(['school/' + this.school.schoolId + '/update'])
     }
+
+  ngOnDestroy(): void {
+      unSub(this.sub);
+  }
 }

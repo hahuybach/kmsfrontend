@@ -33,7 +33,8 @@ export class InitiationPlanDetailComponent implements OnInit {
   lastDocs: any;
   fileInputPlaceholders: string;
   isDelete = false;
-
+  isLoading = false;
+  submitCompleted = false;
   ngOnInit(): void {
     this.route.params
       .pipe(
@@ -108,6 +109,40 @@ export class InitiationPlanDetailComponent implements OnInit {
     isPasssed: [false, Validators.required],
     file: ['', Validators.required],
   });
+  initData() {
+    this.initiationplanService
+      .getInitiationPlanById(this.initiationplanId)
+      .subscribe((data) => {
+        this.schoolinitiationplan = data;
+        console.log(this.schoolinitiationplan);
+        if (
+          this.schoolinitiationplan.documents.length >= 2 &&
+          this.schoolinitiationplan.status.statusId == 7
+        ) {
+          this.lastDocs = {
+            schoolDocument:
+              this.schoolinitiationplan.documents[
+                this.schoolinitiationplan.documents.length - 1
+              ].schoolDocument,
+            departmentDocument:
+              this.schoolinitiationplan.documents[
+                this.schoolinitiationplan.documents.length - 2
+              ].departmentDocument,
+          };
+        } else {
+          this.lastDocs =
+            this.schoolinitiationplan.documents[
+              this.schoolinitiationplan.documents.length - 1
+            ];
+        }
+        if (
+          this.lastDocs.schoolDocument != null &&
+          this.schoolinitiationplan.status.statusId != 9
+        ) {
+          this.fileStatus = true;
+        }
+      });
+  }
   displayNewFileUpload(file: File) {
     const blobUrl = window.URL.createObjectURL(file as Blob);
     this.pdfUrl = blobUrl;
@@ -184,6 +219,7 @@ export class InitiationPlanDetailComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmInitiationplan',
       accept: () => {
+        this.isLoading = true;
         if (this.inputFileForm.get('file')?.value) {
           this.inputFileForm.get('isPasssed')?.setValue(true);
           const formData = new FormData();
@@ -209,24 +245,26 @@ export class InitiationPlanDetailComponent implements OnInit {
           this.initiationplanService.putUploadSchoolDoc(formData).subscribe({
             next: (response) => {
               console.log('Form data sent to the backend:', response);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Đăng tải thành công',
-                detail: 'Đăng tải tài liệu thành công',
-              });
-              window.location.reload();
+              this.submitCompleted = true;
+              setTimeout(() => {
+                this.initData();
+              }, 1500);
+              setTimeout(() => {
+                this.isLoading = false;
+              }, 1500);
             },
             error: (error) => {
               console.log(error);
             },
           });
         } else {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Đăng tải thành công',
-            detail: 'Đăng tải tài liệu thành công',
-          });
-          window.location.reload();
+          this.submitCompleted = true;
+          setTimeout(() => {
+            this.initData();
+          }, 1500);
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 1500);
         }
 
         // const headers = new HttpHeaders();

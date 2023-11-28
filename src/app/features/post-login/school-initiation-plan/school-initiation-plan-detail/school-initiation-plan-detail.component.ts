@@ -13,6 +13,8 @@ import { InitiationplanService } from 'src/app/services/initiationplan.service';
 import { switchMap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
+import { AuthService } from '../../../../services/auth.service';
+import { ToastService } from '../../../../shared/toast/toast.service';
 @Component({
   selector: 'app-school-initiation-plan-detail',
   templateUrl: './school-initiation-plan-detail.component.html',
@@ -36,7 +38,10 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   initiationplanId: number;
   lastDocs: any;
   isFormNull = true;
+  isLoading = false;
+  submitCompleted = false;
   ngOnInit(): void {
+    console.log('on init ' + this.auth.getJwtFromCookie());
     this.minDate = new Date();
     this.route.params
       .pipe(
@@ -52,8 +57,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
         this.schoolinitiationplan = data;
         console.log(this.schoolinitiationplan);
         this.lastDocs =
-          this.schoolinitiationplan.documents[
-            this.schoolinitiationplan.documents.length - 1
+          this.schoolinitiationplan?.documents[
+            this.schoolinitiationplan?.documents?.length - 1
           ];
         console.log(this.lastDocs);
       });
@@ -72,8 +77,23 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     private router: Router,
     private initiationplanService: InitiationplanService,
     private route: ActivatedRoute,
-    protected http: HttpClient
+    protected http: HttpClient,
+    private auth: AuthService,
+    private toastService: ToastService
   ) {}
+  initData() {
+    this.initiationplanService
+      .getInitiationPlanById(this.initiationplanId)
+      .subscribe((data) => {
+        this.schoolinitiationplan = data;
+        console.log(this.schoolinitiationplan);
+        this.lastDocs =
+          this.schoolinitiationplan.documents[
+            this.schoolinitiationplan.documents.length - 1
+          ];
+        console.log(this.lastDocs);
+      });
+  }
   inputFileForm = this.fb.group({
     documentName: ['', NoWhitespaceValidator()],
     documentCode: ['', NoWhitespaceValidator()],
@@ -92,6 +112,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
 
     return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
   }
+
   deleteFile() {
     this.fileStatus = false;
     this.buttonApproveStatus = false;
@@ -136,15 +157,26 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
             formData.append('files', pdfFile);
           }
           //
+          console.log('before approve ' + this.auth.getJwtFromCookie());
+
           this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
             next: (response) => {
               console.log('Form data sent to the backend:', response);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Phê duyệt',
-                detail: 'Đã phê duyệt thành công',
-              });
-              window.location.reload();
+              console.log('after approve ' + this.auth.getJwtFromCookie());
+
+              // this.messageService.add({
+              //   severity: 'success',
+              //   summary: 'Phê duyệt',
+              //   detail: 'Đã phê duyệt thành công',
+              // });
+              this.submitCompleted = true;
+              setTimeout(() => {
+                this.initData();
+              }, 1500);
+              setTimeout(() => {
+                this.isLoading = false;
+              }, 1500);
+              this.uploadFileVisible = false;
             },
             error: (error) => {
               console.log(error);
@@ -207,6 +239,9 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmSchoolInitiationplan',
       accept: () => {
+        this.uploadFileVisible = false;
+        this.resetDeadlineVisible = false;
+        this.isLoading = true;
         const formData = new FormData();
         const initiationplan = {
           initiationPlanId: this.schoolinitiationplan.initiationPlanId,
@@ -228,15 +263,22 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
           const pdfFile = fileControl.value;
           formData.append('files', pdfFile);
         }
+        console.log('before submit deadline ' + this.auth.getJwtFromCookie());
+
         this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
           next: (response) => {
             console.log('Form data sent to the backend:', response);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Đã gửi đánh giá',
-              detail: 'Đã gửi đánh giá thành công',
-            });
-            window.location.reload();
+            console.log(
+              'after submit deadline ' + this.auth.getJwtFromCookie()
+            );
+
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.initData();
+            }, 1500);
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 1500);
           },
           error: (error) => {
             console.log(error);

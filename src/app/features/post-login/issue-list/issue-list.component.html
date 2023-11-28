@@ -1,4 +1,4 @@
-<h4>Danh sách văn bản triển khai kế hoạch năm học</h4>
+<h4>Danh sách kế hoạch kiểm tra năm học</h4>
 
 <div class="card">
   <p-table
@@ -25,7 +25,9 @@
             placeholder="Tìm kiếm"
           />
         </span>
-        <p-button (click)="navigateToCreateIssue()" class="btn-purple"
+        <p-button (click)="navigateToCreateIssue()"
+                  *ngIf="isDirector"
+                  class="btn-purple"
           >Tạo mới
         </p-button>
       </div>
@@ -107,6 +109,7 @@
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
             (click)="navigateToUpdate(issue.issueId)"
+            *ngIf="isDirector"
           >
             <i class="bi bi-pencil-fill"></i>
           </div>

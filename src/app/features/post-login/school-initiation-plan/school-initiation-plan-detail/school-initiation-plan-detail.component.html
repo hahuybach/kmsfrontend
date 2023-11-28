@@ -1,6 +1,13 @@
 <span>breadcrumb</span>
 <h4 class="mb-4">Kế hoạch thực hiện nhiệm vụ năm học</h4>
 <p-toast></p-toast>
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Đánh giá'"
+  [progress]="'Vui lòng đợi trong giây lát'"
+  [complete]="'Đánh giá thành công'"
+></app-loading-complete-dialog>
 <p-confirmDialog
   [style]="{ width: '50vw' }"
   acceptLabel="Đồng ý"
@@ -23,26 +30,78 @@
   header="Lịch sử phê duyệt"
   [(visible)]="docHistoryVisible"
   [modal]="true"
-  [style]="{ width: '90vw' }"
+  [style]="{ width: '90vw', height: '900px' }"
   [draggable]="false"
   [resizable]="false"
 >
   <ng-container *ngIf="schoolinitiationplan?.documents">
     <p-table
+      #dthistory
       [value]="schoolinitiationplan.documents"
       [tableStyle]="{ 'min-width': '50rem' }"
+      [scrollable]="true"
+      scrollHeight="580px"
+      [paginator]="true"
+      [rows]="5"
+      [rowHover]="true"
+      [globalFilterFields]="[
+        'schoolDocument.documentName',
+        'schoolDocument.documentCode',
+        'schoolDocument.uploadedDate',
+        'schoolDocument.createdBy',
+        'schoolDocument.status.statusName',
+        'departmentDocument.uploadedDate',
+        'departmentDocument.account.user.fullName'
+      ]"
     >
+      <ng-template pTemplate="caption">
+        <input
+          class="history-search-box"
+          type="text"
+          pInputText
+          placeholder="Tìm kiếm"
+          (input)="
+            dthistory.filterGlobal($any($event.target).value, 'contains')
+          "
+        />
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th>Id</th>
-          <th>Tài liệu</th>
-          <th>Mã tài liệu</th>
-          <th>Ngày tạo</th>
-          <th>Người tạo</th>
-          <th>Trạng thái</th>
-          <th>Ngày phê duyệt</th>
-          <th>Người đánh giá</th>
-          <th></th>
+          <th>STT</th>
+          <th pSortableColumn="schoolDocument.documentName">
+            Tài liệu<p-sortIcon
+              field="schoolDocument.documentName"
+            ></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.documentCode">
+            Mã tài liệu<p-sortIcon
+              field="schoolDocument.documentCode"
+            ></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.uploadedDate">
+            Ngày tạo<p-sortIcon
+              field="schoolDocument.uploadedDate"
+            ></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.createdBy">
+            Người tạo<p-sortIcon field="schoolDocument.createdBy"></p-sortIcon>
+          </th>
+          <th pSortableColumn="schoolDocument.status.statusName">
+            Trạng thái
+            <p-sortIcon field="schoolDocument.status.statusName"></p-sortIcon>
+          </th>
+          <th pSortableColumn="departmentDocument.uploadedDate">
+            Ngày phê duyệt
+            <p-sortIcon field="departmentDocument.uploadedDate"></p-sortIcon>
+          </th>
+          <th pSortableColumn="departmentDocument.account.user.fullName">
+            Người đánh giá
+            <p-sortIcon
+              field="departmentDocument.account.user.fullName"
+            ></p-sortIcon>
+          </th>
+          <th>
+          </th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-plan let-i="rowIndex">
@@ -232,19 +291,19 @@
   <div class="col-md-7 plan">
     <div class="plan-content row">
       <div class="col-md-8">
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Tên kế hoạch</span>
           <p class="font-weight-bold">
             {{ schoolinitiationplan.initiationPlanName }}
           </p>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Trường</span>
           <p class="font-weight-bold">
             {{ schoolinitiationplan.school.schoolName }}
           </p>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Ngày tạo</span>
           <p class="font-weight-bold">
             {{ schoolinitiationplan.createdDate | date : "dd/MM/yyyy" }}
@@ -252,11 +311,11 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Người lên kế hoạch</span>
           <p class="font-weight-bold">{{ schoolinitiationplan.createdBy }}</p>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Trạng thái</span>
           <br />
           <p-tag
@@ -273,7 +332,7 @@
             {{ schoolinitiationplan?.status.statusName }}
           </p-tag>
         </div>
-        <div class="mb-3">
+        <div class="height-80">
           <span class="mb-2 text-black-50">Hạn nộp</span>
           <p class="font-weight-bold p-error">
             {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
@@ -290,11 +349,11 @@
             Xem lịch sử phê duyệt tài liệu
           </button>
         </div>
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <button pButton class="mb-2" (click)="redirectToIssue()">
             Kế hoạch kiểm tra
           </button>
-        </div>
+        </div> -->
       </div>
 
       <div

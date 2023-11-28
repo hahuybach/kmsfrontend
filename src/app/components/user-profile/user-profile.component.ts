@@ -95,6 +95,10 @@ export class UserProfileComponent implements OnInit{
           setTimeout(() => {
             this.isLoading = false
           }, 1500)
+        }, error: (error) => {
+          this.isLoading = false;
+          this.submitCompleted = false;
+          this.toastService.showWarn("error", "Lỗi", error.error.message);
         }
 
       })

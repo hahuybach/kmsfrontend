@@ -199,7 +199,7 @@ export class SchoolUpdateComponent implements OnInit {
   }
   confirm() {
     this.confirmationService.confirm({
-      message: 'Bạn có xác nhận hành động này không?',
+      message: 'Bạn có xác nhận hành động này không? (nếu bạn cập nhật hiệu trưởng, tài khoản hiệu trưởng cũ sẽ bị vô hiệu hóa',
       header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',

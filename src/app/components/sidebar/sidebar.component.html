@@ -10,7 +10,6 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector"
         >
           <a routerLink="" [routerLink]="['/dashboard']">
             <div>
@@ -22,51 +21,7 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isDirector || isAdmin"
-        >
-          <a class="" [routerLink]="['/schoolList']">
-            <div>
-              <i class="bi bi-building"></i>
-              &nbsp; Danh sách trường
-            </div>
-          </a>
-        </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
-          <a class="" [routerLink]="['/school/'] + schoolId">
-            <div>
-              <i class="bi bi-building"></i>
-              &nbsp; Trường của bạn
-            </div>
-          </a>
-        </li>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector"
-        >
-          <a class="" [routerLink]="['/inspection_plan']">
-            <div>
-              <i class="bi bi-file-earmark-person"></i>
-              &nbsp; Thanh tra
-            </div>
-          </a>
-        </li>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector || isAdmin"
-        >
-          <a class="" [routerLink]="['/userList']">
-            <div>
-              <i class="bi bi-people"></i>
-              &nbsp; Danh sách người dùng
-            </div>
-          </a>
-        </li>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector"
+          *ngIf="isPrincipal || isDirector || isSchoolNormalEmp"
         >
           <a class="" [routerLink]="['/issuelist']">
             <div>
@@ -92,6 +47,18 @@
           routerLinkActive="active"
           *ngIf="isPrincipal || isDirector"
         >
+          <a class="" [routerLink]="['/inspection_plan']">
+            <div>
+              <i class="bi bi-file-earmark-person"></i>
+              &nbsp; Thanh tra
+            </div>
+          </a>
+        </li>
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+
+        >
           <a class="" [routerLink]="['/guidanceDocument']">
             <div>
               <i class="bi bi-clipboard2-check"></i>
@@ -110,15 +77,64 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isPrincipal || isChiefTeacher || isTeacher"
+          *ngIf="isPrincipal || isSchoolNormalEmp"
         >
-          <a class="" [routerLink]="['/assignassignment']">
+          <a class="" [routerLink]="['/assignassignment/' + issueId]">
             <div>
               <i class="bi bi-list-check"></i>
               &nbsp; Danh sách công việc
             </div>
           </a>
         </li>
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isDirector || isPrincipal || isSchoolNormalEmp"
+        >
+          <a class="" [routerLink]="['/listAssignment']">
+            <div>
+              <i class="bi bi-list-check"></i>
+              &nbsp; Hồ sơ các năm
+            </div>
+          </a>
+        </li>
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isDirector || isAdmin"
+        >
+          <a class="" [routerLink]="['/schoolList']">
+            <div>
+              <i class="bi bi-building"></i>
+              &nbsp; Danh sách trường
+            </div>
+          </a>
+        </li>
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isSchoolNormalEmp">
+          <a class="" [routerLink]="['/school/'] + schoolId">
+            <div>
+              <i class="bi bi-building"></i>
+              &nbsp; Đơn vị hiện tại
+            </div>
+          </a>
+        </li>
+
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isDirector || isAdmin"
+        >
+          <a class="" [routerLink]="['/userList']">
+            <div>
+              <i class="bi bi-people"></i>
+              &nbsp; Danh sách người dùng
+            </div>
+          </a>
+        </li>
+
+
+
+
         <!-- <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
           <a class="" [routerLink]="['/submitassignment']">
             <div>

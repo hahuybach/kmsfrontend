@@ -18,6 +18,7 @@ import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
+import { isUnionTypeNode } from 'typescript';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -32,8 +33,8 @@ export class AssignAssignmentComponent implements OnInit {
   selectedAssignment: any;
   action: string | undefined;
   assignmentForm = this.fb.group({
-    assignmentName: ['', Validators.required],
-    description: ['', Validators.required],
+    assignmentName: ['', NoWhitespaceValidator()],
+    description: [''],
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
@@ -45,7 +46,7 @@ export class AssignAssignmentComponent implements OnInit {
   detailVisible = false;
   canSubmit = true;
   commentForm = this.fb.group({
-    content: ['', Validators.required],
+    content: [''],
     userName: ['', Validators.required],
     createdDate: ['', Validators.required],
   });
@@ -103,23 +104,35 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Thư mục', value: false },
       { label: 'Nộp tài liệu', value: true },
     ];
-    this.issueService.getCurrentActiveIssue().subscribe({
-      next: (data) => {
-        issueId = data.issueDto.issueId;
-        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-          next: (data) => {
-            this.assignments = data.assignmentListDtos;
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xảy ra lỗi',
-              detail: error.error.message,
-            });
-          },
-        });
-      },
-    });
+
+    // lay issueId tu url goi theo issueId
+    this.activateRouter.params
+      .pipe(
+        switchMap((params) => {
+          this.issueId = +params['issueId'];
+          return this.assignmentService.getAssignmentByIssueId(this.issueId);
+        })
+      )
+      .subscribe((data) => {
+        this.assignments = data.assignmentListDtos;
+      });
+    // this.issueService.getCurrentActiveIssue().subscribe({
+    //   next: (data) => {
+    //     issueId = data.issueDto.issueId;
+    //     this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
+    //       next: (data) => {
+    //         this.assignments = data.assignmentListDtos;
+    //       },
+    //       error: (error) => {
+    //         this.messageService.add({
+    //           severity: 'error',
+    //           summary: 'Xảy ra lỗi',
+    //           detail: error.error.message,
+    //         });
+    //       },
+    //     });
+    //   },
+    // });
     // this.assignmentService.getMyAssignedAssignments().subscribe({
     //   next: (data) => {
     //     this.assignments = data.assignmentListDtos;
@@ -144,6 +157,7 @@ export class AssignAssignmentComponent implements OnInit {
       if (params) {
         console.log('run here');
         const id = params['id'];
+        console.log('****ID:' + id + '*****');
         if (id > 0) this.openDetailRowNode({ assignmentId: id }, 'info');
       }
     });
@@ -162,20 +176,9 @@ export class AssignAssignmentComponent implements OnInit {
     private router: Router
   ) {}
   initData() {
-    // this.assignmentService.getMyAssignedAssignments().subscribe({
-    //   next: (data) => {
-    //     this.assignments = data.assignmentListDtos;
-    //   },
-    // });
-    let issueId;
-    this.issueService.getCurrentActiveIssue().subscribe({
+    this.assignmentService.getAssignmentByIssueId(this.issueId).subscribe({
       next: (data) => {
-        issueId = data.issueDto.issueId;
-        this.assignmentService.getAssignmentByIssueId(issueId).subscribe({
-          next: (data) => {
-            this.assignments = data.assignmentListDtos;
-          },
-        });
+        this.assignments = data.assignmentListDtos;
       },
     });
   }
@@ -322,7 +325,9 @@ export class AssignAssignmentComponent implements OnInit {
             summary: 'Không tìm thấy công việc',
             detail: error.error.message,
           });
-          this.router.navigate(['/assignassignment'], { queryParams: {} });
+          this.router.navigate(['/assignassignment/' + this.issueId], {
+            queryParams: {},
+          });
         },
       });
 
@@ -401,7 +406,9 @@ export class AssignAssignmentComponent implements OnInit {
     this.assignmentForm.reset();
     this.showComment = true;
     this.stompService.unsubscribe(this.selectedAssignment.assignmentId);
-    this.router.navigate(['/assignassignment'], { queryParams: {} });
+    this.router.navigate(['/assignassignment/' + this.issueId], {
+      queryParams: {},
+    });
     // this.initData();
   }
 
@@ -809,6 +816,24 @@ export class AssignAssignmentComponent implements OnInit {
         break;
     }
     return url;
+  }
+  getFileExtension(fileExtension: string): string {
+    let extension = '';
+    switch (fileExtension) {
+      case 'application/pdf':
+        extension = 'pdf';
+        break;
+      case 'application/msword':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        extension = 'xlsx';
+        break;
+    }
+    return extension;
   }
   // viewDocxFile(documentLink: string) {
   //   this.fileService

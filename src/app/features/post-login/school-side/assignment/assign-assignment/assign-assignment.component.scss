@@ -17,18 +17,27 @@
 .action-item {
     width: 40px;
     height: 40px;
-    background-color: $primary;
-    border-color: $primary;
+    background-color: #bfc5ff;
+    border-color: #bfc5ff;
     border-radius: 50%;
     font-size: 16px;
     &:hover {
-        background-color: $primary-hover;
-        border-color: $primary-hover;
+        background-color: #bfc5ff;
+        border-color: #bfc5ff;
         cursor: pointer;
     }
     i {
         color: #fff;
         align-items: center;
+    }
+}
+.action-item-active {
+    background-color: $primary;
+    border-color: $primary;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+        cursor: pointer;
     }
 }
 .folder-icon {
@@ -57,6 +66,7 @@
     ul {
         padding: 0;
         margin-bottom: 0;
+        font-size: 16px;
     }
     // .p-dialog-footer {
     //     text-align: left;
@@ -185,7 +195,7 @@ ul {
     // flex-direction: column;
     .right-box {
         height: 100%;
-        padding: 0 60px;
+        padding: 0 40px;
         // border: #495057 solid 1px;
 
         // // background-color: #f8f9fa;
@@ -266,7 +276,6 @@ ul {
         color: $primary-hover;
         font-size: 16px;
         margin-right: 10px;
-        border-radius: 25px;
         border: 0.5px solid $primary-hover;
         background-color: #fff;
         padding: 10px 40px;
@@ -304,4 +313,7 @@ a {
 td,
 th {
     font-size: 16px;
+}
+.font-size-14 {
+    font-size: 14px;
 }
