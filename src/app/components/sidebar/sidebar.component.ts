@@ -1,9 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
-import { Role } from '../../shared/enum/role';
-import { IssueService } from 'src/app/services/issue.service';
-import { error } from '@angular/compiler-cli/src/transformers/util';
+import {AuthService} from '../../services/auth.service';
+import {Router} from '@angular/router';
+import {Role} from '../../shared/enum/role';
+import {IssueService} from 'src/app/services/issue.service';
 import {unSub} from "../../shared/util/util";
 
 @Component({
@@ -15,16 +14,22 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isPrincipal: boolean = false;
   isDirector: boolean = false;
   isAdmin: boolean = false;
-  isTeacher: boolean = false;
-  isChiefTeacher: boolean = false;
+  isInspector: boolean = false;
+  isViceDirector: boolean = false;
+  isSchoolNormalEmp: boolean = false;
+  isSpecialist: boolean = false;
   schoolId: any;
   issueId: number;
   sub: any[] = []
+  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER,Role.CHIEF_OFFICE,Role.TEACHER,
+  Role.ACCOUNTANT,Role.MEDIC,Role.CLERICAL_ASSISTANT,Role.SECURITY]
   constructor(
     private auth: AuthService,
     private router: Router,
     private issueService: IssueService
-  ) {}
+  ) {
+  }
+
   logout() {
     this.auth.logout();
     this.router.navigateByUrl('/login');
@@ -32,30 +37,40 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log(this.auth.getRoleFromJwt());
-    if (this.auth.getSchoolFromJwt()){
+    if (this.auth.getSchoolFromJwt()) {
       this.schoolId = this.auth.getSchoolFromJwt().schoolId;
     }
-    if (this.auth.getRolesFromCookie()){
+    if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
-        if (argument.authority === 'Trưởng Phòng') {
+        if (argument.authority === Role.DIRECTOR) {
           this.isDirector = true;
         }
-        if (argument.authority === 'Hiệu Trưởng') {
+        if (argument.authority === Role.PRINCIPAL) {
           this.isPrincipal = true;
         }
         if (argument.authority === Role.ADMIN) {
           this.isAdmin = true;
         }
-        if (argument.authority === Role.TEACHER) {
-          this.isTeacher = true;
+        if (argument.authority === Role.VICE_DIRECTOR) {
+          this.isViceDirector = true;
         }
-        if (argument.authority === Role.CHIEF_TEACHER) {
-          this.isChiefTeacher = true;
+        if (argument.authority === Role.INSPECTOR) {
+          this.isInspector = true;
         }
+        if (argument.authority === Role.CHIEF_INSPECTOR) {
+          this.isInspector = true;
+        }
+        if (argument.authority === Role.SPECIALIST) {
+          this.isSpecialist = true;
+        }
+        if (this.schoolRoles.some(value => value === argument.authority)){
+          this.isSchoolNormalEmp = true;
+        }
+
       }
 
     }
-  let method =  this.issueService.getCurrentActiveIssue().subscribe({
+    let method = this.issueService.getCurrentActiveIssue().subscribe({
       next: (data) => {
         this.issueId = data.issueDto.issueId;
       },
@@ -68,8 +83,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
 
-
   ngOnDestroy(): void {
-      unSub(this.sub)
+    unSub(this.sub)
   }
 }

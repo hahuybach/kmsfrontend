@@ -13,5 +13,5 @@ export enum Role{
   CLERICAL_ASSISTANT = 'Văn thư',
   SECURITY = 'Bảo vệ',
   VICE_PRINCIPAL = 'Hiệu phó',
-  CHIEF_TEACHER_OFFICE = 'Tổ trưởng tổ văn phòng'
+  CHIEF_OFFICE = 'Tổ trưởng tổ văn phòng'
 }
