@@ -1,22 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FilterGuidanceDocumentResponse} from "../../../models/filter-guidance-document-response";
 import {GuidanceDocumentService} from "../../../services/guidance-document.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {IssueDropDownResponse} from "../../../models/issue-drop-down-response";
 import {IssueService} from "../../../services/issue.service";
 import {MessageService} from "primeng/api";
-import {ToastModule} from 'primeng/toast';
-import {resolve} from "@angular/compiler-cli";
-import {switchMap} from "rxjs";
 import {AuthService} from "../../../services/auth.service";
 import {Role} from "../../../shared/enum/role";
+import {unSub} from "../../../shared/util/util";
 
 @Component({
   selector: 'app-guidance-document-list',
   templateUrl: './guidance-document-list.component.html',
   styleUrls: ['./guidance-document-list.component.scss']
 })
-export class GuidanceDocumentListComponent implements OnInit {
+export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
   guidanceDocuments: FilterGuidanceDocumentResponse[];
   issueDropDowns: IssueDropDownResponse[];
   currentIssueSelected: IssueDropDownResponse;
@@ -39,8 +37,49 @@ export class GuidanceDocumentListComponent implements OnInit {
     recordPerPageOption: number[] = [5, 15, 25];
 
   issueId: number = -1
-  isPrincipal = false;
+  isPrincipal: boolean = false;
+  isDirector: boolean = false;
+  isAdmin: boolean = false;
+  isInspector: boolean = false;
+  isChiefInspector: boolean = false;
+  isViceDirector: boolean = false;
+  isSchoolNormalEmp: boolean = false;
+  isSpecialist: boolean = false;
+  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY];
+  sub: any[] = []
+  setAuth() {
+    if (this.auth.getRolesFromCookie()) {
+      for (const argument of this.auth.getRoleFromJwt()) {
+        if (argument.authority === Role.DIRECTOR) {
+          this.isDirector = true;
+        }
+        if (argument.authority === Role.PRINCIPAL) {
+          this.isPrincipal = true;
+        }
+        if (argument.authority === Role.ADMIN) {
+          this.isAdmin = true;
+        }
+        if (argument.authority === Role.VICE_DIRECTOR) {
+          this.isViceDirector = true;
+        }
+        if (argument.authority === Role.INSPECTOR) {
+          this.isInspector = true;
+        }
+        if (argument.authority === Role.CHIEF_INSPECTOR) {
+          this.isChiefInspector = true;
+        }
+        if (argument.authority === Role.SPECIALIST) {
+          this.isSpecialist = true;
+        }
+        if (this.schoolRoles.some(value => value === argument.authority)) {
+          this.isSchoolNormalEmp = true;
+        }
 
+      }
+
+    }
+  }
   constructor(private guidanceDocumentService: GuidanceDocumentService,
               private route: Router,
               private issueService: IssueService,
@@ -56,7 +95,7 @@ export class GuidanceDocumentListComponent implements OnInit {
       this.dateError = true;
       return
     }
-    this.guidanceDocumentService
+   const sub =  this.guidanceDocumentService
       .filterGuidanceDocuments(
         this.pageNo,
         this.pageSize,
@@ -102,6 +141,7 @@ export class GuidanceDocumentListComponent implements OnInit {
         }
       });
     this.dateError = false;
+    this.sub.push(sub);
 
   }
 
@@ -121,11 +161,7 @@ export class GuidanceDocumentListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    for (const role of this.auth.getRoleFromJwt()) {
-      if (role.authority === Role.PRINCIPAL){
-        this.isPrincipal = true;
-      }
-    }
+this.setAuth()
     this.issueService.getIssueDropDownResponse()
       .subscribe({
         next: (result) => {
@@ -277,5 +313,9 @@ export class GuidanceDocumentListComponent implements OnInit {
     changePageSize() {
         this.loadGuidanceDocuments();
     }
+
+  ngOnDestroy(): void {
+    unSub(this.sub)
+  }
 }
 
