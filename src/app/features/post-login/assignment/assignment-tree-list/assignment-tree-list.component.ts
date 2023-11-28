@@ -218,13 +218,25 @@ export class AssignmentTreeListComponent implements OnInit {
     }
   }
 
-  onDetail(schoolId: number | undefined, issueId: number | undefined) {
-    if (this.isPrincipal) {
-      this.router.navigate(['assignassignment/' + issueId]);
+  onDetail(
+    schoolId: number | undefined,
+    issueId: number | undefined,
+    statusId: number | undefined
+  ) {
+    if (statusId != 15) {
+      this.toastService.showError(
+        'error',
+        'Lỗi',
+        'Hồ sơ của trường chưa hoàn thành\nVui lòng không thực hiện thao tác này'
+      );
     } else {
-      this.router.navigate(['detailAssignment'], {
-        queryParams: { issueId: issueId, schoolId: schoolId },
-      });
+      if (this.isPrincipal) {
+        this.router.navigate(['assignassignment/' + issueId]);
+      } else {
+        this.router.navigate(['detailAssignment'], {
+          queryParams: { issueId: issueId, schoolId: schoolId },
+        });
+      }
     }
   }
 
