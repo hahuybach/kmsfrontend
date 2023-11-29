@@ -107,6 +107,16 @@ export class SchoolInitiationPlanListComponent implements OnInit {
       )
     }
 
+  getStatusSeverity(statusId: number): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      6: 'info',
+      7: 'warning',
+      8: 'success',
+      9: 'danger',
+    };
+    return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
+  }
+
     ngOnInit(): void {
       for (const role of this.auth.getRoleFromJwt()) {
         if (role.authority === Role.PRINCIPAL){
