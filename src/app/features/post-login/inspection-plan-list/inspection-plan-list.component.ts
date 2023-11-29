@@ -94,6 +94,7 @@ export class InspectionPlanListComponent implements OnInit{
         if(value['selectedSchool'] && value['selectedSchool'] !== undefined ){
           this.selectedSchool.schoolId = value['selectedSchool']
         }
+
         if(value['advanceSearch']){
           this.advanceSearch = (value['advanceSearch'] == 'true' )
           if (this.advanceSearch){
@@ -166,12 +167,13 @@ export class InspectionPlanListComponent implements OnInit{
             sortDirection: this.sortDirection,
             planName: this.planName,
             currentIssueSelected: this.currentIssueSelected?.issueId,
-            creationStartDateTime: this.creationStartDateTime,
-            creationEndDateTime: this.creationEndDateTime,
-            deadlineStartDateTime: this.deadlineStartDateTime,
-            deadlineEndDateTime: this.deadlineEndDateTime,
+            creationStartDateTime:  this.creationStartDateTime.toISOString(),
+            creationEndDateTime: this.creationEndDateTime.toISOString(),
+            deadlineStartDateTime: this.deadlineStartDateTime.toISOString(),
+            deadlineEndDateTime: this.deadlineEndDateTime.toISOString(),
             advanceSearch: this.advanceSearch,
             selectedSchool: this.selectedSchool?.schoolId,
+            statusId: this.selectedStatus
             // Add other query parameters as needed
           },
           queryParamsHandling: 'merge'
