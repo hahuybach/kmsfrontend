@@ -6,6 +6,7 @@
     border-radius: 8px;
     border: solid 1px $primary;
     transition: all 0.5s ease;
+
     &:hover {
       background-color: $primary-hover;
       border-color: $primary-hover;
@@ -13,17 +14,19 @@
   }
 }
 
-.p-inputtext{
+.p-inputtext {
   border-radius: 8px;
 }
 
-.super-small-input{
+.super-small-input {
   width: 60px;
 
 }
-.loading{
+
+.loading {
   z-index: 100;
 }
+
 .fontAwesome {
   font-family: Arial, 'Font Awesome 5 Free'
 }
@@ -37,11 +40,122 @@
   margin-right: 5px; /* Adjust the margin as needed */
 }
 
-tbody{
-  i{
-    width: 35px;
-    height: 35px;
-    background: $primary;
+.action-button {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background: $primary;
+
+  i {
     color: white;
   }
 }
+
+
+::ng-deep .p-dropdown {
+  width: 100%;
+  border-radius: 8px;
+}
+
+::ng-deep ul {
+  padding: 0;
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.table-container {
+  border: 0.8px solid #d2d2d2;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+
+  .advance-search {
+  }
+}
+
+.table {
+  margin-bottom: 0;
+
+  table {
+    thead {
+      font-size: 16px;
+      border-top: 0.8px solid #eef0f3;
+      th {
+        border-bottom: none;
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #495057;
+        padding-bottom: 20px !important;
+      }
+    }
+
+    tr {
+      border: none;
+    }
+
+    td {
+      border: none;
+    }
+  }
+}
+
+.table-footer {
+  background-color: white;
+
+  select{
+    height: 40%;
+    margin-bottom: 5px;
+    font-size: 16px;
+    option{
+      font-size: 20px;
+      background-color: $primary !important;
+      :hover{
+        background-color: $primary-hover;
+      }
+    }
+  }
+
+  ::ng-deep .ngx-pagination {
+    width: 300px !important;
+    display: flex;
+    font-size: 20px;
+
+    .small-screen {
+      display: none;
+    }
+
+    .pagination-previous, .pagination-next{
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    li {
+      margin-right: 5px;
+      margin-left: 5px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      a{
+        text-decoration: none !important;
+        background: none !important;
+      }
+    }
+
+    .current {
+      background-color: $primary !important;
+      opacity: 0.5;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
