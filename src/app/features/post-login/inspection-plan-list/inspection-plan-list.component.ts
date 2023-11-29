@@ -107,6 +107,18 @@ export class InspectionPlanListComponent implements OnInit{
       }
     )
   }
+
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      19: 'warning',
+      20: 'info',
+      21: 'danger',
+      22: 'danger',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
+  }
+
   ngOnInit(): void {
 
     for (const role of this.auth.getRoleFromJwt()) {
