@@ -40,6 +40,7 @@ export class IssueListComponent implements OnInit, OnDestroy {
   ];
   sub: any[] = [];
   @ViewChild('dt') dt: Table;
+  filterVisible: Boolean = false;
   constructor(
     private issueService: IssueService,
     private router: Router,
@@ -111,5 +112,8 @@ export class IssueListComponent implements OnInit, OnDestroy {
   formatCreatedDate(createdDate: string): string | null {
     const dateObj = new Date(createdDate);
     return this.datePipe.transform(dateObj, 'dd/MM/yyyy');
+  }
+  changeFilterVisible(status: Boolean) {
+    this.filterVisible = status;
   }
 }

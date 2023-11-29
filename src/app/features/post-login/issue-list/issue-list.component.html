@@ -25,15 +25,71 @@
               placeholder="Tìm kiếm theo tên kế hoạch, tên người đăng"
             />
           </span>
-          <p-button
-            (click)="navigateToCreateIssue()"
-            *ngIf="isDirector"
-            class="btn-purple"
-            >Tạo mới
-          </p-button>
+          <div>
+            <button
+              *ngIf="!filterVisible"
+              pButton
+              (click)="changeFilterVisible(true)"
+            >
+              Tra cứu nâng cao
+            </button>
+            <button
+              *ngIf="filterVisible"
+              pButton
+              (click)="changeFilterVisible(false)"
+            >
+              Ẩn tra cứu nâng cao
+            </button>
+            <button
+              pButton
+              (click)="navigateToCreateIssue()"
+              *ngIf="isDirector"
+              class="ms-2"
+            >
+              Tạo mới
+            </button>
+          </div>
         </div>
       </ng-template>
       <ng-template pTemplate="header">
+        <tr *ngIf="filterVisible">
+          <th></th>
+          <th>
+            <p-columnFilter
+              type="text"
+              field="issueName"
+              pTooltip="(VD): Kế hoạch năm hoạch năm 2022 - 2023"
+              tooltipPosition="top"
+              placeholder="Tên kế hoạch"
+            ></p-columnFilter>
+          </th>
+          <th>
+            <p-columnFilter
+              type="text"
+              field="account.user.fullName"
+              pTooltip="(VD): Nguyễn Văn A"
+              tooltipPosition="top"
+              placeholder="Tên người đăng"
+            ></p-columnFilter>
+          </th>
+          <th>
+            <p-columnFilter
+              type="date"
+              field="createdDate"
+              pTooltip="(VD): 1/1/2022"
+              tooltipPosition="top"
+              placeholder="Ngày đăng"
+            ></p-columnFilter>
+          </th>
+          <th>
+            <p-columnFilter
+              type="numeric"
+              field="inspectorGroupSize"
+              tooltipPosition="top"
+            ></p-columnFilter>
+          </th>
+          <th></th>
+        </tr>
         <tr>
           <th class="th-id">
             <div>Id</div>
@@ -44,13 +100,7 @@
                 Tên
                 <p-sortIcon field="issueName"></p-sortIcon>
               </div>
-              <div>
-                <p-columnFilter
-                  type="text"
-                  field="issueName"
-                  display="menu"
-                ></p-columnFilter>
-              </div>
+              <div></div>
             </div>
           </th>
           <th pSortableColumn="account.user.fullName">
@@ -58,13 +108,6 @@
               <div>
                 Người đăng
                 <p-sortIcon field="account.user.fullName"></p-sortIcon>
-              </div>
-              <div>
-                <p-columnFilter
-                  type="text"
-                  field="account.user.fullName"
-                  display="menu"
-                ></p-columnFilter>
               </div>
             </div>
           </th>
@@ -74,14 +117,6 @@
                 Ngày đăng
                 <p-sortIcon field="createdDate"></p-sortIcon>
               </div>
-              <div>
-                <p-columnFilter
-                  type="custom"
-                  field="createdDate"
-                  display="menu"
-                >
-                </p-columnFilter>
-              </div>
             </div>
           </th>
           <th class="th-small" pSortableColumn="inspectorGroupSize">
@@ -89,13 +124,6 @@
               <div>
                 Số người
                 <p-sortIcon field="inspectorGroupSize"></p-sortIcon>
-              </div>
-              <div>
-                <p-columnFilter
-                  type="numeric"
-                  field="inspectorGroupSize"
-                  display="menu"
-                ></p-columnFilter>
               </div>
             </div>
           </th>

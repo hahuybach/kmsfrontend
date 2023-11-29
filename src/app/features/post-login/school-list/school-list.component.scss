@@ -43,6 +43,36 @@
       color: $primary;
     }
   }
+  // for active th
+  .p-highlight {
+    div {
+      color: $primary;
+    }
+    .p-dropdown-item {
+      color: white;
+    }
+  }
+  .p-dropdown-items-wrapper {
+    ul {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  }
+  .p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    margin-right: 20px;
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+  .p-inputtext,
+  .p-dropdown {
+    border-radius: 8px;
+  }
 }
 .action-item {
   width: 40px;

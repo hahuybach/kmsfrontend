@@ -146,3 +146,41 @@ textarea {
 .font-size-18 {
     font-size: 18px;
 }
+:host ::ng-deep {
+    table {
+        table-layout: fixed;
+        width: 100%;
+    }
+    th,
+    td {
+        font-size: 16px;
+        white-space: wrap; /* Prevent text from wrapping */
+        overflow: hidden; /* Hide overflowing text */
+        text-overflow: ellipsis; /* Display ellipsis for overflowing text */
+    }
+    .th-id {
+        width: 60px;
+    }
+    // for icon sort
+    .p-highlight {
+        .p-sortable-column-icon {
+            color: $primary;
+        }
+    }
+    // for active th
+    .p-highlight {
+        div {
+            color: $primary;
+        }
+        .p-dropdown-item {
+            color: white;
+        }
+    }
+    .p-paginator .p-paginator-pages .p-paginator-page {
+        border-radius: 50%;
+        &.p-highlight {
+            background-color: $primary-hover !important;
+            color: #fff !important;
+        }
+    }
+}

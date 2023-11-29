@@ -11,6 +11,7 @@
 <h2>Danh sách các trường</h2>
 <div class="d-flex justify-content-end mb-3" *ngIf="!isDirector">
   <button
+    pButton
     (click)="showImportSchool()"
     class="btn btn-info ml-3 mr-3"
     *ngIf="isAdmin"
@@ -18,7 +19,12 @@
     Nhập trường bằng file excel
   </button>
 
-  <button class="btn btn-primary" (click)="onCreateSchool()" *ngIf="isAdmin">
+  <button
+    pButton
+    class="btn btn-primary"
+    (click)="onCreateSchool()"
+    *ngIf="isAdmin"
+  >
     Tạo mới
   </button>
 </div>
@@ -38,7 +44,7 @@
     selectionMode="single"
   >
     <ng-template pTemplate="caption">
-      <div class="d-flex justify-content-start">
+      <div class="d-flex justify-content-between">
         <span class="w-50">
           <input
             pInputText
@@ -55,29 +61,26 @@
           icon="pi pi-filter-slash"
           (click)="clear(dt1)"
         ></button> -->
+        <div>
+          <button
+            *ngIf="!filterVisible"
+            pButton
+            (click)="changeFilterVisible(true)"
+          >
+            Tra cứu nâng cao
+          </button>
+          <button
+            *ngIf="filterVisible"
+            pButton
+            (click)="changeFilterVisible(false)"
+          >
+            Ẩn tra cứu nâng cao
+          </button>
+        </div>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="schoolId">
-          Mã
-          <p-sortIcon field="schoolId"></p-sortIcon>
-        </th>
-        <th pSortableColumn="schoolName">
-          Tên trường
-          <p-sortIcon field="schoolName"></p-sortIcon>
-        </th>
-        <th pSortableColumn="exactAddress">
-          Địa chỉ
-          <p-sortIcon field="exactAddress"></p-sortIcon>
-        </th>
-        <th pSortableColumn="isActive">
-          Trạng thái
-          <p-sortIcon field="isActive"></p-sortIcon>
-        </th>
-        <th></th>
-      </tr>
-      <tr>
+      <tr *ngIf="filterVisible">
         <th></th>
         <th>
           <p-columnFilter
@@ -128,6 +131,33 @@
               </p-dropdown>
             </ng-template>
           </p-columnFilter>
+        </th>
+        <th></th>
+      </tr>
+      <tr>
+        <th pSortableColumn="schoolId">
+          <div>
+            Mã
+            <p-sortIcon field="schoolId"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="schoolName">
+          <div>
+            Tên trường
+            <p-sortIcon field="schoolName"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="exactAddress">
+          <div>
+            Địa chỉ
+            <p-sortIcon field="exactAddress"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="isActive">
+          <div>
+            Trạng thái
+            <p-sortIcon field="isActive"></p-sortIcon>
+          </div>
         </th>
         <th></th>
       </tr>
@@ -200,8 +230,10 @@
       (change)="onSubmitFile($event)"
       type="file"
     />
-    <button class="btn btn-primary mt-3" (click)="confirm()">Xác nhận</button>
-    <button class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
+    <button pButton class="btn btn-primary mt-3" (click)="confirm()">
+      Xác nhận
+    </button>
+    <button pButton class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
       Tải file mẫu
     </button>
   </div>

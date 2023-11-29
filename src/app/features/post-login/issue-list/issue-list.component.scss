@@ -134,6 +134,16 @@
         color: #fff;
         border-radius: 50%;
     }
+    .p-inputnumber-button {
+        background-color: $primary;
+        border: none;
+        &:hover {
+            background-color: $primary-hover;
+        }
+    }
+    // .p-inputtext {
+    //     border-radius: 8px;
+    // }
 }
 .p-inputtext {
     font-size: 16px;

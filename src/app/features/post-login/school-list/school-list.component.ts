@@ -26,7 +26,7 @@ export class SchoolListComponent implements OnInit {
   excelFile: any;
   isLoading = false;
   submitCompleted = false;
-
+  filterVisible: Boolean = false;
   constructor(
     private schoolService: SchoolService,
     private config: PrimeNGConfig,
@@ -227,5 +227,7 @@ export class SchoolListComponent implements OnInit {
       key: 'createSchoolByExcel',
     });
   }
-
+  changeFilterVisible(status: Boolean) {
+    this.filterVisible = status;
+  }
 }
