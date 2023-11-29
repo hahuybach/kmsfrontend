@@ -3,97 +3,106 @@
   href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css"
 />
 <p-toast key="error" position="top-right"></p-toast>
-<!-- <p-toast key="errorAssDetail" position="top-right"></p-toast> -->
 <h2>Tra cứu tài liệu các trường</h2>
-
-<div class="row mt-4">
-  <div class="form-group col-md-7" *ngIf="!advanceSearch">
-    <input
-      type="text"
-      name="globalSearch"
-      id="globalSearch"
-      class="form-control small-input fontAwesome mb-3"
-      [(ngModel)]="assignmentName"
-      (keyup)="loadDocuments()"
-      placeholder="&#xF002; Tra cứu nhanh"
-    />
-  </div>
-  <div *ngIf="advanceSearch" class="col-md-10">
-    <p-dropdown
-      [options]="issueDropDowns"
-      [(ngModel)]="currentIssueSelected"
-      optionLabel="issueName"
-      [filter]="true"
-      filterBy="issueName"
-      [showClear]="true"
-      placeholder="Chọn 1 kế hoạch kiểm tra"
-      (onChange)="loadDocuments()"
-    >
-      <ng-template pTemplate="selectedItem">
-        <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
-          <div>{{ currentIssueSelected.issueName }}</div>
+<div class="table-container">
+  <div class="my-4 row advance-search container d-flex flex-row justify-content-between">
+    <div class="form-group col-md-4" *ngIf="!advanceSearch">
+      <input
+        type="text"
+        name="globalSearch"
+        id="globalSearch"
+        class="form-control small-input fontAwesome mb-3"
+        [(ngModel)]="assignmentName"
+        (keyup)="loadDocuments()"
+        pInputText
+        placeholder="&#xF002; Tra cứu nhanh"
+      />
+    </div>
+    <div *ngIf="advanceSearch" class="col-md-10">
+      <div class="row">
+        <div class="col-md-6">
+          <label>Tên kế hoạch</label>
+          <input
+            class="form-control"
+            [(ngModel)]="assignmentName"
+            name="planName"
+            id="planName"
+            (keyup)="loadDocuments()"
+            pInputText
+            placeholder="(VD): VIMECO Mẫu công việc 2023 - 2024"
+          />
         </div>
-      </ng-template>
-      <ng-template let-issue pTemplate="item">
-        <div class="flex align-items-center gap-2">
-          <div>{{ issue.issueName }}</div>
+        <div class="col-md-6 d-flex align-items-end">
+          <p-dropdown
+            class="w-100"
+            [options]="issueDropDowns"
+            [(ngModel)]="currentIssueSelected"
+            optionLabel="issueName"
+            [filter]="true"
+            filterBy="issueName"
+            [showClear]="true"
+            placeholder="Chọn 1 kế hoạch kiểm tra"
+            (onChange)="loadDocuments()"
+          >
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
+                <div>{{ currentIssueSelected.issueName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-issue pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ issue.issueName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
-      </ng-template>
-    </p-dropdown>
-    <p-dropdown
-      [options]="schools"
-      [(ngModel)]="selectedSchool"
-      optionLabel="schoolName"
-      [filter]="true"
-      filterBy="schoolName"
-      [showClear]="true"
-      placeholder="Chọn 1 trường"
-      (onChange)="loadDocuments()"
-      *ngIf="!isPrincipal"
-    >
-      <ng-template pTemplate="selectedItem">
-        <div class="flex align-items-center gap-2" *ngIf="selectedSchool">
-          <div>{{ selectedSchool.schoolName }}</div>
-        </div>
-      </ng-template>
-      <ng-template let-school pTemplate="item">
-        <div class="flex align-items-center gap-2">
-          <div>{{ school.schoolName }}</div>
-        </div>
-      </ng-template>
-    </p-dropdown>
-    <p-dropdown
-      placeholder="Chọn 1 trạng thái"
-      [options]="statuses"
-      [(ngModel)]="selectedStatus"
-      [showClear]="true"
-      (onChange)="loadDocuments()"
-    ></p-dropdown>
-    <div class="row mt-3">
-      <div class="col-md-5">
-        <label>Tên kế hoạch</label>
-        <input
-          class="form-control"
-          [(ngModel)]="assignmentName"
-          name="planName"
-          id="planName"
-          (keyup)="loadDocuments()"
-          placeholder="(VD): VIMECO Mẫu công việc 2023 - 2024"
-        />
       </div>
-
-      <div class="col-md-5"></div>
+    </div>
+    <div class="text-end justify-content-end"
+         [ngClass]="{'col-md-2 d-flex align-items-end': advanceSearch, 'col-md-3 ': !advanceSearch}">
+      <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
+    </div>
+    <div *ngIf="advanceSearch" class="col-md-10 mt-2">
+      <div class="row">
+        <div class="col-md-6">
+          <p-dropdown
+            [options]="schools"
+            [(ngModel)]="selectedSchool"
+            optionLabel="schoolName"
+            [filter]="true"
+            filterBy="schoolName"
+            [showClear]="true"
+            placeholder="Chọn 1 trường"
+            (onChange)="loadDocuments()"
+            *ngIf="!isPrincipal"
+          >
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="selectedSchool">
+                <div>{{ selectedSchool.schoolName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-school pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ school.schoolName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-md-6">
+          <p-dropdown
+            placeholder="Chọn 1 trạng thái"
+            [options]="statuses"
+            [(ngModel)]="selectedStatus"
+            [showClear]="true"
+            (onChange)="loadDocuments()"
+          ></p-dropdown>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="col-md-2">
-    <button (click)="onAdvanceSearch()" class="btn btn-primary">
-      {{ advanceSearchButtonText }}
-    </button>
-  </div>
-</div>
-<div class="container">
-  <table class="table table-hover table-responsive table-fit">
-    <thead>
+  <div class="table-content">
+    <table class="table p-2 table-hover align-middle">
+      <thead>
       <tr>
         <th (click)="onSort('assignmentName')">
           <div class="header-container">
@@ -152,8 +161,8 @@
         <th></th>
       </tr>
       <span *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</span>
-    </thead>
-    <tbody *ngIf="taskTrees && taskTrees.length > 0">
+      </thead>
+      <tbody *ngIf="taskTrees && taskTrees.length > 0">
       <tr
         *ngFor="
           let task of taskTrees
@@ -166,82 +175,47 @@
           let i = index
         "
       >
-        <td>{{ task.rootAssignmentName }}</td>
-        <td>{{ task.issue?.issueName }}</td>
-        <td>{{ task.school?.schoolName }}</td>
-        <td>{{ task.rootAssignmentStatus?.statusName }}</td>
-        <td>
-          <i
-            class="bi bi-info-circle-fill"
-            (click)="
+        <td class="py-3 px-2">{{ task.rootAssignmentName }}</td>
+        <td class="py-3 px-2">{{ task.issue?.issueName }}</td>
+        <td class="py-3 px-2">{{ task.school?.schoolName }}</td>
+        <td class="py-3 px-2">{{ task.rootAssignmentStatus?.statusName }}</td>
+        <td class="py-3 px-2">
+          <button class="action-button" type="button" (click)="
               onDetail(
                 task.school?.schoolId,
                 task.issue?.issueId,
                 task.rootAssignmentStatus?.statusId
               )
-            "
-          ></i>
+            ">
+            <i class="bi bi-info-circle-fill"></i>
+          </button>
         </td>
       </tr>
-    </tbody>
-  </table>
-  <div class="d-flex justify-content-end mt-3">
-    <div
-      class="d-flex justify-content-center"
-      *ngIf="taskTrees && taskTrees.length > 0"
-    >
-      <label for="pageNo" style="margin-right: 10px">Trang: </label>
-      <input
-        class="form-control super-small-input mr-3"
-        min="1"
-        type="number"
-        id="pageNo"
-        name="pageNo"
-        max="{{ maxPage }} "
-        style="margin-right: 20px"
-        (keyup)="[maxPageOnKeyUp(), loadDocuments()]"
-        (mouseup)="[maxPageOnKeyUp(), loadDocuments()]"
-        [(ngModel)]="pageNo"
-      />
-
-      <label for="pageNo" style="margin-right: 10px"
-        >Số bản ghi trên 1 trang:
-      </label>
-
-      <select
-        (change)="loadDocuments()"
-        class="form-control super-small-input ng-untouched ng-pristine ng-valid"
-        [(ngModel)]="pageSize"
-      >
-        <option *ngFor="let option of recordPerPageOption" [value]="option">
-          {{ option }}
-        </option>
-      </select>
-
-      <!--      <input class="form-control super-small-input"-->
-      <!--             min="1"-->
-      <!--             type="number"-->
-      <!--             id="pageSize"-->
-      <!--             name="pageSize"-->
-      <!--             style=" margin-right: 20px"-->
-      <!--             max="{{maxPage}} "-->
-      <!--             (keyup)="loadGuidanceDocuments()"-->
-      <!--             (mouseup)=" loadGuidanceDocuments()"-->
-
-      <!--             [(ngModel)]="pageSize"-->
-      <!--      >-->
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center table-footer">
+      <div class="me-3 mt-3" *ngIf="taskTrees && taskTrees.length > 0">
+        <pagination-controls
+          previousLabel=""
+          nextLabel=""
+          (pageChange)="[onTableDataChange($event), maxPageOnKeyUp()]"
+        >
+        </pagination-controls>
+      </div>
+      <div
+        class="d-flex justify-content-center align-items-center" *ngIf="taskTrees && taskTrees.length > 0">
+        <select
+          (change)="loadDocuments()"
+          class="form-select ng-untouched ng-pristine ng-valid"
+          [(ngModel)]="pageSize"
+        >
+          <option *ngFor="let option of recordPerPageOption" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
     </div>
-
-    <div class="" *ngIf="taskTrees && taskTrees.length > 0">
-      <pagination-controls
-        previousLabel="Trước"
-        nextLabel="Sau"
-        (pageChange)="[onTableDataChange($event), maxPageOnKeyUp()]"
-      >
-      </pagination-controls>
-    </div>
+    <p-toast key="paging" position="bottom-right"></p-toast>
+    <p-toast key="issueId" position="top-right"></p-toast>
   </div>
-
-  <p-toast key="paging" position="bottom-right"></p-toast>
-  <p-toast key="issueId" position="top-right"></p-toast>
 </div>

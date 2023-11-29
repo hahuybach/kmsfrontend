@@ -190,7 +190,7 @@
         <td class="py-3 px-2" style="width: 13%">{{ plan.startDate  | date : "dd/MM/yyyy" }}</td>
         <td class="py-3 px-2" style="width: 11%">{{ plan.endDate | date : "dd/MM/yyyy" }}</td>
         <td class="py-3 px-2" style="width: 16%">
-<!--          <p-tag [severity]="getStatusSeverity(plan?.status?.statusId)" [value]="plan.statusName"></p-tag>-->
+          <p-tag [severity]="getStatusSeverity(plan?.status?.statusId)" [value]="plan.statusName"></p-tag>
         </td>
         <td class="py-3 px-2">
           <button class="action-button" type="button" (click)="onDetail(plan.inspectionPlanId)">
