@@ -136,7 +136,7 @@
     </ng-container>
   </ng-container>
 
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="guidanceDocuments.length < 10">
     <button
       class="btn btn-primary"
       (click)="addGuidanceDocument()"
