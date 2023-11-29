@@ -8,6 +8,7 @@ import {MessageService} from "primeng/api";
 import {AuthService} from "../../../services/auth.service";
 import {Role} from "../../../shared/enum/role";
 import {unSub} from "../../../shared/util/util";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-guidance-document-list',
@@ -25,8 +26,8 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
   sortDirection: string = 'desc';
   description: string = '';
   guidanceDocumentName: string = '';
-  startDateTime: string;
-  endDateTime: string;
+  startDateTime: any;
+  endDateTime: any;
   fullName: string = '';
   dateError = false;
   globalSearch: string = '';
@@ -85,10 +86,12 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
               private issueService: IssueService,
               private messageService: MessageService,
               private activateRouter: ActivatedRoute,
-              private auth: AuthService
+              private auth: AuthService,
+              private datePipe: DatePipe
   ) {
     this.guidanceDocuments = [];
   }
+
 
   loadGuidanceDocuments(): void {
     if ((this.startDateTime != null && this.endDateTime != null) && (new Date(this.startDateTime) > new Date(this.endDateTime))) {
@@ -115,7 +118,8 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
           this.allGuidanceDocument = result.size;
           this.maxPage = result.maxPage;
             this.onChangePageSize();
-
+          console.log("error " + this.startDateTime);
+          this.startDateTime = new Date(this.startDateTime)
           this.route.navigate([], {
             relativeTo: this.activateRouter,
             queryParams: {
@@ -124,8 +128,8 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
               sortBy: this.sortBy,
               sortDirection: this.sortDirection,
               guidanceDocumentName: this.guidanceDocumentName,
-              startDateTime: this.startDateTime,
-              endDateTime: this.endDateTime,
+              startDateTime: (this.startDateTime as Date).toISOString() ,
+              endDateTime: (this.endDateTime as Date).toISOString(),
               fullName: this.fullName,
               globalSearch     :this.globalSearch,
                 advanceSearch: this.advanceSearch
@@ -142,7 +146,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
       });
     this.dateError = false;
     this.sub.push(sub);
-
+    console.log(this.startDateTime);
   }
 
   loadIssueIdForCreate(): Promise<boolean> {
@@ -187,10 +191,10 @@ this.setAuth()
             this.guidanceDocumentName = value['guidanceDocumentName'];
           }
           if(value['startDateTime']){
-            this.startDateTime = value['startDateTime'];
+            this.startDateTime = new Date(value['startDateTime']) ;
           }
           if(value['endDateTime']){
-            this.endDateTime = value['endDateTime'];
+            this.endDateTime = new Date(value['endDateTime']) ;
           }
           if(value['fullName']){
             this.fullName = value['fullName']
