@@ -12,6 +12,10 @@
       border-color: $primary-hover;
     }
   }
+
+  .p-tag {
+    border-radius: 20px;
+  }
 }
 
 .p-inputtext {
@@ -68,19 +72,23 @@
   }
 }
 
-.table {
+.table-content {
   margin-bottom: 0;
 
-  table {
+  .table {
+    margin-bottom: 0;
+
     thead {
-      font-size: 16px;
+      font-size: 17px;
       border-top: 0.8px solid #eef0f3;
-      th {
-        border-bottom: none;
-        background-color: #f8f9fa;
-        font-weight: 600;
-        color: #495057;
-        padding-bottom: 20px !important;
+      tr {
+        th {
+          border-bottom: none;
+          background-color: #f8f9fa;
+          font-weight: 600;
+          color: #495057;
+          padding-bottom: 20px !important;
+        }
       }
     }
 
@@ -89,7 +97,7 @@
     }
 
     td {
-      font-size: 16px;
+      font-size: 15px;
       border: none;
     }
   }
@@ -101,13 +109,16 @@
 
 .table-footer {
   background-color: white;
-  select{
+
+  select {
     padding-right: 50px;
     margin-top: 10px;
-    option{
+
+    option {
       font-size: 20px;
       background-color: white !important;
-      :hover{
+
+      :hover {
         background-color: $primary-hover;
       }
     }
@@ -122,7 +133,7 @@
       display: none;
     }
 
-    .pagination-previous, .pagination-next{
+    .pagination-previous, .pagination-next {
       font-size: 30px;
       display: flex;
       align-items: center;
@@ -138,7 +149,8 @@
       border-radius: 50%;
       align-items: center;
       justify-content: center;
-      a{
+
+      a {
         text-decoration: none !important;
         background: none !important;
       }

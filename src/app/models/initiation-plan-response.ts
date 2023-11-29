@@ -1,4 +1,5 @@
 import {IssueResponse} from "./issue-response";
+import {StatusResponse} from "./status-response";
 
 export interface InitiationPlanResponse{
   initiationPlanId? : number,
@@ -8,5 +9,6 @@ export interface InitiationPlanResponse{
   createdBy?: string,
   statusName: string,
   schoolName: string,
-  issueName: string
+  issueName: string,
+  status: any
 }

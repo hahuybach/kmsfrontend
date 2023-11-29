@@ -120,11 +120,11 @@
       <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
     </div>
   </div>
-  <div class="table">
-    <table class="table table-responsive table-fit p-2 table-hover">
+  <div class="table-content">
+    <table class="table p-2 table-hover">
       <thead>
       <tr>
-        <th (click)="onSort('initiationPlanName')">
+        <th (click)="onSort('initiationPlanName')" >
           <div class="header-container">
             <span class="icon-text">Tên kế hoạch</span>
             <i class="bi bi-sort-up" *ngIf="sortBy === 'initiationPlanName' && sortDirection === 'asc'"></i>
@@ -175,9 +175,9 @@
       <span *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</span>
 
       </thead>
-      <tbody *ngIf="schoolInitPlans && schoolInitPlans.length > 0" class="px-2">
-      <tr
-        *ngFor="
+        <tbody *ngIf="schoolInitPlans && schoolInitPlans.length > 0" class="px-2">
+        <tr
+          *ngFor="
           let plan of schoolInitPlans
             | paginate
               : {
@@ -187,20 +187,22 @@
                 };
           let i = index
         "
-      >
-        <td class="py-3 px-2">{{ plan.initiationPlanName }}</td>
-        <td class="py-3 px-2">{{ plan.issueName }}</td>
-        <td class="py-3 px-2">{{ plan.schoolName }}</td>
-        <td class="py-3 px-2"> {{ plan.createdDate  | date : "dd/MM/yyyy" }}</td>
-        <td class="py-3 px-2">{{ plan.deadline | date : "dd/MM/yyyy" }}</td>
-        <td class="py-3 px-2">{{ plan.statusName}}</td>
-        <td class="py-3 px-2">
-          <button class="action-button" type="button" (click)="onDetail(plan.initiationPlanId)">
-            <i class="bi bi-info-circle-fill"></i>
-          </button>
-        </td>
-      </tr>
-      </tbody>
+        >
+          <td class="py-3 px-2" style="width: 30%">{{ plan.initiationPlanName }}</td>
+          <td class="py-3 px-2" style="width: 17%">{{ plan.issueName }}</td>
+          <td class="py-3 px-2" style="width: 17%">{{ plan.schoolName }}</td>
+          <td class="py-3 px-2" style="width: 9%"> {{ plan.createdDate  | date : "dd/MM/yyyy" }}</td>
+          <td class="py-3 px-2" style="width: 9%">{{ plan.deadline | date : "dd/MM/yyyy" }}</td>
+          <td class="py-3 px-2" style="width: 18%">
+              <p-tag [severity]="getStatusSeverity(plan?.status?.statusId)" [value]="plan.statusName"></p-tag>
+          </td>
+          <td class="py-3 px-2">
+            <button class="action-button" type="button" (click)="onDetail(plan.initiationPlanId)">
+              <i class="bi bi-info-circle-fill"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
     </table>
     <div class="d-flex justify-content-center table-footer">
       <div class="me-3 mt-3" *ngIf="schoolInitPlans && schoolInitPlans.length > 0">
@@ -211,7 +213,8 @@
         >
         </pagination-controls>
       </div>
-      <div class="d-flex justify-content-center align-items-center" *ngIf="schoolInitPlans && schoolInitPlans.length > 0">
+      <div class="d-flex justify-content-center align-items-center"
+           *ngIf="schoolInitPlans && schoolInitPlans.length > 0">
         <select (change)="loadDocuments()" class="form-select ng-untouched ng-pristine ng-valid"
                 [(ngModel)]="pageSize">
           <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>

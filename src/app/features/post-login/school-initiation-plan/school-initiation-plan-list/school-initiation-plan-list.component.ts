@@ -107,7 +107,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
       )
     }
 
-  getStatusSeverity(statusId: number): string {
+  getStatusSeverity(statusId: any): string {
     const statusSeverityMap: { [key: number]: string } = {
       6: 'info',
       7: 'warning',
