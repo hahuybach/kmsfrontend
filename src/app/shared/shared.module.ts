@@ -22,9 +22,10 @@ import { MenuModule } from 'primeng/menu';
 import { ChartModule } from 'primeng/chart';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { FileLoadingComponent } from '../components/file-loading/file-loading.component';
-import {MatNativeDateModule} from '@angular/material/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { PrimeNGConfig } from 'primeng/api';
 @NgModule({
   declarations: [
     FileSizePipePipe,
@@ -55,7 +56,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     TabMenuModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    MatFormFieldModule
+    MatFormFieldModule,
   ],
   exports: [
     InputTextModule,
@@ -83,7 +84,34 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     FileLoadingComponent,
     MatNativeDateModule,
     MatDatepickerModule,
-    MatFormFieldModule
+    MatFormFieldModule,
   ],
 })
-export class SharedModule {}
+export class SharedModule {
+  constructor(private primeNGConfig: PrimeNGConfig) {
+    // Set custom translations for all tables
+    this.primeNGConfig.setTranslation({
+      matchAll: 'Trùng tất cả',
+      matchAny: 'Trùng bất kỳ',
+      startsWith: 'Bắt đầu bằng',
+      contains: 'Bao gồm',
+      notContains: 'Không bao gồm',
+      endsWith: 'Kết thúc bằng',
+      equals: 'Bằng',
+      notEquals: 'Không bằng',
+      noFilter: 'Bỏ lọc',
+      lt: 'Bé hơn',
+      addRule: 'Thêm điều kiện',
+      removeRule: 'Bỏ điều kiện',
+      dateAfter: 'Sau',
+      dateBefore: 'Trước',
+      clear: 'Xóa',
+      apply: 'Áp dụng',
+      dateIs: 'Ngày chính xác',
+      dateIsNot: 'Không phải ngày',
+      lte: 'Bé hơn bằng',
+      gte: 'Lớn hơn bằng',
+      gt: 'Lớn hơn',
+    });
+  }
+}

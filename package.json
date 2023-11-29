@@ -37,7 +37,7 @@
     "ngx-doc-viewer": "^15.0.1",
     "ngx-pagination": "^6.0.3",
     "primeicons": "^6.0.1",
-    "primeng": "^16.9.0",
+    "primeng": "^16.9.1",
     "rxjs": "~7.8.0",
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",

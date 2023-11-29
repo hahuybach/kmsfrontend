@@ -1,5 +1,5 @@
-<h4>Danh sách kế hoạch kiểm tra năm học</h4>
-<ng-container *ngIf="issues.length > 0">
+<h3 class="mat-headline-4">Danh sách kế hoạch kiểm tra năm học</h3>
+<ng-container *ngIf="issues">
   <div class="card">
     <p-table
       #dt
@@ -12,7 +12,7 @@
       [paginator]="true"
       currentPageReportTemplate="Hiển thị {first} đến {last} trong số {totalRecords} bản ghi"
       [filterDelay]="0"
-      [globalFilterFields]="['issueName', 'school', 'role']"
+      [globalFilterFields]="['issueName', 'account.user.fullName']"
     >
       <ng-template pTemplate="caption">
         <div class="table-header">
@@ -76,19 +76,14 @@
               </div>
               <div>
                 <p-columnFilter
-                  type="date"
+                  type="custom"
                   field="createdDate"
                   display="menu"
-                ></p-columnFilter>
+                >
+                </p-columnFilter>
               </div>
             </div>
           </th>
-          <!-- <th pSortableColumn="docNum">
-            <div class="flex justify-content-between align-items-center">
-              Số văn bản
-              <p-sortIcon field="docNum"></p-sortIcon>
-            </div>
-          </th> -->
           <th class="th-small" pSortableColumn="inspectorGroupSize">
             <div class="d-flex justify-content-between align-items-center">
               <div>
@@ -115,7 +110,13 @@
           </td>
           <td>
             <span class="p-column-title">Tên kế hoạch kiểm tra</span>
-            <div class="three-dot-text">{{ issue.issueName }}</div>
+            <div
+              pTooltip="{{ issue.issueName }}"
+              tooltipPosition="top"
+              class="td-content"
+            >
+              {{ issue.issueName }}
+            </div>
           </td>
           <td class="td-createdby">
             <span class="p-column-title">Người đăng</span>
@@ -123,7 +124,7 @@
           </td>
           <td>
             <span class="p-column-title">Date</span>
-            {{ issue.createdDate | date : "MM/dd/yyyy" }}
+            {{ issue.createdDate | date : "dd/MM/yyyy" }}
           </td>
           <!-- <td>
             <span class="p-column-title">Số lượng văn bản</span>
@@ -159,7 +160,7 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="8">Không tìm thấy kế hoạch nào</td>
+          <td colspan="6">Không tìm thấy kế hoạch nào</td>
         </tr>
       </ng-template>
     </p-table>

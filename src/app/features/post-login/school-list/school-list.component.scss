@@ -21,6 +21,7 @@
     }
     padding: 0;
     margin-bottom: 0;
+    z-index: 9999;
   }
   .p-dropdown {
     width: 100%;
@@ -28,6 +29,19 @@
   .p-column-filter-row-items {
     padding: 0;
     margin: 0;
+  }
+  .p-paginator .p-paginator-pages .p-paginator-page {
+    border-radius: 50%;
+    &.p-highlight {
+      background-color: $primary-hover !important;
+      color: #fff !important;
+    }
+  }
+  // for icon sort
+  .p-highlight {
+    .p-sortable-column-icon {
+      color: $primary;
+    }
   }
 }
 .action-item {
