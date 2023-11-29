@@ -22,7 +22,9 @@ import { MenuModule } from 'primeng/menu';
 import { ChartModule } from 'primeng/chart';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { FileLoadingComponent } from '../components/file-loading/file-loading.component';
-
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
 @NgModule({
   declarations: [
     FileSizePipePipe,
@@ -51,6 +53,9 @@ import { FileLoadingComponent } from '../components/file-loading/file-loading.co
     MenuModule,
     ChartModule,
     TabMenuModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatFormFieldModule
   ],
   exports: [
     InputTextModule,
@@ -76,6 +81,9 @@ import { FileLoadingComponent } from '../components/file-loading/file-loading.co
     ChartModule,
     TabMenuModule,
     FileLoadingComponent,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatFormFieldModule
   ],
 })
 export class SharedModule {}

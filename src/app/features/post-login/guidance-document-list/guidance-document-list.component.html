@@ -54,30 +54,50 @@
                placeholder="(VD): Kế hoạch PCCC"
         >
       </div>
+<!--      <div class="col-md-2">-->
+<!--        <label>Ngày bắt đầu</label>-->
+<!--        <input class="form-control"-->
+<!--               [(ngModel)]="startDateTime"-->
+<!--               name="startDateTime"-->
+<!--               id="startDateTime"-->
+<!--               type="date"-->
+<!--               (change)="loadGuidanceDocuments()"-->
+
+<!--        >-->
+<!--      </div>-->
+<!--      <div class="col-md-2">-->
+<!--        <label>Ngày kết thúc</label>-->
+<!--        <input class="form-control"-->
+<!--               [(ngModel)]="endDateTime"-->
+<!--               name="endDateTime"-->
+<!--               id="endDateTime"-->
+<!--               type="date"-->
+<!--               (change)="loadGuidanceDocuments()"-->
+
+<!--        >-->
+<!--        <span class="p-error" *ngIf="dateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>-->
+
+<!--      </div>-->
       <div class="col-md-2">
-        <label>Ngày bắt đầu</label>
-        <input class="form-control"
-               [(ngModel)]="startDateTime"
-               name="startDateTime"
-               id="startDateTime"
-               type="date"
-               (change)="loadGuidanceDocuments()"
-
-        >
-      </div>
-      <div class="col-md-2">
-        <label>Ngày kết thúc</label>
-        <input class="form-control"
-               [(ngModel)]="endDateTime"
-               name="endDateTime"
-               id="endDateTime"
-               type="date"
-               (change)="loadGuidanceDocuments()"
-
-        >
-        <span class="p-error" *ngIf="dateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
+        <mat-form-field>
+          <mat-label>Chọn 1 khoảng thời gian</mat-label>
+          <mat-date-range-input [rangePicker]="picker"  >
+            <input matStartDate [(ngModel)]="startDateTime" placeholder="Ngày tạo bắt đầu" >
+            <input matEndDate    [(ngModel)]="endDateTime" placeholder="Ngày tạo kết thúc"
+                   (dateChange)="loadGuidanceDocuments()"
+            >
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle  matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
 
       </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary" (click)="reset()">Reset</button>
+
+      </div>
+
 
     </div>
   </div>

@@ -73,54 +73,82 @@
                placeholder="(VD): Kế hoạch của Trường Mầm Non Ánh Sao"
         >
       </div>
-      <div class="col-md-3">
-        <label>Ngày khởi tạo bắt đầu</label>
-        <input class="form-control"
-               [(ngModel)]="creationStartDateTime"
-               name="startDateTime"
-               id="startDateTime"
-               type="date"
-               (change)="loadDocuments()"
+<!--      <div class="col-md-3">-->
+<!--        <label>Ngày khởi tạo bắt đầu</label>-->
+<!--        <input class="form-control"-->
+<!--               [(ngModel)]="creationStartDateTime"-->
+<!--               name="startDateTime"-->
+<!--               id="startDateTime"-->
+<!--               type="date"-->
+<!--               (change)="loadDocuments()"-->
 
-        >
+<!--        >-->
+<!--      </div>-->
+<!--      <div class="col-md-3">-->
+<!--        <label>Ngày khởi tạo kết thúc</label>-->
+<!--        <input class="form-control"-->
+<!--               [(ngModel)]="creationEndDateTime"-->
+<!--               name="endDateTime"-->
+<!--               id="endDateTime"-->
+<!--               type="date"-->
+<!--               (change)="loadDocuments()"-->
+
+<!--        >-->
+<!--        <span class="p-error" *ngIf="creationDateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>-->
+
+<!--      </div>-->
+      <div class="col-md-3 mr-3">
+        <mat-form-field>
+          <mat-label>Ngày tạo</mat-label>
+          <mat-date-range-input [rangePicker]="picker1"  >
+            <input matStartDate [(ngModel)]="creationStartDateTime" placeholder="Bắt đầu" >
+            <input matEndDate    [(ngModel)]="creationEndDateTime" placeholder="Kết thúc"
+                   (dateChange)="loadDocuments()"
+            >
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle  matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker1></mat-date-range-picker>
+        </mat-form-field>
       </div>
       <div class="col-md-3">
-        <label>Ngày khởi tạo kết thúc</label>
-        <input class="form-control"
-               [(ngModel)]="creationEndDateTime"
-               name="endDateTime"
-               id="endDateTime"
-               type="date"
-               (change)="loadDocuments()"
-
-        >
-        <span class="p-error" *ngIf="creationDateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
-
+        <mat-form-field>
+          <mat-label>Hạn nộp</mat-label>
+          <mat-date-range-input [rangePicker]="picker2"  >
+            <input matStartDate [(ngModel)]="deadlineStartDateTime" placeholder="Bắt đầu" >
+            <input matEndDate    [(ngModel)]="deadlineEndDateTime" placeholder="Kết thúc"
+                   (dateChange)="loadDocuments()"
+            >
+          </mat-date-range-input>
+          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle  matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker2></mat-date-range-picker>
+        </mat-form-field>
       </div>
       <div class="col-md-5">
 
       </div>
-      <div class="col-md-3">
+<!--      <div class="col-md-3">-->
 
-        <label>Ngày deadline bắt đầu</label>
-        <input class="form-control"
-               [(ngModel)]="deadlineStartDateTime"
-               type="date"
-               (change)="loadDocuments()"
+<!--        <label>Ngày deadline bắt đầu</label>-->
+<!--        <input class="form-control"-->
+<!--               [(ngModel)]="deadlineStartDateTime"-->
+<!--               type="date"-->
+<!--               (change)="loadDocuments()"-->
 
-        >
-      </div>
-      <div class="col-md-3">
-        <label>Ngày deadline kết thúc</label>
-        <input class="form-control"
-               [(ngModel)]="deadlineEndDateTime"
-               type="date"
-               (change)="loadDocuments()"
+<!--        >-->
+<!--      </div>-->
+<!--      <div class="col-md-3">-->
+<!--        <label>Ngày deadline kết thúc</label>-->
+<!--        <input class="form-control"-->
+<!--               [(ngModel)]="deadlineEndDateTime"-->
+<!--               type="date"-->
+<!--               (change)="loadDocuments()"-->
 
-        >
-        <span class="p-error" *ngIf="deadlineDateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>
+<!--        >-->
+<!--        <span class="p-error" *ngIf="deadlineDateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>-->
 
-      </div>
+<!--      </div>-->
 
     </div>
   </div>
