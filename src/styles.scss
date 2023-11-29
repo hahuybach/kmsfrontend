@@ -4,7 +4,8 @@
 
 /* Import PrimeNG styles */
 @import "primeng/resources/primeng.min.css";
-@import "node_modules/primeng/resources/themes/saga-blue/theme.css"; /* Replace with your preferred theme */
+@import "node_modules/primeng/resources/themes/saga-blue/theme.css";
+/* Replace with your preferred theme */
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-alpine.css";
 //SCROLLBAR CSS
@@ -29,6 +30,7 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #9aa3ff;
 }
+
 :root {
   $primary: #4253f0;
 }
@@ -39,44 +41,71 @@
   color: #3b9871;
   padding: 5px 20px;
 }
+
 .p-tag.p-tag-danger {
   color: #b42318;
   background-color: #fef3f2;
   padding: 5px 20px;
 }
+
 .p-tag.p-tag-warning {
   color: #b54708;
   background-color: #fffaeb;
   padding: 5px 20px;
 }
+
 .p-tag.p-tag-info {
   color: #4176a8;
   background-color: #d4e9fc;
   padding: 5px 20px;
 }
+
 .p-error {
   color: #b42318;
 }
+
 .p-inputtext.ng-dirty.ng-invalid {
   border-color: #b42318;
 }
+
 $theme-colors: (
   "primary": #4253f0
 );
 .p-toast-message {
   white-space: pre-line;
 }
+
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: "Helvetica Neue", sans-serif;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family:  "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: "Helvetica Neue", sans-serif;
+}
+
 .mat-typography {
   font-family: inherit !important;
+}
+
+html, body {
+  height: 100%;
+}
+
+h4{
+  font-size: 1em;
+  font-weight: bolder;
+}
+
+body {
+  font-family:"Helvetica Neue", sans-serif;
 }
