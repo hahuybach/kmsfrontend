@@ -31,11 +31,11 @@ export class GuidanceDocumentService {
     if (issueId) {
       params = params.set('issueId', issueId)
     }
-    if ( startDateTime instanceof Date) {
+    if (startDateTime instanceof Date && !isNaN(startDateTime.getTime())) {
       params = params.set('startDateTime', startDateTime.toISOString());
     }
 
-    if (endDateTime instanceof Date) {
+    if (endDateTime instanceof Date && !isNaN(endDateTime.getTime())) {
       params = params.set('endDateTime', endDateTime.toISOString());
     }
     console.log(params);
