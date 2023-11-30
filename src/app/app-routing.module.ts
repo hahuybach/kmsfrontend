@@ -22,7 +22,6 @@ import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-
 import { CreateAssignmentComponent } from './features/post-login/assignment/create-assignment/create-assignment.component';
 import { SchoolInitiationPlanListComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-list/school-initiation-plan-list.component';
 import { AssignmentListComponent } from './features/post-login/school-side/assignment/assignment-list/assignment-list.component';
-import { SubmitAssignmentComponent } from './features/post-login/school-side/assignment/submit-assignment/submit-assignment.component';
 import { SchoolListComponent } from './features/post-login/school-list/school-list.component';
 import { SchoolDetailComponent } from './features/post-login/school-list/school-detail/school-detail.component';
 import { SchoolCreateComponent } from './features/post-login/school-list/school-create/school-create.component';
@@ -40,9 +39,7 @@ import { InspectionInformationComponent } from './features/post-login/inspection
 import { InspectionSchoolDocumentComponent } from './features/post-login/inspection/inspection-school-document/inspection-school-document.component';
 import { InspectionDocumentComponent } from './features/post-login/inspection/inspection-document/inspection-document.component';
 import { AssignmentDetailComponent } from './features/post-login/assignment/assignment-detail/assignment-detail.component';
-import {
-  InspectionMytaskComponent
-} from "./features/post-login/inspection/inspection-mytask/inspection-mytask.component";
+import { InspectionMytaskComponent } from './features/post-login/inspection/inspection-mytask/inspection-mytask.component';
 
 const routes: Routes = [
   {
@@ -122,10 +119,6 @@ const routes: Routes = [
         component: AssignmentListComponent,
       },
       {
-        path: 'submitassignment',
-        component: SubmitAssignmentComponent,
-      },
-      {
         path: 'schoolList',
         component: SchoolListComponent,
       },
@@ -176,7 +169,7 @@ const routes: Routes = [
           {
             path: '',
             pathMatch: 'full',
-            redirectTo: 'information'
+            redirectTo: 'information',
           },
           {
             path: 'information',
@@ -192,10 +185,10 @@ const routes: Routes = [
           },
           {
             path: 'my-task',
-            component: InspectionMytaskComponent
-          }
-        ]
-      }
+            component: InspectionMytaskComponent,
+          },
+        ],
+      },
     ],
   },
   {

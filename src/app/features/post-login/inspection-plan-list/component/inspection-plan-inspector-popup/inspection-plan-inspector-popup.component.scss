@@ -13,3 +13,55 @@
     }
   }
 }
+:host ::ng-deep {
+  .th-id {
+    width: 80px;
+  }
+  // for icon sort
+  .p-highlight {
+    .p-sortable-column-icon {
+      color: $primary;
+    }
+  }
+  // for active th
+  .p-highlight {
+    div {
+      color: $primary;
+    }
+    .p-dropdown-item {
+      color: white;
+    }
+  }
+  // FILTER ICON
+  .p-column-filter-menu-button-active {
+    border-radius: 50%;
+    // background-color: #cfd3ff;
+    background-color: $primary;
+    color: #fff;
+  }
+  .p-column-filter-clear-button,
+  .p-column-filter-menu-button {
+    border-radius: 50%;
+  }
+  .p-paginator .p-paginator-pages .p-paginator-page {
+    border-radius: 50%;
+    &.p-highlight {
+      background-color: $primary-hover !important;
+      color: #fff !important;
+    }
+  }
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  .p-checkbox .p-checkbox-box {
+    border-color: $primary-hover;
+    &.p-highlight {
+      background-color: $primary-hover;
+    }
+  }
+}
+
+.search-input {
+  width: 400px;
+}

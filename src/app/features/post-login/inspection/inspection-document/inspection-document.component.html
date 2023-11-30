@@ -1,22 +1,25 @@
 <app-create-record
   [inspectionPlanId]="inspectionId"
   [createRecordPopupVisible]="createRecordPopupVisible"
-  (createRecordPopupVisibleChange)="changeCreateRecordVisible()">
+  (createRecordPopupVisibleChange)="changeCreateRecordVisible()"
+>
 </app-create-record>
 <app-update-record
   [inspectionPlanId]="inspectionId"
   [updateRecordPopupVisible]="updateRecordPopupVisible"
   (updateRecordPopupVisibleChange)="changeUpdateRecordVisible()"
-  [recordId]="recordId">
+  [recordId]="recordId"
+>
 </app-update-record>
 <app-record-detail
   [canUploadDocument]="canUploadDocument"
   [recordId]="recordId"
   [detailRecordPopupVisible]="detailRecordPopupVisible"
-  (detailRecordPopupVisibleChange)="changeDetailRecordVisible()">
+  (detailRecordPopupVisibleChange)="changeDetailRecordVisible()"
+>
 </app-record-detail>
 <p-confirmDialog
-  [style]="{width: '50%'}"
+  [style]="{ width: '50%' }"
   acceptLabel="Xác nhận"
   rejectLabel="Hủy bỏ"
   key="deleteRecord"
@@ -28,111 +31,215 @@
     <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
     <div class="row">
       <div class="col-md-12 d-flex flex-row mb-2 report-button">
-        <button type="button" class="me-2" pButton (click)="initDetailRecordData(inspectionDocument.reportId)">Báo cáo</button>
-        <button type="button" pButton (click)="initDetailRecordData(inspectionDocument.conclusionId)">Kết luận</button>
+        <button
+          type="button"
+          class="me-2"
+          pButton
+          (click)="initDetailRecordData(inspectionDocument.reportId)"
+        >
+          Báo cáo
+        </button>
+        <button
+          type="button"
+          pButton
+          (click)="initDetailRecordData(inspectionDocument.conclusionId)"
+        >
+          Kết luận
+        </button>
       </div>
       <div class="form-content col-md-12 h-100">
-        <p-table
-          #dt
-          *ngIf="inspectionDocument"
-          [value]="inspectionDocument.taskListDtos"
-          dataKey="taskId"
-          [rowHover]="true"
-          [rows]="5"
-          [showCurrentPageReport]="true"
-          [paginator]="true"
-          currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
-          [filterDelay]="0"
-          [globalFilterFields]="['name', 'role', 'school']"
-        >
-          <ng-template pTemplate="caption">
-            <div class="table-header d-flex justify-content-between flex-row align-items-center">
-            <span class="p-input-icon-left">
-              <i class="fa-solid fa-search"></i>
-              <input
-                pInputText
-                type="text"
-                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                placeholder="Tìm kiếm"
-              />
-            </span>
-              <button class="create-button" pButton (click)="changeCreateRecordVisible()">Tạo mới</button>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="th-id">
-                <div>STT</div>
-              </th>
-              <th pSortableColumn="taskName">
-                <div>
-                  Tên
-                  <p-sortIcon field="taskName"></p-sortIcon>
-                </div>
-              </th>
-              <th pSortableColumn="assigneeName">
-                <div>
-                  Người thực hiện
-                  <p-sortIcon field="assigneeName"></p-sortIcon>
-                </div>
-              </th>
-              <th pSortableColumn="deadline">
-                <div>
-                  Hạn nộp
-                  <p-sortIcon field="deadline"></p-sortIcon>
-                </div>
-              </th>
-              <th *ngIf="inspectionDocument.isChief" class="th-small"></th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-taskList >
-            <tr class="p-selectable-row">
-              <td>
-                <span class="p-column-title">STT</span>
-                {{ taskList.index + 1 }}
-              </td>
-              <td>
-                <span class="p-column-title">Tên</span>
-                {{ taskList.taskName }}
-              </td>
-              <td>
-                <span class="p-column-title">Người thực hiện</span>
-                {{ taskList.assigneeName }}
-              </td>
-              <td>
-                <span class="p-column-title">Ngày nộp</span>
-                {{ taskList.deadline | date: "dd/MM/yyyy" }}
-              </td>
-              <td style="text-align: center" *ngIf="inspectionDocument.isChief"
-                  class="d-flex td-action justify-content-center align-items-center action-button">
-                <div class="action-item d-flex justify-content-center align-items-center mx-2">
-                  <button type="button" (click)="initDetailRecordData(taskList.taskId)">
-                    <i class="bi bi-info-circle-fill"></i>
+        <div class="card">
+          <p-table
+            #dt
+            *ngIf="inspectionDocument"
+            [value]="inspectionDocument.taskListDtos"
+            dataKey="taskId"
+            [rowHover]="true"
+            [rows]="5"
+            [showCurrentPageReport]="true"
+            [paginator]="true"
+            currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
+            [filterDelay]="0"
+            [globalFilterFields]="['taskName', 'assigneeName']"
+          >
+            <ng-template pTemplate="caption">
+              <div
+                class="table-header d-flex justify-content-between flex-row align-items-center"
+              >
+                <span class="p-input-icon-left">
+                  <i class="fa-solid fa-search"></i>
+                  <input
+                    class="search-input"
+                    pInputText
+                    type="text"
+                    (input)="
+                      dt.filterGlobal($any($event.target).value, 'contains')
+                    "
+                    placeholder="Tra cứu theo tên công việc, người làm"
+                  />
+                </span>
+                <div
+                  class="d-flex justify-content-between align-content-center"
+                >
+                  <button
+                    class="create-button"
+                    pButton
+                    (click)="changeFilterVisible(true)"
+                    *ngIf="!filterVisible"
+                  >
+                    Tra cứu nâng cao
+                  </button>
+                  <button
+                    class="create-button"
+                    pButton
+                    (click)="changeFilterVisible(false)"
+                    *ngIf="filterVisible"
+                  >
+                    Ẩn tra cứu nâng cao
+                  </button>
+                  <button
+                    class="create-button ms-2"
+                    pButton
+                    (click)="changeCreateRecordVisible()"
+                  >
+                    Tạo mới
                   </button>
                 </div>
-                <div class="action-item d-flex justify-content-center align-items-center mx-2">
-                  <button type="button" (click)="initUpdateRecordData(taskList.taskId)" [disabled]="!taskList.canManipulate" [class.disabled-action-button]="!taskList.canManipulate">
-                    <i class="bi bi-pencil-fill"></i>
-                  </button>
-                </div>
-                <div class="action-item d-flex justify-content-center align-items-center mx-2">
-                  <button type="button" (click)="handleOnClickDeleteRecord(taskList.taskId)" [disabled]="!taskList.canManipulate" [class.disabled-action-button]="!taskList.canManipulate">
-                    <i class="bi bi-trash-fill"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="8">Không tìm thấy mục kiểm tra</td>
-            </tr>
-          </ng-template>
-        </p-table>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr *ngIf="filterVisible">
+                <th class="th-id"></th>
+                <th>
+                  <p-columnFilter
+                    type="text"
+                    field="taskName"
+                    pTooltip="(VD): Công tác quản lý của hiệu trưởng"
+                    tooltipPosition="top"
+                    placeholder="Tên mục kiểm tra"
+                  ></p-columnFilter>
+                </th>
+                <th>
+                  <p-columnFilter
+                    type="text"
+                    field="assigneeName"
+                    pTooltip="(VD): Nguyễn Văn A"
+                    tooltipPosition="top"
+                    placeholder="Tên người thực hiện"
+                  ></p-columnFilter>
+                </th>
+                <th>
+                  <!-- <p-columnFilter
+                type="date"
+
+                ></p-columnFilter> -->
+                </th>
+                <th *ngIf="inspectionDocument.isChief" class="th-small"></th>
+              </tr>
+              <tr>
+                <th class="th-id">
+                  <div>STT</div>
+                </th>
+                <th pSortableColumn="taskName">
+                  <div>
+                    Tên
+                    <p-sortIcon field="taskName"></p-sortIcon>
+                  </div>
+                </th>
+                <th pSortableColumn="assigneeName">
+                  <div>
+                    Người thực hiện
+                    <p-sortIcon field="assigneeName"></p-sortIcon>
+                  </div>
+                </th>
+                <th pSortableColumn="deadline">
+                  <div>
+                    Hạn nộp
+                    <p-sortIcon field="deadline"></p-sortIcon>
+                  </div>
+                </th>
+                <th *ngIf="inspectionDocument.isChief" class="th-small"></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-taskList>
+              <tr class="p-selectable-row">
+                <td>
+                  <span class="p-column-title">STT</span>
+                  {{ taskList.index + 1 }}
+                </td>
+                <td>
+                  <span class="p-column-title">Tên</span>
+                  {{ taskList.taskName }}
+                </td>
+                <td>
+                  <span class="p-column-title">Người thực hiện</span>
+                  {{ taskList.assigneeName }}
+                </td>
+                <td>
+                  <span class="p-column-title">Ngày nộp</span>
+                  {{ taskList.deadline | date : "dd/MM/yyyy" }}
+                </td>
+                <td
+                  style="text-align: center"
+                  *ngIf="inspectionDocument.isChief"
+                  class="d-flex td-action justify-content-center align-items-center action-button"
+                >
+                  <div
+                    class="action-item d-flex justify-content-center align-items-center mx-2"
+                    pTooltip="Chi tiết"
+                    tooltipPosition="top"
+                  >
+                    <button
+                      type="button"
+                      (click)="initDetailRecordData(taskList.taskId)"
+                    >
+                      <i class="bi bi-info-circle-fill"></i>
+                    </button>
+                  </div>
+                  <div
+                    class="action-item d-flex justify-content-center align-items-center mx-2"
+                    pTooltip="Chỉnh sửa"
+                    tooltipPosition="top"
+                  >
+                    <button
+                      type="button"
+                      (click)="initUpdateRecordData(taskList.taskId)"
+                      [disabled]="!taskList.canManipulate"
+                      [class.disabled-action-button]="!taskList.canManipulate"
+                    >
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                  </div>
+                  <div
+                    class="action-item d-flex justify-content-center align-items-center mx-2"
+                    pTooltip="Xóa"
+                    tooltipPosition="top"
+                  >
+                    <button
+                      type="button"
+                      (click)="handleOnClickDeleteRecord(taskList.taskId)"
+                      [disabled]="!taskList.canManipulate"
+                      [class.disabled-action-button]="!taskList.canManipulate"
+                    >
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5">Không tìm thấy mục kiểm tra</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
       </div>
     </div>
   </div>
   <div class="w-100 d-flex justify-content-center align-items-center mt-3">
-    <button type="button" class="mb-1 complete-button" pButton>Hoàn thành</button>
+    <button type="button" class="mb-1 complete-button" pButton>
+      Hoàn thành
+    </button>
   </div>
 </div>
