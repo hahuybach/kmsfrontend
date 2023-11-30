@@ -2,7 +2,7 @@
   <p-dialog
     header="Chi tiết công việc"
     [(visible)]="assignmentVisible"
-    [style]="{ width: '1400px', height: '700px' }"
+    [style]="{ width: '1400px' }"
     [draggable]="false"
     [resizable]="false"
     (onHide)="assignmentPopuptHideEvent()"
@@ -55,77 +55,85 @@
     key="confirm"
   ></p-confirmDialog>
   <h4>Tạo template công việc cho các trường mầm non</h4>
-  <p-treeTable
-    [value]="assignments"
-    [scrollable]="true"
-    [style]="{ 'min-width': '50rem' }"
-    [scrollable]="true"
-    scrollHeight="600px"
-  >
-    <ng-template pTemplate="caption">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h6 class="mat-headline-6">Danh sách công việc</h6>
+  <div class="card">
+    <p-treeTable
+      [value]="assignments"
+      [scrollable]="true"
+      [style]="{ 'min-width': '50rem' }"
+      [scrollable]="true"
+      scrollHeight="600px"
+    >
+      <ng-template pTemplate="caption">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mat-headline-6">Danh sách công việc</h6>
+          </div>
+          <div>
+            <button
+              [disabled]="assignments.length != 0"
+              pButton
+              (click)="openDetail(null, 'addroot')"
+            >
+              Tạo mới
+            </button>
+          </div>
         </div>
-        <div>
-          <button
-            [disabled]="assignments.length != 0"
-            pButton
-            (click)="openDetail(null, 'addroot')"
-          >
-            Tạo mới
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Công việc</th>
-        <!-- <th>Người tạo</th>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Công việc</th>
+          <!-- <th>Người tạo</th>
       <th>Hạn nộp</th> -->
-        <th></th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-rowNode>
-      <tr [ttRow]="rowNode" class="d-flex justify-content-between">
-        <td class="folder">
-          <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-          <i class="bi bi-folder-fill"></i>
-          {{ rowData.node.assignmentName }}
-        </td>
-        <!-- <td>{{ rowData.node.assigner.user.fullName }}</td> -->
-        <!-- <td>{{ rowData.node.deadline | date : "dd/MM/yyyy" }}</td> -->
-        <ng-container>
-          <td class="d-flex">
-            <div
-              class="action-item d-flex justify-content-center align-items-center mx-2"
-              (click)="openDetail(rowData.node, 'addchild')"
-            >
-              <i class="bi bi-plus-circle-fill"></i>
-            </div>
-            <div
-              class="action-item d-flex justify-content-center align-items-center mx-2"
-              (click)="openDetail(rowData.node, 'update')"
-            >
-              <i class="bi bi-pencil-fill"></i>
-            </div>
-            <div
-              class="action-item d-flex justify-content-center align-items-center mx-2"
-              (click)="deleteNode(rowData.node)"
-            >
-              <i class="bi bi-x-circle-fill"></i>
-            </div>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-rowNode>
+        <tr [ttRow]="rowNode" class="d-flex justify-content-between">
+          <td class="folder">
+            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+            <i class="bi bi-folder-fill"></i>
+            {{ rowData.node.assignmentName }}
           </td>
-        </ng-container>
-        <ng-template #td>
-          <td></td>
-        </ng-template>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="footer">
-      <div class="p-2">
-        <button pButton (click)="sendToSchools()">Gửi template</button>
-      </div>
-    </ng-template>
-  </p-treeTable>
+          <!-- <td>{{ rowData.node.assigner.user.fullName }}</td> -->
+          <!-- <td>{{ rowData.node.deadline | date : "dd/MM/yyyy" }}</td> -->
+          <ng-container>
+            <td class="d-flex">
+              <div
+                class="action-item d-flex justify-content-center align-items-center mx-2"
+                (click)="openDetail(rowData.node, 'addchild')"
+                pTooltip="Tạo"
+                tooltipPosition="top"
+              >
+                <i class="bi bi-plus-circle-fill"></i>
+              </div>
+              <div
+                class="action-item d-flex justify-content-center align-items-center mx-2"
+                (click)="openDetail(rowData.node, 'update')"
+                pTooltip="Chỉnh sửa"
+                tooltipPosition="top"
+              >
+                <i class="bi bi-pencil-fill"></i>
+              </div>
+              <div
+                class="action-item d-flex justify-content-center align-items-center mx-2"
+                (click)="deleteNode(rowData.node)"
+                pTooltip="Xóa"
+                tooltipPosition="top"
+              >
+                <i class="bi bi-x-circle-fill"></i>
+              </div>
+            </td>
+          </ng-container>
+          <ng-template #td>
+            <td></td>
+          </ng-template>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <div class="p-2">
+          <button pButton (click)="sendToSchools()">Gửi template</button>
+        </div>
+      </ng-template>
+    </p-treeTable>
+  </div>
 </form>
