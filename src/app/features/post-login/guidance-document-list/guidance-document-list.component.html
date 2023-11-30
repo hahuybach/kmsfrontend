@@ -1,50 +1,21 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
-
 <h2>Tra cứu văn bản bổ sung</h2>
-
-<div class="row mt-4">
-  <div class="form-group col-md-7" *ngIf="!advanceSearch">
+<div class="table-container">
+<div class="my-4 advance-search container d-flex flex-row justify-content-between">
+  <div class="form-group col-md-4" *ngIf="!advanceSearch">
     <input type="text"
            name="globalSearch"
            id="globalSearch"
            class="form-control small-input fontAwesome mb-3"
            [(ngModel)]="globalSearch"
            (keyup)="loadGuidanceDocuments()"
+           pInputText
            placeholder="&#xF002; Tra cứu nhanh theo tiêu đề hoặc người tạo"
     >
   </div>
   <div *ngIf="advanceSearch" class="col-md-10">
-    <p-dropdown [options]="issueDropDowns"
-                [(ngModel)]="currentIssueSelected"
-                optionLabel="issueName" [filter]="true"
-                filterBy="issueName"
-                [showClear]="true"
-                placeholder="Chọn 1 kế hoạch kiểm tra"
-                (onChange)="loadGuidanceDocuments()"
-    >
-      <ng-template pTemplate="selectedItem">
-        <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
-          <div>{{ currentIssueSelected.issueName }}</div>
-        </div>
-      </ng-template>
-      <ng-template let-issue pTemplate="item">
-        <div class="flex align-items-center gap-2">
-          <div>{{ issue.issueName }}</div>
-        </div>
-      </ng-template>
-    </p-dropdown>
-    <div class="row mt-3">
-      <div class="col-md-3">
-        <label>Người tạo</label>
-        <input class="form-control"
-               [(ngModel)]="fullName"
-               name="fullName"
-               id="fullName"
-               (keyup)="loadGuidanceDocuments()"
-               placeholder="(VD): Trần Lê Hải"
-        >
-      </div>
-      <div class="col-md-5">
+    <div class="row">
+      <div class="col-md-6">
         <label>Tiêu đề</label>
         <input class="form-control"
                [(ngModel)]="guidanceDocumentName"
@@ -54,31 +25,28 @@
                placeholder="(VD): Kế hoạch PCCC"
         >
       </div>
-<!--      <div class="col-md-2">-->
-<!--        <label>Ngày bắt đầu</label>-->
-<!--        <input class="form-control"-->
-<!--               [(ngModel)]="startDateTime"-->
-<!--               name="startDateTime"-->
-<!--               id="startDateTime"-->
-<!--               type="date"-->
-<!--               (change)="loadGuidanceDocuments()"-->
-
-<!--        >-->
-<!--      </div>-->
-<!--      <div class="col-md-2">-->
-<!--        <label>Ngày kết thúc</label>-->
-<!--        <input class="form-control"-->
-<!--               [(ngModel)]="endDateTime"-->
-<!--               name="endDateTime"-->
-<!--               id="endDateTime"-->
-<!--               type="date"-->
-<!--               (change)="loadGuidanceDocuments()"-->
-
-<!--        >-->
-<!--        <span class="p-error" *ngIf="dateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>-->
-
-<!--      </div>-->
-      <div class="col-md-2">
+      <div class="col-md-6">
+        <p-dropdown [options]="issueDropDowns"
+                    [(ngModel)]="currentIssueSelected"
+                    optionLabel="issueName" [filter]="true"
+                    filterBy="issueName"
+                    [showClear]="true"
+                    placeholder="Chọn 1 kế hoạch kiểm tra"
+                    (onChange)="loadGuidanceDocuments()"
+        >
+          <ng-template pTemplate="selectedItem">
+            <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
+              <div>{{ currentIssueSelected.issueName }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-issue pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <div>{{ issue.issueName }}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      <div class="col-md-6">
         <mat-form-field>
           <mat-label>Chọn 1 khoảng thời gian</mat-label>
           <mat-date-range-input [rangePicker]="picker"  >
@@ -87,11 +55,23 @@
                    (dateChange)="loadGuidanceDocuments()"
             >
           </mat-date-range-input>
-          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle  matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
-
+      </div>
+      <div class="col-md-6">
+        <label>Người tạo</label>
+        <input class="form-control"
+               [(ngModel)]="fullName"
+               name="fullName"
+               id="fullName"
+               (keyup)="loadGuidanceDocuments()"
+               placeholder="(VD): Trần Lê Hải"
+        >
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-3">
       </div>
       <div class="col-md-3">
         <button class="btn btn-primary" (click)="reset()">Reset</button>
@@ -177,17 +157,13 @@
       <td>{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
       <td>{{ doc.accountDto?.user?.fullName}}</td>
       <td>
-
         <i
           class="bi bi-info-circle-fill"
           (click)="onDetail(doc.guidanceDocumentId)"
         ></i>
-
-
       </td>
     </tr>
     </tbody>
-
   </table>
   <div class="d-flex justify-content-end mt-3">
     <div class="d-flex justify-content-center" *ngIf="guidanceDocuments.length > 0">
@@ -211,23 +187,7 @@
       <select (change)="changePageSize()" class="form-control super-small-input ng-untouched ng-pristine ng-valid" [(ngModel)]="pageSize">
         <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>
       </select>
-
-<!--      <input class="form-control super-small-input"-->
-<!--             min="1"-->
-<!--             type="number"-->
-<!--             id="pageSize"-->
-<!--             name="pageSize"-->
-<!--             style=" margin-right: 20px"-->
-<!--             max="{{maxPage}} "-->
-<!--             (keyup)="loadGuidanceDocuments()"-->
-<!--             (mouseup)=" loadGuidanceDocuments()"-->
-
-<!--             [(ngModel)]="pageSize"-->
-<!--      >-->
-
-
     </div>
-
     <div class="" *ngIf="guidanceDocuments.length > 0">
       <pagination-controls
         previousLabel="Trước"
@@ -235,17 +195,9 @@
         (pageChange)="   [  onTableDataChange($event), maxPageOnKeyUp()]"
       >
       </pagination-controls>
-
-
     </div>
   </div>
-
-
-
   <p-toast key="paging" position="bottom-right"></p-toast>
   <p-toast key="issueId" position="top-right"></p-toast>
-
 </div>
-
-
-
+</div>
