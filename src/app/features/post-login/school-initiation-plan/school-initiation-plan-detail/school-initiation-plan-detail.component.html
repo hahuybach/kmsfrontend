@@ -70,36 +70,52 @@
         <tr>
           <th>STT</th>
           <th pSortableColumn="schoolDocument.documentName">
-            Tài liệu<p-sortIcon
-              field="schoolDocument.documentName"
-            ></p-sortIcon>
+            <div>
+              Tài liệu<p-sortIcon
+                field="schoolDocument.documentName"
+              ></p-sortIcon>
+            </div>
           </th>
           <th pSortableColumn="schoolDocument.documentCode">
-            Mã tài liệu<p-sortIcon
-              field="schoolDocument.documentCode"
-            ></p-sortIcon>
+            <div>
+              Mã tài liệu<p-sortIcon
+                field="schoolDocument.documentCode"
+              ></p-sortIcon>
+            </div>
           </th>
           <th pSortableColumn="schoolDocument.uploadedDate">
-            Ngày tạo<p-sortIcon
-              field="schoolDocument.uploadedDate"
-            ></p-sortIcon>
+            <div>
+              Ngày tạo<p-sortIcon
+                field="schoolDocument.uploadedDate"
+              ></p-sortIcon>
+            </div>
           </th>
           <th pSortableColumn="schoolDocument.createdBy">
-            Người tạo<p-sortIcon field="schoolDocument.createdBy"></p-sortIcon>
+            <div>
+              Người tạo<p-sortIcon
+                field="schoolDocument.createdBy"
+              ></p-sortIcon>
+            </div>
           </th>
           <th pSortableColumn="schoolDocument.status.statusName">
-            Trạng thái
-            <p-sortIcon field="schoolDocument.status.statusName"></p-sortIcon>
+            <div>
+              Ngày phê duyệt
+              <p-sortIcon field="departmentDocument.uploadedDate"></p-sortIcon>
+            </div>
           </th>
           <th pSortableColumn="departmentDocument.uploadedDate">
-            Ngày phê duyệt
-            <p-sortIcon field="departmentDocument.uploadedDate"></p-sortIcon>
+            <div>
+              Ngày phê duyệt
+              <p-sortIcon field="departmentDocument.uploadedDate"></p-sortIcon>
+            </div>
           </th>
           <th pSortableColumn="departmentDocument.account.user.fullName">
-            Người đánh giá
-            <p-sortIcon
-              field="departmentDocument.account.user.fullName"
-            ></p-sortIcon>
+            <div>
+              Người đánh giá
+              <p-sortIcon
+                field="departmentDocument.account.user.fullName"
+              ></p-sortIcon>
+            </div>
           </th>
           <th></th>
         </tr>
