@@ -78,6 +78,7 @@
                  id="fullName"
                  (keyup)="loadGuidanceDocuments()"
                  placeholder="(VD): Trần Lê Hải"
+                 pInputText
           >
         </div>
       </div>
@@ -85,7 +86,7 @@
     <div *ngIf="advanceSearch" class="d-flex justify-content-end align-items-center col-md-2">
       <button pButton class="reset-button" (click)="reset()">Reset</button>
     </div>
-    <div class="col-md-12 d-flex flex-row justify-content-end align-items-center mt-2">
+    <div class="col-md-12 d-flex flex-row justify-content-end align-items-center">
       <button pButton (click)="onCreateGuidanceDocument()" *ngIf="isDirector||isViceDirector">Tạo mới</button>
     </div>
   </div>

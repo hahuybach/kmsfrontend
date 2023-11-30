@@ -110,7 +110,7 @@ export class AssignmentTreeListComponent implements OnInit {
     }
   }
 
-  private reset() {
+  protected reset() {
     this.pageNo = 1;
     this.sortBy = 'createdDate';
     this.sortDirection = 'desc';

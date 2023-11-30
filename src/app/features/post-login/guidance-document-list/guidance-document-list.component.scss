@@ -136,11 +136,9 @@
   border-radius: 0 0 8px 8px;
   select {
     margin-top: 8px;
-
     option {
       font-size: 20px;
       background-color: white !important;
-
       :hover {
         background-color: $primary-hover;
       }

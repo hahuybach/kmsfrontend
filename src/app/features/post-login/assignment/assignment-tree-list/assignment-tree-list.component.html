@@ -103,6 +103,9 @@
         </div>
       </div>
     </div>
+    <div *ngIf="advanceSearch" class="d-flex justify-content-end align-items-end col-md-2">
+      <button pButton class="reset-button" (click)="reset()">Reset</button>
+    </div>
   </div>
   <div class="table-content">
     <table class="table p-2 table-hover align-middle">
@@ -161,7 +164,6 @@
             ></i>
           </div>
         </th>
-
         <th></th>
       </tr>
       <span *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</span>
@@ -179,11 +181,11 @@
           let i = index
         "
       >
-        <td class="py-3 px-2">{{ task.rootAssignmentName }}</td>
-        <td class="py-3 px-2">{{ task.issue?.issueName }}</td>
-        <td class="py-3 px-2">{{ task.school?.schoolName }}</td>
-        <td class="py-3 px-2"><p-tag [severity]="getStatusSeverity(task.rootAssignmentStatus?.statusId)" [value]="task.rootAssignmentStatus?.statusName"></p-tag></td>
-        <td class="py-3 px-2">
+        <td class="py-4 px-2" pTooltip="{{task.rootAssignmentName}}" tooltipPosition="top">{{ task.rootAssignmentName }}</td>
+        <td class="py-4 px-2" pTooltip="{{task.issue?.issueName}}" tooltipPosition="top">{{ task.issue?.issueName }}</td>
+        <td class="py-4 px-2" pTooltip="{{task.school?.schoolName}}" tooltipPosition="top">{{ task.school?.schoolName }}</td>
+        <td class="py-4 px-2"><p-tag [severity]="getStatusSeverity(task.rootAssignmentStatus?.statusId)" [value]="task.rootAssignmentStatus?.statusName"></p-tag></td>
+        <td class="py-4 px-2">
           <button class="action-button" type="button" (click)="
               onDetail(
                 task.school?.schoolId,

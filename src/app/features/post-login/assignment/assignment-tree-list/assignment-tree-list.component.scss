@@ -63,22 +63,24 @@
   border: 0.8px solid #d2d2d2;
   border-radius: 8px;
   background-color: #f8f9fa;
-
   .advance-search {
   }
 }
 
 .table-content {
   margin-bottom: 0;
-
   .table {
     margin-bottom: 0;
-
+    border-collapse: collapse;
+    table-layout: fixed;
     thead {
       font-size: 17px;
       border-top: 0.8px solid #eef0f3;
       tr {
         th {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           border-bottom: none;
           background-color: #f8f9fa;
           font-weight: 600;
@@ -87,14 +89,34 @@
         }
       }
     }
-
     tr {
       border: none;
     }
-
     td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-size: 15px;
       border: none;
+    }
+    th:first-child, td:first-child {
+      width: 35%;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+      width: 25%;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+      width: 20%;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
+      width: 15%;
+    }
+
+    th:last-child, td:last-child {
+      width: 5%;
     }
   }
 }
@@ -108,11 +130,9 @@
   border-radius: 0 0 8px 8px;
   select {
     margin-top: 8px;
-
     option {
       font-size: 20px;
       background-color: white !important;
-
       :hover {
         background-color: $primary-hover;
       }
@@ -163,3 +183,8 @@
   }
 }
 
+.reset-button{
+  background-color: white;
+  color: $primary;
+  border: 1px solid $primary;
+}
