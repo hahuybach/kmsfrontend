@@ -55,7 +55,7 @@
          [ngClass]="{'col-md-2 d-flex align-items-end': advanceSearch, 'col-md-3 ': !advanceSearch}">
       <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
     </div>
-    <div *ngIf="advanceSearch" class="col-md-10  mt-2">
+    <div *ngIf="advanceSearch" class="col-md-10 mt-2">
       <div class="row">
         <div class="col-md-6">
           <mat-form-field class="w-100">
@@ -93,7 +93,7 @@
     <table class="table p-2 table-hover align-middle">
       <thead>
       <tr>
-        <th (click)="onSort('guidanceDocumentId')">
+        <th  (click)="onSort('guidanceDocumentId')">
           <div class="header-container">
             <span class="icon-text">Mã</span>
             <i class="bi bi-sort-up" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'asc'"></i>
@@ -135,7 +135,6 @@
         <th></th>
       </tr>
       <span *ngIf="allGuidanceDocument == 0">Không tìm thấy bản ghi nào phù hợp</span>
-
       </thead>
       <tbody *ngIf="guidanceDocuments.length > 0">
       <tr
@@ -150,12 +149,12 @@
           let i = index
         "
       >
-        <td class="py-3 px-2" style="width: 5%">{{ doc.guidanceDocumentId}}</td>
-        <td class="py-3 px-2" style="width: 40%">{{ doc.guidanceDocumentName }}</td>
-        <td class="py-3 px-2" style="width: 25%">{{ doc.issueDto?.issueName }}</td>
-        <td class="py-3 px-2" style="width: 10%">{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
-        <td class="py-3 px-2" style="width: 15%">{{ doc.accountDto?.user?.fullName}}</td>
-        <td class="py-3 px-2" style="width: 5%">
+        <td class="py-4 px-2">{{ doc.guidanceDocumentId}}</td>
+        <td class="py-4 px-2" pTooltip="{{doc.guidanceDocumentName}}" tooltipPosition="top">{{ doc.guidanceDocumentName }}</td>
+        <td class="py-4 px-2">{{ doc.issueDto?.issueName }}</td>
+        <td class="py-4 px-2">{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
+        <td class="py-4 px-2">{{ doc.accountDto?.user?.fullName}}</td>
+        <td class="py-4 px-2">
           <button class="action-button" type="button" (click)="onDetail(doc.guidanceDocumentId)">
             <i class="bi bi-info-circle-fill"></i>
           </button>

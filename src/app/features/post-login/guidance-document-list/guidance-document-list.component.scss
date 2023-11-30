@@ -69,15 +69,18 @@
 
 .table-content {
   margin-bottom: 0;
-
   .table {
     margin-bottom: 0;
-
+    border-collapse: collapse;
+    table-layout: fixed;
     thead {
       font-size: 17px;
       border-top: 0.8px solid #eef0f3;
       tr {
         th {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           border-bottom: none;
           background-color: #f8f9fa;
           font-weight: 600;
@@ -92,8 +95,35 @@
     }
 
     td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-size: 15px;
       border: none;
+    }
+
+    th:first-child, td:first-child {
+      width: 5%;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+      width: 40%;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+      width: 25%;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
+      width: 10%;
+    }
+
+    th:nth-child(5), td:nth-child(5) {
+      width: 15%;
+    }
+
+    th:last-child, td:last-child {
+      width: 5%;
     }
   }
 }
@@ -166,3 +196,4 @@
   color: $primary;
   border: 1px solid $primary;
 }
+
