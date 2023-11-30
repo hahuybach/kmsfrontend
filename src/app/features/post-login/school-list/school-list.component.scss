@@ -71,7 +71,19 @@
   }
   .p-inputtext,
   .p-dropdown {
-    border-radius: 8px;
+    // border-radius: 8px;
+  }
+
+  // FILTER ICON
+  .p-column-filter-menu-button-active {
+    border-radius: 50%;
+    // background-color: #cfd3ff;
+    background-color: $primary;
+    color: #fff;
+  }
+  .p-column-filter-clear-button,
+  .p-column-filter-menu-button {
+    border-radius: 50%;
   }
 }
 .action-item {

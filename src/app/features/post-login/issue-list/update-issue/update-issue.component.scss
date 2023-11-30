@@ -146,6 +146,9 @@ textarea {
 .font-size-18 {
     font-size: 18px;
 }
+.advance-search {
+    // background-color: $primary-hover;
+}
 :host ::ng-deep {
     table {
         table-layout: fixed;
@@ -182,5 +185,17 @@ textarea {
             background-color: $primary-hover !important;
             color: #fff !important;
         }
+    }
+
+    // FILTER ICON
+    .p-column-filter-menu-button-active {
+        border-radius: 50%;
+        // background-color: #cfd3ff;
+        background-color: $primary;
+        color: #fff;
+    }
+    .p-column-filter-clear-button,
+    .p-column-filter-menu-button {
+        border-radius: 50%;
     }
 }

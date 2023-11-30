@@ -30,6 +30,7 @@
               *ngIf="!filterVisible"
               pButton
               (click)="changeFilterVisible(true)"
+              class="advance-search"
             >
               Tra cứu nâng cao
             </button>
@@ -37,6 +38,7 @@
               *ngIf="filterVisible"
               pButton
               (click)="changeFilterVisible(false)"
+              class="advance-search"
             >
               Ẩn tra cứu nâng cao
             </button>
@@ -53,7 +55,7 @@
       </ng-template>
       <ng-template pTemplate="header">
         <tr *ngIf="filterVisible">
-          <th></th>
+          <th class="th-id"></th>
           <th>
             <p-columnFilter
               type="text"
@@ -72,7 +74,7 @@
               placeholder="Tên người đăng"
             ></p-columnFilter>
           </th>
-          <th>
+          <!-- <th>
             <p-columnFilter
               type="date"
               field="createdDate"
@@ -80,7 +82,7 @@
               tooltipPosition="top"
               placeholder="Ngày đăng"
             ></p-columnFilter>
-          </th>
+          </th> -->
           <th>
             <p-columnFilter
               type="numeric"
@@ -88,7 +90,7 @@
               tooltipPosition="top"
             ></p-columnFilter>
           </th>
-          <th></th>
+          <th class="th-small"></th>
         </tr>
         <tr>
           <th class="th-id">
@@ -103,7 +105,7 @@
               <div></div>
             </div>
           </th>
-          <th pSortableColumn="account.user.fullName">
+          <th pSortableColumn="account.user.fullName" class="td-createdby">
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 Người đăng
@@ -111,15 +113,15 @@
               </div>
             </div>
           </th>
-          <th class="th-small" pSortableColumn="createdDate">
+          <!-- <th class="th-small" pSortableColumn="createdDate">
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 Ngày đăng
                 <p-sortIcon field="createdDate"></p-sortIcon>
               </div>
             </div>
-          </th>
-          <th class="th-small" pSortableColumn="inspectorGroupSize">
+          </th> -->
+          <th pSortableColumn="inspectorGroupSize">
             <div class="d-flex justify-content-between align-items-center">
               <div>
                 Số người
@@ -150,10 +152,10 @@
             <span class="p-column-title">Người đăng</span>
             {{ issue.account.user.fullName }}
           </td>
-          <td>
+          <!-- <td>
             <span class="p-column-title">Date</span>
             {{ issue.createdDate | date : "dd/MM/yyyy" }}
-          </td>
+          </td> -->
           <!-- <td>
             <span class="p-column-title">Số lượng văn bản</span>
             {{ issue.docNum }}
@@ -188,7 +190,7 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="6">Không tìm thấy kế hoạch nào</td>
+          <td colspan="5">Không tìm thấy kế hoạch nào</td>
         </tr>
       </ng-template>
     </p-table>

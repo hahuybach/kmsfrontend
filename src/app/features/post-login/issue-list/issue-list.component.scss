@@ -128,10 +128,15 @@
         padding: 0 !important;
         margin: 0 !important;
     }
+    // filter icon
     .p-column-filter-menu-button-active {
+        border-radius: 50%;
         // background-color: #cfd3ff;
         background-color: $primary;
         color: #fff;
+    }
+    .p-column-filter-clear-button,
+    .p-column-filter-menu-button {
         border-radius: 50%;
     }
     .p-inputnumber-button {
@@ -194,4 +199,7 @@
 }
 .mat-headline-4 {
     margin: 0;
+}
+.advance-search {
+    // background-color: $primary-hover;
 }
