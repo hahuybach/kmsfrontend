@@ -10,16 +10,23 @@
 />
 <h2>Danh sách các trường</h2>
 <div class="d-flex justify-content-end mb-3" *ngIf="!isDirector">
-  <button (click)="showImportSchool()"
-          class="btn btn-info ml-3 mr-3"
-          *ngIf="isAdmin"
-  >Nhập trường bằng file excel</button>
+  <button
+    pButton
+    (click)="showImportSchool()"
+    class="btn btn-info ml-3 mr-3"
+    *ngIf="isAdmin"
+  >
+    Nhập trường bằng file excel
+  </button>
 
-  <button class="btn btn-primary"
-          (click)="onCreateSchool()"
-          *ngIf="isAdmin"
-  >Tạo mới</button>
-
+  <button
+    pButton
+    class="btn btn-primary"
+    (click)="onCreateSchool()"
+    *ngIf="isAdmin"
+  >
+    Tạo mới
+  </button>
 </div>
 <div class="card">
   <p-table
@@ -37,7 +44,7 @@
     selectionMode="single"
   >
     <ng-template pTemplate="caption">
-      <div class="d-flex justify-content-start">
+      <div class="d-flex justify-content-between">
         <span class="w-50">
           <input
             pInputText
@@ -47,36 +54,33 @@
             placeholder="&#xF002; Tra cứu nhanh theo tên trường hoặc địa chỉ"
           />
         </span>
-        <button
+        <!-- <button
           pButton
           label="Clear"
           class="p-button-outlined"
           icon="pi pi-filter-slash"
           (click)="clear(dt1)"
-        ></button>
+        ></button> -->
+        <div>
+          <button
+            *ngIf="!filterVisible"
+            pButton
+            (click)="changeFilterVisible(true)"
+          >
+            Tra cứu nâng cao
+          </button>
+          <button
+            *ngIf="filterVisible"
+            pButton
+            (click)="changeFilterVisible(false)"
+          >
+            Ẩn tra cứu nâng cao
+          </button>
+        </div>
       </div>
     </ng-template>
     <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="schoolId">
-          Mã
-          <p-sortIcon field="schoolId"></p-sortIcon>
-        </th>
-        <th pSortableColumn="schoolName">
-          Tên trường
-          <p-sortIcon field="schoolName"></p-sortIcon>
-        </th>
-        <th pSortableColumn="exactAddress">
-          Địa chỉ
-          <p-sortIcon field="exactAddress"></p-sortIcon>
-        </th>
-        <th pSortableColumn="isActive">
-          Trạng thái
-          <p-sortIcon field="isActive"></p-sortIcon>
-        </th>
-        <th></th>
-      </tr>
-      <tr>
+      <tr *ngIf="filterVisible">
         <th></th>
         <th>
           <p-columnFilter
@@ -130,6 +134,33 @@
         </th>
         <th></th>
       </tr>
+      <tr>
+        <th pSortableColumn="schoolId">
+          <div>
+            Mã
+            <p-sortIcon field="schoolId"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="schoolName">
+          <div>
+            Tên trường
+            <p-sortIcon field="schoolName"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="exactAddress">
+          <div>
+            Địa chỉ
+            <p-sortIcon field="exactAddress"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="isActive">
+          <div>
+            Trạng thái
+            <p-sortIcon field="isActive"></p-sortIcon>
+          </div>
+        </th>
+        <th></th>
+      </tr>
     </ng-template>
     <ng-template pTemplate="body" let-school>
       <tr>
@@ -160,6 +191,8 @@
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"
             (click)="onDetail(school.schoolId)"
+            pTooltip="Chi tiết"
+            tooltipPosition="top"
           >
             <i class="bi bi-info-circle-fill"></i>
           </div>
@@ -167,31 +200,48 @@
             class="action-item d-flex justify-content-center align-items-center mx-2"
             (click)="onUpdate(school.schoolId)"
             *ngIf="isAdmin"
+            pTooltip="Chỉnh sửa"
+            tooltipPosition="top"
           >
             <i class="bi bi-pencil-fill"></i>
           </div>
         </td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5">Không tìm thấy trường nào phù hợp</td>
+      </tr>
+    </ng-template>
   </p-table>
 </div>
-<p-dialog header="Tạo trường bằng file excel" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+<p-dialog
+  header="Tạo trường bằng file excel"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
   <div>
     <input
-            class="form-control"
-            required
-            (change)="onSubmitFile($event)"
-            type="file"
+      class="form-control"
+      required
+      (change)="onSubmitFile($event)"
+      type="file"
     />
-    <button class="btn btn-primary mt-3" (click)="confirm()">
+    <button pButton class="btn btn-primary mt-3" (click)="confirm()">
       Xác nhận
     </button>
-    <button class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
+    <button pButton class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
       Tải file mẫu
     </button>
   </div>
 </p-dialog>
-<p-confirmDialog key="createSchoolByExcel" [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog
+  key="createSchoolByExcel"
+  [style]="{ width: '50vw' }"
+></p-confirmDialog>
 <p-toast position="top-right" key="error"></p-toast>
 <app-loading-complete-dialog
   [visible]="isLoading"

@@ -8,6 +8,7 @@
 /* Replace with your preferred theme */
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-alpine.css";
+@import "assets/scss/base.scss";
 //SCROLLBAR CSS
 /* width */
 ::-webkit-scrollbar {
@@ -33,6 +34,7 @@
 
 :root {
   $primary: #4253f0;
+  $primary-hover: #9aa3ff;
 }
 
 // Tag
@@ -85,33 +87,18 @@ html,
 body {
   height: 100%;
 }
-
-body {
-  margin: 0;
-  font-family: "Helvetica Neue", sans-serif;
-}
-
-html, body {
-  height: 100%;
-}
-
 body {
   font-family: "Helvetica Neue", sans-serif;
 }
-
 .mat-typography {
   font-family: inherit !important;
 }
-
-html, body {
-  height: 100%;
+.td-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-h4{
-  font-size: 1em;
-  font-weight: bolder;
-}
-
-body {
-  font-family:"Helvetica Neue", sans-serif;
+ul {
+  padding: 0 !important;
+  margin: 0 !important;
 }

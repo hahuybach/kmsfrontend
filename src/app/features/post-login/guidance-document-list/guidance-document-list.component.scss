@@ -106,7 +106,7 @@
   background-color: white;
   border-radius: 0 0 8px 8px;
   select {
-    margin-top: 10px;
+    margin-top: 8px;
 
     option {
       font-size: 20px;
@@ -122,6 +122,7 @@
     width: auto !important;
     display: flex;
     font-size: 20px;
+    margin-bottom: 20px !important;
     .small-screen {
       display: none;
     }
@@ -141,7 +142,6 @@
       border-radius: 50%;
       align-items: center;
       justify-content: center;
-
       a {
         text-decoration: none !important;
         background: none !important;

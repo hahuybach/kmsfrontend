@@ -59,9 +59,8 @@ export class UpdateIssueComponent implements OnInit {
     documentName: [''],
     documentCode: [''],
     inspector: [''],
-    // addedDocumentIssues: [],
-    // inEffectiveDocumentIds: [],
   });
+  filterVisible: Boolean = false;
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
@@ -410,5 +409,8 @@ export class UpdateIssueComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+  changeFilterVisible(status: Boolean) {
+    this.filterVisible = status;
   }
 }
