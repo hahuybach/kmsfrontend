@@ -304,7 +304,6 @@ this.setAuth()
         this.route.navigate(['guidanceDocument/create/' + this.issueId])
       }
     })
-
   }
 
   onChangePageSize(){

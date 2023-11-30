@@ -207,7 +207,7 @@ export class InspectionPlanListComponent implements OnInit{
       this.advanceSearchButtonText = 'Ẩn tra cứu nâng cao'
     }
   }
-  private reset() {
+  protected reset() {
     this.pageNo = 1;
     this.sortBy = 'createdDate';
     this.sortDirection = 'desc';
@@ -259,4 +259,6 @@ export class InspectionPlanListComponent implements OnInit{
     this.pageNo = $event;
     this.loadDocuments()
   }
+
+  onCreateInspectionPlan(){}
 }

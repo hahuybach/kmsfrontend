@@ -2,7 +2,7 @@
 <h2>Danh sách kế hoạch thanh tra</h2>
 <p-toast key="error" position="top-right"></p-toast>
 <div class="table-container">
-  <div class="my-4 advance-search container d-flex flex-row justify-content-between">
+  <div class="my-4 row advance-search container d-flex flex-row justify-content-between">
     <div class="form-group col-md-4" *ngIf="!advanceSearch">
       <input type="text"
              name="globalSearch"
@@ -56,6 +56,12 @@
           </mat-form-field>
         </div>
       </div>
+    </div>
+    <div class="text-end justify-content-end"
+         [ngClass]="{'col-md-2  d-flex align-items-center': advanceSearch, 'col-md-3 ': !advanceSearch}">
+      <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
+    </div>
+    <div *ngIf="advanceSearch" class="col-md-10 mt-2">
       <div class="row">
         <div class="col-md-4">
           <p-dropdown [options]="issueDropDowns"
@@ -116,8 +122,11 @@
         </div>
       </div>
     </div>
-    <div class="text-end" [ngClass]="{'col-md-2': advanceSearch, 'col-md-3 ': !advanceSearch}">
-      <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
+    <div *ngIf="advanceSearch" class="d-flex justify-content-end align-items-center col-md-2">
+      <button pButton class="reset-button" (click)="reset()">Reset</button>
+    </div>
+    <div class="col-md-12 d-flex flex-row justify-content-end align-items-center mt-2">
+      <button pButton (click)="onCreateInspectionPlan()">Tạo mới</button>
     </div>
   </div>
   <div class="table-content">
@@ -184,12 +193,13 @@
           let i = index
         "
       >
-        <td class="py-3 px-2" style="width: 28%">{{ plan.inspectionPlanName }}</td>
-        <td class="py-3 px-2" style="width: 16%">{{ plan.issueName }}</td>
-        <td class="py-3 px-2" style="width: 16%">{{ plan.schoolName }}</td>
-        <td class="py-3 px-2" style="width: 13%">{{ plan.startDate  | date : "dd/MM/yyyy" }}</td>
-        <td class="py-3 px-2" style="width: 11%">{{ plan.endDate | date : "dd/MM/yyyy" }}</td>
-        <td class="py-3 px-2" style="width: 16%">
+        <td class="py-4 px-2" pTooltip="{{plan.inspectionPlanName}}"
+            tooltipPosition="top">{{ plan.inspectionPlanName }}</td>
+        <td class="py-4 px-2" pTooltip="{{plan.issueName}}" tooltipPosition="top">{{ plan.issueName }}</td>
+        <td class="py-4 px-2" pTooltip="{{plan.schoolName}}" tooltipPosition="top">{{ plan.schoolName }}</td>
+        <td class="py-4 px-2">{{ plan.startDate  | date : "dd/MM/yyyy" }}</td>
+        <td class="py-4 px-2">{{ plan.endDate | date : "dd/MM/yyyy" }}</td>
+        <td class="py-4 px-2">
           <p-tag [severity]="getStatusSeverity(plan?.status?.statusId)" [value]="plan.statusName"></p-tag>
         </td>
         <td class="py-3 px-2">
@@ -199,7 +209,6 @@
         </td>
       </tr>
       </tbody>
-
     </table>
     <div class="d-flex justify-content-center  table-footer">
       <div class="me-3 mt-3" *ngIf="inspectionPlans && inspectionPlans.length > 0">
