@@ -7,5 +7,6 @@ export interface TaskTreeResponse{
   rootAssignmentName?: number,
   rootAssignmentStatus?: StatusResponse,
   issue?: IssueResponse,
-  school?: SchoolResponse
+  school?: SchoolResponse,
+  status: any;
 }

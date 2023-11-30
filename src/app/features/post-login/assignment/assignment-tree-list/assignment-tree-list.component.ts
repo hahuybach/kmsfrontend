@@ -52,6 +52,15 @@ export class AssignmentTreeListComponent implements OnInit {
     private documentService: DocumentService
   ) {}
 
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      13: 'warning',
+      14: 'danger',
+      15: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
+  }
+
   loadDocuments() {
     this.documentService
       .filterTreeTask(
@@ -101,7 +110,7 @@ export class AssignmentTreeListComponent implements OnInit {
     }
   }
 
-  private reset() {
+  protected reset() {
     this.pageNo = 1;
     this.sortBy = 'createdDate';
     this.sortDirection = 'desc';

@@ -1,166 +1,142 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
-
 <h2>Tra cứu văn bản bổ sung</h2>
-
-<div class="row mt-4">
-  <div class="form-group col-md-7" *ngIf="!advanceSearch">
-    <input type="text"
-           name="globalSearch"
-           id="globalSearch"
-           class="form-control small-input fontAwesome mb-3"
-           [(ngModel)]="globalSearch"
-           (keyup)="loadGuidanceDocuments()"
-           placeholder="&#xF002; Tra cứu nhanh theo tiêu đề hoặc người tạo"
-    >
-  </div>
-  <div *ngIf="advanceSearch" class="col-md-10">
-    <p-dropdown [options]="issueDropDowns"
-                [(ngModel)]="currentIssueSelected"
-                optionLabel="issueName" [filter]="true"
-                filterBy="issueName"
-                [showClear]="true"
-                placeholder="Chọn 1 kế hoạch kiểm tra"
-                (onChange)="loadGuidanceDocuments()"
-    >
-      <ng-template pTemplate="selectedItem">
-        <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
-          <div>{{ currentIssueSelected.issueName }}</div>
+<div class="table-container">
+  <div class="my-4 row advance-search container d-flex flex-row justify-content-between">
+    <div class="form-group col-md-4" *ngIf="!advanceSearch">
+      <input type="text"
+             name="globalSearch"
+             id="globalSearch"
+             class="form-control small-input fontAwesome mb-3"
+             [(ngModel)]="globalSearch"
+             (keyup)="loadGuidanceDocuments()"
+             pInputText
+             placeholder="&#xF002; Tra cứu nhanh theo tiêu đề hoặc người tạo"
+      >
+    </div>
+    <div *ngIf="advanceSearch" class="col-md-10">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="fw-medium">Tiêu đề</label>
+          <input class="form-control"
+                 [(ngModel)]="guidanceDocumentName"
+                 name="guidanceDocumentName"
+                 id="guidanceDocumentName"
+                 (keyup)="loadGuidanceDocuments()"
+                 placeholder="(VD): Kế hoạch PCCC"
+                 pInputText
+          >
         </div>
-      </ng-template>
-      <ng-template let-issue pTemplate="item">
-        <div class="flex align-items-center gap-2">
-          <div>{{ issue.issueName }}</div>
+        <div class="col-md-6">
+          <label class="fw-medium">Kế hoạch</label>
+          <p-dropdown
+            class="w-100"
+            [options]="issueDropDowns"
+            [(ngModel)]="currentIssueSelected"
+            optionLabel="issueName" [filter]="true"
+            filterBy="issueName"
+            [showClear]="true"
+            placeholder="Chọn 1 kế hoạch kiểm tra"
+            (onChange)="loadGuidanceDocuments()"
+          >
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
+                <div>{{ currentIssueSelected.issueName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-issue pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ issue.issueName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
         </div>
-      </ng-template>
-    </p-dropdown>
-    <div class="row mt-3">
-      <div class="col-md-3">
-        <label>Người tạo</label>
-        <input class="form-control"
-               [(ngModel)]="fullName"
-               name="fullName"
-               id="fullName"
-               (keyup)="loadGuidanceDocuments()"
-               placeholder="(VD): Trần Lê Hải"
-        >
       </div>
-      <div class="col-md-5">
-        <label>Tiêu đề</label>
-        <input class="form-control"
-               [(ngModel)]="guidanceDocumentName"
-               name="guidanceDocumentName"
-               id="guidanceDocumentName"
-               (keyup)="loadGuidanceDocuments()"
-               placeholder="(VD): Kế hoạch PCCC"
-        >
+    </div>
+    <div class="text-end justify-content-end"
+         [ngClass]="{'col-md-2 d-flex align-items-end': advanceSearch, 'col-md-3 ': !advanceSearch}">
+      <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
+    </div>
+    <div *ngIf="advanceSearch" class="col-md-10 mt-2">
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="w-100">
+            <mat-label>Khoảng thời gian tạo</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate [(ngModel)]="startDateTime" placeholder="Ngày tạo bắt đầu">
+              <input matEndDate [(ngModel)]="endDateTime" placeholder="Ngày tạo kết thúc"
+                     (dateChange)="loadGuidanceDocuments()"
+              >
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <label class="fw-medium">Người tạo</label>
+          <input class="form-control"
+                 [(ngModel)]="fullName"
+                 name="fullName"
+                 id="fullName"
+                 (keyup)="loadGuidanceDocuments()"
+                 placeholder="(VD): Trần Lê Hải"
+                 pInputText
+          >
+        </div>
       </div>
-<!--      <div class="col-md-2">-->
-<!--        <label>Ngày bắt đầu</label>-->
-<!--        <input class="form-control"-->
-<!--               [(ngModel)]="startDateTime"-->
-<!--               name="startDateTime"-->
-<!--               id="startDateTime"-->
-<!--               type="date"-->
-<!--               (change)="loadGuidanceDocuments()"-->
-
-<!--        >-->
-<!--      </div>-->
-<!--      <div class="col-md-2">-->
-<!--        <label>Ngày kết thúc</label>-->
-<!--        <input class="form-control"-->
-<!--               [(ngModel)]="endDateTime"-->
-<!--               name="endDateTime"-->
-<!--               id="endDateTime"-->
-<!--               type="date"-->
-<!--               (change)="loadGuidanceDocuments()"-->
-
-<!--        >-->
-<!--        <span class="p-error" *ngIf="dateError">Ngày kết thúc không thể nhỏ hơn ngày bắt đầu</span>-->
-
-<!--      </div>-->
-      <div class="col-md-2">
-        <mat-form-field>
-          <mat-label>Chọn 1 khoảng thời gian</mat-label>
-          <mat-date-range-input [rangePicker]="picker"  >
-            <input matStartDate [(ngModel)]="startDateTime" placeholder="Ngày tạo bắt đầu" >
-            <input matEndDate    [(ngModel)]="endDateTime" placeholder="Ngày tạo kết thúc"
-                   (dateChange)="loadGuidanceDocuments()"
-            >
-          </mat-date-range-input>
-          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle  matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-
-      </div>
-      <div class="col-md-3">
-        <button class="btn btn-primary" (click)="reset()">Reset</button>
-
-      </div>
-
-
+    </div>
+    <div *ngIf="advanceSearch" class="d-flex justify-content-end align-items-center col-md-2">
+      <button pButton class="reset-button" (click)="reset()">Reset</button>
+    </div>
+    <div class="col-md-12 d-flex flex-row justify-content-end align-items-center">
+      <button pButton (click)="onCreateGuidanceDocument()" *ngIf="isDirector||isViceDirector">Tạo mới</button>
     </div>
   </div>
-  <div class="col-md-2">
-    <button (click)="onAdvanceSearch()" class="btn btn-primary">{{advanceSearchButtonText}}</button>
-  </div>
-</div>
-
-
-<div class="d-flex justify-content-end mb-3">
-  <button class="btn btn-primary" (click)="onCreateGuidanceDocument()" *ngIf="isDirector||isViceDirector">Tạo mới</button>
-</div>
-<div class="container">
-  <table class="table table-hover table-fit">
-    <thead>
-    <tr>
-      <th (click)="onSort('guidanceDocumentId')">
-        <div class="header-container">
-          <span class="icon-text">Mã</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'desc'"></i>
-        </div>
-      </th>
-      <th (click)="onSort('guidanceDocumentName')">
-        <div class="header-container">
-          <span class="icon-text">Tiêu đề</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'desc'"></i>
-        </div>
-      </th>
-      <th (click)="onSort('issue.createdDate')">
-        <div class="header-container">
-          <span class="icon-text">Kế hoạch kiểm tra</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'desc'"></i>
-        </div>
-      </th>
-
-      <th (click)="onSort('createdDate')">
-        <div class="header-container">
-          <span class="icon-text">Ngày tạo</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"></i>
-        </div>
-
-
-      </th>
-      <th (click)="onSort('account.user.fullName')">
-        <div class="header-container">
-          <span class="icon-text">Người tạo</span>
-          <i class="bi bi-sort-up" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'asc'"></i>
-          <i class="bi bi-sort-down" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'desc'"></i>
-        </div>
-      </th>
-
-      <th></th>
-    </tr>
-    <span *ngIf="allGuidanceDocument == 0">Không tìm thấy bản ghi nào phù hợp</span>
-
-    </thead>
-    <tbody *ngIf="guidanceDocuments.length > 0">
-    <tr
-      *ngFor="
+  <div class="table-content">
+    <table class="table p-2 table-hover align-middle">
+      <thead>
+      <tr>
+        <th  (click)="onSort('guidanceDocumentId')">
+          <div class="header-container">
+            <span class="icon-text">Mã</span>
+            <i class="bi bi-sort-up" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'asc'"></i>
+            <i class="bi bi-sort-down" *ngIf="sortBy === 'guidanceDocumentId' && sortDirection === 'desc'"></i>
+          </div>
+        </th>
+        <th (click)="onSort('guidanceDocumentName')">
+          <div class="header-container">
+            <span class="icon-text">Tiêu đề</span>
+            <i class="bi bi-sort-up" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'asc'"></i>
+            <i class="bi bi-sort-down" *ngIf="sortBy === 'guidanceDocumentName' && sortDirection === 'desc'"></i>
+          </div>
+        </th>
+        <th (click)="onSort('issue.createdDate')">
+          <div class="header-container">
+            <span class="icon-text">Kế hoạch kiểm tra</span>
+            <i class="bi bi-sort-up" *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'asc'"></i>
+            <i class="bi bi-sort-down" *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'desc'"></i>
+          </div>
+        </th>
+        <th (click)="onSort('createdDate')">
+          <div class="header-container">
+            <span class="icon-text">Ngày tạo</span>
+            <i class="bi bi-sort-up" *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"></i>
+            <i class="bi bi-sort-down" *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"></i>
+          </div>
+        </th>
+        <th (click)="onSort('account.user.fullName')">
+          <div class="header-container">
+            <span class="icon-text">Người tạo</span>
+            <i class="bi bi-sort-up" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'asc'"></i>
+            <i class="bi bi-sort-down" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'desc'"></i>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+      <span *ngIf="allGuidanceDocument == 0">Không tìm thấy bản ghi nào phù hợp</span>
+      </thead>
+      <tbody *ngIf="guidanceDocuments.length > 0">
+      <tr
+        *ngFor="
           let doc of guidanceDocuments
             | paginate
               : {
@@ -170,82 +146,37 @@
                 };
           let i = index
         "
-    >
-      <td>{{ doc.guidanceDocumentId}}</td>
-      <td>{{ doc.guidanceDocumentName }}</td>
-      <td>{{ doc.issueDto?.issueName }}</td>
-      <td>{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
-      <td>{{ doc.accountDto?.user?.fullName}}</td>
-      <td>
-
-        <i
-          class="bi bi-info-circle-fill"
-          (click)="onDetail(doc.guidanceDocumentId)"
-        ></i>
-
-
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
-  <div class="d-flex justify-content-end mt-3">
-    <div class="d-flex justify-content-center" *ngIf="guidanceDocuments.length > 0">
-
-      <label for="pageNo"
-             style=" margin-right: 10px"
-      >Trang: </label>
-      <input class="form-control super-small-input mr-3" min="1" type="number" id="pageNo" name="pageNo"
-             max="{{maxPage}} "
-             style=" margin-right: 20px"
-             (keyup)="[maxPageOnKeyUp(), loadGuidanceDocuments()]"
-             (mouseup)="[maxPageOnKeyUp(), loadGuidanceDocuments()]"
-             [(ngModel)]="pageNo"
       >
-
-
-      <label for="pageNo"
-             style=" margin-right: 10px"
-      >Số bản ghi trên 1 trang: </label>
-
-      <select (change)="changePageSize()" class="form-control super-small-input ng-untouched ng-pristine ng-valid" [(ngModel)]="pageSize">
-        <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>
-      </select>
-
-<!--      <input class="form-control super-small-input"-->
-<!--             min="1"-->
-<!--             type="number"-->
-<!--             id="pageSize"-->
-<!--             name="pageSize"-->
-<!--             style=" margin-right: 20px"-->
-<!--             max="{{maxPage}} "-->
-<!--             (keyup)="loadGuidanceDocuments()"-->
-<!--             (mouseup)=" loadGuidanceDocuments()"-->
-
-<!--             [(ngModel)]="pageSize"-->
-<!--      >-->
-
-
+        <td class="py-4 px-2">{{ doc.guidanceDocumentId}}</td>
+        <td class="py-4 px-2" pTooltip="{{doc.guidanceDocumentName}}" tooltipPosition="top">{{ doc.guidanceDocumentName }}</td>
+        <td class="py-4 px-2">{{ doc.issueDto?.issueName }}</td>
+        <td class="py-4 px-2">{{ doc.createdDate | date : "dd/MM/yyyy" }}</td>
+        <td class="py-4 px-2">{{ doc.accountDto?.user?.fullName}}</td>
+        <td class="py-4 px-2">
+          <button class="action-button" type="button" (click)="onDetail(doc.guidanceDocumentId)">
+            <i class="bi bi-info-circle-fill"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center table-footer">
+      <div class="me-3 mt-3" *ngIf="guidanceDocuments.length > 0">
+        <pagination-controls
+          previousLabel=""
+          nextLabel=""
+          (pageChange)="   [  onTableDataChange($event), maxPageOnKeyUp()]"
+        >
+        </pagination-controls>
+      </div>
+      <div class="d-flex justify-content-center align-items-center" *ngIf="guidanceDocuments.length > 0">
+        <select (change)="changePageSize()" class="form-select ng-untouched ng-pristine ng-valid"
+                [(ngModel)]="pageSize">
+          <option *ngFor="let option of recordPerPageOption" [value]="option">{{ option }}</option>
+        </select>
+      </div>
     </div>
-
-    <div class="" *ngIf="guidanceDocuments.length > 0">
-      <pagination-controls
-        previousLabel="Trước"
-        nextLabel="Sau"
-        (pageChange)="   [  onTableDataChange($event), maxPageOnKeyUp()]"
-      >
-      </pagination-controls>
-
-
-    </div>
+    <p-toast key="paging" position="bottom-right"></p-toast>
+    <p-toast key="issueId" position="top-right"></p-toast>
   </div>
-
-
-
-  <p-toast key="paging" position="bottom-right"></p-toast>
-  <p-toast key="issueId" position="top-right"></p-toast>
-
 </div>
-
-
-

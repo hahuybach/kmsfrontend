@@ -69,6 +69,7 @@ import { NotificationListAllComponent } from './components/notification-list/not
 import { NotificationListUnseenComponent } from './components/notification-list/notification-list-unseen/notification-list-unseen.component';
 import {InspectionModule} from "./features/post-login/inspection/inspection.module";
 import { SchoolListModule } from './features/post-login/school-list/school-list.module';
+import {MAT_DATE_LOCALE} from "@angular/material/core";
 @NgModule({
   declarations: [
     AppComponent,
@@ -146,6 +147,7 @@ import { SchoolListModule } from './features/post-login/school-list/school-list.
       multi: true,
     },
     provideAnimations(),
+    {provide: MAT_DATE_LOCALE, useValue: 'vi-VN'},
   ],
   bootstrap: [AppComponent],
 })

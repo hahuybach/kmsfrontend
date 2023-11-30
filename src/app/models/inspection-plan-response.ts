@@ -5,5 +5,6 @@ export interface InspectionPlanResponse{
   endDate?: Date,
   startDate? : Date,
   issueName? : string,
-  statusName? : string
+  statusName? : string,
+  status: any;
 }

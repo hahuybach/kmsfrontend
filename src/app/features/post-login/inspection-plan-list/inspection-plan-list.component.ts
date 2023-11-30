@@ -107,6 +107,18 @@ export class InspectionPlanListComponent implements OnInit{
       }
     )
   }
+
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      19: 'warning',
+      20: 'info',
+      21: 'danger',
+      22: 'danger',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
+  }
+
   ngOnInit(): void {
 
     for (const role of this.auth.getRoleFromJwt()) {
@@ -195,7 +207,7 @@ export class InspectionPlanListComponent implements OnInit{
       this.advanceSearchButtonText = 'Ẩn tra cứu nâng cao'
     }
   }
-  private reset() {
+  protected reset() {
     this.pageNo = 1;
     this.sortBy = 'createdDate';
     this.sortDirection = 'desc';
@@ -247,4 +259,6 @@ export class InspectionPlanListComponent implements OnInit{
     this.pageNo = $event;
     this.loadDocuments()
   }
+
+  onCreateInspectionPlan(){}
 }

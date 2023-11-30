@@ -255,7 +255,7 @@ this.setAuth()
     this.loadGuidanceDocuments()
   }
 
-  reset() {
+  protected reset() {
     this.pageNo = 1;
     this.sortBy = 'createdDate';
     this.sortDirection = 'desc';
@@ -304,7 +304,6 @@ this.setAuth()
         this.route.navigate(['guidanceDocument/create/' + this.issueId])
       }
     })
-
   }
 
   onChangePageSize(){

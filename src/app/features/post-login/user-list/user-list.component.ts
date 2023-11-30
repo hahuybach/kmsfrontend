@@ -275,7 +275,21 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     }
 
-    reset() {
+  getStatusSeverity(status: boolean | undefined): string {
+    if (status){
+      return 'success';
+    }
+    return 'danger';
+  }
+
+  getStatusValue(status: undefined | boolean): string {
+    if (status){
+      return 'Đang hoạt động';
+    }
+    return 'Ngưng hoạt động';
+  }
+
+    protected reset() {
         this.pageNo = 1;
         this.sortBy = 'user.userId';
         this.sortDirection = 'desc';
