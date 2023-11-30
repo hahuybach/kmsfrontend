@@ -18,7 +18,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="w-100">
-            <label>Tên kế hoạch</label>
+            <label class="fw-medium">Tên kế hoạch</label>
             <input class="form-control"
                    [(ngModel)]="planName"
                    name="planName"
@@ -31,7 +31,7 @@
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <mat-label>Ngày tạo</mat-label>
+            <mat-label>Khoảng thời gian tạo</mat-label>
             <mat-date-range-input [rangePicker]="picker1">
               <input matStartDate [(ngModel)]="creationStartDateTime" placeholder="Bắt đầu">
               <input matEndDate [(ngModel)]="creationEndDateTime" placeholder="Kết thúc"
@@ -44,7 +44,7 @@
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <mat-label>Hạn nộp</mat-label>
+            <mat-label>Khoảng hạn nộp</mat-label>
             <mat-date-range-input [rangePicker]="picker2">
               <input matStartDate [(ngModel)]="deadlineStartDateTime" placeholder="Bắt đầu">
               <input matEndDate [(ngModel)]="deadlineEndDateTime" placeholder="Kết thúc"
@@ -61,9 +61,10 @@
          [ngClass]="{'col-md-2 d-flex align-items-center': advanceSearch, 'col-md-3 ': !advanceSearch}">
       <button (click)="onAdvanceSearch()" pButton>{{advanceSearchButtonText}}</button>
     </div>
-    <div *ngIf="advanceSearch" class="col-md-10 mt-2">
+    <div *ngIf="advanceSearch" class="col-md-10">
       <div class="row">
         <div class="col-md-4">
+          <label class="fw-medium">Kế hoạch</label>
           <p-dropdown
             [options]="issueDropDowns"
             [(ngModel)]="currentIssueSelected"
@@ -86,6 +87,7 @@
           </p-dropdown>
         </div>
         <div class="col-md-4">
+          <label class="fw-medium">Tên trường</label>
           <p-dropdown
             [options]="schools"
             [(ngModel)]="selectedSchool"
@@ -109,6 +111,7 @@
           </p-dropdown>
         </div>
         <div class="col-md-4">
+          <label class="fw-medium">Trạng thái</label>
           <p-dropdown
             placeholder="Chọn 1 trạng thái"
             [options]="statuses"

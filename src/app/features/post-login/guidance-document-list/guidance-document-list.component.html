@@ -16,7 +16,7 @@
     <div *ngIf="advanceSearch" class="col-md-10">
       <div class="row">
         <div class="col-md-6">
-          <label>Tiêu đề</label>
+          <label class="fw-medium">Tiêu đề</label>
           <input class="form-control"
                  [(ngModel)]="guidanceDocumentName"
                  name="guidanceDocumentName"
@@ -26,7 +26,8 @@
                  pInputText
           >
         </div>
-        <div class="col-md-6 d-flex align-items-end">
+        <div class="col-md-6">
+          <label class="fw-medium">Kế hoạch</label>
           <p-dropdown
             class="w-100"
             [options]="issueDropDowns"
@@ -59,7 +60,7 @@
       <div class="row">
         <div class="col-md-6">
           <mat-form-field class="w-100">
-            <mat-label>Chọn 1 khoảng thời gian</mat-label>
+            <mat-label>Khoảng thời gian tạo</mat-label>
             <mat-date-range-input [rangePicker]="picker">
               <input matStartDate [(ngModel)]="startDateTime" placeholder="Ngày tạo bắt đầu">
               <input matEndDate [(ngModel)]="endDateTime" placeholder="Ngày tạo kết thúc"
@@ -71,7 +72,7 @@
           </mat-form-field>
         </div>
         <div class="col-md-6">
-          <label>Người tạo</label>
+          <label class="fw-medium">Người tạo</label>
           <input class="form-control"
                  [(ngModel)]="fullName"
                  name="fullName"

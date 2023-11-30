@@ -21,7 +21,7 @@
     <div *ngIf="advanceSearch" class="col-md-10">
       <div class="row">
         <div class="col-md-6">
-          <label>Tên kế hoạch</label>
+          <label class="fw-medium">Tên công việc</label>
           <input
             class="form-control"
             [(ngModel)]="assignmentName"
@@ -32,7 +32,8 @@
             placeholder="(VD): VIMECO Mẫu công việc 2023 - 2024"
           />
         </div>
-        <div class="col-md-6 d-flex align-items-end">
+        <div class="col-md-6">
+          <label class="fw-medium">Kế hoạch</label>
           <p-dropdown
             class="w-100"
             [options]="issueDropDowns"
@@ -65,6 +66,7 @@
     <div *ngIf="advanceSearch" class="col-md-10 mt-2">
       <div class="row">
         <div class="col-md-6">
+          <label class="fw-medium">Tên trường</label>
           <p-dropdown
             [options]="schools"
             [(ngModel)]="selectedSchool"
@@ -89,6 +91,7 @@
           </p-dropdown>
         </div>
         <div class="col-md-6">
+          <label class="fw-medium">Trạng thái</label>
           <p-dropdown
             placeholder="Chọn 1 trạng thái"
             [options]="statuses"
@@ -126,7 +129,7 @@
         </th>
         <th (click)="onSort('issue.createdDate')">
           <div class="header-container">
-            <span class="icon-text">Thuộc kế hoạch kiểm tra</span>
+            <span class="icon-text">Kế hoạch kiểm tra</span>
             <i
               class="bi bi-sort-up"
               *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'asc'"
