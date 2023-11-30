@@ -95,7 +95,11 @@
             [(ngModel)]="selectedStatus"
             [showClear]="true"
             (onChange)="loadDocuments()"
-          ></p-dropdown>
+          >
+            <ng-template let-status pTemplate="item">
+              <p-tag [severity]="getStatusSeverity(status.value)" [value]="status.label"></p-tag>
+            </ng-template>
+          </p-dropdown>
         </div>
       </div>
     </div>
@@ -178,7 +182,7 @@
         <td class="py-3 px-2">{{ task.rootAssignmentName }}</td>
         <td class="py-3 px-2">{{ task.issue?.issueName }}</td>
         <td class="py-3 px-2">{{ task.school?.schoolName }}</td>
-        <td class="py-3 px-2">{{ task.rootAssignmentStatus?.statusName }}</td>
+        <td class="py-3 px-2"><p-tag [severity]="getStatusSeverity(task.rootAssignmentStatus?.statusId)" [value]="task.rootAssignmentStatus?.statusName"></p-tag></td>
         <td class="py-3 px-2">
           <button class="action-button" type="button" (click)="
               onDetail(
