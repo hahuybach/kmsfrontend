@@ -116,15 +116,12 @@
             <i class="bi bi-sort-down" *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'desc'"></i>
           </div>
         </th>
-
         <th (click)="onSort('createdDate')">
           <div class="header-container">
             <span class="icon-text">Ngày tạo</span>
             <i class="bi bi-sort-up" *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"></i>
             <i class="bi bi-sort-down" *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"></i>
           </div>
-
-
         </th>
         <th (click)="onSort('account.user.fullName')">
           <div class="header-container">
@@ -133,7 +130,6 @@
             <i class="bi bi-sort-down" *ngIf="sortBy === 'account.user.fullName' && sortDirection === 'desc'"></i>
           </div>
         </th>
-
         <th></th>
       </tr>
       <span *ngIf="allGuidanceDocument == 0">Không tìm thấy bản ghi nào phù hợp</span>
