@@ -105,6 +105,9 @@
     //     color: your-desired-color-for-focused-item !important;
     //     background-color: your-desired-background-color-for-focused-item !important;
     // }
+    .p-paginator {
+        font-size: 16px;
+    }
     .p-paginator .p-paginator-pages .p-paginator-page {
         border-radius: 50%;
         &.p-highlight {

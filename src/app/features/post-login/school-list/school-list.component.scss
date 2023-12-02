@@ -6,6 +6,7 @@
   table {
     table-layout: fixed;
     width: 100%;
+    font-size: 16px;
   }
 
   th,
@@ -36,6 +37,9 @@
       background-color: $primary-hover !important;
       color: #fff !important;
     }
+  }
+  .p-paginator {
+    font-size: 16px;
   }
   // for icon sort
   .p-highlight {
