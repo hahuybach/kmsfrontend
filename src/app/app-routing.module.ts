@@ -51,16 +51,16 @@ import {SchoolListComponent} from './features/post-login/school/school-list/scho
 import {SchoolDetailComponent} from './features/post-login/school/school-detail/school-detail.component';
 import {SchoolCreateComponent} from './features/post-login/school/school-create/school-create.component';
 import {SchoolUpdateComponent} from './features/post-login/school/school-update/school-update.component';
-import {UserListComponent} from './features/post-login/user-list/user-list.component';
-import {UserDetailComponent} from './features/post-login/user-list/user-detail/user-detail.component';
-import {UserCreateComponent} from './features/post-login/user-list/user-create/user-create.component';
+import {UserListComponent} from './features/post-login/user/user-list/user-list.component';
+import {UserDetailComponent} from './features/post-login/user/user-detail/user-detail.component';
+import {UserCreateComponent} from './features/post-login/user/user-create/user-create.component';
 import {
   AssignAssignmentComponent
 } from './features/post-login/school-side/assignment/assign-assignment/assign-assignment.component';
 import {
   UpdateInspectionPlanComponent
 } from './features/post-login/inspection-plan/update-inspection-plan/update-inspection-plan.component';
-import {UserUpdateComponent} from './features/post-login/user-list/user-update/user-update.component';
+import {UserUpdateComponent} from './features/post-login/user/user-update/user-update.component';
 import {
   AssignmentTreeListComponent
 } from './features/post-login/assignment/assignment-tree-list/assignment-tree-list.component';
@@ -92,6 +92,7 @@ import {
   SchoolInitiationPlanBaseComponent
 } from "./features/post-login/school-initiation-plan/school-initiation-plan-base/school-initiation-plan-base.component";
 import {SchoolBaseComponent} from "./features/post-login/school/school-base/school-base.component";
+import {UserBaseComponent} from "./features/post-login/user/user-base/user-base.component";
 
 const routes: Routes = [
   {
@@ -254,24 +255,35 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'userList',
-        component: UserListComponent,
-      },
-      {
-        path: 'userList/:id',
-        component: UserDetailComponent,
-      },
-      {
-        path: 'userList/create/new',
-        component: UserCreateComponent,
+        path: 'user',
+        component: UserBaseComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'list'
+          },
+          {
+            path: 'list',
+            component: UserListComponent,
+          },
+          {
+            path: 'create',
+            component: UserCreateComponent,
+          },
+          {
+            path: ':id',
+            component: UserDetailComponent,
+          },
+          {
+            path: 'user/update/:id',
+            component: UserUpdateComponent,
+          }
+        ]
       },
       {
         path: 'assignassignment/:issueId',
         component: AssignAssignmentComponent,
-      },
-      {
-        path: 'userList/:id/update',
-        component: UserUpdateComponent,
       },
       {
         path: 'listAssignment',

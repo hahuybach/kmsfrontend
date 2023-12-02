@@ -1,16 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {UserResponseForUserList} from "../../../models/user-response-for-user-list";
-import {SchoolResponse} from "../../../models/school-response";
-import {RoleResponse} from "../../../models/role-response";
-import {AccountService} from "../../../services/account.service";
+import {UserResponseForUserList} from "../../../../models/user-response-for-user-list";
+import {SchoolResponse} from "../../../../models/school-response";
+import {RoleResponse} from "../../../../models/role-response";
+import {AccountService} from "../../../../services/account.service";
 import {ActivatedRoute, Route, Router} from "@angular/router";
-import {SchoolService} from "../../../services/school.service";
-import {ToastService} from "../../../shared/toast/toast.service";
-import {RoleService} from "../../../services/role.service";
-import {AuthService} from "../../../services/auth.service";
-import {Role} from "../../../shared/enum/role";
+import {SchoolService} from "../../../../services/school.service";
+import {ToastService} from "../../../../shared/toast/toast.service";
+import {RoleService} from "../../../../services/role.service";
+import {AuthService} from "../../../../services/auth.service";
+import {Role} from "../../../../shared/enum/role";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
-import {unSub} from "../../../shared/util/util";
+import {unSub} from "../../../../shared/util/util";
 
 
 @Component({
@@ -320,7 +320,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onDetail(userId: number | undefined) {
-        this.route.navigate(['userList/' + userId])
+        this.route.navigate(['user/' + userId])
     }
 
     maxPageOnKeyUp() {
@@ -354,11 +354,11 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
 
     onCreateUser() {
-        this.route.navigate(['userList/create/new'])
+        this.route.navigate(['user/create'])
     }
 
     onUpdate(userId: number | undefined) {
-        this.route.navigate(['userList/' + userId + '/update'])
+        this.route.navigate(['user/update/' + userId])
 
     }
 

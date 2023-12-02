@@ -147,7 +147,7 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.submitCompleted = true;
           setTimeout(() => {
-            this.route.navigate(['userList/' + data.accountDto.accountId])
+            this.route.navigate(['user/' + data.accountDto.accountId])
           }, 1500)
           console.log(data);
         },

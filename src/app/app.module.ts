@@ -56,13 +56,13 @@ import { SchoolListComponent } from './features/post-login/school/school-list/sc
 import { SchoolDetailComponent } from './features/post-login/school/school-detail/school-detail.component';
 import { SchoolCreateComponent } from './features/post-login/school/school-create/school-create.component';
 import { SchoolUpdateComponent } from './features/post-login/school/school-update/school-update.component';
-import { UserListComponent } from './features/post-login/user-list/user-list.component';
-import { UserDetailComponent } from './features/post-login/user-list/user-detail/user-detail.component';
-import { UserCreateComponent } from './features/post-login/user-list/user-create/user-create.component';
+import { UserListComponent } from './features/post-login/user/user-list/user-list.component';
+import { UserDetailComponent } from './features/post-login/user/user-detail/user-detail.component';
+import { UserCreateComponent } from './features/post-login/user/user-create/user-create.component';
 
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import { StompService } from './features/post-login/push-notification/stomp.service';
-import { UserUpdateComponent } from './features/post-login/user-list/user-update/user-update.component';
+import { UserUpdateComponent } from './features/post-login/user/user-update/user-update.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ChangePasswordComponent } from './components/user-profile/change-password/change-password.component';
 import { NotificationListAllComponent } from './components/notification-list/notification-list-all/notification-list-all.component';
@@ -73,6 +73,7 @@ import {MAT_DATE_LOCALE} from "@angular/material/core";
 import { IssueBaseComponent } from './features/post-login/issue/issue-base/issue-base.component';
 import { InspectionPlanBaseComponent } from './features/post-login/inspection-plan/inspection-plan-base/inspection-plan-base.component';
 import { GuidanceDocumentBaseComponent } from './features/post-login/guidance-document/guidance-document-base/guidance-document-base.component';
+import { UserBaseComponent } from './features/post-login/user/user-base/user-base.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -107,6 +108,7 @@ import { GuidanceDocumentBaseComponent } from './features/post-login/guidance-do
     IssueBaseComponent,
     InspectionPlanBaseComponent,
     GuidanceDocumentBaseComponent,
+    UserBaseComponent,
   ],
   imports: [
     BrowserModule,
