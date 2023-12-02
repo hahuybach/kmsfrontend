@@ -67,7 +67,7 @@
           </a>
         </li>
         <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
-          <a class="" [routerLink]="['/createtemplate']">
+          <a class="" [routerLink]="['/create-template']">
             <div>
               <i class="bi bi-folder-plus"></i>
               &nbsp; Tạo template
@@ -103,7 +103,7 @@
           routerLinkActive="active"
           *ngIf="isDirector || isAdmin || isViceDirector || isSpecialist "
         >
-          <a class="" [routerLink]="['/schoolList']">
+          <a class="" [routerLink]="['/school']">
             <div>
               <i class="bi bi-building"></i>
               &nbsp; Danh sách trường

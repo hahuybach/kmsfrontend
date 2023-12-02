@@ -114,7 +114,7 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
 
 
     onUpdate() {
-        this.routeLink.navigate(['school/' + this.school.schoolId + '/update'])
+        this.routeLink.navigate(['/school/update/' + this.school.schoolId])
     }
 
   ngOnDestroy(): void {

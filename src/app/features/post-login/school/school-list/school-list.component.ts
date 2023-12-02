@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SchoolResponse } from '../../../models/school-response';
-import { SchoolService } from '../../../services/school.service';
+import { SchoolResponse } from '../../../../models/school-response';
+import { SchoolService } from '../../../../services/school.service';
 import { Table } from 'primeng/table';
 import {
   ConfirmationService,
@@ -9,9 +9,9 @@ import {
   PrimeNGConfig,
 } from 'primeng/api';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { Role } from '../../../shared/enum/role';
-import { ToastService } from '../../../shared/toast/toast.service';
+import { AuthService } from '../../../../services/auth.service';
+import { Role } from '../../../../shared/enum/role';
+import { ToastService } from '../../../../shared/toast/toast.service';
 
 @Component({
   selector: 'app-school-list',
@@ -119,11 +119,11 @@ export class SchoolListComponent implements OnInit {
   }
 
   onCreateSchool() {
-    this.router.navigate(['/schools/create']);
+    this.router.navigate(['/school/create']);
   }
 
   onUpdate(schoolId: any) {
-    this.router.navigate(['school/' + schoolId + '/update']);
+    this.router.navigate(['/school/update/' + schoolId]);
   }
 
   showImportSchool() {

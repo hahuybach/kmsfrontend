@@ -47,10 +47,10 @@ import {
 import {
   SubmitAssignmentComponent
 } from './features/post-login/school-side/assignment/submit-assignment/submit-assignment.component';
-import {SchoolListComponent} from './features/post-login/school-list/school-list.component';
-import {SchoolDetailComponent} from './features/post-login/school-list/school-detail/school-detail.component';
-import {SchoolCreateComponent} from './features/post-login/school-list/school-create/school-create.component';
-import {SchoolUpdateComponent} from './features/post-login/school-list/school-update/school-update.component';
+import {SchoolListComponent} from './features/post-login/school/school-list/school-list.component';
+import {SchoolDetailComponent} from './features/post-login/school/school-detail/school-detail.component';
+import {SchoolCreateComponent} from './features/post-login/school/school-create/school-create.component';
+import {SchoolUpdateComponent} from './features/post-login/school/school-update/school-update.component';
 import {UserListComponent} from './features/post-login/user-list/user-list.component';
 import {UserDetailComponent} from './features/post-login/user-list/user-detail/user-detail.component';
 import {UserCreateComponent} from './features/post-login/user-list/user-create/user-create.component';
@@ -91,6 +91,7 @@ import {
 import {
   SchoolInitiationPlanBaseComponent
 } from "./features/post-login/school-initiation-plan/school-initiation-plan-base/school-initiation-plan-base.component";
+import {SchoolBaseComponent} from "./features/post-login/school/school-base/school-base.component";
 
 const routes: Routes = [
   {
@@ -184,8 +185,6 @@ const routes: Routes = [
           },
         ]
       },
-
-
       //guidance-document
       {
         path: 'guidance-document',
@@ -215,7 +214,7 @@ const routes: Routes = [
         component: InitiationPlanDetailComponent,
       },
       {
-        path: 'createtemplate',
+        path: 'create-template',
         component: CreateAssignmentComponent,
       },
       {
@@ -226,21 +225,33 @@ const routes: Routes = [
         path: 'submitassignment',
         component: SubmitAssignmentComponent,
       },
+      //school
       {
-        path: 'schoolList',
-        component: SchoolListComponent,
-      },
-      {
-        path: 'school/:id',
-        component: SchoolDetailComponent,
-      },
-      {
-        path: 'schools/create',
-        component: SchoolCreateComponent,
-      },
-      {
-        path: 'school/:id/update',
-        component: SchoolUpdateComponent,
+        path: 'school',
+        component: SchoolBaseComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'list'
+          },
+          {
+            path: 'list',
+            component: SchoolListComponent,
+          },
+          {
+            path: 'create',
+            component: SchoolCreateComponent,
+          },
+          {
+            path: ':id',
+            component: SchoolDetailComponent,
+          },
+          {
+            path: 'update/:id',
+            component: SchoolUpdateComponent,
+          }
+        ]
       },
       {
         path: 'userList',
