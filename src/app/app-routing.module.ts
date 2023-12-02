@@ -88,6 +88,9 @@ import {
 import {
   GuidanceDocumentBaseComponent
 } from "./features/post-login/guidance-document/guidance-document-base/guidance-document-base.component";
+import {
+  SchoolInitiationPlanBaseComponent
+} from "./features/post-login/school-initiation-plan/school-initiation-plan-base/school-initiation-plan-base.component";
 
 const routes: Routes = [
   {
@@ -162,9 +165,26 @@ const routes: Routes = [
       },
       // school initiation plan
       {
-        path: 'schoolinitiationplan/:id',
-        component: SchoolInitiationPlanDetailComponent,
+        path: 'school-initiation-plan',
+        component: SchoolInitiationPlanBaseComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'list'
+          },
+
+          {
+            path: 'list',
+            component: SchoolInitiationPlanListComponent,
+          },
+          {
+            path: ':id',
+            component: SchoolInitiationPlanDetailComponent,
+          },
+        ]
       },
+
 
       //guidance-document
       {
@@ -189,10 +209,6 @@ const routes: Routes = [
             component: GuidanceDocumentCreateComponent,
           },
         ]
-      },
-      {
-        path: 'schoolinitiationplan',
-        component: SchoolInitiationPlanListComponent,
       },
       {
         path: 'initiationplan/:id',
