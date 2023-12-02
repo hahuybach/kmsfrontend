@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FilterGuidanceDocumentResponse} from "../../../models/filter-guidance-document-response";
-import {GuidanceDocumentService} from "../../../services/guidance-document.service";
+import {FilterGuidanceDocumentResponse} from "../../../../models/filter-guidance-document-response";
+import {GuidanceDocumentService} from "../../../../services/guidance-document.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {IssueDropDownResponse} from "../../../models/issue-drop-down-response";
-import {IssueService} from "../../../services/issue.service";
+import {IssueDropDownResponse} from "../../../../models/issue-drop-down-response";
+import {IssueService} from "../../../../services/issue.service";
 import {MessageService} from "primeng/api";
-import {AuthService} from "../../../services/auth.service";
-import {Role} from "../../../shared/enum/role";
-import {unSub} from "../../../shared/util/util";
+import {AuthService} from "../../../../services/auth.service";
+import {Role} from "../../../../shared/enum/role";
+import {unSub} from "../../../../shared/util/util";
 import {DatePipe} from "@angular/common";
 
 @Component({
@@ -219,7 +219,7 @@ this.setAuth()
   }
 
   onDetail(id?: any) {
-    this.route.navigate(['guidanceDocument/' + id])
+    this.route.navigate(['guidance-document/' + id])
   }
 
 
@@ -301,7 +301,7 @@ this.setAuth()
   onCreateGuidanceDocument() {
     this.loadIssueIdForCreate().then((success) => {
       if (success) {
-        this.route.navigate(['guidanceDocument/create/' + this.issueId])
+        this.route.navigate(['guidance-document/create/' + this.issueId])
       }
     })
   }

@@ -28,13 +28,13 @@ import {
 } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
 import {
   GuidanceDocumentListComponent
-} from './features/post-login/guidance-document-list/guidance-document-list.component';
+} from './features/post-login/guidance-document/guidance-document-list/guidance-document-list.component';
 import {
   GuidanceDocumentDetailComponent
-} from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component';
+} from './features/post-login/guidance-document/guidance-document-detail/guidance-document-detail.component';
 import {
   GuidanceDocumentCreateComponent
-} from './features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component';
+} from './features/post-login/guidance-document/guidance-document-create/guidance-document-create.component';
 import {
   CreateAssignmentComponent
 } from './features/post-login/assignment/create-assignment/create-assignment.component';
@@ -85,6 +85,9 @@ import {IssueBaseComponent} from "./features/post-login/issue/issue-base/issue-b
 import {
   InspectionPlanBaseComponent
 } from "./features/post-login/inspection-plan/inspection-plan-base/inspection-plan-base.component";
+import {
+  GuidanceDocumentBaseComponent
+} from "./features/post-login/guidance-document/guidance-document-base/guidance-document-base.component";
 
 const routes: Routes = [
   {
@@ -162,17 +165,30 @@ const routes: Routes = [
         path: 'schoolinitiationplan/:id',
         component: SchoolInitiationPlanDetailComponent,
       },
+
+      //guidance-document
       {
-        path: 'guidanceDocument',
-        component: GuidanceDocumentListComponent,
-      },
-      {
-        path: 'guidanceDocument/:id',
-        component: GuidanceDocumentDetailComponent,
-      },
-      {
-        path: 'guidanceDocument/create/:issueId',
-        component: GuidanceDocumentCreateComponent,
+        path: 'guidance-document',
+        component: GuidanceDocumentBaseComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'list'
+          },
+          {
+            path: 'list',
+            component: GuidanceDocumentListComponent,
+          },
+          {
+            path: ':id',
+            component: GuidanceDocumentDetailComponent,
+          },
+          {
+            path: 'create/:issueId',
+            component: GuidanceDocumentCreateComponent,
+          },
+        ]
       },
       {
         path: 'schoolinitiationplan',

@@ -43,13 +43,13 @@ import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
 import { TokenExpirationInterceptor } from './shared/interceptor/token_expiration_inceptor/token-expiration.interceptor';
-import { GuidanceDocumentListComponent } from './features/post-login/guidance-document-list/guidance-document-list.component';
-import { GuidanceDocumentDetailComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-detail.component';
-import { GuidanceDocumentFilesComponent } from './features/post-login/guidance-document-list/guidance-document-detail/guidance-document-files/guidance-document-files.component';
+import { GuidanceDocumentListComponent } from './features/post-login/guidance-document/guidance-document-list/guidance-document-list.component';
+import { GuidanceDocumentDetailComponent } from './features/post-login/guidance-document/guidance-document-detail/guidance-document-detail.component';
+import { GuidanceDocumentFilesComponent } from './features/post-login/guidance-document/guidance-document-detail/guidance-document-files/guidance-document-files.component';
 import { InitiationPlanModule } from './features/post-login/school-side/initiation-plan/initiation-plan.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastModule } from 'primeng/toast';
-import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document-list/guidance-document-create/guidance-document-create.component';
+import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document/guidance-document-create/guidance-document-create.component';
 import { AssignmentModule } from './features/post-login/assignment/assignment.module';
 import { SchoolAssignmentModule } from './features/post-login/school-side/assignment/school-assignment.module';
 import { SchoolListComponent } from './features/post-login/school-list/school-list.component';
@@ -72,6 +72,7 @@ import { SchoolListModule } from './features/post-login/school-list/school-list.
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import { IssueBaseComponent } from './features/post-login/issue/issue-base/issue-base.component';
 import { InspectionPlanBaseComponent } from './features/post-login/inspection-plan/inspection-plan-base/inspection-plan-base.component';
+import { GuidanceDocumentBaseComponent } from './features/post-login/guidance-document/guidance-document-base/guidance-document-base.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -105,6 +106,7 @@ import { InspectionPlanBaseComponent } from './features/post-login/inspection-pl
     NotificationListUnseenComponent,
     IssueBaseComponent,
     InspectionPlanBaseComponent,
+    GuidanceDocumentBaseComponent,
   ],
   imports: [
     BrowserModule,
