@@ -198,7 +198,7 @@ export class CreateInspectionPlanComponent {
       next: (response) => {
         this.createComplete = true;
         setTimeout(() => {
-          this.router.navigateByUrl("inspection_plan/" + response.inspectionPlan.inspectionPlanId);
+          this.router.navigateByUrl("inspection-plan/" + response.inspectionPlan.inspectionPlanId);
         }, 1500);
       },
       error: (error) => {

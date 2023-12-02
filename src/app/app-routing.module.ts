@@ -8,10 +8,12 @@ import {MainComponent} from './main/main/main.component';
 import {LoginFormComponent} from './features/login/login-form/login-form.component';
 import {LoginBaseComponent} from './features/login/login-base/login-base.component';
 import {ForgotPasswordComponent} from './features/login/forgot-password/forgot-password.component';
-import {InspectionPlanListComponent} from './features/post-login/inspection-plan-list/inspection-plan-list.component';
+import {
+  InspectionPlanListComponent
+} from './features/post-login/inspection-plan/inspection-plan-list/inspection-plan-list.component';
 import {
   CreateInspectionPlanComponent
-} from './features/post-login/inspection-plan-list/create-inspection-plan/create-inspection-plan.component';
+} from './features/post-login/inspection-plan/create-inspection-plan/create-inspection-plan.component';
 import {UpdateIssueComponent} from './features/post-login/issue/update-issue/update-issue.component';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
 import {
@@ -20,7 +22,7 @@ import {
 import {AuthGuard} from './shared/guards/AuthGuard/auth.guard';
 import {
   InspectionPlanDetailComponent
-} from './features/post-login/inspection-plan-list/inspection-plan-detail/inspection-plan-detail.component';
+} from './features/post-login/inspection-plan/inspection-plan-detail/inspection-plan-detail.component';
 import {
   InitiationPlanDetailComponent
 } from './features/post-login/school-side/initiation-plan/initiation-plan-detail/initiation-plan-detail.component';
@@ -57,7 +59,7 @@ import {
 } from './features/post-login/school-side/assignment/assign-assignment/assign-assignment.component';
 import {
   UpdateInspectionPlanComponent
-} from './features/post-login/inspection-plan-list/update-inspection-plan/update-inspection-plan.component';
+} from './features/post-login/inspection-plan/update-inspection-plan/update-inspection-plan.component';
 import {UserUpdateComponent} from './features/post-login/user-list/user-update/user-update.component';
 import {
   AssignmentTreeListComponent
@@ -80,6 +82,9 @@ import {
   InspectionMytaskComponent
 } from "./features/post-login/inspection/inspection-mytask/inspection-mytask.component";
 import {IssueBaseComponent} from "./features/post-login/issue/issue-base/issue-base.component";
+import {
+  InspectionPlanBaseComponent
+} from "./features/post-login/inspection-plan/inspection-plan-base/inspection-plan-base.component";
 
 const routes: Routes = [
   {
@@ -124,19 +129,33 @@ const routes: Routes = [
         path: 'dashboard',
         component: DashboardComponent,
       },
-      // initiationplan
-      {path: 'inspection_plan', component: InspectionPlanListComponent},
+      // inspection-plan
       {
-        path: 'inspection_plan/create',
-        component: CreateInspectionPlanComponent,
-      },
-      {
-        path: 'inspection_plan/:id',
-        component: InspectionPlanDetailComponent,
-      },
-      {
-        path: 'inspection_plan/update/:id',
-        component: UpdateInspectionPlanComponent,
+        path: 'inspection-plan',
+        component: InspectionPlanBaseComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'list'
+          },
+          {
+            path: 'list',
+            component: InspectionPlanListComponent
+          },
+          {
+            path: 'create',
+            component: CreateInspectionPlanComponent,
+          },
+          {
+            path: ':id',
+            component: InspectionPlanDetailComponent,
+          },
+          {
+            path: 'update/:id',
+            component: UpdateInspectionPlanComponent,
+          },
+        ]
       },
       // school initiation plan
       {

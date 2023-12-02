@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {inspectionPlanService} from "../../../services/inspectionplan.service";
-import {IssueDropDownResponse} from "../../../models/issue-drop-down-response";
-import {SchoolResponse} from "../../../models/school-response";
-import {SchoolService} from "../../../services/school.service";
-import {IssueService} from "../../../services/issue.service";
-import {ToastService} from "../../../shared/toast/toast.service";
-import {InspectionPlanResponse} from "../../../models/inspection-plan-response";
-import {AuthService} from "../../../services/auth.service";
-import {Role} from "../../../shared/enum/role";
+import {inspectionPlanService} from "../../../../services/inspectionplan.service";
+import {IssueDropDownResponse} from "../../../../models/issue-drop-down-response";
+import {SchoolResponse} from "../../../../models/school-response";
+import {SchoolService} from "../../../../services/school.service";
+import {IssueService} from "../../../../services/issue.service";
+import {ToastService} from "../../../../shared/toast/toast.service";
+import {InspectionPlanResponse} from "../../../../models/inspection-plan-response";
+import {AuthService} from "../../../../services/auth.service";
+import {Role} from "../../../../shared/enum/role";
 
 @Component({
   selector: 'app-inspection-plan-list',

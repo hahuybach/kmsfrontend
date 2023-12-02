@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {InspectionPlanListComponent} from "../inspection-plan-list.component";
+import {InspectionPlanListComponent} from "../inspection-plan-list/inspection-plan-list.component";
 import {InspectionPlanDetailComponent} from "../inspection-plan-detail/inspection-plan-detail.component";
 import {CreateInspectionPlanComponent} from "../create-inspection-plan/create-inspection-plan.component";
 import {UpdateInspectionPlanComponent} from "../update-inspection-plan/update-inspection-plan.component";

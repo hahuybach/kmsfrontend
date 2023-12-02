@@ -38,7 +38,7 @@ import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
 import { IssueListPopUpComponent } from './features/post-login/issue/component/issue-list-pop-up/issue-list-pop-up.component';
 import { IssueListRightSideComponent } from './features/post-login/issue/component/issue-list-right-side/issue-list-right-side.component';
 import { SortByIdPipe } from './shared/pipes/sortByDocumentTypeIdPipe.pipe';
-import { InspectionPlanModule } from './features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module';
+import { InspectionPlanModule } from './features/post-login/inspection-plan/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { SchoolInitiationPlanModule } from './features/post-login/school-initiation-plan/school-initiation-plan.module';
@@ -71,6 +71,7 @@ import {InspectionModule} from "./features/post-login/inspection/inspection.modu
 import { SchoolListModule } from './features/post-login/school-list/school-list.module';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
 import { IssueBaseComponent } from './features/post-login/issue/issue-base/issue-base.component';
+import { InspectionPlanBaseComponent } from './features/post-login/inspection-plan/inspection-plan-base/inspection-plan-base.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -103,6 +104,7 @@ import { IssueBaseComponent } from './features/post-login/issue/issue-base/issue
     NotificationListAllComponent,
     NotificationListUnseenComponent,
     IssueBaseComponent,
+    InspectionPlanBaseComponent,
   ],
   imports: [
     BrowserModule,

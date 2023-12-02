@@ -305,7 +305,7 @@ export class UpdateInspectionPlanComponent {
 
     this.inspectionPlanService.updateInspectionPlan(formData).subscribe({
       next: (response) => {
-        this.router.navigateByUrl("inspection_plan/" + response.inspectionPlan.inspectionPlanId);
+        this.router.navigateByUrl("inspection-plan/" + response.inspectionPlan.inspectionPlanId);
       },
       error: (error) => {
         console.log(error)
