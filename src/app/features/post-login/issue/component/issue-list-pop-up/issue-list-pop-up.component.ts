@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {InspectorService} from "../../../../../../services/inspector.service";
+import {InspectorService} from "../../../../../services/inspector.service";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {CellClickedEvent, ColDef, GridOptions, GridReadyEvent, SortChangedEvent} from "ag-grid-community";
 import { Observable } from 'rxjs';

@@ -1,4 +1,4 @@
-import { UpdateIssueComponent } from './features/post-login/issue-list/update-issue/update-issue.component';
+import { UpdateIssueComponent } from './features/post-login/issue/update-issue/update-issue.component';
 import { InspectorService } from './services/inspector.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -8,7 +8,7 @@ import { LoginFormComponent } from './features/login/login-form/login-form.compo
 import { MainComponent } from './main/main/main.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
-import { IssueListComponent } from './features/post-login/issue-list/issue-list.component';
+import { IssueListComponent } from './features/post-login/issue/issue-list/issue-list.component';
 import { DashboardComponent } from './features/post-login/dashboard/dashboard.component';
 import { MenuModule } from 'primeng/menu';
 import { AgGridModule } from 'ag-grid-angular';
@@ -22,9 +22,9 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DropdownModule } from 'primeng/dropdown';
 import { IssueService } from './services/issue.service';
 import { LoggerService } from './services/LoggerService';
-import { IssueDetailComponent } from './features/post-login/issue-list/issue-detail/issue-detail.component';
+import { IssueDetailComponent } from './features/post-login/issue/issue-detail/issue-detail.component';
 import { VirtualScrollerModule } from 'primeng/virtualscroller';
-import { CreateIssueComponent } from './features/post-login/issue-list/create-issue/create-issue.component';
+import { CreateIssueComponent } from './features/post-login/issue/create-issue/create-issue.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ForgotPasswordComponent } from './features/login/forgot-password/forgot-password.component';
 import { LoginBaseComponent } from './features/login/login-base/login-base.component';
@@ -35,8 +35,8 @@ import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.inte
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
-import { IssueListPopUpComponent } from './features/post-login/issue-list/create-issue/component/issue-list-pop-up/issue-list-pop-up.component';
-import { IssueListRightSideComponent } from './features/post-login/issue-list/create-issue/component/issue-list-right-side/issue-list-right-side.component';
+import { IssueListPopUpComponent } from './features/post-login/issue/component/issue-list-pop-up/issue-list-pop-up.component';
+import { IssueListRightSideComponent } from './features/post-login/issue/component/issue-list-right-side/issue-list-right-side.component';
 import { SortByIdPipe } from './shared/pipes/sortByDocumentTypeIdPipe.pipe';
 import { InspectionPlanModule } from './features/post-login/inspection-plan-list/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
@@ -70,6 +70,7 @@ import { NotificationListUnseenComponent } from './components/notification-list/
 import {InspectionModule} from "./features/post-login/inspection/inspection.module";
 import { SchoolListModule } from './features/post-login/school-list/school-list.module';
 import {MAT_DATE_LOCALE} from "@angular/material/core";
+import { IssueBaseComponent } from './features/post-login/issue/issue-base/issue-base.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -101,6 +102,7 @@ import {MAT_DATE_LOCALE} from "@angular/material/core";
     ChangePasswordComponent,
     NotificationListAllComponent,
     NotificationListUnseenComponent,
+    IssueBaseComponent,
   ],
   imports: [
     BrowserModule,

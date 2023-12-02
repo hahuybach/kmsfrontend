@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Issue } from 'src/app/models/issue.model';
 import { IssueService } from 'src/app/services/issue.service';
-import { ToastService } from '../../../shared/toast/toast.service';
-import { Role } from '../../../shared/enum/role';
-import { AuthService } from '../../../services/auth.service';
-import { unSub } from '../../../shared/util/util';
+import { ToastService } from '../../../../shared/toast/toast.service';
+import { Role } from '../../../../shared/enum/role';
+import { AuthService } from '../../../../services/auth.service';
+import { unSub } from '../../../../shared/util/util';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import { FilterMatchMode } from 'primeng/api';
 import { DatePipe } from '@angular/common';
@@ -95,15 +95,15 @@ export class IssueListComponent implements OnInit, OnDestroy {
   }
 
   navigateToCreateIssue() {
-    this.router.navigate(['/createissue']);
+    this.router.navigate(['/issue/create']);
   }
 
   navigateToDetail(issueId: number) {
-    this.router.navigate(['/issuelist', issueId]);
+    this.router.navigate(['/issue', issueId]);
   }
 
   navigateToUpdate(issueId: number) {
-    this.router.navigate(['/issuelist/update', issueId]);
+    this.router.navigate(['/issue/update', issueId]);
   }
 
   ngOnDestroy(): void {
