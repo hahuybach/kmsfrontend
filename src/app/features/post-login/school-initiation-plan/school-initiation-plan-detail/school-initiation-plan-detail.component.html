@@ -1,544 +1,576 @@
-<span>breadcrumb</span>
-<h5 class="mat-headline-5 fw-medium mb-4">
-  Kế hoạch thực hiện nhiệm vụ năm học
-</h5>
-<p-toast></p-toast>
-<app-loading-complete-dialog
-  [visible]="isLoading"
-  [completed]="submitCompleted"
-  [header]="'Đánh giá'"
-  [progress]="'Vui lòng đợi trong giây lát'"
-  [complete]="'Đánh giá thành công'"
-></app-loading-complete-dialog>
-<app-file-loading [visible]="isFileLoading" [progress]="''"></app-file-loading>
-<p-confirmDialog
-  [style]="{ width: '50vw' }"
-  acceptLabel="Đồng ý"
-  rejectLabel="Hủy"
-  key="confirmSchoolInitiationplan"
-></p-confirmDialog>
-<!-- file preview -->
-<p-dialog
-  [(visible)]="pdfLoaded"
-  [style]="{ width: '90vw', height: '1080px' }"
-  [draggable]="false"
-  [resizable]="false"
->
-  <div *ngIf="pdfLoaded">
-    <iframe [src]="safePdfUrl" width="100%" height="600px"></iframe>
-  </div>
-</p-dialog>
-<!--doc history -->
-<p-dialog
-  header="Lịch sử phê duyệt"
-  [(visible)]="docHistoryVisible"
-  [modal]="true"
-  [style]="{ width: '90vw', height: '900px' }"
-  [draggable]="false"
-  [resizable]="false"
->
-  <ng-container *ngIf="schoolinitiationplan?.documents">
-    <p-table
-      #dthistory
-      [value]="schoolinitiationplan.documents"
-      [tableStyle]="{ 'min-width': '50rem' }"
-      [scrollable]="true"
-      scrollHeight="580px"
-      [paginator]="true"
-      [rows]="5"
-      [rowHover]="true"
-      [globalFilterFields]="[
-        'schoolDocument.documentName',
-        'schoolDocument.documentCode',
-        'schoolDocument.uploadedDate',
-        'schoolDocument.createdBy',
-        'schoolDocument.status.statusName',
-        'departmentDocument.uploadedDate',
-        'departmentDocument.account.user.fullName'
-      ]"
-    >
-      <ng-template pTemplate="caption">
-        <input
-          class="history-search-box"
-          type="text"
-          pInputText
-          placeholder="Tìm kiếm"
-          (input)="
-            dthistory.filterGlobal($any($event.target).value, 'contains')
-          "
-        />
-      </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th>STT</th>
-          <th pSortableColumn="schoolDocument.documentName">
-            <div>
-              Tài liệu<p-sortIcon
-                field="schoolDocument.documentName"
-              ></p-sortIcon>
-            </div>
-          </th>
-          <th pSortableColumn="schoolDocument.documentCode">
-            <div>
-              Mã tài liệu<p-sortIcon
-                field="schoolDocument.documentCode"
-              ></p-sortIcon>
-            </div>
-          </th>
-          <th pSortableColumn="schoolDocument.uploadedDate">
-            <div>
-              Ngày tạo<p-sortIcon
-                field="schoolDocument.uploadedDate"
-              ></p-sortIcon>
-            </div>
-          </th>
-          <th pSortableColumn="schoolDocument.createdBy">
-            <div>
-              Người tạo<p-sortIcon
-                field="schoolDocument.createdBy"
-              ></p-sortIcon>
-            </div>
-          </th>
-          <th pSortableColumn="schoolDocument.status.statusName">
-            <div>
-              Ngày phê duyệt
-              <p-sortIcon field="departmentDocument.uploadedDate"></p-sortIcon>
-            </div>
-          </th>
-          <th pSortableColumn="departmentDocument.uploadedDate">
-            <div>
-              Ngày phê duyệt
-              <p-sortIcon field="departmentDocument.uploadedDate"></p-sortIcon>
-            </div>
-          </th>
-          <th pSortableColumn="departmentDocument.account.user.fullName">
-            <div>
-              Người đánh giá
-              <p-sortIcon
-                field="departmentDocument.account.user.fullName"
-              ></p-sortIcon>
-            </div>
-          </th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-plan let-i="rowIndex">
-        <tr>
-          <td>{{ i + 1 }}</td>
-          <td
-            class="his-file-name"
-            (click)="openNewTab(plan.schoolDocument.documentLink)"
-          >
-            {{ plan.schoolDocument.documentName }}
-          </td>
-          <td>{{ plan.schoolDocument.documentCode }}</td>
-          <td>{{ plan.schoolDocument.uploadedDate | date : "dd/MM/yyyy" }}</td>
-          <td>{{ plan.schoolDocument.account.user.fullName }}</td>
-          <td>
-            <p-tag
-              *ngIf="plan.schoolDocument.status.statusId == 10"
-              class="status"
-              [severity]="'warning'"
-              [rounded]="true"
-            >
-              {{ plan.schoolDocument.status.statusName }}
-            </p-tag>
-            <p-tag
-              *ngIf="plan.schoolDocument.status.statusId == 11"
-              class="status"
-              [severity]="'success'"
-              [rounded]="true"
-            >
-              {{ plan.schoolDocument.status.statusName }}
-            </p-tag>
-            <p-tag
-              *ngIf="plan.schoolDocument.status.statusId == 12"
-              class="status"
-              [severity]="'danger'"
-              [rounded]="true"
-            >
-              {{ plan.schoolDocument.status.statusName }}
-            </p-tag>
-          </td>
-
-          <td *ngIf="plan.departmentDocument">
-            {{ plan.departmentDocument.uploadedDate | date : "dd/MM/yyyy" }}
-          </td>
-          <td *ngIf="plan.departmentDocument">
-            {{ plan.departmentDocument.account.user.fullName }}
-          </td>
-          <td>
-            <button
-              pButton
-              *ngIf="plan.departmentDocument"
-              (click)="openNewTab(plan.departmentDocument.documentLink)"
-            >
-              Chi tiết
-            </button>
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="8">Không có lịch sử phê duyệt</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </ng-container>
-</p-dialog>
-
-<form [formGroup]="inputFileForm">
-  <!-- reset deadline -->
+<div class="container-fluid">
+  <span>breadcrumb</span>
+  <h5 class="mat-headline-5 fw-medium mb-4">
+    Kế hoạch thực hiện nhiệm vụ năm học
+  </h5>
+  <p-toast></p-toast>
+  <app-loading-complete-dialog
+    [visible]="isLoading"
+    [completed]="submitCompleted"
+    [header]="'Đánh giá'"
+    [progress]="'Vui lòng đợi trong giây lát'"
+    [complete]="'Đánh giá thành công'"
+  ></app-loading-complete-dialog>
+  <app-file-loading
+    [visible]="isFileLoading"
+    [progress]="''"
+  ></app-file-loading>
+  <p-confirmDialog
+    [style]="{ width: '50vw' }"
+    acceptLabel="Đồng ý"
+    rejectLabel="Hủy"
+    key="confirmSchoolInitiationplan"
+  ></p-confirmDialog>
+  <!-- file preview -->
   <p-dialog
-    header="Chỉnh sửa hạn nộp"
-    [(visible)]="resetDeadlineVisible"
-    [modal]="true"
-    [style]="{ width: '60vw', height: '820px' }"
+    [(visible)]="pdfLoaded"
+    [style]="{ width: '90vw', height: '1080px' }"
     [draggable]="false"
     [resizable]="false"
   >
-    <div>
-      <p-calendar
-        formControlName="deadline"
-        [minDate]="minDate"
-        [inline]="true"
-        [style]="{ width: '100%' }"
-      ></p-calendar>
-    </div>
-    <div class="mt-5 d-flex justify-content-center align-items-center">
-      <button pButton (click)="resetDeadline()">Thay đổi hạn nộp</button>
+    <div *ngIf="pdfLoaded">
+      <iframe [src]="safePdfUrl" width="100%" height="600px"></iframe>
     </div>
   </p-dialog>
+  <!--doc history -->
   <p-dialog
-    header="Đánh giá tài liệu"
-    [(visible)]="uploadFileVisible"
+    header="Lịch sử phê duyệt"
+    [(visible)]="docHistoryVisible"
     [modal]="true"
-    [style]="{ width: '60vw', height: '600px' }"
+    [style]="{ width: '90vw', height: '900px' }"
     [draggable]="false"
     [resizable]="false"
-    (onHide)="hideUploadPopup()"
   >
-    <label class="mb-1" for=""
-      >Tên tài liệu<span class="p-error">*</span></label
-    >
-    <br />
-    <input
-      pInputText
-      formControlName="documentName"
-      type="text"
-      placeholder="Tên tài liệu"
-    />
-    <span
-      *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
-      class="p-error"
-      >Vui lòng điền tên tài liệu</span
-    >
-    <br />
-    <label class="mb-1 mt-1" for=""
-      >Mã tài liệu<span class="p-error">*</span></label
-    >
-    <br />
-    <input
-      pInputText
-      formControlName="documentCode"
-      type="text"
-      placeholder="Mã tài liệu"
-    />
-    <span
-      *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
-      class="p-error"
-      >Vui lòng điền mã tài liệu</span
-    >
-    <br />
-    <label class="mb-1 mt-1" for=""
-      >Tài liệu<span class="p-error">*</span></label
-    >
-    <div class="mb-3 input-file-popup row">
-      <div class="col-md-9">
-        <input
-          type="file"
-          accept="application/pdf"
-          #fileInput
-          style="display: none"
-          (change)="handleFileInputChange(fileInput)"
-        />
-        <input
-          pInputText
-          readonly
-          class="col-md-9"
-          placeholder="{{
-            fileInputPlaceholders
-              ? fileInputPlaceholders
-              : 'Chọn file để tải lên'
-          }}"
-        />
-      </div>
-      <div class="col-md-3">
-        <button
-          type="button"
-          pButton
-          label="Chọn tệp"
-          (click)="fileInput.click()"
-        ></button>
-      </div>
-
-      <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
-        >Vui lòng chọn tài liệu</span
-      > -->
-    </div>
-    <!-- <button
-      type="button"
-      pButton
-      (click)="upload()"
-      [disabled]="inputFileForm.get('file')?.value == '' || inputFileForm.controls.documentName.errors?.['whitespace'] || inputFileForm.controls.documentCode.errors?.['whitespace'] "
-    >
-      Tải tài liệu
-    </button> -->
-    <div
-      class="button-bottom py-4 d-flex justify-content-around align-items-center"
-    >
-      <button class="p-tag p-tag-danger" (click)="reject()">
-        Không phê duyệt
-      </button>
-      <button class="p-tag p-tag-success" (click)="approve()">Phê duyệt</button>
-    </div>
-  </p-dialog>
-</form>
-
-<div class="row" *ngIf="schoolinitiationplan">
-  <div class="col-md-7 plan">
-    <div class="plan-content row">
-      <div class="col-md-8">
-        <div class="height-80">
-          <span class="mb-2 text-black-50">Tên kế hoạch</span>
-          <p class="font-weight-bold">
-            {{ schoolinitiationplan.initiationPlanName }}
-          </p>
-        </div>
-        <div class="height-80">
-          <span class="mb-2 text-black-50">Trường</span>
-          <p class="font-weight-bold">
-            {{ schoolinitiationplan.school.schoolName }}
-          </p>
-        </div>
-        <div class="height-80">
-          <span class="mb-2 text-black-50">Ngày tạo</span>
-          <p class="font-weight-bold">
-            {{ schoolinitiationplan.createdDate | date : "dd/MM/yyyy" }}
-          </p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="height-80">
-          <span class="mb-2 text-black-50">Người lên kế hoạch</span>
-          <p class="font-weight-bold">{{ schoolinitiationplan.createdBy }}</p>
-        </div>
-        <div class="height-80">
-          <span class="mb-2 text-black-50">Trạng thái</span>
-          <br />
-          <p-tag
-            *ngIf="
-              schoolinitiationplan?.status.statusId >= 6 &&
-              schoolinitiationplan?.status.statusId <= 9
-            "
-            class="status"
-            [severity]="
-              getStatusSeverity(schoolinitiationplan?.status.statusId)
-            "
-            [rounded]="true"
-          >
-            {{ schoolinitiationplan?.status.statusName }}
-          </p-tag>
-        </div>
-        <div class="height-80">
-          <span class="mb-2 text-black-50">Hạn nộp</span>
-          <p class="font-weight-bold p-error">
-            {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="plan-file mt-3">
-      <span class="text-black-50">Tài liệu</span>
-      <br />
-      <div class="row">
-        <div class="col-md-8">
-          <button pButton class="mb-2" (click)="docHistoryVisible = true">
-            Xem lịch sử phê duyệt tài liệu
-          </button>
-        </div>
-        <!-- <div class="col-md-4">
-          <button pButton class="mb-2" (click)="redirectToIssue()">
-            Kế hoạch kiểm tra
-          </button>
-        </div> -->
-      </div>
-
-      <div
-        *ngIf="schoolinitiationplan?.status.statusId != 6"
-        class="plan-file-item d-flex"
-        (click)="openNewTab(lastDocs.schoolDocument?.documentLink)"
+    <ng-container *ngIf="schoolinitiationplan?.documents">
+      <p-table
+        #dthistory
+        [value]="schoolinitiationplan.documents"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [scrollable]="true"
+        scrollHeight="580px"
+        [paginator]="true"
+        [rows]="5"
+        [rowHover]="true"
+        [globalFilterFields]="[
+          'schoolDocument.documentName',
+          'schoolDocument.documentCode',
+          'schoolDocument.uploadedDate',
+          'schoolDocument.createdBy',
+          'schoolDocument.status.statusName',
+          'departmentDocument.uploadedDate',
+          'departmentDocument.account.user.fullName'
+        ]"
       >
-        <div
-          class="plan-file-item-img d-flex justify-content-center align-items-center"
-        >
-          <img src="../../../../../assets/img/pdf.png" alt="" />
-        </div>
-        <div class="plan-file-item-content" *ngIf="lastDocs?.schoolDocument">
-          <div class="col-md-10 p-2">
-            <span class="font-weight-bold">
-              {{ lastDocs.schoolDocument.documentName }}
-            </span>
-            <br />
-            <span class="font-weight-bold">Mã: </span>
-            <span class="text-black-50">{{
-              lastDocs.schoolDocument.documentCode
-            }}</span>
-            <br />
-            <span class="text-black-50">{{
-              lastDocs.schoolDocument.sizeFormat
-            }}</span>
-            <br />
-            <span class="text-black-50">{{
-              lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
-            }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-5">
-    <div class="upload">
-      <div class="py-4 header text-center">
-        <h4>Đánh giá kế hoạch</h4>
-      </div>
+        <ng-template pTemplate="caption">
+          <input
+            class="history-search-box"
+            type="text"
+            pInputText
+            placeholder="Tìm kiếm"
+            (input)="
+              dthistory.filterGlobal($any($event.target).value, 'contains')
+            "
+          />
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>STT</th>
+            <th pSortableColumn="schoolDocument.documentName">
+              <div>
+                Tài liệu<p-sortIcon
+                  field="schoolDocument.documentName"
+                ></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="schoolDocument.documentCode">
+              <div>
+                Mã tài liệu<p-sortIcon
+                  field="schoolDocument.documentCode"
+                ></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="schoolDocument.uploadedDate">
+              <div>
+                Ngày tạo<p-sortIcon
+                  field="schoolDocument.uploadedDate"
+                ></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="schoolDocument.createdBy">
+              <div>
+                Người tạo<p-sortIcon
+                  field="schoolDocument.createdBy"
+                ></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="schoolDocument.status.statusName">
+              <div>
+                Ngày phê duyệt
+                <p-sortIcon
+                  field="departmentDocument.uploadedDate"
+                ></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="departmentDocument.uploadedDate">
+              <div>
+                Ngày phê duyệt
+                <p-sortIcon
+                  field="departmentDocument.uploadedDate"
+                ></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="departmentDocument.account.user.fullName">
+              <div>
+                Người đánh giá
+                <p-sortIcon
+                  field="departmentDocument.account.user.fullName"
+                ></p-sortIcon>
+              </div>
+            </th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-plan let-i="rowIndex">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td
+              class="his-file-name"
+              (click)="openNewTab(plan.schoolDocument.documentLink)"
+            >
+              {{ plan.schoolDocument.documentName }}
+            </td>
+            <td>{{ plan.schoolDocument.documentCode }}</td>
+            <td>
+              {{ plan.schoolDocument.uploadedDate | date : "dd/MM/yyyy" }}
+            </td>
+            <td>{{ plan.schoolDocument.account.user.fullName }}</td>
+            <td>
+              <p-tag
+                *ngIf="plan.schoolDocument.status.statusId == 10"
+                class="status"
+                [severity]="'warning'"
+                [rounded]="true"
+              >
+                {{ plan.schoolDocument.status.statusName }}
+              </p-tag>
+              <p-tag
+                *ngIf="plan.schoolDocument.status.statusId == 11"
+                class="status"
+                [severity]="'success'"
+                [rounded]="true"
+              >
+                {{ plan.schoolDocument.status.statusName }}
+              </p-tag>
+              <p-tag
+                *ngIf="plan.schoolDocument.status.statusId == 12"
+                class="status"
+                [severity]="'danger'"
+                [rounded]="true"
+              >
+                {{ plan.schoolDocument.status.statusName }}
+              </p-tag>
+            </td>
 
-      <ng-container *ngIf="schoolinitiationplan?.status.statusId == 6">
-        <div class="input-file">
-          <div class="my-4 d-flex justify-content-center align-items-center">
-            <span class="p-error">
-              Phía trường chưa gửi tài liệu nên không thể đánh giá
-            </span>
+            <td *ngIf="plan.departmentDocument">
+              {{ plan.departmentDocument.uploadedDate | date : "dd/MM/yyyy" }}
+            </td>
+            <td *ngIf="plan.departmentDocument">
+              {{ plan.departmentDocument.account.user.fullName }}
+            </td>
+            <td>
+              <button
+                pButton
+                *ngIf="plan.departmentDocument"
+                (click)="openNewTab(plan.departmentDocument.documentLink)"
+              >
+                Chi tiết
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="8">Không có lịch sử phê duyệt</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-container>
+  </p-dialog>
+
+  <form [formGroup]="inputFileForm">
+    <!-- reset deadline -->
+    <p-dialog
+      header="Chỉnh sửa hạn nộp"
+      [(visible)]="resetDeadlineVisible"
+      [modal]="true"
+      [style]="{ width: '60vw', height: '820px' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div>
+        <p-calendar
+          formControlName="deadline"
+          [minDate]="minDate"
+          [inline]="true"
+          [style]="{ width: '100%' }"
+        ></p-calendar>
+      </div>
+      <div class="mt-5 d-flex justify-content-center align-items-center">
+        <button pButton (click)="resetDeadline()">Thay đổi hạn nộp</button>
+      </div>
+    </p-dialog>
+    <!-- file upload -->
+    <p-dialog
+      header="Đánh giá tài liệu"
+      [(visible)]="uploadFileVisible"
+      [modal]="true"
+      [style]="{ width: '60vw', height: '600px' }"
+      [draggable]="false"
+      [resizable]="false"
+      (onHide)="hideUploadPopup()"
+    >
+      <label class="mb-1" for=""
+        >Tên tài liệu<span class="p-error">*</span></label
+      >
+      <br />
+      <input
+        pInputText
+        formControlName="documentName"
+        type="text"
+        placeholder="Tên tài liệu"
+      />
+      <span
+        *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
+        class="p-error"
+        >Vui lòng điền tên tài liệu</span
+      >
+      <br />
+      <label class="mb-1 mt-1" for=""
+        >Mã tài liệu<span class="p-error">*</span></label
+      >
+      <br />
+      <input
+        pInputText
+        formControlName="documentCode"
+        type="text"
+        placeholder="Mã tài liệu"
+      />
+      <span
+        *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
+        class="p-error"
+        >Vui lòng điền mã tài liệu</span
+      >
+      <br />
+      <label class="mb-1 mt-1" for=""
+        >Tài liệu<span class="p-error">*</span></label
+      >
+      <div class="mb-3 input-file-popup row">
+        <div class="col-md-9">
+          <input
+            type="file"
+            accept="application/pdf"
+            #fileInput
+            style="display: none"
+            (change)="handleFileInputChange(fileInput)"
+          />
+          <input
+            pInputText
+            readonly
+            class="col-md-9"
+            placeholder="{{
+              fileInputPlaceholders
+                ? fileInputPlaceholders
+                : 'Chọn file để tải lên'
+            }}"
+          />
+        </div>
+        <div class="col-md-3">
+          <button
+            type="button"
+            pButton
+            label="Chọn tệp"
+            (click)="fileInput.click()"
+          ></button>
+        </div>
+
+        <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
+          >Vui lòng chọn tài liệu</span
+        > -->
+      </div>
+      <!-- <button
+        type="button"
+        pButton
+        (click)="upload()"
+        [disabled]="inputFileForm.get('file')?.value == '' || inputFileForm.controls.documentName.errors?.['whitespace'] || inputFileForm.controls.documentCode.errors?.['whitespace'] "
+      >
+        Tải tài liệu
+      </button> -->
+      <div
+        class="button-bottom py-4 d-flex justify-content-around align-items-center"
+      >
+        <button class="p-tag p-tag-danger" (click)="reject()">
+          Không phê duyệt
+        </button>
+        <button class="p-tag p-tag-success" (click)="approve()">
+          Phê duyệt
+        </button>
+      </div>
+    </p-dialog>
+  </form>
+
+  <div class="row" *ngIf="schoolinitiationplan">
+    <div class="col-md-7 plan">
+      <div class="plan-content">
+        <!-- dong 1 -->
+        <div class="row mb-2">
+          <div class="col-md-8">
+            <div class="mb-1">
+              <span class="mb-2 span-heading-color">Tên kế hoạch</span>
+              <p class="fw-bold p-content-fs">
+                {{ schoolinitiationplan.initiationPlanName }}
+              </p>
+            </div>
           </div>
-          <div class="d-flex justify-content-center align-items-center">
+          <div class="col-md-4">
+            <div class="mb-1">
+              <span class="mb-2 text-black-50">Người lên kế hoạch</span>
+              <p class="fw-bold p-content-fs">
+                {{ schoolinitiationplan.createdBy }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- dong 2 -->
+        <div class="row mb-2">
+          <div class="col-md-8">
+            <div class="mb-1">
+              <span class="mb-2 span-heading-color">Trường</span>
+              <p class="fw-bold p-content-fs">
+                {{ schoolinitiationplan.school.schoolName }}
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-1">
+              <span class="mb-2 text-black-50">Trạng thái</span>
+              <br />
+              <p-tag
+                *ngIf="
+                  schoolinitiationplan?.status.statusId >= 6 &&
+                  schoolinitiationplan?.status.statusId <= 9
+                "
+                class="status"
+                [severity]="
+                  getStatusSeverity(schoolinitiationplan?.status.statusId)
+                "
+                [rounded]="true"
+              >
+                {{ schoolinitiationplan?.status.statusName }}
+              </p-tag>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-md-8">
+            <div class="mb-1">
+              <span class="mb-2 text-black-50">Ngày tạo</span>
+              <p class="fw-bold p-content-fs">
+                {{ schoolinitiationplan.createdDate | date : "dd/MM/yyyy" }}
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-1">
+              <span class="mb-2 text-black-50">Hạn nộp</span>
+              <p class="fw-bold p-error">
+                {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="plan-file mt-3">
+        <span class="text-black-50">Tài liệu</span>
+        <br />
+        <div class="row">
+          <div class="col-md-8">
+            <button pButton class="mb-2" (click)="docHistoryVisible = true">
+              Xem lịch sử phê duyệt tài liệu
+            </button>
+          </div>
+          <!-- <div class="col-md-4">
+            <button pButton class="mb-2" (click)="redirectToIssue()">
+              Kế hoạch kiểm tra
+            </button>
+          </div> -->
+        </div>
+
+        <div
+          *ngIf="schoolinitiationplan?.status.statusId != 6"
+          class="plan-file-item d-flex"
+          (click)="openNewTab(lastDocs.schoolDocument?.documentLink)"
+        >
+          <div
+            class="plan-file-item-img d-flex justify-content-center align-items-center"
+          >
+            <img src="../../../../../assets/img/pdf.png" alt="" />
+          </div>
+          <div class="plan-file-item-content" *ngIf="lastDocs?.schoolDocument">
+            <div class="col-md-10 p-2">
+              <span class="font-weight-bold">
+                {{ lastDocs.schoolDocument.documentName }}
+              </span>
+              <br />
+              <span class="font-weight-bold">Mã: </span>
+              <span class="text-black-50">{{
+                lastDocs.schoolDocument.documentCode
+              }}</span>
+              <br />
+              <span class="text-black-50">{{
+                lastDocs.schoolDocument.sizeFormat
+              }}</span>
+              <br />
+              <span class="text-black-50">{{
+                lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+    <div class="col-md-5">
+      <div class="upload">
+        <div class="py-4 header text-center">
+          <h6 class="mat-headline-6 p-content-fs">Đánh giá kế hoạch</h6>
+        </div>
+
+        <ng-container *ngIf="schoolinitiationplan?.status.statusId == 6">
+          <div class="input-file">
+            <div class="my-4 d-flex justify-content-center align-items-center">
+              <span class="p-error">
+                Phía trường chưa gửi tài liệu nên không thể đánh giá
+              </span>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+              <button
+                type="button"
+                pButton
+                [disabled]="true"
+                label="Đánh giá"
+                (click)="uploadFileVisible = true"
+                class="col-md-3"
+              ></button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="schoolinitiationplan?.status.statusId == 7">
+          <div
+            *ngIf="!fileStatus"
+            class="input-file d-flex justify-content-center align-items-center"
+          >
             <button
               type="button"
               pButton
-              [disabled]="true"
               label="Đánh giá"
               (click)="uploadFileVisible = true"
               class="col-md-3"
             ></button>
           </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="schoolinitiationplan?.status.statusId == 7">
-        <div
-          *ngIf="!fileStatus"
-          class="input-file d-flex justify-content-center align-items-center"
-        >
-          <button
-            type="button"
-            pButton
-            label="Đánh giá"
-            (click)="uploadFileVisible = true"
-            class="col-md-3"
-          ></button>
-        </div>
 
-        <!-- <div
-          *ngIf="fileStatus"
-          class="px-4 my-4"
-          (click)="displayNewFileUpload(newFile)"
-        >
-          <div class="plan-file-item d-flex">
-            <div
-              class="plan-file-item-img d-flex justify-content-center align-items-center"
-            >
-              <img src="../../../../../assets/img/pdf.png" alt="" />
-            </div>
-            <div class="plan-file-item-content row">
-              <div class="col-md-10 p-2">
-                <span class="font-weight-bold">
-                  {{ inputFileForm.get("documentName")?.value }}
-                </span>
-                <br />
-                <span class="font-weight-bold">Mã: </span
-                ><span class="text-black-50">{{
-                  inputFileForm.get("documentCode")?.value
-                }}</span>
-              </div>
+          <!-- <div
+            *ngIf="fileStatus"
+            class="px-4 my-4"
+            (click)="displayNewFileUpload(newFile)"
+          >
+            <div class="plan-file-item d-flex">
               <div
-                class="col-md-2 d-flex justify-content-center align-items-center"
+                class="plan-file-item-img d-flex justify-content-center align-items-center"
               >
+                <img src="../../../../../assets/img/pdf.png" alt="" />
+              </div>
+              <div class="plan-file-item-content row">
+                <div class="col-md-10 p-2">
+                  <span class="font-weight-bold">
+                    {{ inputFileForm.get("documentName")?.value }}
+                  </span>
+                  <br />
+                  <span class="font-weight-bold">Mã: </span
+                  ><span class="text-black-50">{{
+                    inputFileForm.get("documentCode")?.value
+                  }}</span>
+                </div>
                 <div
-                  *ngIf="iconStatus"
-                  class="delete-icon d-flex justify-content-center align-items-center"
-                  (click)="deleteFile()"
+                  class="col-md-2 d-flex justify-content-center align-items-center"
                 >
-                  <i class="bi bi-x-lg"></i>
+                  <div
+                    *ngIf="iconStatus"
+                    class="delete-icon d-flex justify-content-center align-items-center"
+                    (click)="deleteFile()"
+                  >
+                    <i class="bi bi-x-lg"></i>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div> -->
-      </ng-container>
-      <ng-container
-        *ngIf="
-          schoolinitiationplan?.status.statusId == 8 ||
-          schoolinitiationplan?.status.statusId == 9
-        "
-      >
-        <div
-          class="px-4 my-4"
-          (click)="openNewTab(lastDocs.departmentDocument?.documentLink)"
+          </div> -->
+        </ng-container>
+        <ng-container
+          *ngIf="
+            schoolinitiationplan?.status.statusId == 8 ||
+            schoolinitiationplan?.status.statusId == 9
+          "
         >
-          <div class="plan-file-item d-flex">
+          <div class="px-4 my-4">
             <div
-              class="plan-file-item-img d-flex justify-content-center align-items-center"
+              class="plan-file-item d-flex"
+              (click)="openNewTab(lastDocs.departmentDocument?.documentLink)"
             >
-              <img src="../../../../../assets/img/pdf.png" alt="" />
-            </div>
-            <div class="plan-file-item-content row">
-              <div class="col-md-10 p-2">
-                <span class="font-weight-bold">
-                  {{ lastDocs.departmentDocument?.documentName }}
-                </span>
-                <br />
-                <span class="font-weight-bold">Mã: </span
-                ><span class="text-black-50">{{
-                  lastDocs.departmentDocument?.documentCode
-                }}</span>
-                <br />
-                <span class="text-black-50">{{
-                  lastDocs.departmentDocument?.sizeFormat
-                }}</span>
-                <br />
-                <span class="text-black-50">{{
-                  lastDocs.departmentDocument?.uploadedDate
-                    | date : "dd/MM/yyyy"
-                }}</span>
+              <div
+                class="plan-file-item-img d-flex justify-content-center align-items-center"
+              >
+                <img src="../../../../../assets/img/pdf.png" alt="" />
+              </div>
+              <div class="plan-file-item-content row">
+                <div class="col-md-10 p-2">
+                  <span class="font-weight-bold">
+                    {{ lastDocs.departmentDocument?.documentName }}
+                  </span>
+                  <br />
+                  <span class="font-weight-bold">Mã: </span
+                  ><span class="text-black-50">{{
+                    lastDocs.departmentDocument?.documentCode
+                  }}</span>
+                  <br />
+                  <span class="text-black-50">{{
+                    lastDocs.departmentDocument?.sizeFormat
+                  }}</span>
+                  <br />
+                  <span class="text-black-50">{{
+                    lastDocs.departmentDocument?.uploadedDate
+                      | date : "dd/MM/yyyy"
+                  }}</span>
+                </div>
               </div>
             </div>
+            <div class="mt-5 d-flex justify-content-center align-items-center">
+              <span>Kết quả đánh giá:</span> &nbsp;&nbsp;
+              <p-tag
+                *ngIf="
+                  schoolinitiationplan?.status.statusId >= 6 &&
+                  schoolinitiationplan?.status.statusId <= 9
+                "
+                class="status"
+                [severity]="
+                  getStatusSeverity(schoolinitiationplan?.status.statusId)
+                "
+                [rounded]="true"
+              >
+                {{ schoolinitiationplan?.status.statusName }}
+              </p-tag>
+            </div>
           </div>
-          <div class="mt-5 d-flex justify-content-center align-items-center">
-            <span>Kết quả đánh giá:</span> &nbsp;&nbsp;
-            <p-tag
-              *ngIf="
-                schoolinitiationplan?.status.statusId >= 6 &&
-                schoolinitiationplan?.status.statusId <= 9
-              "
-              class="status"
-              [severity]="
-                getStatusSeverity(schoolinitiationplan?.status.statusId)
-              "
-              [rounded]="true"
-            >
-              {{ schoolinitiationplan?.status.statusName }}
-            </p-tag>
-          </div>
-        </div>
-      </ng-container>
+        </ng-container>
+      </div>
     </div>
   </div>
 </div>

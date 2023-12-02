@@ -16,7 +16,7 @@ textarea {
 }
 .issue-content {
     font-size: 16px;
-    margin-left: 10px;
+    // margin-left: 10px;
 }
 
 .scrollview-item {
@@ -29,6 +29,7 @@ textarea {
 
         &:hover {
             color: rgb(240, 136, 136);
+            cursor: pointer;
         }
     }
     img {
@@ -36,12 +37,12 @@ textarea {
         height: 60px;
     }
     &:hover {
-        background-color: $primary-hover;
+        background-color: rgb(245, 245, 245);
         transition: all 0.5s ease;
-        border-radius: 10px;
+        // border-radius: 10px;
 
         // cursor: pointer;
-        color: #fff;
+        // color: #fff;
     }
     .scrollview-item-content {
         width: 400px;
@@ -81,9 +82,8 @@ textarea {
 .list-inspector {
     border-radius: 10px;
     // border: 0.8px solid $primary;
-    box-shadow:
-        rgba(9, 30, 66, 0.25) 0px 1px 1px,
-        rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
     font-size: 16px;
     .list-inspector-header {
         background-color: $primary;

@@ -15,6 +15,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FileService } from 'src/app/services/file.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ToastService } from 'src/app/shared/toast/toast.service';
 
 interface DocumentIssue {
   documentName: string;
@@ -64,11 +65,12 @@ export class UpdateIssueComponent implements OnInit {
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
+  sub: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService,
+    private toastService: ToastService,
     private inspectorService: InspectorService,
     private fb: FormBuilder,
     private auth: AuthService,
@@ -78,7 +80,7 @@ export class UpdateIssueComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   ngOnInit(): void {
-    this.route.params
+    const sub = this.route.params
       .pipe(
         switchMap((params) => {
           this.issueId = +params['id'];
@@ -100,6 +102,7 @@ export class UpdateIssueComponent implements OnInit {
       this.inspectorLeftList = data;
       this.inspectorLeftBeforeList = data;
     });
+    this.sub.push(sub);
   }
   //toggle status in scrollview
   toggleStatus() {
@@ -108,54 +111,42 @@ export class UpdateIssueComponent implements OnInit {
   // store button in scrollview
   toggleStore() {
     this.isChanged = !this.isChanged;
-    this.inspectorBeforeList = this.issue.inspector.slice();
-    this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
+    this.inspectorBeforeList = this.issue.inspector;
+    this.inspectorLeftBeforeList = this.inspectorLeftList;
     this.issueForm.patchValue({
       inspectorId: this.issue.inspectors.map((item: any) => item.accountId),
     });
   }
   // click trash icon event in scrollview
   confirmDelete(inspector: any) {
-    this.confirmationService.confirm({
-      message: 'Do you want to delete this record?',
-      header: 'Delete Confirmation',
-      // icon: 'pi pi-info-circle',
-      accept: () => {
-        this.inspectorBeforeList = this.issue.inspectors.slice();
-        this.issue.inspectors = this.issue.inspectors.filter(
-          (item: any) => item.accountId != inspector.accountId
-        );
-        // add lại vào danh sách trong popup
-        this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
-        this.inspectorLeftList.push(inspector);
-        this.messageService.add({
-          severity: 'info',
-          summary: 'Confirmed',
-          detail: 'Record deleted',
-        });
-      },
-      reject: (type: any) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Rejected',
-              detail: 'You have rejected',
-            });
-            break;
-          case ConfirmEventType.CANCEL:
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'Cancelled',
-              detail: 'You have cancelled',
-            });
-            break;
-          default:
-            // Handle other cases, if necessary
-            break;
-        }
-      },
-    });
+    if (this.issue.inspectors.length == 1) {
+      this.toastService.showWarn(
+        'toastUpdateIssue',
+        'Cảnh báo',
+        'Danh sách cần ít nhất 1 người'
+      );
+    } else {
+      this.confirmationService.confirm({
+        message:
+          'Bạn có muốn xóa ' + inspector.user.fullName + ' khỏi danh sách?',
+        header: 'Xác nhận xóa',
+        key: 'confirmUpdateIssue',
+        accept: () => {
+          this.inspectorBeforeList = this.issue.inspectors.slice();
+          this.issue.inspectors = this.issue.inspectors.filter(
+            (item: any) => item.accountId != inspector.accountId
+          );
+          // add lại vào danh sách trong popup
+          this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
+          this.inspectorLeftList.push(inspector);
+          this.toastService.showSuccess(
+            'toastUpdateIssue',
+            'Xóa thành công',
+            'Đã xóa ' + inspector.user.fullName + ' khỏi danh sách'
+          );
+        },
+      });
+    }
   }
   //toggle inspector group popup
   showInspectorPopup() {
@@ -179,11 +170,11 @@ export class UpdateIssueComponent implements OnInit {
     this.issue.inspectors.push(...this.selectedInspectors);
     this.selectedInspectors = [];
     this.popupInspectorVisible = false;
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Confirmed',
-      detail: 'Thêm thành công',
-    });
+    this.toastService.showSuccess(
+      'toastUpdateIssue',
+      'Thêm thành công',
+      'Thêm thành công người vào danh sách'
+    );
     // scroll to first
   }
   resetFileInput() {
@@ -271,11 +262,11 @@ export class UpdateIssueComponent implements OnInit {
     if (this.fileInputRef) {
       this.fileInputRef.nativeElement.value = null;
     }
-    this.messageService.add({
-      severity: 'info',
-      summary: 'File Uploaded',
-      detail: '',
-    });
+    this.toastService.showInfo(
+      'toastUpdateIssue',
+      'Tài liệu đã được tải lên',
+      ''
+    );
     this.uploadFileVisible = false;
   }
   onHideEvent() {
@@ -303,30 +294,10 @@ export class UpdateIssueComponent implements OnInit {
         documentName +
         ' ?',
       header: 'Xác nhận cập nhật',
+      key: 'confirmUpdateIssue',
       // icon: 'pi pi-info-circle',
       accept: () => {
         this.uploadFileVisible = true;
-      },
-      reject: (type: any) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Rejected',
-              detail: 'You have rejected',
-            });
-            break;
-          case ConfirmEventType.CANCEL:
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'Cancelled',
-              detail: 'You have cancelled',
-            });
-            break;
-          default:
-            // Handle other cases, if necessary
-            break;
-        }
       },
     });
   }
@@ -339,12 +310,16 @@ export class UpdateIssueComponent implements OnInit {
   }
   openNewTab(documentLink: string) {
     console.log(documentLink);
-    this.fileService.readIssuePDF(documentLink).subscribe((response) => {
-      const blobUrl = window.URL.createObjectURL(response.body as Blob);
-      this.pdfUrl = blobUrl;
-      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-      this.pdfLoaded = true;
-    });
+    const sub = this.fileService
+      .readIssuePDF(documentLink)
+      .subscribe((response) => {
+        const blobUrl = window.URL.createObjectURL(response.body as Blob);
+        this.pdfUrl = blobUrl;
+        this.safePdfUrl =
+          this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        this.pdfLoaded = true;
+      });
+    this.sub.push(sub);
   }
   displayNewFileUpload(file: File) {
     const blobUrl = window.URL.createObjectURL(file as Blob);
@@ -403,10 +378,18 @@ export class UpdateIssueComponent implements OnInit {
     });
     this.issueService.updateIssue(formData).subscribe({
       next: (response) => {
-        console.log(response);
+        this.toastService.showSuccess(
+          'toastUpdateIssue',
+          'Cập nhật thành công',
+          'Cập nhật kế hoạch kiểm tra thành công'
+        );
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError(
+          'toastUpdateIssue',
+          'Cập nhật thất bại',
+          error.error.message
+        );
       },
     });
   }

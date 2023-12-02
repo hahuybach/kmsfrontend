@@ -1,14 +1,19 @@
 <span>breadcrumb here</span>
 <!-- {{ issue | json }} -->
-<h4>Cập nhật kế hoạch kiểm tra</h4>
+<h5 class="mat-headline-5 fw-medium">Cập nhật kế hoạch kiểm tra</h5>
 <form
   [formGroup]="issueForm"
   class="row issue-content no-gutter-row"
   *ngIf="issue"
   (ngSubmit)="onSubmit()"
 >
-  <p-toast></p-toast>
-  <p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
+  <p-toast key="toastUpdateIssue"></p-toast>
+  <p-confirmDialog
+    key="confirmUpdateIssue"
+    [style]="{ width: '50vw' }"
+    rejectLabel="Hủy"
+    acceptLabel="Đồng ý"
+  ></p-confirmDialog>
   <p-dialog
     header="Danh sách đoàn kiểm tra"
     [(visible)]="popupInspectorVisible"
@@ -287,7 +292,7 @@
   </p-dialog>
   <div class="col-md-8">
     <div class="mb-2 issue-name">
-      <h6>Tên kế hoạch</h6>
+      <span class="fw-medium">Tên kế hoạch</span>
       <input
         pInputText
         class="text-black-50 w-100"
@@ -302,7 +307,7 @@
       <!-- <pre>{{ issueForm.controls.name.errors | json }}</pre> -->
     </div>
     <div class="mb-2 issue-description">
-      <h6>Chi tiết</h6>
+      <span class="fw-medium">Chi tiết</span>
       <textarea
         pInputTextarea
         class="text-black-50 w-100"
@@ -317,7 +322,7 @@
       >
     </div>
     <div class="mb-2">
-      <h6 class="mb-2">Tài liệu công văn</h6>
+      <h6 class="mb-2 mat-headline-6">Tài liệu công văn</h6>
       <button
         class="mb-3"
         type="button"
@@ -405,14 +410,14 @@
   <div class="col-md-4">
     <div class="list-inspector">
       <div class="list-inspector-header p-3 text-center">
-        <h5 class="mx-auto">Danh sách thanh tra</h5>
+        <h6 class="mat-headline-6 mx-auto">Danh sách thanh tra</h6>
         <div class="total">
           <span class="mx-auto">Tổng số: {{ issue.inspectors.length }}</span>
           <div *ngIf="isChanged"></div>
         </div>
       </div>
 
-      <div class="card">
+      <div>
         <div class="overflow-auto">
           <ng-container *ngFor="let item of issue.inspectors">
             <div *ngIf="issue.inspectors" class="mb-2">
@@ -448,7 +453,9 @@
             class="d-flex justify-content-center align-items-center p-error"
             *ngIf="issue.inspectors.length == 0"
           >
-            <h6>Danh sách ban kiểm tra không được để trống</h6>
+            <h6 class="mat-headline-6">
+              Danh sách ban kiểm tra không được để trống
+            </h6>
           </div>
         </div>
       </div>
