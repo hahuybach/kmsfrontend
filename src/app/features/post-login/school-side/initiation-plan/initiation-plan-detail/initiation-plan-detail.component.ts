@@ -184,6 +184,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     console.log(this.inputFileForm.value);
     this.uploadFileVisible = false;
     this.fileStatus = true;
+    this.iconStatus = true;
     this.buttonApproveStatus = true;
     this.schoolinitiationplan.documents.departmentDocument = '';
     const fileControl = this.inputFileForm.get('file');
@@ -205,7 +206,8 @@ export class InitiationPlanDetailComponent implements OnInit {
   redirectToIssue() {
     this.router.navigateByUrl('/issuelist/1');
   }
-  deleteFile() {
+  deleteFile(event: MouseEvent) {
+    event.stopPropagation();
     this.confirmationService.confirm({
       header: 'Xác nhận xóa',
       message: 'Bạn có chắc chắn muốn xóa tài liệu?',
@@ -226,7 +228,7 @@ export class InitiationPlanDetailComponent implements OnInit {
   confirmUpload() {
     this.confirmationService.confirm({
       message: 'Bạn có chắc chắn nộp tài liệu?',
-      header: 'Xác nhận phê duyệt',
+      header: 'Xác nhận nộp',
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmInitiationplan',
       accept: () => {
@@ -256,6 +258,7 @@ export class InitiationPlanDetailComponent implements OnInit {
           this.initiationplanService.putUploadSchoolDoc(formData).subscribe({
             next: (response) => {
               console.log('Form data sent to the backend:', response);
+              this.iconStatus = false;
               this.submitCompleted = true;
               setTimeout(() => {
                 this.initData();
@@ -270,6 +273,7 @@ export class InitiationPlanDetailComponent implements OnInit {
             },
           });
         } else {
+          this.iconStatus = false;
           this.submitCompleted = true;
           setTimeout(() => {
             this.initData();
