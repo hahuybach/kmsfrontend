@@ -24,6 +24,20 @@ export class UserDetailComponent implements OnInit {
               private auth: AuthService) {
   }
 
+  getStatusValue(status: undefined | boolean): string {
+    if (status){
+      return 'Đang hoạt động';
+    }
+    return 'Ngưng hoạt động';
+  }
+
+  getStatusSeverity(status: boolean | undefined): string {
+    if (status){
+      return 'success';
+    }
+    return 'danger';
+  }
+
   ngOnInit(): void {
     this.setAuthority();
     this.accountService.findById(this.activateRouter.snapshot.paramMap.get('id'))
@@ -72,6 +86,6 @@ export class UserDetailComponent implements OnInit {
   }
 
   onUpdate() {
-    this.router.navigate(['user/update' + this.user.userId])
+    this.router.navigate(['user/update/' + this.user.userId])
   }
 }
