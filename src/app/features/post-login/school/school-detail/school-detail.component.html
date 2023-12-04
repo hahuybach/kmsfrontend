@@ -1,105 +1,87 @@
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<h2>Chi tiết trường</h2>
-<div class="row">
+<div class="container-fluid">
+  <h5 class="mat-headline-5 fw-medium">Chi tiết trường</h5>
+  <div class="row">
+    <div class="col-md-6" *ngIf="school">
+      <h6 class="mat-headline-6 fw-medium">Thông tin trường</h6>
+      <div class="col-md-10">
+        <div class="mb-4">
+          <label class="span-heading-color mb-2">Tên trường</label>
+          <p class="fw-medium">{{ school.schoolName }}</p>
+        </div>
+        <div class="mb-4">
+          <label class="span-heading-color mb-2">Địa chỉ</label>
+          <p class="fw-medium">{{ school.exactAddress }}</p>
+        </div>
+        <div class="mb-4">
+          <label class="span-heading-color mb-2">Trạng thái</label>
+          <br />
+          <p-tag
+            [rounded]="true"
+            [severity]="school.isActive ? 'success' : 'error'"
+            >{{ school.isActive ? "Hoạt động" : "Ngưng hoạt động" }}</p-tag
+          >
+        </div>
+      </div>
 
-  <div class="col-md-6" *ngIf="school">
-    <div class="m-3">
-      <h5>Thông tin trường</h5>
-    </div>
-    <div class="mb-4">
-      <div class="m-3">
-        <p class="text-black-50">Tên trường</p>
-      </div>
-      <div class="m-3">
-        <p class="font-weight-bold">{{school.schoolName}}</p>
-      </div>
-    </div>
-    <div class="mb-4">
-      <div class="m-3">
-        <p class="text-black-50">Địa chỉ</p>
-      </div>
-      <div class="m-3">
-        <p class="font-weight-bold">{{school.exactAddress}}</p>
-      </div>
-
-    </div>
-    <div class="mb-4">
-      <div class="m-3">
-        <p class="text-black-50">Trạng thái</p>
-        <span
-          [class]="school.isActive ? 'badge badge-pill badge-success' : 'badge badge-pill badge-danger'">{{ school.isActive ? "Hoạt động" : "Ngưng hoạt động" }}</span>
+      <div class="mt-3" *ngIf="isAdmin">
+        <button pButton (click)="onUpdate()">Cập nhật</button>
       </div>
     </div>
-
-    <div class="m-3" *ngIf="isAdmin">
-      <button class="btn btn-primary" (click)="onUpdate()">Cập nhật</button>
-
+    <div class="col-md-6">
+      <h6 class="mat-headline-6 fw-medium">Thông tin hiệu trưởng</h6>
+      <ng-container *ngIf="!principal">
+        <div class="mb-4">
+          <div class="m-3">
+            <p class="text-black-50">Email</p>
+          </div>
+          <div class="m-3">
+            <p class="font-weight-bold">Chưa có hiệu trưởng</p>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="principal">
+        <div class="mb-4">
+          <label class="span-heading-color mb-2">Email</label>
+          <p class="fw-medium">{{ principal.email }}</p>
+        </div>
+        <div class="mb-4">
+          <label class="span-heading-color mb-2">Tên</label>
+          <p class="fw-medium">{{ principal.user?.fullName }}</p>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-4">
+              <label class="span-heading-color mb-2">Giới tính</label>
+              <p class="fw-medium">
+                {{ principal.user?.gender ? "Nam" : "Nữ" }}
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-4">
+              <label class="span-heading-color mb-2">Ngày sinh</label>
+              <p class="fw-medium">
+                {{
+                  principal.user?.dob == null
+                    ? "Chưa nhập ngày sinh"
+                    : principal.user?.dob
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="span-heading-color mb-2">Số điện thoại</label>
+          <p class="fw-medium">
+            {{
+              principal.user?.phoneNumber == null
+                ? "Chưa nhập số điện thoại"
+                : principal.user?.phoneNumber
+            }}
+          </p>
+        </div>
+      </ng-container>
     </div>
-
-
   </div>
-  <div class="col-md-6">
-    <div class="m-3">
-      <h5>Thông tin hiệu trưởng</h5>
-    </div>
-    <ng-container *ngIf="!principal">
-      <div class="mb-4">
-        <div class="m-3">
-          <p class="text-black-50">Email</p>
-        </div>
-        <div class="m-3">
-          <p class="font-weight-bold">Chưa có hiệu trưởng</p>
-        </div>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="principal">
-      <div class="mb-4">
-        <div class="m-3">
-          <p class="text-black-50">Email</p>
-        </div>
-        <div class="m-3">
-          <p class="font-weight-bold">{{principal.email}}</p>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="m-3">
-          <p class="text-black-50">Tên</p>
-        </div>
-        <div class="m-3">
-          <p class="font-weight-bold">{{principal.user?.fullName}}</p>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="m-3">
-          <p class="text-black-50">Giới tính</p>
-        </div>
-        <div class="m-3">
-          <p class="font-weight-bold">{{principal.user?.gender == "MALE" ? "Nam" : "Nữ" }}</p>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="m-3">
-          <p class="text-black-50">Ngày sinh</p>
-        </div>
-        <div class="m-3">
-          <p class="font-weight-bold">{{principal.user?.dob == null ? "Chưa nhập ngày sinh" : principal.user?.dob }}</p>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="m-3">
-          <p class="text-black-50">Số điện thoại</p>
-        </div>
-        <div class="m-3">
-          <p class="font-weight-bold">{{principal.user?.phoneNumber == null ? "Chưa nhập số điện thoại" : principal.user?.phoneNumber }}</p>
-        </div>
-      </div>
-    </ng-container>
-
-
-  </div>
+  <p-toast position="top-right" key="toastSchoolDetail"></p-toast>
 </div>
-<p-toast position="top-right" key="error"></p-toast>
-
-

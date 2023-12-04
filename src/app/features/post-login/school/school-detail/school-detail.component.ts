@@ -87,13 +87,13 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
                 console.log(this.principal)
             },
                 error => {
-                    this.toastService.showWarn('error', "Lỗi", error.error.message);
+                    this.toastService.showWarn('toastSchoolDetail', "Lỗi", error.error.message);
                     this.schoolService.findSchoolById(this.auth.getSchoolFromJwt().schoolId).subscribe({
                       next: (data) => {
                         this.school = data;
                         this.principal = data.principal;
                       },error: (error) => {
-                        this.toastService.showWarn('error', "Lỗi", error.error.message);
+                        this.toastService.showWarn('toastSchoolDetail', "Lỗi", error.error.message);
                       }
                     })
 
