@@ -1,0 +1,78 @@
+<p-confirmDialog
+  [style]="{width: '50vw'}"
+  acceptLabel="Xác nhận"
+  rejectLabel="Hủy bỏ"
+  key="confirmDeleteRemainingInspector"
+></p-confirmDialog>
+<p-confirmDialog
+  [style]="{width: '50vw'}"
+  acceptLabel="Xác nhận"
+  rejectLabel="Hủy bỏ"
+  key="confirmDeleteInspector"
+></p-confirmDialog>
+<div *ngIf="selectedInspectors && selectedInspectors.length == 0 && listEditable; else inspectorList" class="text-center">
+  <button type="button" pButton class="create-inspector" (click)="changeInspectorVisible()">Tạo ban KTNB</button>
+</div>
+<ng-template #inspectorList>
+  <div class="list-inspector d-flex flex-column">
+    <div class="list-inspector-header px-3 text-center">
+      <h5 class="mx-auto mt-2">Danh sách thanh tra</h5>
+      <div class="total">
+        <span class="mx-auto" *ngIf="selectedInspectors">Tổng số: {{selectedInspectors.length || 0}}</span>
+      </div>
+    </div>
+
+    <div class="card mt-2 flex-fill">
+      <div class="scrollable-container overflow-auto d-flex flex-column justify-content-between h-100">
+        <ng-container *ngFor="let item of selectedInspectors; let i = index">
+          <div *ngIf="selectedInspectors" class="mt-1 my-2">
+            <div class="scrollview-item d-flex flex-row justify-content-between align-items-center p-2 h-full mx-1">
+              <div class=" d-flex flex-row justify-content-center align-items-center">
+                <div class="scrollview-item-icon">
+                  <img src="../../../../../../assets/img/user_icon.svg" alt=""/>
+                </div>
+                <div class="scrollview-item-content ms-3">
+                  <span class="font-weight-bold">{{ item?.user?.fullName}}</span>
+                  <br/>
+                  <span class="fw-light">
+                    {{item.roles[0]?.roleName}} -
+                    {{ item.school?.schoolName}}
+                  </span>
+                  <div class="chief d-flex flex-row" *ngIf="item.chief">
+                    <i class="bi bi-person-badge"></i>
+                    <label class="form-check-label ms-2">
+                      - Trưởng phòng
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="" *ngIf="deleteButtonVisibility">
+                <button type="button" class="delete-button" (click)="onDeleteInspector(i)">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="w-100 d-flex justify-content-center my-1" *ngIf="listEditable">
+      <div *ngIf="toggleChange">
+        <button type="button" pButton class="create-inspector"
+                (click)="changeToggleStatus()">Chỉnh sửa ban KTNB
+        </button>
+      </div>
+      <div *ngIf="!toggleChange" class="w-100 px-1 d-flex flex-row justify-content-between align-items-center">
+        <button type="button" pButton class="create-inspector px-4" (click)="onReset()">
+          Hủy
+        </button>
+        <button type="button" pButton class="create-inspector px-5" (click)="changeInspectorVisible()">
+          <i class="bi bi-plus-lg"></i>
+        </button>
+        <button type="button" pButton class="create-inspector px-4" (click)="onSave()">
+          Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
