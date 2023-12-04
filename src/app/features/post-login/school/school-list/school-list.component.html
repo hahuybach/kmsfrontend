@@ -9,25 +9,7 @@
   crossorigin="anonymous"
 />
 <h5 class="mat-headline-5 fw-medium">Danh sách các trường</h5>
-<div class="d-flex justify-content-end mb-3" *ngIf="!isDirector">
-  <button
-    pButton
-    (click)="showImportSchool()"
-    class="btn btn-info ml-3 mr-3"
-    *ngIf="isAdmin"
-  >
-    Nhập trường bằng file excel
-  </button>
 
-  <button
-    pButton
-    class="btn btn-primary"
-    (click)="onCreateSchool()"
-    *ngIf="isAdmin"
-  >
-    Tạo mới
-  </button>
-</div>
 <div class="card">
   <p-table
     #dt1
@@ -44,15 +26,72 @@
     selectionMode="single"
   >
     <ng-template pTemplate="caption">
-      <div class="d-flex justify-content-between">
+      <div class="d-flex justify-content-between mb-3">
         <span class="w-50">
           <input
+            *ngIf="!filterVisible"
             pInputText
             type="text"
             class="fontAwesome w-100"
             (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
             placeholder="&#xF002; Tra cứu nhanh theo tên trường hoặc địa chỉ"
           />
+          <div class="mb-3">
+            <tr *ngIf="filterVisible">
+              <th></th>
+              <th>
+                <p-columnFilter
+                  type="text"
+                  field="schoolName"
+                  pTooltip="(VD): Trường mầm non Ánh Sao"
+                  tooltipPosition="top"
+                  placeholder="Tên trường"
+                ></p-columnFilter>
+              </th>
+              <th>
+                <p-columnFilter
+                  type="text"
+                  field="exactAddress"
+                  pTooltip="(VD): Số 2, Nguyễn Khánh Toàn"
+                  tooltipPosition="top"
+                  placeholder="Địa chỉ"
+                ></p-columnFilter>
+              </th>
+
+              <th>
+                <p-columnFilter
+                  field="isActive"
+                  matchMode="equals"
+                  [showMenu]="false"
+                >
+                  <ng-template
+                    pTemplate="filter"
+                    let-value
+                    let-filter="filterCallback"
+                  >
+                    <p-dropdown
+                      [ngModel]="value"
+                      [options]="statuses"
+                      (onChange)="filter($event.value)"
+                      placeholder="Tất cả"
+                      [showClear]="true"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <p-tag
+                          class="status"
+                          [severity]="option.value ? 'success' : 'danger'"
+                          [rounded]="true"
+                        >
+                          {{ option.label }}
+                        </p-tag>
+                      </ng-template>
+                    </p-dropdown>
+                  </ng-template>
+                </p-columnFilter>
+              </th>
+              <th></th>
+            </tr>
+          </div>
         </span>
         <!-- <button
           pButton
@@ -78,62 +117,28 @@
           </button>
         </div>
       </div>
+
+      <div class="d-flex justify-content-between" *ngIf="!isDirector">
+        <button
+          pButton
+          (click)="showImportSchool()"
+          class="btn btn-info ml-3 mr-3"
+          *ngIf="isAdmin"
+        >
+          Nhập trường bằng file excel
+        </button>
+
+        <button
+          pButton
+          class="btn btn-primary"
+          (click)="onCreateSchool()"
+          *ngIf="isAdmin"
+        >
+          Tạo mới
+        </button>
+      </div>
     </ng-template>
     <ng-template pTemplate="header">
-      <tr *ngIf="filterVisible">
-        <th></th>
-        <th>
-          <p-columnFilter
-            type="text"
-            field="schoolName"
-            pTooltip="(VD): Trường mầm non Ánh Sao"
-            tooltipPosition="top"
-            placeholder="Tên trường"
-          ></p-columnFilter>
-        </th>
-        <th>
-          <p-columnFilter
-            type="text"
-            field="exactAddress"
-            pTooltip="(VD): Số 2, Nguyễn Khánh Toàn"
-            tooltipPosition="top"
-            placeholder="Địa chỉ"
-          ></p-columnFilter>
-        </th>
-
-        <th>
-          <p-columnFilter
-            field="isActive"
-            matchMode="equals"
-            [showMenu]="false"
-          >
-            <ng-template
-              pTemplate="filter"
-              let-value
-              let-filter="filterCallback"
-            >
-              <p-dropdown
-                [ngModel]="value"
-                [options]="statuses"
-                (onChange)="filter($event.value)"
-                placeholder="Tất cả"
-                [showClear]="true"
-              >
-                <ng-template let-option pTemplate="item">
-                  <p-tag
-                    class="status"
-                    [severity]="option.value ? 'success' : 'danger'"
-                    [rounded]="true"
-                  >
-                    {{ option.label }}
-                  </p-tag>
-                </ng-template>
-              </p-dropdown>
-            </ng-template>
-          </p-columnFilter>
-        </th>
-        <th></th>
-      </tr>
       <tr>
         <th pSortableColumn="schoolId">
           <div>
