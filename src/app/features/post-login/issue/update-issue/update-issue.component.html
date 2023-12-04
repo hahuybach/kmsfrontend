@@ -235,49 +235,102 @@
     [resizable]="false"
     (onHide)="onHideEvent()"
   >
-    <label for="">Tên tài liệu</label>
-    <br />
-    <input
-      pInputText
-      formControlName="documentName"
-      type="text"
-      placeholder="Tên tài liệu"
-    />
-    <br />
-    <label for="">Mã tài liệu</label>
-    <br />
-    <input
-      pInputText
-      formControlName="documentCode"
-      type="text"
-      placeholder="Mã tài liệu"
-    />
-    <br />
-    <label for="">Tài liệu</label>
-    <div class="input-file mb-3">
-      <input
-        type="file"
-        #fileInput
-        style="display: none"
-        (change)="handleFileInputChange(fileInput)"
-      />
-      <input
-        pInputText
-        readonly
-        class="col-md-9"
-        placeholder="{{
-          fileInputPlaceholders ? fileInputPlaceholders : 'Chọn file để tải lên'
-        }}"
-      />
-      <button
-        type="button"
-        pButton
-        label="Chọn tệp"
-        (click)="fileInput.click()"
-        class="col-md-3"
-      ></button>
+    <div class="row record-document">
+      <div class="col-md-8">
+        <label class="fw-medium"
+          >Tên tài liệu<span class="p-error">*</span></label
+        ><br />
+        <input
+          pInputText
+          placeholder="Điền tên tài liệu"
+          formControlName="documentName"
+        />
+        <div
+          *ngIf="issueForm.controls?.['documentName']?.invalid && (issueForm.controls?.['documentName']?.touched || issueForm.controls?.['documentName']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['documentName']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng điền tên tài liệu
+          </span>
+          <span
+            *ngIf="issueForm.controls?.['documentName']?.errors?.['maxLength']"
+            class="p-error"
+          >
+            Tên tài liệu quá dài
+          </span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="fw-medium"
+          >Mã tài liệu<span class="p-error">*</span></label
+        ><br />
+        <input
+          pInputText
+          placeholder="Điền mã tài liệu"
+          formControlName="documentCode"
+        />
+        <div
+          *ngIf="issueForm.controls?.['documentCode']?.invalid && (issueForm.controls?.['documentCode']?.touched || issueForm.controls?.['documentCode']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['documentCode']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng điền mã tài liệu
+          </span>
+          <span
+            *ngIf="issueForm.controls?.['documentCode']?.errors?.['maxLength']"
+            class="p-error"
+          >
+            Mã tài liệu quá dài
+          </span>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <label class="fw-medium">Tài liệu<span class="p-error">*</span></label
+        ><br />
+        <div class="input-file">
+          <input
+            type="file"
+            #fileInput
+            style="display: none"
+            (change)="handleFileInputChange(fileInput)"
+          />
+          <input
+            pInputText
+            readonly
+            class="col-md-9"
+            placeholder="{{
+              fileInputPlaceholders
+                ? fileInputPlaceholders
+                : 'Chọn file để tải lên'
+            }}"
+          />
+          <button
+            pButton
+            type="button"
+            label="Chọn tệp"
+            (click)="fileInput.click()"
+            class="col-md-3 h-100"
+          ></button>
+        </div>
+        <div
+          *ngIf="issueForm.controls?.['file']?.invalid && (issueForm.controls?.['file']?.touched || issueForm.controls?.['file']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['file']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng chọn tài liệu
+          </span>
+        </div>
+      </div>
     </div>
-    <button type="button" pButton (click)="upload()">Lưu thay đổi</button>
+    <button class="mt-2" type="button" pButton (click)="upload()">
+      Lưu thay đổi
+    </button>
   </p-dialog>
   <!-- file preview -->
   <p-dialog
@@ -290,7 +343,7 @@
       <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
     </div>
   </p-dialog>
-  <div class="col-md-8">
+  <div class="col-md-8 issue-content">
     <div class="mb-2 issue-name">
       <span class="fw-medium">Tên kế hoạch</span>
       <input

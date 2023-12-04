@@ -7,7 +7,7 @@
 .col {
     margin: 0;
 }
-.col-md-8 {
+.issue-content {
     padding: 0;
 }
 input,
@@ -131,15 +131,6 @@ textarea {
     height: 480px;
     overflow: auto;
 }
-.input-file {
-    input {
-        width: 60%;
-        border-radius: 8px 0 0 8px;
-    }
-    button {
-        border-radius: 0 8px 8px 0;
-    }
-}
 .font-weight-bold {
     font-weight: 500;
 }
@@ -202,6 +193,32 @@ textarea {
         border-color: $primary-hover;
         &.p-highlight {
             background-color: $primary-hover;
+        }
+    }
+}
+.record-document {
+    font-size: 16px;
+
+    .col-md-8,
+    .col-md-4 {
+        input {
+            width: 100%;
+        }
+    }
+    .input-file {
+        .p-inputtext {
+            border-radius: 8px 0 0 8px;
+        }
+
+        button {
+            background-color: $primary;
+            border-radius: 0 8px 8px 0;
+            margin-right: 0px;
+            &:hover,
+            &:active {
+                background-color: $primary-hover;
+                border-color: $primary-hover;
+            }
         }
     }
 }
