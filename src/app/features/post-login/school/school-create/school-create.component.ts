@@ -77,7 +77,7 @@ export class SchoolCreateComponent implements OnInit {
           },
           error: (error) => {
             this.isLoading = false;
-            this.toastService.showWarn('error', "Lỗi", error.error.message)
+            this.toastService.showWarn('toastSchoolCreate', "Lỗi", error.error.message)
             console.log(error);
           }
         })
@@ -175,10 +175,10 @@ export class SchoolCreateComponent implements OnInit {
       reject: (type: ConfirmEventType) => {
         switch (type) {
           case ConfirmEventType.REJECT:
-            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
+            this.toastService.showError('toastSchoolCreate', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
             break;
           case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
+            this.toastService.showWarn('toastSchoolCreate', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
             break;
         }
       },key: 'updateConfirm'

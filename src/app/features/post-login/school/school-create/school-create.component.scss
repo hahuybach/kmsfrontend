@@ -1,3 +1,7 @@
+@import "../../../../../assets/scss/base.scss";
+* {
+  font-size: 16px;
+}
 .overlay {
   position: fixed;
   top: 0;
@@ -16,4 +20,32 @@
   justify-content: center;
   align-items: center;
 }
+.p-inputtext {
+  width: 100%;
+  font-size: 16px;
+}
+:host ::ng-deep {
+  .p-dropdown-label {
+    font-size: 16px;
+  }
+  .p-dropdown {
+    width: 100%;
+  }
+  .p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
 
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}
+.info {
+  margin: 0;
+  .col-md-5 {
+    padding: 0;
+  }
+}

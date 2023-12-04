@@ -56,9 +56,15 @@ export class UpdateIssueComponent implements OnInit {
     ],
     description: ['', NoWhitespaceValidator()],
     inspectorId: [''],
-    file: [Validators.required],
-    documentName: [''],
-    documentCode: [''],
+    file: [null, Validators.required],
+    documentName: [
+      '',
+      Validators.compose([Validators.required, Validators.maxLength(256)]),
+    ],
+    documentCode: [
+      '',
+      Validators.compose([Validators.required, Validators.maxLength(256)]),
+    ],
     inspector: [''],
   });
   filterVisible: Boolean = false;
@@ -66,6 +72,8 @@ export class UpdateIssueComponent implements OnInit {
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
   sub: any[] = [];
+  isLoading: boolean = false;
+  submitCompleted: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
@@ -328,6 +336,7 @@ export class UpdateIssueComponent implements OnInit {
     this.pdfLoaded = true;
   }
   onSubmit() {
+    this.isLoading = true;
     const inspectorFormAttr = this.issueForm.get('inspectorId');
     if (inspectorFormAttr !== null) {
       inspectorFormAttr.patchValue(
@@ -378,11 +387,16 @@ export class UpdateIssueComponent implements OnInit {
     });
     this.issueService.updateIssue(formData).subscribe({
       next: (response) => {
-        this.toastService.showSuccess(
-          'toastUpdateIssue',
-          'Cập nhật thành công',
-          'Cập nhật kế hoạch kiểm tra thành công'
-        );
+        this.submitCompleted = true;
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 1500);
+        // this.uploadFileVisible = false;
+        // this.toastService.showSuccess(
+        //   'toastUpdateIssue',
+        //   'Cập nhật thành công',
+        //   'Cập nhật kế hoạch kiểm tra thành công'
+        // );
       },
       error: (error) => {
         this.toastService.showError(
