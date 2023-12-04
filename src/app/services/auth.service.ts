@@ -56,10 +56,12 @@ export class AuthService {
 
   setJwtInCookie(jwt: string) {
     const decodedToken = this.getDecodedJWT(jwt);
+    console.log()
     document.cookie = `exp=${decodedToken.exp}`;
     document.cookie = `iat=${decodedToken.iat}`;
     document.cookie = `sub=${decodedToken.sub}`;
     document.cookie = `roles=${decodedToken.roles}`;
+    console.log(decodedToken.roles);
     document.cookie = `jwtToken=${jwt}`;
   }
 
