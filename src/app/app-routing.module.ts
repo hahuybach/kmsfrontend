@@ -97,14 +97,20 @@ import {UserBaseComponent} from "./features/post-login/user/user-base/user-base.
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
-  },
-  {
-    path: '',
     canActivate: [AuthGuard],
     component: MainComponent,
     children: [
+      // dashboard
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      //issue
       {
         path: 'issue',
         component: IssueBaseComponent,
@@ -131,11 +137,6 @@ const routes: Routes = [
             component: UpdateIssueComponent,
           }
         ]
-      },
-      // dashboard
-      {
-        path: 'dashboard',
-        component: DashboardComponent,
       },
       // inspection-plan
       {
@@ -184,6 +185,10 @@ const routes: Routes = [
             path: ':id',
             component: SchoolInitiationPlanDetailComponent,
           },
+          {
+            path: ':id',
+            component: InitiationPlanDetailComponent,
+          },
         ]
       },
       //guidance-document
@@ -209,10 +214,6 @@ const routes: Routes = [
             component: GuidanceDocumentCreateComponent,
           },
         ]
-      },
-      {
-        path: 'initiationplan/:id',
-        component: InitiationPlanDetailComponent,
       },
       {
         path: 'create-template',
