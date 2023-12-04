@@ -87,6 +87,12 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
 
   }
 
+  getStatusSeverity(status: boolean | undefined): string {
+    if (status){
+      return 'success';
+    }
+    return 'danger';
+  }
 
   patchRoleId() {
     this.updateForm.patchValue({

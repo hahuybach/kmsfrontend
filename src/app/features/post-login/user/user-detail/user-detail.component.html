@@ -23,7 +23,7 @@
         <p class="fw-medium">{{user.dob == null ? "Chưa nhập ngày sinh" : user.dob}}</p>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
       <div class="mb-3">
         <span class="span-heading-color mb-2">Đơn vị</span>
         <p class="fw-medium">{{user.school?.schoolName}}</p>
@@ -47,12 +47,12 @@
         </div>
       </div>
     </div>
-    <div class="m-3">
+    <div class="col-md-12">
       <button class="btn btn-primary"
               (click)="onUpdate()"
               *ngIf="isUpdatable(this.user)"
               pButton
-      >Cập nhật người dùng
+      >Đi tới cập nhật
       </button>
     </div>
   </div>

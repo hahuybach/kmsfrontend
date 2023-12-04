@@ -113,6 +113,7 @@
           >
             <ng-template let-status pTemplate="item">
               <p-tag
+                [rounded]="true"
                 [severity]="getStatusSeverity(status.value)"
                 [value]="status.label"
               ></p-tag>
