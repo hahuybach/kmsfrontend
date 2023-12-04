@@ -10,7 +10,7 @@
   <p-toast key="toastUpdateIssue"></p-toast>
   <p-confirmDialog
     key="confirmUpdateIssue"
-    [style]="{ width: '50vw' }"
+    [style]="{ width: '45vw' }"
     rejectLabel="Hủy"
     acceptLabel="Đồng ý"
   ></p-confirmDialog>
@@ -176,50 +176,51 @@
     header="Tài liệu không có hiệu lực"
     [modal]="true"
     [(visible)]="popupInvalidDocVisible"
-    [style]="{ width: '80vw' }"
+    [style]="{ width: '50vw' }"
     [draggable]="false"
     [resizable]="false"
   >
-    <ng-container *ngFor="let item of issue.documentDtos">
+    <ng-container *ngFor="let document of issue.documentDtos">
       <div
-        *ngIf="item.status.statusId == 2"
-        class="mb-3"
-        (click)="openNewTab(item.documentLink)"
+        *ngIf="document.status.statusId == 1"
+        class="file-item py-1 d-flex mt-2"
+        (click)="openNewTab(document.documentLink)"
       >
-        <div class="file-item px-3 py-1 d-flex">
-          <div
-            class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
-          >
-            <img src="../../../../../assets/img/pdf.png" alt="" />
+        <div
+          class="file-item-icon d-flex justify-content-center align-items-center"
+        >
+          <img src="assets/img/pdf_logo.svg" alt="" />
+        </div>
+        <div class="row col-md-10 d-flex align-items-end mb-3">
+          <div class="col-md-8">
+            <p class="mb-0">
+              <span class="fw-bold">{{ document.documentName }}</span>
+              <span class="fw-bold">.pdf</span>
+            </p>
+            <p class="mb-0">
+              <span>Loại tài liệu: </span>
+              <span class="fw-bold">{{
+                document.documentType.documentTypeName
+              }}</span>
+            </p>
+            <p class="mb-0">
+              <span>Mã tài liệu: </span>
+              <span class="fw-bold">{{ document.documentCode }}</span>
+            </p>
           </div>
-          <div class="file-item-content">
-            <div class="row ms-5">
-              <div class="col-md-10">
-                <span class="font-weight-bold font-size-18">{{
-                  item.documentName + "." + item.fileExtension
-                }}</span>
-                <br />
-                <span>
-                  <span class="font-weight-bold">Loại TL:</span>
-                  {{ item.documentType.documentTypeName }}</span
-                >
-                <br />
-                <span
-                  ><span class="font-weight-bold">Mã:</span>
-                  {{ item.documentCode }}</span
-                >
-              </div>
-              <div class="col-md-2">
-                <span class="text-black-50">{{ item.sizeFormat }}</span>
-                <br />
-                <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="mx-auto d-flex justify-content-center align-items-center">
-            <p-tag class="status" [severity]="'danger'" [rounded]="true">
-              {{ item.status.statusName }}
-            </p-tag>
+          <div class="col-md-4 text-end">
+            <p class="mb-0">
+              <span>Kích thước: </span>
+              <span class="fw-bold">{{
+                document.size | fileSizePipe : "MB"
+              }}</span>
+            </p>
+            <p class="mb-0">
+              <span>Ngày tạo: </span>
+              <span class="fw-bold">{{
+                document.uploadedDate | date : "dd/MM/yyyy"
+              }}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -343,6 +344,13 @@
       <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
     </div>
   </p-dialog>
+  <app-loading-complete-dialog
+    [visible]="isLoading"
+    [completed]="submitCompleted"
+    [header]="'Đánh giá'"
+    [progress]="'Vui lòng đợi trong giây lát'"
+    [complete]="'Đánh giá thành công'"
+  ></app-loading-complete-dialog>
   <div class="col-md-8 issue-content">
     <div class="mb-2 issue-name">
       <span class="fw-medium">Tên kế hoạch</span>
@@ -384,8 +392,73 @@
       >
         Xem tài liệu không có hiệu lực
       </button>
-      <ng-container *ngFor="let item of issue.documentDtos | sortById">
+      <ng-container *ngFor="let document of issue.documentDtos | sortById">
         <div
+          *ngIf="document.status.statusId == 1"
+          class="file-item py-1 d-flex mt-2"
+          (click)="
+            document.documentLink
+              ? openNewTab(document.documentLink)
+              : displayNewFileUpload(document.file)
+          "
+          pTooltip="{{ document.documentName }}"
+          tooltipPosition="top"
+        >
+          <div
+            class="file-item-icon d-flex justify-content-center align-items-center"
+          >
+            <img src="assets/img/pdf_logo.svg" alt="" />
+          </div>
+          <div class="row col-md-10 d-flex align-items-end file-item-content">
+            <div class="col-md-7 mb-3">
+              <p class="mb-0 document-name">
+                <span class="fw-bold span-doc-name">{{
+                  document.documentName
+                }}</span>
+                <span class="fw-bold">.pdf</span>
+              </p>
+              <p class="mb-0">
+                <span>Loại tài liệu: </span>
+                <span class="fw-bold">{{
+                  document.documentType.documentTypeName
+                }}</span>
+              </p>
+              <p class="mb-0">
+                <span>Mã tài liệu: </span>
+                <span class="fw-bold">{{ document.documentCode }}</span>
+              </p>
+            </div>
+            <div class="col-md-4 text-end mb-3">
+              <p class="mb-0">
+                <span>Kích thước: </span>
+                <span class="fw-bold">{{ document.sizeFormat }}</span>
+              </p>
+              <p class="mb-0">
+                <span>Ngày tạo: </span>
+                <span class="fw-bold">{{
+                  document.uploadedDate | date : "dd/MM/yyyy"
+                }}</span>
+              </p>
+            </div>
+            <div
+              class="align-self-center col-md-1 update-icon d-flex justify-content-center align-items-center"
+            >
+              <i
+                class="bi bi-pencil-square"
+                (click)="
+                  togglePopupFileUpload(
+                    $event,
+                    document.documentType.documentTypeId,
+                    document.documentId,
+                    document.documentName,
+                    document.documentType.documentTypeName
+                  )
+                "
+              ></i>
+            </div>
+          </div>
+        </div>
+        <!-- <div
           *ngIf="item.status.statusId == 1"
           class="mb-3"
           (click)="
@@ -448,16 +521,11 @@
               ></i>
             </div>
           </div>
-        </div>
+        </div> -->
       </ng-container>
       <!-- <button type="button" pButton>Thêm mới</button> -->
       <!-- <br /> -->
-      <button
-        pButton
-        [disabled]="issueForm.invalid || issue.inspectors.length == 0"
-      >
-        Lưu
-      </button>
+      <button class="mt-3" pButton>Lưu</button>
     </div>
   </div>
   <div class="col-md-4">
