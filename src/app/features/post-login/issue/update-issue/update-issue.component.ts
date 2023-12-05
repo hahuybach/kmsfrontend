@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
@@ -28,7 +34,7 @@ interface DocumentIssue {
   templateUrl: './update-issue.component.html',
   styleUrls: ['./update-issue.component.scss'],
 })
-export class UpdateIssueComponent implements OnInit {
+export class UpdateIssueComponent implements OnInit, AfterViewInit {
   @ViewChild('fileInput', { static: false }) fileInputRef!: ElementRef;
   addedDocumentIssues = new Map<number, object>();
   file: File;
@@ -284,6 +290,12 @@ export class UpdateIssueComponent implements OnInit {
     this.issueForm.get('documentName')?.setValue('');
     this.issueForm.get('documentCode')?.setValue('');
     this.fileInputPlaceholders = '';
+    this.issueForm.reset();
+    this.issueForm.patchValue({
+      issueName: this.issue.issueName,
+      description: this.issue.description,
+      inspectorId: this.issue.inspectors.map((item: any) => item.accountId),
+    });
   }
 
   togglePopupFileUpload(
@@ -418,6 +430,10 @@ export class UpdateIssueComponent implements OnInit {
     if (this.pdfPreviewVisibility && this.yourDialog) {
       this.yourDialog.maximize();
     }
+  }
+  ngAfterViewInit() {
+    this.maximizeDialogIfVisible();
+    console.log('run ng after view init');
   }
   onHideFilePreviewEvent() {
     this.pdfUrl = '';
