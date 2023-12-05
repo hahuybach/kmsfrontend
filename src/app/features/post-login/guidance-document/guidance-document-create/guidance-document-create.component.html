@@ -5,137 +5,202 @@
   [progress]="'Đang tạo mới văn bản bổ sung'"
   [complete]="'Tạo mới văn bản bổ sung thành công'"
 ></app-loading-complete-dialog>
-<h5 class="mat-headline-5 fw-medium">Tạo văn bản bổ sung</h5>
-<form [formGroup]="guidanceForm">
-  <div class="row">
-    <div class="form-group col-md-7">
-      <div class="m-3">
-        <label>Tiêu đề <span class="p-error">*</span></label>
+<div class="container-fluid">
+  <h5 class="mat-headline-5 fw-medium">Tạo văn bản bổ sung</h5>
+  <form [formGroup]="guidanceForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="fw-medium mb-1">Kế hoạch kiểm tra</label>
+          <br />
+          <span *ngIf="issue">{{ issue.issueName }} </span>
+        </div>
+        <div class="mb-3">
+          <label class="mb-1 fw-medium"
+            >Tiêu đề<span class="p-error">*</span></label
+          >
+          <br />
+          <input
+            type="text"
+            formControlName="guidanceDocumentName"
+            pInputText
+            class="w-100"
+          />
+          <br />
+          <span *ngIf="isBlank('guidanceDocumentName')" class="p-error"
+            >Không được để trống mục này</span
+          >
+        </div>
+        <div class="mb-3">
+          <label class="fw-medium mb-1"
+            >Lời nhắn<span class="p-error">*</span></label
+          >
+          <br />
+          <textarea
+            class="w-100"
+            pInputText
+            formControlName="description"
+          ></textarea>
+          <br />
+          <span *ngIf="isBlank('description')" class="p-error"
+            >Không được để trống mục này</span
+          >
+        </div>
       </div>
-      <div class="m-3">
-        <input
-          type="text"
-          formControlName="guidanceDocumentName"
-          class="form-control"
-        />
-        <span *ngIf="isBlank('guidanceDocumentName')" class="p-error"
-        >Không được để trống mục này</span
-        >
-      </div>
-    </div>
-    <div class="form-group col-md-5">
-      <div class="m-3">
-        <span class="text-black-50">Kế hoạch kiểm tra</span>
-      </div>
-      <div class="m-3">
-        <span class="font-weight-bold" style="font-weight: bold" *ngIf="issue"
-        >{{ issue.issueName }}
-        </span>
-      </div>
-    </div>
+      <div class="col-md-6">
+        <div class="mb-2">
+          <label class="fw-medium mb-1">Tài liệu đính kèm</label>
+          <br />
+          <span>&nbsp;</span>
+        </div>
+        <ng-container formArrayName="guidanceDocuments">
+          <ng-container
+            *ngFor="
+              let documentForm of guidanceDocuments.controls;
+              let i = index
+            "
+          >
+            <div class="row mb-2 file-item py-2" formGroupName="{{ i }}">
+              <div class="col-md-11 row">
+                <div class="col-md-6 file-info">
+                  <div class="mb-2">
+                    <label class="fw-medium mb-1"
+                      >Tên tài liệu <span class="p-error">*</span></label
+                    >
+                    <br />
+                    <div>
+                      <input
+                        class="w-100"
+                        pInputText
+                        formControlName="documentName"
+                        class=""
+                        type="text"
+                      />
+                    </div>
+                    <span
+                      *ngIf="isBlankForGuidanceDocuments('documentName', i)"
+                      class="p-error"
+                      >Không được để trống mục này</span
+                    >
+                  </div>
+                </div>
+                <div class="col-md-6 file-info">
+                  <div class="mb-3">
+                    <label class="fw-medium mb-1"
+                      >Mã tài liệu <span class="p-error">*</span></label
+                    >
+                    <br />
+                    <div>
+                      <input
+                        class="w-100"
+                        pInputText
+                        formControlName="documentCode"
+                        class=""
+                        type="text"
+                      />
+                    </div>
 
-    <div class="form-group col-md-7">
-      <div class="m-3">
-        <label>Lời nhắn <span class="p-error">*</span></label>
-      </div>
-      <div class="m-3">
-        <textarea class="form-control" formControlName="description"></textarea>
-        <span *ngIf="isBlank('description')" class="p-error"
-        >Không được để trống mục này</span
-        >
-      </div>
-    </div>
-  </div>
-  <ng-container formArrayName="guidanceDocuments">
-    <ng-container
-      *ngFor="let documentForm of guidanceDocuments.controls; let i = index"
-    >
-      <div class="row" formGroupName="{{ i }}">
-        <div class="col-md-2 form-group">
-          <div class="m-2">
-            <label>Mã tài liệu <span class="p-error">*</span></label>
-          </div>
-          <div class="m-2">
-            <input
-              formControlName="documentCode"
-              class="form-control"
-              type="text"
-            />
-            <span
-              *ngIf="isBlankForGuidanceDocuments('documentCode', i)"
-              class="p-error"
-            >Không được để trống mục này</span
-            >
-            <span
-              class="p-error"
-              *ngIf="
-                isDuplicateDocumentCode(
-                  guidanceDocuments.at(i).get('documentCode')?.value,
-                  i
-                )
-              "
-            >Trùng lặp mã văn bản</span
-            >
-          </div>
-        </div>
-        <div class="col-md-5 form-group">
-          <div class="m-2">
-            <label>Tên tài liệu <span class="p-error">*</span></label>
-          </div>
-          <div class="m-2">
-            <input
-              formControlName="documentName"
-              class="form-control"
-              type="text"
-            />
-            <span
-              *ngIf="isBlankForGuidanceDocuments('documentName', i)"
-              class="p-error"
-            >Không được để trống mục này</span
-            >
-          </div>
-        </div>
-        <div class="col-md-5 form-group">
-          <div class="m-2">
-            <label></label>
-          </div>
-          <div class="m-2 d-flex justify-content-around">
-            <input
-              class="form-control"
-              required
-              (change)="onSubmitFile($event, i)"
-              type="file"
-            />
-            <button
-              type="button"
-              class="btn btn-outline-danger"
-              (click)="removeGuidanceDocument(i)"
-              [ngClass]="{
-                'disable-icon': guidanceDocuments.controls.length === 1
-              }"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-trash-fill"
-                viewBox="0 0 16 16"
+                    <span
+                      *ngIf="isBlankForGuidanceDocuments('documentCode', i)"
+                      class="p-error"
+                      >Không được để trống mục này</span
+                    >
+                    <span
+                      class="p-error"
+                      *ngIf="
+                        isDuplicateDocumentCode(
+                          guidanceDocuments.at(i).get('documentCode')?.value,
+                          i
+                        )
+                      "
+                      >Trùng lặp mã văn bản</span
+                    >
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <label class="fw-medium mb-1"
+                    >Tài liệu<span class="p-error">*</span></label
+                  >
+                  <div class="input-file row">
+                    <input
+                      type="file"
+                      #fileInput
+                      style="display: none"
+                      (change)="onSubmitFile($event, i)"
+                    />
+                    <input
+                      pInputText
+                      readonly
+                      class="col-md-9"
+                      placeholder="{{
+                        fileInputPlaceholders[i]
+                          ? fileInputPlaceholders[i]
+                          : 'Chọn file để tải lên'
+                      }}"
+                    />
+                    <button
+                      type="button"
+                      pButton
+                      label="Chọn tệp"
+                      (click)="fileInput.click()"
+                      class="col-md-3"
+                    ></button>
+                  </div>
+                  <ng-container *ngIf="checkValidFile(i)?.value">
+                    <span class="p-error">File không được để trống</span>
+                  </ng-container>
+                </div>
+
+                <!-- <div class="d-flex justify-content-around">
+                    <input
+                      class="form-control"
+                      required
+                      (change)="onSubmitFile($event, i)"
+                      type="file"
+                    />
+  
+                    
+                  </div> -->
+              </div>
+              <div
+                class="col-md-1 d-flex justify-content-center align-items-center"
               >
-                <path
-                  d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
-                ></path>
-              </svg>
-            </button>
-            <ng-container *ngIf="checkValidFile(i)?.value">
-              <span class="p-error">File không được để trống</span>
-            </ng-container>
-          </div>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  (click)="removeGuidanceDocument(i)"
+                  [ngClass]="{
+                    'disable-icon': guidanceDocuments.controls.length === 1
+                  }"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-trash-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="col-md-5 form-group"></div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <div class="mt-3 d-flex justify-content-start">
+          <button pButton (click)="addGuidanceDocument()" type="button">
+            Thêm văn bản
+          </button>
         </div>
       </div>
-    </ng-container>
-  </ng-container>
+    </div>
 
+<<<<<<< HEAD
   <div class="d-flex justify-content-end" *ngIf="guidanceDocuments.length < 10">
     <button
       class="btn btn-primary"
@@ -150,13 +215,21 @@
       Tạo mới
     </button>
   </div>
+=======
+    <div class="m-2">
+      <button pButton type="submit" (click)="confirm()">Tạo mới</button>
+    </div>
+  </form>
+  <!--<div class="overlay" *ngIf="isLoading">-->
+  <!--  <div class="spinner-container">-->
+  <!--    <div class="spinner-border" role="status"></div>-->
+  <!--  </div>-->
+  <!--</div>-->
+>>>>>>> 8e15f75a5cb2d2557af5c7644ce63ad3be57e9d9
 
-</form>
-<!--<div class="overlay" *ngIf="isLoading">-->
-<!--  <div class="spinner-container">-->
-<!--    <div class="spinner-border" role="status"></div>-->
-<!--  </div>-->
-<!--</div>-->
-
-<p-toast position="top-right" key="error"></p-toast>
-<p-confirmDialog key="createConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
+  <p-toast position="top-right" key="error"></p-toast>
+  <p-confirmDialog
+    key="createConfirm"
+    [style]="{ width: '50vw' }"
+  ></p-confirmDialog>
+</div>

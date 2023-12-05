@@ -68,7 +68,6 @@
     border-radius: 8px;
     border: solid 1px $primary;
     transition: all 0.5s ease;
-    margin-right: 20px;
     &:hover {
       background-color: $primary-hover;
       border-color: $primary-hover;
@@ -76,6 +75,7 @@
   }
   .p-inputtext,
   .p-dropdown {
+    font-size: 16px;
     // border-radius: 8px;
   }
 
