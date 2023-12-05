@@ -41,6 +41,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   isLoading = false;
   submitCompleted = false;
   isFileLoading = false;
+  pdfPreviewVisibility: boolean = false;
   ngOnInit(): void {
     console.log('on init ' + this.auth.getJwtFromCookie());
     this.minDate = new Date();
@@ -96,8 +97,14 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       });
   }
   inputFileForm = this.fb.group({
-    documentName: ['', NoWhitespaceValidator()],
-    documentCode: ['', NoWhitespaceValidator()],
+    documentName: [
+      '',
+      Validators.compose([Validators.required, Validators.maxLength(256)]),
+    ],
+    documentCode: [
+      '',
+      Validators.compose([Validators.required, Validators.maxLength(256)]),
+    ],
     documentTypeId: 4,
     deadline: [this.today, Validators.required],
     isPasssed: [false, Validators.required],
@@ -319,7 +326,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     this.pdfLoaded = true;
   }
   openNewTab(documentLink: string) {
-    this.isFileLoading = true;
+    this.pdfPreviewVisibility = true;
     console.log(documentLink);
     this.fileService
       .readInitiationplanPDF(documentLink)
@@ -328,7 +335,6 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
         this.pdfUrl = blobUrl;
         this.safePdfUrl =
           this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-        this.isFileLoading = false;
         this.pdfLoaded = true;
       });
   }
@@ -338,5 +344,10 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   }
   hideUploadPopup() {
     this.inputFileForm.reset(this.inputFileForm.value);
+  }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
   }
 }

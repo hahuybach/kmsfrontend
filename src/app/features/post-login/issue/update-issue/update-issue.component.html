@@ -335,15 +335,24 @@
   </p-dialog>
   <!-- file preview -->
   <p-dialog
-    [(visible)]="pdfLoaded"
-    [style]="{ width: '80vw' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
-    <div *ngIf="pdfLoaded">
-      <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
-    </div>
-  </p-dialog>
+  #pdfDialog
+  header="Xem tài liệu"
+  [(visible)]="pdfPreviewVisibility"
+  [style]="{ width: '90vw', height: '100vh' }"
+  [draggable]="false"
+  [resizable]="false"
+  [maximizable]="true"
+  [modal]="true"
+  (onHide)="onHideFilePreviewEvent()"
+>
+  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+    <div class="spinner-border text-center" role="status"></div>
+    <p>Đang tải...</p>
+  </div>
+  <ng-template #pdfIsLoaded>
+    <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
+  </ng-template>
+</p-dialog>
   <app-loading-complete-dialog
     [visible]="isLoading"
     [completed]="submitCompleted"

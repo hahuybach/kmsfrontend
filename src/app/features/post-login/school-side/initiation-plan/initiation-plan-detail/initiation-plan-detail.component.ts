@@ -38,6 +38,7 @@ export class InitiationPlanDetailComponent implements OnInit {
   isLoading = false;
   submitCompleted = false;
   isFileLoading = false;
+  pdfPreviewVisibility: boolean = false;
   ngOnInit(): void {
     this.route.params
       .pipe(
@@ -159,7 +160,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.pdfLoaded = true;
   }
   openNewTab(documentLink: string) {
-    this.isFileLoading = true;
+    this.pdfPreviewVisibility = true;
     console.log(documentLink);
     this.fileService
       .readInitiationplanPDF(documentLink)
@@ -168,7 +169,7 @@ export class InitiationPlanDetailComponent implements OnInit {
         this.pdfUrl = blobUrl;
         this.safePdfUrl =
           this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-        this.isFileLoading = false;
+        this.pdfPreviewVisibility = false;
         this.pdfLoaded = true;
       });
   }
@@ -340,5 +341,10 @@ export class InitiationPlanDetailComponent implements OnInit {
     }
 
     return s;
+  }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
   }
 }

@@ -112,7 +112,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
             }, 1500);
           },
           error: (error) => {
-            this.toast.showWarn('error', 'Lỗi', error.error.message);
+            this.toast.showWarn('toastGuidanceDocumentCreate', 'Lỗi', error.error.message);
             this.isLoading = false;
             console.log(error);
           },
@@ -169,7 +169,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     } else {
       // Handle error or provide feedback to the user
       this.toast.showWarn(
-        'error',
+        'toastGuidanceDocumentCreate',
         'Lỗi',
         'Văn bản chỉ đạo phải ở dưới định dạng pdf'
       );
@@ -218,24 +218,14 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   confirm() {
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận yêu cầu này không?',
-      header: 'Xác nhân',
+      header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
       rejectLabel: 'Không',
+      key: 'confirmGuidanceDocumentCreate',
       accept: () => {
         this.onSubmit();
       },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy yêu cầu này');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy yêu cầu này');
-            break;
-        }
-      },
-      key: 'createConfirm',
     });
   }
 }

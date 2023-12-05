@@ -23,15 +23,23 @@
   ></app-file-loading>
   <!-- file preview -->
   <p-dialog
-    [(visible)]="pdfLoaded"
-    [style]="{ width: '90vw', height: '1080px' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
-    <div *ngIf="pdfLoaded">
-      <iframe [src]="safePdfUrl" width="100%" height="600px"></iframe>
-    </div>
-  </p-dialog>
+  header="Xem tài liệu"
+  [(visible)]="pdfPreviewVisibility"
+  [style]="{ width: '90vw', height: '100vh' }"
+  [draggable]="false"
+  [resizable]="false"
+  [maximizable]="true"
+  [modal]="true"
+  (onHide)="onHideFilePreviewEvent()"
+>
+  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+    <div class="spinner-border text-center" role="status"></div>
+    <p>Đang tải...</p>
+  </div>
+  <ng-template #pdfIsLoaded>
+    <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
+  </ng-template>
+</p-dialog>
   <!--doc history -->
   <p-dialog
     header="Lịch sử phê duyệt"
@@ -279,7 +287,7 @@
           <div class="col-md-8">
             <div class="mb-1">
               <span class="mb-2 span-heading-color">Tên kế hoạch</span>
-              <p class="fw-bold p-content-fs">
+              <p class="fw-medium p-content-fs">
                 {{ schoolinitiationplan.initiationPlanName }}
               </p>
             </div>
@@ -287,7 +295,7 @@
           <div class="col-md-4">
             <div class="mb-1">
               <span class="mb-2 text-black-50">Người lên kế hoạch</span>
-              <p class="fw-bold p-content-fs">
+              <p class="fw-medium p-content-fs">
                 {{ schoolinitiationplan.createdBy }}
               </p>
             </div>
@@ -298,7 +306,7 @@
           <div class="col-md-8">
             <div class="mb-1">
               <span class="mb-2 span-heading-color">Trường</span>
-              <p class="fw-bold p-content-fs">
+              <p class="fw-medium p-content-fs">
                 {{ schoolinitiationplan.school.schoolName }}
               </p>
             </div>
@@ -327,7 +335,7 @@
           <div class="col-md-8">
             <div class="mb-1">
               <span class="mb-2 text-black-50">Ngày tạo</span>
-              <p class="fw-bold p-content-fs">
+              <p class="fw-medium p-content-fs">
                 {{ schoolinitiationplan.createdDate | date : "dd/MM/yyyy" }}
               </p>
             </div>
@@ -335,7 +343,7 @@
           <div class="col-md-4">
             <div class="mb-1">
               <span class="mb-2 text-black-50">Hạn nộp</span>
-              <p class="fw-bold p-error">
+              <p class="fw-medium p-error">
                 {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
               </p>
             </div>
@@ -371,13 +379,13 @@
             <div class="row col-md-10 d-flex align-items-end mb-3">
               <div class="col-md-8">
                 <p class="mb-0">
-                  <span class="fw-bold"
+                  <span class="fw-medium"
                     >{{ lastDocs.departmentDocument.documentName }}.pdf</span
                   ><span></span>
                 </p>
                 <p class="mb-0">
                   <span>Mã tài liệu: </span>
-                  <span class="fw-bold">{{
+                  <span class="fw-medium">{{
                     lastDocs.departmentDocument.documentCode
                   }}</span>
                 </p>
@@ -385,13 +393,13 @@
               <div class="col-md-4 text-end">
                 <p class="mb-0">
                   <!-- <span>Kích thước: </span> -->
-                  <span class="fw-bold">{{
+                  <span class="fw-medium">{{
                     lastDocs.departmentDocument.sizeFormat
                   }}</span>
                 </p>
                 <p class="mb-0">
                   <!-- <span>Ngày tạo: </span> -->
-                  <span class="fw-bold">{{
+                  <span class="fw-medium">{{
                     lastDocs.departmentDocument.uploadedDate
                       | date : "dd/MM/yyyy"
                   }}</span>
@@ -441,14 +449,14 @@
               <div class="row col-md-10 d-flex align-items-end">
                 <div class="col-md-6 mb-3">
                   <p class="mb-0">
-                    <span class="fw-bold"
+                    <span class="fw-medium"
                       >{{ inputFileForm.get("documentName")?.value }}.pdf</span
                     >
                     <span></span>
                   </p>
                   <p class="mb-0">
                     <span>Mã tài liệu: </span>
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       inputFileForm.get("documentCode")?.value
                     }}</span>
                   </p>
@@ -456,11 +464,11 @@
                 <div class="col-md-4 mb-3 text-end">
                   <p class="mb-0">
                     <!-- <span>Kích thước: </span> -->
-                    <span class="fw-bold">{{ getSize(newFile.size) }}</span>
+                    <span class="fw-medium">{{ getSize(newFile.size) }}</span>
                   </p>
                   <p class="mb-0">
                     <!-- <span>Ngày tạo: </span> -->
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       today | date : "dd/MM/yyyy"
                     }}</span>
                   </p>
@@ -515,14 +523,14 @@
               <div class="row col-md-10 d-flex align-items-end">
                 <div class="col-md-6 mb-3">
                   <p class="mb-0">
-                    <span class="fw-bold"
+                    <span class="fw-medium"
                       >{{ inputFileForm.get("documentName")?.value }}.pdf</span
                     >
                     <span></span>
                   </p>
                   <p class="mb-0">
                     <span>Mã tài liệu: </span>
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       inputFileForm.get("documentCode")?.value
                     }}</span>
                   </p>
@@ -530,11 +538,11 @@
                 <div class="col-md-4 mb-3 text-end">
                   <p class="mb-0">
                     <!-- <span>Kích thước: </span> -->
-                    <span class="fw-bold">{{ getSize(newFile.size) }}</span>
+                    <span class="fw-medium">{{ getSize(newFile.size) }}</span>
                   </p>
                   <p class="mb-0">
                     <!-- <span>Ngày tạo: </span> -->
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       today | date : "dd/MM/yyyy"
                     }}</span>
                   </p>
@@ -567,25 +575,25 @@
               <div class="row col-md-10 d-flex align-items-end">
                 <div class="col-md-6 mb-3">
                   <p class="mb-0">
-                    <span class="fw-bold"
+                    <span class="fw-medium"
                       >{{ lastDocs.schoolDocument.documentName }}.pdf</span
                     ><span></span>
                   </p>
                   <p class="mb-0">
                     <span>Mã tài liệu: </span>
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       lastDocs.schoolDocument.documentCode
                     }}</span>
                   </p>
                 </div>
                 <div class="col-md-4 text-end mb-3">
                   <p class="mb-0">
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       lastDocs.schoolDocument.sizeFormat
                     }}</span>
                   </p>
                   <p class="mb-0">
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
                     }}</span>
                   </p>
@@ -650,13 +658,13 @@
               <div class="row col-md-10 d-flex align-items-end mb-3">
                 <div class="col-md-8">
                   <p class="mb-0">
-                    <span class="fw-bold"
+                    <span class="fw-medium"
                       >{{ lastDocs.schoolDocument.documentName }}.pdf</span
                     ><span></span>
                   </p>
                   <p class="mb-0">
                     <span>Mã tài liệu: </span>
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       lastDocs.schoolDocument.documentCode
                     }}</span>
                   </p>
@@ -664,13 +672,13 @@
                 <div class="col-md-4 text-end">
                   <p class="mb-0">
                     <!-- <span>Kích thước: </span> -->
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       lastDocs.schoolDocument.sizeFormat
                     }}</span>
                   </p>
                   <p class="mb-0">
                     <!-- <span>Ngày tạo: </span> -->
-                    <span class="fw-bold">{{
+                    <span class="fw-medium">{{
                       lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
                     }}</span>
                   </p>

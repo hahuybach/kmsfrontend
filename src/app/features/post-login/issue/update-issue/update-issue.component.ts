@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
@@ -16,6 +22,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FileService } from 'src/app/services/file.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { Dialog } from 'primeng/dialog';
 
 interface DocumentIssue {
   documentName: string;
@@ -27,7 +34,7 @@ interface DocumentIssue {
   templateUrl: './update-issue.component.html',
   styleUrls: ['./update-issue.component.scss'],
 })
-export class UpdateIssueComponent implements OnInit {
+export class UpdateIssueComponent implements OnInit, AfterViewInit {
   @ViewChild('fileInput', { static: false }) fileInputRef!: ElementRef;
   addedDocumentIssues = new Map<number, object>();
   file: File;
@@ -74,6 +81,8 @@ export class UpdateIssueComponent implements OnInit {
   sub: any[] = [];
   isLoading: boolean = false;
   submitCompleted: boolean = false;
+  pdfPreviewVisibility: boolean = false;
+  @ViewChild('pdfDialog') yourDialog!: Dialog;
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
@@ -281,6 +290,12 @@ export class UpdateIssueComponent implements OnInit {
     this.issueForm.get('documentName')?.setValue('');
     this.issueForm.get('documentCode')?.setValue('');
     this.fileInputPlaceholders = '';
+    this.issueForm.reset();
+    this.issueForm.patchValue({
+      issueName: this.issue.issueName,
+      description: this.issue.description,
+      inspectorId: this.issue.inspectors.map((item: any) => item.accountId),
+    });
   }
 
   togglePopupFileUpload(
@@ -317,6 +332,7 @@ export class UpdateIssueComponent implements OnInit {
     this.popupInvalidDocVisible = true;
   }
   openNewTab(documentLink: string) {
+    this.pdfPreviewVisibility = true;
     console.log(documentLink);
     const sub = this.fileService
       .readIssuePDF(documentLink)
@@ -409,5 +425,19 @@ export class UpdateIssueComponent implements OnInit {
   }
   changeFilterVisible(status: Boolean) {
     this.filterVisible = status;
+  }
+  maximizeDialogIfVisible() {
+    if (this.pdfPreviewVisibility && this.yourDialog) {
+      this.yourDialog.maximize();
+    }
+  }
+  ngAfterViewInit() {
+    this.maximizeDialogIfVisible();
+    console.log('run ng after view init');
+  }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
   }
 }
