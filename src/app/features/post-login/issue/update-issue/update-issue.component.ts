@@ -16,6 +16,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FileService } from 'src/app/services/file.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { Dialog } from 'primeng/dialog';
 
 interface DocumentIssue {
   documentName: string;
@@ -74,6 +75,8 @@ export class UpdateIssueComponent implements OnInit {
   sub: any[] = [];
   isLoading: boolean = false;
   submitCompleted: boolean = false;
+  pdfPreviewVisibility: boolean = false;
+  @ViewChild('pdfDialog') yourDialog!: Dialog;
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
@@ -317,6 +320,7 @@ export class UpdateIssueComponent implements OnInit {
     this.popupInvalidDocVisible = true;
   }
   openNewTab(documentLink: string) {
+    this.pdfPreviewVisibility = true;
     console.log(documentLink);
     const sub = this.fileService
       .readIssuePDF(documentLink)
@@ -409,5 +413,15 @@ export class UpdateIssueComponent implements OnInit {
   }
   changeFilterVisible(status: Boolean) {
     this.filterVisible = status;
+  }
+  maximizeDialogIfVisible() {
+    if (this.pdfPreviewVisibility && this.yourDialog) {
+      this.yourDialog.maximize();
+    }
+  }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
   }
 }

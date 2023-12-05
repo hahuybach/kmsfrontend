@@ -1,10 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
 import { FileService } from 'src/app/services/file.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { unSub } from 'src/app/shared/util/util';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-issue-detail',
@@ -20,6 +27,8 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
   invalidDoc: any[];
   popupInvalidDocVisible = false;
   sub: any[] = [];
+  pdfPreviewVisibility: boolean = false;
+  @ViewChild('pdfDialog') yourDialog!: Dialog;
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
@@ -44,6 +53,7 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
     unSub(this.sub);
   }
   openNewTab(documentLink: string) {
+    this.pdfPreviewVisibility = true;
     console.log(documentLink);
     const sub = this.fileService
       .readIssuePDF(documentLink)
@@ -56,11 +66,21 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
       });
     this.sub.push(sub);
   }
+  maximizeDialogIfVisible() {
+    if (this.pdfPreviewVisibility && this.yourDialog) {
+      this.yourDialog.maximize();
+    }
+  }
   togglePopupInvalidDoc() {
     this.invalidDoc = this.issue.documentDtos.filter(
       (document: any) => document.status.statusId === 2
     );
 
     this.popupInvalidDocVisible = true;
+  }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
   }
 }

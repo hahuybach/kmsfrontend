@@ -1,11 +1,13 @@
 <div class="container-fluid">
   <div class="row inspection-plan-detail">
     <p-dialog
+      appendTo="body"
       header="Xem tài liệu"
       [(visible)]="pdfPreviewVisibility"
-      [style]="{ width: '90vw', height: '100vh' }"
+      [style]="{ width: '100vw', height: '100vh' }"
       [draggable]="false"
       [resizable]="false"
+      [modal]="true"
     >
       <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
         <div class="spinner-border text-center" role="status"></div>
@@ -87,10 +89,18 @@
           </div>
         </div>
         <h5 class="mb-2">Tài liệu công văn</h5>
-        <div class="file-item py-1 d-flex"
-             (click)="openNewTab(inspectionPlanDetail.inspectionPlan.documents[0]?.documentLink)">
-          <div class="file-item-icon d-flex justify-content-center align-items-center">
-            <img src="../../../../../assets/img/pdf_logo.svg" alt=""/>
+        <div
+          class="file-item py-1 d-flex"
+          (click)="
+            openNewTab(
+              inspectionPlanDetail.inspectionPlan.documents[0]?.documentLink
+            )
+          "
+        >
+          <div
+            class="file-item-icon d-flex justify-content-center align-items-center"
+          >
+            <img src="../../../../../assets/img/pdf_logo.svg" alt="" />
           </div>
           <div class="row col-md-10 d-flex align-items-end mb-3">
             <div class="col-md-8">
