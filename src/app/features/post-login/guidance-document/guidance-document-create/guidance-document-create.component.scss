@@ -1,3 +1,7 @@
+@import "../../../../../assets/scss/base";
+* {
+  font-size: 16px;
+}
 .bigger-icon {
   font-size: 50px;
 }
@@ -22,4 +26,45 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.p-inputtext {
+  border-radius: 8px;
+  // height: 100%;
+}
+.file-item {
+  // box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  // border-radius: 8px;
+}
+.file-info {
+  .p-inputtext {
+    width: 100%;
+  }
+}
+.input-file {
+  margin: 0;
+  .p-inputtext {
+    border-radius: 8px 0 0 8px;
+    // width: 100%;
+  }
+
+  button {
+    background-color: $primary;
+    border-radius: 0 8px 8px 0;
+
+    &:hover,
+    &:active {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}
+.p-button {
+  background-color: $primary;
+  border-radius: 8px;
+  border: solid 1px $primary;
+  transition: all 0.5s ease;
+  &:hover {
+    background-color: $primary-hover;
+    border-color: $primary-hover;
+  }
 }

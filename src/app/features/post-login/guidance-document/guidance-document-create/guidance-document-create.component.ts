@@ -1,18 +1,24 @@
-import {Component, OnInit} from '@angular/core';
-import {GuidanceDocumentService} from "../../../../services/guidance-document.service";
-import {IssueService} from "../../../../services/issue.service";
-import {FormArray, FormBuilder, FormControl, ValidationErrors, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Observable, Observer, switchMap} from "rxjs";
-import {IssueResponse} from "../../../../models/issue-response";
-import {ToastService} from "../../../../shared/toast/toast.service";
-import {DocumentService} from "../../../../services/document.service";
-import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import { Component, OnInit } from '@angular/core';
+import { GuidanceDocumentService } from '../../../../services/guidance-document.service';
+import { IssueService } from '../../../../services/issue.service';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, Observer, switchMap } from 'rxjs';
+import { IssueResponse } from '../../../../models/issue-response';
+import { ToastService } from '../../../../shared/toast/toast.service';
+import { DocumentService } from '../../../../services/document.service';
+import { ConfirmationService, ConfirmEventType } from 'primeng/api';
 
 @Component({
   selector: 'app-guidance-document-create',
   templateUrl: './guidance-document-create.component.html',
-  styleUrls: ['./guidance-document-create.component.scss']
+  styleUrls: ['./guidance-document-create.component.scss'],
 })
 export class GuidanceDocumentCreateComponent implements OnInit {
   guidanceForm = this.fb.group({
@@ -20,7 +26,6 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     guidanceDocumentName: ['', Validators.required],
     description: ['', Validators.required],
     guidanceDocuments: this.fb.array([]),
-
   });
   isSubmitted: boolean = false;
   selectedFiles: any[];
@@ -28,29 +33,29 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   isFileAllSubmit = true;
   issue: IssueResponse;
   submitCompleted: boolean = false;
-
-  constructor(private guidanceService: GuidanceDocumentService,
-              private issueService: IssueService,
-              private fb: FormBuilder,
-              private activateRoute: ActivatedRoute,
-              private route: Router,
-              private toast: ToastService,
-              private documentService: DocumentService,
-              private confirmationService: ConfirmationService
-  ) {
-  }
+  fileInputPlaceholders: string[] = [];
+  constructor(
+    private guidanceService: GuidanceDocumentService,
+    private issueService: IssueService,
+    private fb: FormBuilder,
+    private activateRoute: ActivatedRoute,
+    private route: Router,
+    private toast: ToastService,
+    private documentService: DocumentService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   get guidanceDocuments() {
-    return this.guidanceForm.controls["guidanceDocuments"] as FormArray;
+    return this.guidanceForm.controls['guidanceDocuments'] as FormArray;
   }
 
   addGuidanceDocument() {
     const guidanceDocumentForm = this.fb.group({
       documentName: ['', Validators.required],
       documentCode: ['', [Validators.required]],
-      isExist: [false]
-    })
-    this.guidanceDocuments.push(guidanceDocumentForm)
+      isExist: [false],
+    });
+    this.guidanceDocuments.push(guidanceDocumentForm);
   }
 
   ngOnInit(): void {
@@ -58,29 +63,28 @@ export class GuidanceDocumentCreateComponent implements OnInit {
       .pipe(
         switchMap((params) => {
           console.log(params['issueId']);
-          return params['issueId']
+          return params['issueId'];
         })
-      ).subscribe(
-      (data: any) => {
+      )
+      .subscribe((data: any) => {
         this.guidanceForm.patchValue({
-          issueId: data
-
-        })
-      }
-    )
+          issueId: data,
+        });
+      });
     this.addGuidanceDocument();
     console.log(this.guidanceForm.value);
-    this.issueService.getIssueById(Number.parseInt(this.guidanceForm.get('issueId')?.value ?? ''))
+    this.issueService
+      .getIssueById(
+        Number.parseInt(this.guidanceForm.get('issueId')?.value ?? '')
+      )
       .subscribe({
         next: (result) => {
-          this.issue = result.issue
-        }
-        , error: (error) => {
+          this.issue = result.issue;
+        },
+        error: (error) => {
           console.log(error);
-        }
-
-      })
-
+        },
+      });
   }
 
   onSubmit() {
@@ -89,34 +93,39 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     this.checkIfFileHasSubmit();
     if (!this.isFileAllSubmit) {
       this.isFileAllSubmit = true;
-      return
+      return;
     }
     console.log(this.guidanceForm.value, this.guidanceForm.invalid);
     if (!this.guidanceForm.invalid) {
       this.isLoading = true;
 
-      this.guidanceService.saveGuidanceDocument(this.guidanceForm.value, this.selectedFiles).subscribe({
-        next: (result) => {
-          this.submitCompleted = true;
-          setTimeout(() => {
-            this.route.navigate(['guidanceDocument/' + result.guidanceDocumentDto.guidanceDocumentId])
-          }, 1500)
-        },
-        error: (error) => {
-          this.toast.showWarn('error', 'Lỗi', error.error.message)
-          this.isLoading = false;
-          console.log(error);
-        }
-      })
+      this.guidanceService
+        .saveGuidanceDocument(this.guidanceForm.value, this.selectedFiles)
+        .subscribe({
+          next: (result) => {
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.route.navigate([
+                'guidanceDocument/' +
+                  result.guidanceDocumentDto.guidanceDocumentId,
+              ]);
+            }, 1500);
+          },
+          error: (error) => {
+            this.toast.showWarn('error', 'Lỗi', error.error.message);
+            this.isLoading = false;
+            console.log(error);
+          },
+        });
     }
   }
-
 
   isBlank(field: string): boolean | undefined {
     return (
       this.guidanceForm.get(field)?.invalid &&
       ((this.guidanceForm.get(field)?.dirty ?? false) ||
-        (this.guidanceForm.get(field)?.touched ?? false) || this.isSubmitted)
+        (this.guidanceForm.get(field)?.touched ?? false) ||
+        this.isSubmitted)
     );
   }
 
@@ -124,7 +133,8 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     return (
       this.guidanceDocuments.at(index).get(field)?.invalid &&
       ((this.guidanceDocuments.at(index).get(field)?.dirty ?? false) ||
-        (this.guidanceDocuments.at(index).get(field)?.touched ?? false) || this.isSubmitted)
+        (this.guidanceDocuments.at(index).get(field)?.touched ?? false) ||
+        this.isSubmitted)
     );
   }
   // isDuplicateForGuidanceDocuments(index: number) {
@@ -137,9 +147,9 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   // }
 
   removeGuidanceDocument(index: number) {
-    this.guidanceDocuments.removeAt(index)
+    this.guidanceDocuments.removeAt(index);
     if (this.selectedFiles) {
-      this.selectedFiles.splice(index, 1)
+      this.selectedFiles.splice(index, 1);
     }
     console.log(this.selectedFiles);
   }
@@ -149,16 +159,21 @@ export class GuidanceDocumentCreateComponent implements OnInit {
       this.selectedFiles = []; // Initialize the selectedFiles array if it's not already defined
     }
     const file = event.target.files[0];
-    if (file.type === 'application/pdf') { // Check if the file type is PDF
+    if (file.type === 'application/pdf') {
+      // Check if the file type is PDF
       this.selectedFiles[index] = file;
+      this.fileInputPlaceholders[index] = file.name;
       this.guidanceDocuments.at(index).patchValue({
-        isExist: false
+        isExist: false,
       });
     } else {
       // Handle error or provide feedback to the user
-      this.toast.showWarn('error', "Lỗi", "Văn bản chỉ đạo phải ở dưới định dạng pdf")
+      this.toast.showWarn(
+        'error',
+        'Lỗi',
+        'Văn bản chỉ đạo phải ở dưới định dạng pdf'
+      );
       event.target.value = null;
-
     }
   }
   checkValidFile(index: number) {
@@ -169,8 +184,8 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     for (let i = 0; i < this.guidanceDocuments.length; i++) {
       if (!this.selectedFiles || !this.selectedFiles[i]) {
         this.guidanceDocuments.at(i).patchValue({
-          isExist: true
-        })
+          isExist: true,
+        });
         this.isFileAllSubmit = false;
       }
     }
@@ -181,7 +196,10 @@ export class GuidanceDocumentCreateComponent implements OnInit {
       if (index == i) {
         continue;
       }
-      if (this.guidanceDocuments.at(i).get('documentCode')?.value == documentCode.valueOf().toString()) {
+      if (
+        this.guidanceDocuments.at(i).get('documentCode')?.value ==
+        documentCode.valueOf().toString()
+      ) {
         return !this.guidanceDocuments.at(index).get('documentCode')?.invalid;
       }
     }
@@ -189,16 +207,13 @@ export class GuidanceDocumentCreateComponent implements OnInit {
   }
 
   documentCodeValidator = (formControl: FormControl) => {
-    console.log("validator  ");
-    console.log(formControl.value)
-    this.documentService.checkIfDocumentCodeExist(formControl.value).subscribe(
-      {
-        next: (result) =>{
-          return  { 'documentCodeExist': result };
-        }
-      }
-    )
-
+    console.log('validator  ');
+    console.log(formControl.value);
+    this.documentService.checkIfDocumentCodeExist(formControl.value).subscribe({
+      next: (result) => {
+        return { documentCodeExist: result };
+      },
+    });
   };
   confirm() {
     this.confirmationService.confirm({
@@ -208,7 +223,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
       acceptLabel: 'Có',
       rejectLabel: 'Không',
       accept: () => {
-        this.onSubmit()
+        this.onSubmit();
       },
       reject: (type: ConfirmEventType) => {
         switch (type) {
@@ -219,10 +234,8 @@ export class GuidanceDocumentCreateComponent implements OnInit {
             this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy yêu cầu này');
             break;
         }
-      },key : 'createConfirm'
+      },
+      key: 'createConfirm',
     });
   }
-
-
-
 }

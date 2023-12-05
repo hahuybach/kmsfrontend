@@ -1,4 +1,7 @@
 @import "../../../../../../assets/scss/base";
+* {
+    font-size: 16px;
+}
 .p-button {
     background-color: $primary;
     border-radius: 8px;
@@ -236,10 +239,12 @@ ul {
     }
 }
 .add-file-item {
-    font-size: 30px;
     font-weight: 500;
     color: $primary;
     transition: all 0.5s ease;
+    i {
+        font-size: 25px;
+    }
     &:hover {
         color: $primary-hover;
     }
