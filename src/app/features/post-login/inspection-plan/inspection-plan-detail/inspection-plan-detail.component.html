@@ -24,15 +24,15 @@
         <div class="row mb-3">
           <div class="col-md-9">
             <div class="inspection-plan-name">
-              <label class="mb-2">Tên quyết định kiểm tra</label>
-              <p>
+              <label class="span-heading-color mb-2">Tên quyết định kiểm tra</label>
+              <p class="fw-medium">
                 {{ inspectionPlanDetail.inspectionPlan.inspectionPlanName }}
               </p>
             </div>
           </div>
           <div class="col-md-3">
-            <span>Ngày bắt đầu</span>
-            <p class="fw-bolder">
+            <label class="span-heading-color mb-2">Ngày bắt đầu</label>
+            <p class="fw-medium">
               {{
               inspectionPlanDetail.inspectionPlan.startDate
                 | date : "dd/MM/yyyy"
@@ -42,16 +42,16 @@
         </div>
         <div class="row mb-2">
           <div class="col-md-9">
-            <div class="inspection-plan-name mb-1">
-              <span>Tên trường</span>
-              <p class="fw-bolder">
+            <div class="inspection-plan-name">
+              <label class="span-heading-color mb-2">Tên trường</label>
+              <p class="fw-medium">
                 {{ inspectionPlanDetail.inspectionPlan.school.schoolName }}
               </p>
             </div>
           </div>
           <div class="col-md-3">
-            <span>Ngày kết thúc</span>
-            <p class="fw-bolder">
+            <label class="span-heading-color mb-2">Ngày kết thúc</label>
+            <p class="fw-medium">
               {{
               inspectionPlanDetail.inspectionPlan.endDate
                 | date : "dd/MM/yyyy"
@@ -59,17 +59,17 @@
             </p>
           </div>
         </div>
-        <div class="row mb-2">
+        <div class="row mb-3">
           <div class="col-md-9">
-            <div class="inspection-plan-name mb-1">
-              <span>Chi tiết</span>
-              <p class="fw-bolder">
+            <div class="inspection-plan-name">
+              <label class="span-heading-color mb-2">Chi tiết</label>
+              <p class="fw-medium">
                 {{ inspectionPlanDetail.inspectionPlan.description }}
               </p>
             </div>
           </div>
           <div class="col-md-3">
-            <span>Trạng thái</span>
+            <label class="span-heading-color mb-2">Trạng thái</label>
             <br/>
             <p-tag
               class="status"
@@ -84,7 +84,7 @@
             </p-tag>
           </div>
         </div>
-        <h5 class="mb-2">Tài liệu công văn</h5>
+        <h6 class="mat-headline-6 fw-medium">Tài liệu công văn</h6>
         <div class="file-item py-1 d-flex"
              (click)="openNewTab(inspectionPlanDetail.inspectionPlan.documents[0]?.documentLink)">
           <div class="file-item-icon d-flex justify-content-center align-items-center">
