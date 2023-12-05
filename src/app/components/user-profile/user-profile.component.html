@@ -1,41 +1,42 @@
 <p-dialog header="Thông tin cá nhân"
           [(visible)]="visible"
-          [style]="{width: '40vw', height: '30vw'}"
+          [style]="{width: '40vw', height: '32vw'}"
           (onHide)="resetVisible()"
           [modal]="true"
+          [draggable]="false"
 >
   <div class="row" *ngIf="!isUpdate && this.currentUser">
     <div class="col-md-6">
       <div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Tên</span>
+          <label class="span-heading-color mb-2">Tên</label>
           <p class="fw-medium">{{this.currentUser.fullName}}</p>
         </div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Số điện thoại</span>
+          <label class="span-heading-color mb-2">Số điện thoại</label>
           <p class="fw-medium">{{this.currentUser.phoneNumber}}</p>
         </div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Giới tính</span>
+          <label class="span-heading-color mb-2">Giới tính</label>
           <p class="fw-medium">{{this.currentUser.gender == "MALE" ? "Nam" : "Nữ"}}</p>
         </div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Năm sinh</span>
+          <label class="span-heading-color mb-2">Năm sinh</label>
           <p class="fw-medium">{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
         </div>
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Email</span>
+        <label class="span-heading-color mb-2">Email</label>
         <p class="fw-medium">{{this.currentUser.email}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Đơn vị</span>
+        <label class="span-heading-color mb-2">Đơn vị</label>
         <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Chức vụ</span>
+        <label class="span-heading-color mb-2">Chức vụ</label>
         <p class="fw-medium">
           <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
             {{ role.role?.roleName }}{{ last ? '' : ';' }}
@@ -69,15 +70,15 @@
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Email</span>
+        <label class="span-heading-color mb-2">Email</label>
         <p class="fw-medium">{{this.currentUser.email}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Đơn vị</span>
+        <label class="span-heading-color mb-2">Đơn vị</label>
         <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Chức vụ</span>
+        <label class="span-heading-color mb-2">Chức vụ</label>
         <p class="fw-medium">
           <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
             {{ role.role?.roleName }}{{ last ? '' : ';' }}

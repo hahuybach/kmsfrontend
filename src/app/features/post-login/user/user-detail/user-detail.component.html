@@ -3,33 +3,33 @@
   <div class="row">
     <div class="col-md-5" *ngIf="user">
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Tên hiển thị</span>
+        <label class="span-heading-color mb-2">Tên hiển thị</label>
         <p class="fw-medium">{{user.fullName == null ? "Chưa nhập tên" : user.fullName}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Email</span>
+        <label class="span-heading-color mb-2">Email</label>
         <p class="fw-medium">{{user.email}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Số điện thoại</span>
+        <label class="span-heading-color mb-2">Số điện thoại</label>
         <p class="fw-medium">{{user.phoneNumber == null ? "Chưa nhập số điện thoại" : user.phoneNumber}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Giới tính</span>
+        <label class="span-heading-color mb-2">Giới tính</label>
         <p class="fw-medium">{{user.gender == "MALE" ? "Nam" : "Nữ"}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Ngày sinh</span>
+        <label class="span-heading-color mb-2">Ngày sinh</label>
         <p class="fw-medium">{{user.dob == null ? "Chưa nhập ngày sinh" : user.dob}}</p>
       </div>
     </div>
     <div class="col-md-5">
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Đơn vị</span>
+        <label class="span-heading-color mb-2">Đơn vị</label>
         <p class="fw-medium">{{user.school?.schoolName}}</p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color mb-2">Chức vụ</span>
+        <label class="span-heading-color mb-2">Chức vụ</label>
         <p class="fw-medium">
           <ng-container *ngFor="let role of user.accountRoles; let last = last">
             {{ role.role?.roleName }}{{ last ? '' : ';' }}
@@ -37,7 +37,7 @@
         </p>
       </div>
       <div class="mb-3">
-        <span class="span-heading-color">Trạng thái</span>
+        <label class="span-heading-color">Trạng thái</label>
         <div class="mt-2">
           <p-tag
             [rounded]="true"

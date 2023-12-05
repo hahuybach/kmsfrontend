@@ -4,29 +4,29 @@
     <div class="row">
       <div class="col-md-5" *ngIf="user">
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Tên hiển thị</span>
+          <label class="span-heading-color mb-2">Tên hiển thị</label>
           <p class="fw-medium">{{user.fullName == null ? "Chưa nhập tên" : user.fullName}}</p>
         </div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Email</span>
+          <label class="span-heading-color mb-2">Email</label>
           <p class="fw-medium">{{user.email}}</p>
         </div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Số điện thoại</span>
+          <label class="span-heading-color mb-2">Số điện thoại</label>
           <p class="fw-medium">{{user.phoneNumber == null ? "Chưa nhập số điện thoại" : user.phoneNumber}}</p>
         </div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Giới tính</span>
+          <label class="span-heading-color mb-2">Giới tính</label>
           <p class="fw-medium">{{user.gender == "MALE" ? "Nam" : "Nữ"}}</p>
         </div>
         <div class="mb-3">
-          <span class="span-heading-color mb-2">Ngày sinh</span>
+          <label class="span-heading-color mb-2">Ngày sinh</label>
           <p class="fw-medium">{{user.dob == null ? "Chưa nhập ngày sinh" : user.dob}}</p>
         </div>
       </div>
       <div class="col-md-5">
         <div class="col-md-6 mb-3">
-          <span class="span-heading-color mb-2">Chức vụ</span>
+          <label class="span-heading-color mb-2">Chức vụ</label>
           <p-dropdown [options]="roles"
                       optionLabel="roleName" [filter]="true"
                       filterBy="roleName"
@@ -59,7 +59,7 @@
           </span>
         </div>
         <div class="col-md-6 mb-3">
-          <span class="span-heading-color mb-2">Trạng thái</span>
+          <label class="span-heading-color mb-2">Trạng thái</label>
           <p-dropdown [options]="statusOptions"
                       optionLabel="label"
                       formControlName="isActive"
