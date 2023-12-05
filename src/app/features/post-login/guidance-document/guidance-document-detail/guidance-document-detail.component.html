@@ -1,89 +1,130 @@
-<p-dialog
-  header="Xem tài liệu"
-  [(visible)]="pdfPreviewVisibility"
-  [style]="{ width: '90vw', height: '100vh' }"
-  [draggable]="false"
-  [resizable]="false"
->
-  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
-    <div class="spinner-border text-center" role="status"></div>
-    <p>Đang tải...</p>
+<div class="container-fluid">
+  <p-dialog
+    header="Xem tài liệu"
+    [(visible)]="pdfPreviewVisibility"
+    [style]="{ width: '90vw', height: '100vh' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+      <div class="spinner-border text-center" role="status"></div>
+      <p>Đang tải...</p>
+    </div>
+    <ng-template #pdfIsLoaded>
+      <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
+    </ng-template>
+  </p-dialog>
+  <h5 class="mat-headline-5 fw-medium">Chi tiết văn bản chỉ đạo</h5>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Kế hoạch kiểm tra</label>
+        <br />
+        <p class="fw-medium">{{ guidanceDocument.issueDto?.issueName }}</p>
+      </div>
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Tiêu đề</label>
+        <br />
+        <p class="fw-medium">{{ guidanceDocument.guidanceDocumentName }}</p>
+      </div>
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Lời nhắn</label>
+        <br />
+        <p class="fw-medium">{{ guidanceDocument.description }}</p>
+      </div>
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Người đăng</label>
+        <br />
+        <p class="fw-medium">
+          {{ guidanceDocument.accountDto?.user?.fullName }}
+        </p>
+      </div>
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Ngày tạo</label>
+        <br />
+        <p class="fw-medium">
+          {{ guidanceDocument.createdDate | date : "dd/MM/yyyy" }}
+        </p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h6 class="mat-headline-6 mb-3">Tài liệu đính kèm</h6>
+      <ng-container *ngIf="guidanceDocument.documentDtos">
+        <ng-container *ngFor="let document of guidanceDocument.documentDtos">
+          <div
+            class="file-item py-1 d-flex"
+            *ngIf="document; else documentEmpty"
+            (click)="openNewTab(document.documentLink)"
+          >
+            <div
+              class="file-item-icon d-flex justify-content-center align-items-center"
+            >
+              <img src="assets/img/pdf_logo.svg" alt="" />
+            </div>
+            <div class="row col-md-10 d-flex align-items-end mb-3">
+              <div class="col-md-8">
+                <p class="mb-0">
+                  <span class="fw-bold">{{ document.documentName }}</span>
+                  <span class="fw-bold">.pdf</span>
+                </p>
+                <p class="mb-0">
+                  <span>Mã tài liệu: </span>
+                  <span class="fw-bold">{{ document.documentCode }}</span>
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <p class="mb-0">
+                  <span>Kích thước: </span>
+                  <span class="fw-bold">{{ document.sizeFormat }}</span>
+                </p>
+                <p class="mb-0">
+                  <span>Ngày tạo: </span>
+                  <span class="fw-bold">{{
+                    document.uploadedDate | date : "dd/MM/yyyy"
+                  }}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <ng-template #documentEmpty>
+            <div
+              class="file-item-empty mt-2 py-3 d-flex flex-column justify-content-around align-items-center"
+            >
+              <i class="bi bi-file-earmark-x-fill"></i>
+              <p class="fw-bolder mt-2">Tài liệu hiện đang không tồn tại</p>
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+    </div>
   </div>
-  <ng-template #pdfIsLoaded>
-    <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
-  </ng-template>
-</p-dialog>
-<h5 class="mat-headline-5 fw-medium">Chi tiết văn bản chỉ đạo</h5>
 
-<div class="row">
-    <div class="col-md-7 mt-5">
-        <div class="m-3">
-            <span class="text-black-50">Tiêu đề</span>
-        </div>
-        <div class="m-3">
-            <span class="font-weight-bold">{{guidanceDocument.guidanceDocumentName}}</span>
-        </div>
-    </div>
-    <div class="col-md-2 mt-5">
-        <div class="m-3">
-            <span class="text-black-50">Người đăng</span>
-        </div>
-        <div class="m-3">
-            <span class="font-weight-bold">{{guidanceDocument.accountDto?.user?.fullName}}</span>
-
-        </div>
-    </div>
-
-  <div class="col-md-2 mt-5">
-    <div class="m-3">
-      <span class="text-black-50">Ngày tạo</span>
-    </div>
-    <div class="m-3">
-      <span class="font-weight-bold">{{guidanceDocument.createdDate | date : "dd/MM/yyyy"}} </span>
-    </div>
-  </div>
-
-    <div class="col-md-7 mt-2">
-        <div class="m-3">
-            <span class="text-black-50">Lời nhắn</span>
-        </div>
-        <div class="m-3">
-            <textarea readonly class="font-weight-bold form-control">{{guidanceDocument.description}}</textarea>
-        </div>
-    </div>
-  <div class="col-md-4 mt-2">
-    <div class="m-3">
-      <span class="text-black-50">Kế hoạch kiểm tra</span>
-    </div>
-    <div class="m-3">
-      <span class="font-weight-bold">{{guidanceDocument.issueDto?.issueName}} </span>
-
-    </div>
-  </div>
-
-
-</div>
-
-
-<div class="card mb-5">
-    <p-table  [value]="guidanceDocument.documentDtos || []" [tableStyle]="{ 'min-width': '50rem' }">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Mã tài liệu</th>
-                <th>Tên tài liệu</th>
-                <th>File</th>
-                <th>Dung lượng</th>
-                <th>Ngày tạo</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-document>
-            <tr>
-                <td>{{ document.documentCode }}</td>
-                <td>{{ document.documentName }}</td>
-                <td (click)="openNewTab(document.documentLink)"><img src="../../../../../assets/img/pdf.png" alt=""/></td>
-                <td>{{ document.sizeFormat }}</td>
-                <td>{{ document.uploadedDate | date : "MM/dd/yyyy" }}</td>
-            </tr>
-        </ng-template>
+  <!-- <div class="card mb-5">
+    <p-table
+      [value]="guidanceDocument.documentDtos || []"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Mã tài liệu</th>
+          <th>Tên tài liệu</th>
+          <th>File</th>
+          <th>Dung lượng</th>
+          <th>Ngày tạo</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-document>
+        <tr>
+          <td>{{ document.documentCode }}</td>
+          <td>{{ document.documentName }}</td>
+          <td (click)="openNewTab(document.documentLink)">
+            <img src="../../../../../assets/img/pdf.png" alt="" />
+          </td>
+          <td>{{ document.sizeFormat }}</td>
+          <td>{{ document.uploadedDate | date : "MM/dd/yyyy" }}</td>
+        </tr>
+      </ng-template>
     </p-table>
+  </div> -->
 </div>
