@@ -1,33 +1,31 @@
+<p-dialog
+  header="Xem tài liệu"
+  [(visible)]="pdfPreviewVisibility"
+  [style]="{ width: '100vw', height: '100vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+    <div class="spinner-border text-center" role="status"></div>
+    <p>Đang tải...</p>
+  </div>
+  <ng-template #pdfIsLoaded>
+    <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
+  </ng-template>
+</p-dialog>
 <div class="container-fluid">
+  <h5 class="mat-headline-5 fw-medium">Chi tiết quyết định kiểm tra</h5>
   <div class="row inspection-plan-detail">
-    <p-dialog
-      header="Xem tài liệu"
-      [(visible)]="pdfPreviewVisibility"
-      [style]="{ width: '90vw', height: '100vh' }"
-      [draggable]="false"
-      [resizable]="false"
-    >
-      <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
-        <div class="spinner-border text-center" role="status"></div>
-        <p>Đang tải...</p>
-      </div>
-      <ng-template #pdfIsLoaded>
-        <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
-      </ng-template>
-    </p-dialog>
-    <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
     <div class="row">
       <div
         class="form-content col-md-8 d-flex flex-column justify-content-between"
         *ngIf="inspectionPlanDetail"
       >
-        <div class="row mb-2">
+        <div class="row mb-3">
           <div class="col-md-9">
-            <div class="inspection-plan-name mb-1">
-              <span class="mb-2" style="color: #616161"
-                >Tên quyết định kiểm tra</span
-              >
-              <p class="fw-bold" style="font-size: 18px">
+            <div class="inspection-plan-name">
+              <label class="mb-2">Tên quyết định kiểm tra</label>
+              <p>
                 {{ inspectionPlanDetail.inspectionPlan.inspectionPlanName }}
               </p>
             </div>
@@ -36,8 +34,8 @@
             <span>Ngày bắt đầu</span>
             <p class="fw-bolder">
               {{
-                inspectionPlanDetail.inspectionPlan.startDate
-                  | date : "dd/MM/yyyy"
+              inspectionPlanDetail.inspectionPlan.startDate
+                | date : "dd/MM/yyyy"
               }}
             </p>
           </div>
@@ -55,8 +53,8 @@
             <span>Ngày kết thúc</span>
             <p class="fw-bolder">
               {{
-                inspectionPlanDetail.inspectionPlan.endDate
-                  | date : "dd/MM/yyyy"
+              inspectionPlanDetail.inspectionPlan.endDate
+                | date : "dd/MM/yyyy"
               }}
             </p>
           </div>
@@ -72,7 +70,7 @@
           </div>
           <div class="col-md-3">
             <span>Trạng thái</span>
-            <br />
+            <br/>
             <p-tag
               class="status"
               [severity]="
@@ -98,20 +96,20 @@
                 <span>Tên tài liệu: </span>
                 <span class="fw-bold">{{
                   inspectionPlanDetail.inspectionPlan.documents[0]?.documentName
-                }}</span>
+                  }}</span>
               </p>
               <p class="mb-0">
                 <span>Loại tài liệu: </span>
                 <span class="fw-bold">{{
                   inspectionPlanDetail.inspectionPlan.documents[0]?.documentType
                     .documentTypeName
-                }}</span>
+                  }}</span>
               </p>
               <p class="mb-0">
                 <span>Mã tài liệu: </span>
                 <span class="fw-bold">{{
                   inspectionPlanDetail.inspectionPlan.documents[0]?.documentCode
-                }}</span>
+                  }}</span>
               </p>
             </div>
             <div class="col-md-4 text-end">
@@ -120,14 +118,14 @@
                 <span class="fw-bold">{{
                   inspectionPlanDetail.inspectionPlan.documents[0]?.size
                     | fileSizePipe : "MB"
-                }}</span>
+                  }}</span>
               </p>
               <p class="mb-0">
                 <span>Ngày tạo: </span>
                 <span class="fw-bold">{{
                   inspectionPlanDetail.inspectionPlan.documents[0]?.uploadedDate
                     | date : "MM/dd/yyyy"
-                }}</span>
+                  }}</span>
               </p>
             </div>
           </div>
