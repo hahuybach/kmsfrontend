@@ -1,34 +1,32 @@
 <p-toast position="top-right" key="deleteComplete"></p-toast>
 <p-toast position="top-right" key="deleteInComplete"></p-toast>
+<app-inspection-plan-inspector-popup
+  (popupInspectorVisibleChange)="changeInspectorVisible()"
+  [popupInspectorVisible]="popupInspectorVisible"
+  [inspectorList]="inspectorList"
+  (selectedInspectorsList)="getInspectorIds($event)"
+  [chiefList]="chiefList"
+></app-inspection-plan-inspector-popup>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Xác nhận"
+  rejectLabel="Hủy bỏ"
+></p-confirmDialog>
+<app-loading-complete-dialog
+  [visible]="createLoadingVisibility"
+  [completed]="createComplete"
+  [header]="'Tạo mới quyết định kiểm tra'"
+  [progress]="'Đang tạo quyết định kiểm tra'"
+  [complete]="'Tạo quyết định kiểm tra thành công'"
+>
+</app-loading-complete-dialog>
 <div class="container-fluid">
+  <h5 class="mat-headline-5 fw-medium">Tạo mới quyết định kiểm tra</h5>
   <div class="row create-inspection-plan">
-    <h5 class="mat-headline-5 mb-3 fw-bold">Tạo mới quyết định kiểm tra</h5>
-    <app-inspection-plan-inspector-popup
-      (popupInspectorVisibleChange)="changeInspectorVisible()"
-      [popupInspectorVisible]="popupInspectorVisible"
-      [inspectorList]="inspectorList"
-      (selectedInspectorsList)="getInspectorIds($event)"
-      [chiefList]="chiefList"
-    ></app-inspection-plan-inspector-popup>
-    <p-confirmDialog
-      [style]="{ width: '50vw' }"
-      acceptLabel="Xác nhận"
-      rejectLabel="Hủy bỏ"
-    ></p-confirmDialog>
-    <app-loading-complete-dialog
-      [visible]="createLoadingVisibility"
-      [completed]="createComplete"
-      [header]="'Tạo mới quyết định kiểm tra'"
-      [progress]="'Đang tạo quyết định kiểm tra'"
-      [complete]="'Tạo quyết định kiểm tra thành công'"
-    >
-    </app-loading-complete-dialog>
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
       <div class="form-content col-md-8 mb-2">
-        <div class="inspection-plan-name mb-3">
-          <label class="fw-medium"
-            >Tên quyết định kiểm tra<span class="p-error">*</span></label
-          >
+        <div class="inspection-plan-name mb-2">
+          <label class="fw-medium mb-1">Tên quyết định kiểm tra<span class="p-error">*</span></label>
           <input
             type="text"
             pInputText
@@ -53,10 +51,8 @@
             </span>
           </div>
         </div>
-        <div class="inspection-plan-description mb-3">
-          <label class="fw-medium"
-            >Chi tiết<span class="p-error">*</span></label
-          >
+        <div class="inspection-plan-description mb-2">
+          <label class="fw-medium mb-1">Chi tiết<span class="p-error">*</span></label>
           <textarea
             type="text"
             pInputTextarea
@@ -76,11 +72,9 @@
             </span>
           </div>
         </div>
-        <div class="inspection-plan-school mb-3 row">
-          <div class="col-md-6">
-            <label class="fw-medium"
-              >Trường kiểm tra<span class="p-error">*</span></label
-            >
+        <div class="inspection-plan-school row">
+          <div class="col-md-6 mb-2">
+            <label class="fw-medium mb-1">Trường kiểm tra<span class="p-error">*</span></label>
             <p-dropdown
               class="full-width-dropdown"
               [options]="schoolList"
@@ -104,10 +98,8 @@
               </span>
             </div>
           </div>
-          <div class="col-md-6">
-            <label class="fw-medium"
-              >Trưởng đoàn kiểm tra<span class="p-error">*</span></label
-            >
+          <div class="col-md-6 mb-2">
+            <label class="fw-medium mb-1">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
             <p-dropdown
               class="full-width-dropdown"
               [options]="eligibleChiefList"
@@ -132,11 +124,9 @@
             </div>
           </div>
         </div>
-        <div class="row mb-3">
-          <div class="col-md-3">
-            <label for="startDate" class="fw-medium"
-              >Ngày bắt đầu<span class="p-error">*</span></label
-            >
+        <div class="row">
+          <div class="col-md-3 mb-2">
+            <label for="startDate" class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
             <input
               id="startDate"
               class="form-control"
@@ -147,10 +137,8 @@
               (change)="onStartDateChange()"
             />
           </div>
-          <div class="col-md-3">
-            <label for="endDate" class="fw-medium"
-              >Ngày kết thúc<span class="p-error">*</span></label
-            >
+          <div class="col-md-3 mb-2">
+            <label for="endDate" class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
             <input
               id="endDate"
               class="form-control"
@@ -188,110 +176,102 @@
           </span>
         </div>
       </div>
-      <div class="document" formGroupName="documentInspectionPlanDto">
-        <h6 class="fw-bold">Tài liệu công văn</h6>
-        <div class="row document-item mb-2">
-          <div class="d-flex flex-row">
-            <div class="col-md-4 pe-3">
-              <label class="fw-medium"
-                >Tên tài liệu<span class="p-error">*</span></label
-              ><br />
-              <input
-                pInputText
-                placeholder="Điền tên tài liệu"
-                formControlName="documentName"
-              />
-              <div
-                *ngIf="
+      <h6 class="mat-headline-6 fw-medium">Tài liệu công văn</h6>
+      <div class="document col-md-8" formGroupName="documentInspectionPlanDto">
+        <div class="row document-item">
+          <div class="col-md-8 mb-2">
+            <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label>
+            <input
+              pInputText
+              class="w-100"
+              placeholder="Điền tên tài liệu"
+              formControlName="documentName"
+            />
+            <div
+              *ngIf="
                   documentNameControls?.invalid &&
                   (documentNameControls?.touched || documentNameControls?.dirty)
                 "
-              >
+            >
                 <span
                   *ngIf="documentNameControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng điền tên tài liệu
                 </span>
-                <span
-                  *ngIf="documentNameControls?.errors?.['maxLength']"
-                  class="p-error"
-                >
+              <span
+                *ngIf="documentNameControls?.errors?.['maxLength']"
+                class="p-error"
+              >
                   Tên tài liệu quá dài
                 </span>
-              </div>
             </div>
-            <div class="col-md-2 pe-3">
-              <label class="fw-medium"
-                >Mã tài liệu<span class="p-error">*</span></label
-              ><br />
-              <input
-                pInputText
-                placeholder="Điền mã tài liệu"
-                formControlName="documentCode"
-              />
-              <div
-                *ngIf="
+          </div>
+          <div class="col-md-4 mb-2">
+            <label class="fw-medium mb-1">Mã tài liệu<span class="p-error">*</span></label>
+            <input
+              pInputText
+              placeholder="Điền mã tài liệu"
+              formControlName="documentCode"
+            />
+            <div
+              *ngIf="
                   documentCodeControls?.invalid &&
                   (documentCodeControls?.touched || documentCodeControls?.dirty)
                 "
-              >
+            >
                 <span
                   *ngIf="documentCodeControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng điền mã tài liệu
                 </span>
-                <span
-                  *ngIf="documentCodeControls?.errors?.['maxLength']"
-                  class="p-error"
-                >
-                  Mã tài liệu quá dài
+              <span
+                *ngIf="documentCodeControls?.errors?.['maxLength']"
+                class="p-error">
+                Mã tài liệu quá dài
                 </span>
-              </div>
             </div>
-            <div class="col-md-6">
-              <label class="fw-medium"
-                >Tài liệu<span class="p-error">*</span></label
-              ><br />
-              <div class="input-file">
-                <input
-                  type="file"
-                  #fileInput
-                  style="display: none"
-                  (change)="handleFileInputChange(fileInput)"
-                />
-                <input
-                  pInputText
-                  readonly
-                  class="col-md-10"
-                  placeholder="{{
+          </div>
+          <div class="col-md-12">
+            <label class="fw-medium mb-1">Tài liệu<span class="p-error">*</span></label>
+            <div class="input-file">
+              <input
+                type="file"
+                #fileInput
+                style="display: none"
+                (change)="handleFileInputChange(fileInput)"
+              />
+              <input
+                pInputText
+                readonly
+                class="col-md-9"
+                placeholder="{{
                     fileInputPlaceholders
                       ? fileInputPlaceholders
                       : 'Chọn file để tải lên'
                   }}"
-                />
-                <button
-                  type="button"
-                  pButton
-                  label="Chọn tệp"
-                  (click)="fileInput.click()"
-                  class="col-md-2"
-                ></button>
-              </div>
-              <div
-                *ngIf="
+              />
+              <button
+                type="button"
+                pButton
+                label="Chọn tệp"
+                (click)="fileInput.click()"
+                class="col-md-3"
+              ></button>
+            </div>
+            <div
+              *ngIf="
                   documentFileControls?.invalid &&
                   (documentFileControls?.touched || documentFileControls?.dirty)
                 "
-              >
+            >
                 <span
                   *ngIf="documentFileControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng chọn tài liệu công văn
                 </span>
-              </div>
             </div>
           </div>
         </div>

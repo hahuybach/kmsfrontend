@@ -14,15 +14,15 @@
   <button type="button" pButton class="create-inspector" (click)="changeInspectorVisible()">Tạo ban KTNB</button>
 </div>
 <ng-template #inspectorList>
-  <div class="list-inspector d-flex flex-column">
+  <div class="list-inspector h-100 d-flex flex-column">
     <div class="list-inspector-header px-3 text-center">
-      <h5 class="mx-auto mt-2">Danh sách thanh tra</h5>
+      <h6 class="mat-headline-6 mx-auto mt-2 mb-1">Danh sách thanh tra</h6>
       <div class="total">
-        <span class="mx-auto" *ngIf="selectedInspectors">Tổng số: {{selectedInspectors.length || 0}}</span>
+        <label class="mx-auto mb-2" *ngIf="selectedInspectors">Tổng số: {{selectedInspectors.length || 0}}</label>
       </div>
     </div>
 
-    <div class="card mt-2 flex-fill">
+    <div class="card mt-2">
       <div class="scrollable-container overflow-auto d-flex flex-column justify-content-between h-100">
         <ng-container *ngFor="let item of selectedInspectors; let i = index">
           <div *ngIf="selectedInspectors" class="mt-1 my-2">
