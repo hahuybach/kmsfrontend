@@ -23,7 +23,7 @@
           routerLinkActive="active"
           *ngIf="isPrincipal || isDirector || isSchoolNormalEmp"
         >
-          <a class="" [routerLink]="['/issuelist']">
+          <a class="" [routerLink]="['/issue']">
             <div>
               <i class="bi bi-list-check"></i>
               &nbsp; Kế hoạch kiểm tra
@@ -35,7 +35,7 @@
           routerLinkActive="active"
           *ngIf="isDirector || isPrincipal"
         >
-          <a class="" [routerLink]="['/schoolinitiationplan']">
+          <a class="" [routerLink]="['/school-initiation-plan']">
             <div>
               <i class="bi bi-clock"></i>
               &nbsp; Kế hoạch thực hiện
@@ -47,7 +47,7 @@
           routerLinkActive="active"
           *ngIf="isPrincipal || isDirector"
         >
-          <a class="" [routerLink]="['/inspection_plan']">
+          <a class="" [routerLink]="['/inspection-plan']">
             <div>
               <i class="bi bi-file-earmark-person"></i>
               &nbsp; Thanh tra
@@ -59,7 +59,7 @@
           routerLinkActive="active"
 
         >
-          <a class="" [routerLink]="['/guidanceDocument']" *ngIf="!isAdmin">
+          <a class="" [routerLink]="['/guidance-document']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-clipboard2-check"></i>
               &nbsp; Văn bản bổ sung
@@ -67,7 +67,7 @@
           </a>
         </li>
         <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
-          <a class="" [routerLink]="['/createtemplate']">
+          <a class="" [routerLink]="['/create-template']">
             <div>
               <i class="bi bi-folder-plus"></i>
               &nbsp; Tạo template
@@ -103,7 +103,7 @@
           routerLinkActive="active"
           *ngIf="isDirector || isAdmin || isViceDirector || isSpecialist "
         >
-          <a class="" [routerLink]="['/schoolList']">
+          <a class="" [routerLink]="['/school']">
             <div>
               <i class="bi bi-building"></i>
               &nbsp; Danh sách trường
@@ -124,7 +124,7 @@
           routerLinkActive="active"
           *ngIf="isPrincipal || isDirector || isAdmin"
         >
-          <a class="" [routerLink]="['/userList']">
+          <a class="" [routerLink]="['/user']">
             <div>
               <i class="bi bi-people"></i>
               &nbsp; Danh sách người dùng

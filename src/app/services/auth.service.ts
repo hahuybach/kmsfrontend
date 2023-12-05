@@ -22,15 +22,17 @@ export class AuthService {
   logout() {
     const jwtCookie = document.cookie;
     document.cookie =
-      'jwtToken=; exp=Thu, 01 Jan 1970 00:00:00 UTC; iat=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      'jwtToken=; exp=; iat=; sub=; roles=; path=/;';
     console.log('logout');
     console.log(this.getJwtFromCookie());
   }
 
   isLoggedIn(): boolean {
     const jwt = this.getJwtFromCookie();
+    console.log(jwt);
     const exp: any = this.getExpireFromCookie();
-    if (jwt == null || exp == '') {
+    console.log(exp);
+    if (jwt == '' || exp == '') {
       return false;
     }
     const expireAt = JSON.parse(exp);
@@ -54,13 +56,12 @@ export class AuthService {
 
   setJwtInCookie(jwt: string) {
     const decodedToken = this.getDecodedJWT(jwt);
+    console.log()
     document.cookie = `exp=${decodedToken.exp}`;
-    console.log(decodedToken.exp)
     document.cookie = `iat=${decodedToken.iat}`;
-    console.log(decodedToken.iat)
     document.cookie = `sub=${decodedToken.sub}`;
-    console.log(decodedToken.sub)
     document.cookie = `roles=${decodedToken.roles}`;
+    console.log(decodedToken.roles);
     document.cookie = `jwtToken=${jwt}`;
   }
 

@@ -1,0 +1,89 @@
+<p-dialog
+  header="Xem tài liệu"
+  [(visible)]="pdfPreviewVisibility"
+  [style]="{ width: '90vw', height: '100vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+    <div class="spinner-border text-center" role="status"></div>
+    <p>Đang tải...</p>
+  </div>
+  <ng-template #pdfIsLoaded>
+    <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
+  </ng-template>
+</p-dialog>
+<h5 class="mat-headline-5 fw-medium">Chi tiết văn bản chỉ đạo</h5>
+
+<div class="row">
+    <div class="col-md-7 mt-5">
+        <div class="m-3">
+            <span class="text-black-50">Tiêu đề</span>
+        </div>
+        <div class="m-3">
+            <span class="font-weight-bold">{{guidanceDocument.guidanceDocumentName}}</span>
+        </div>
+    </div>
+    <div class="col-md-2 mt-5">
+        <div class="m-3">
+            <span class="text-black-50">Người đăng</span>
+        </div>
+        <div class="m-3">
+            <span class="font-weight-bold">{{guidanceDocument.accountDto?.user?.fullName}}</span>
+
+        </div>
+    </div>
+
+  <div class="col-md-2 mt-5">
+    <div class="m-3">
+      <span class="text-black-50">Ngày tạo</span>
+    </div>
+    <div class="m-3">
+      <span class="font-weight-bold">{{guidanceDocument.createdDate | date : "dd/MM/yyyy"}} </span>
+    </div>
+  </div>
+
+    <div class="col-md-7 mt-2">
+        <div class="m-3">
+            <span class="text-black-50">Lời nhắn</span>
+        </div>
+        <div class="m-3">
+            <textarea readonly class="font-weight-bold form-control">{{guidanceDocument.description}}</textarea>
+        </div>
+    </div>
+  <div class="col-md-4 mt-2">
+    <div class="m-3">
+      <span class="text-black-50">Kế hoạch kiểm tra</span>
+    </div>
+    <div class="m-3">
+      <span class="font-weight-bold">{{guidanceDocument.issueDto?.issueName}} </span>
+
+    </div>
+  </div>
+
+
+</div>
+
+
+<div class="card mb-5">
+    <p-table  [value]="guidanceDocument.documentDtos || []" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Mã tài liệu</th>
+                <th>Tên tài liệu</th>
+                <th>File</th>
+                <th>Dung lượng</th>
+                <th>Ngày tạo</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-document>
+            <tr>
+                <td>{{ document.documentCode }}</td>
+                <td>{{ document.documentName }}</td>
+                <td (click)="openNewTab(document.documentLink)"><img src="../../../../../assets/img/pdf.png" alt=""/></td>
+                <td>{{ document.sizeFormat }}</td>
+                <td>{{ document.uploadedDate | date : "MM/dd/yyyy" }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

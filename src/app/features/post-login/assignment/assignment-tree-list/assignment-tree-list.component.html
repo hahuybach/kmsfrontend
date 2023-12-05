@@ -3,245 +3,288 @@
   href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css"
 />
 <p-toast key="error" position="top-right"></p-toast>
-<!-- <p-toast key="errorAssDetail" position="top-right"></p-toast> -->
-<h2>Tra cứu tài liệu các trường</h2>
-
-<div class="row mt-4">
-  <div class="form-group col-md-7" *ngIf="!advanceSearch">
-    <input
-      type="text"
-      name="globalSearch"
-      id="globalSearch"
-      class="form-control small-input fontAwesome mb-3"
-      [(ngModel)]="assignmentName"
-      (keyup)="loadDocuments()"
-      placeholder="&#xF002; Tra cứu nhanh"
-    />
-  </div>
-  <div *ngIf="advanceSearch" class="col-md-10">
-    <p-dropdown
-      [options]="issueDropDowns"
-      [(ngModel)]="currentIssueSelected"
-      optionLabel="issueName"
-      [filter]="true"
-      filterBy="issueName"
-      [showClear]="true"
-      placeholder="Chọn 1 kế hoạch kiểm tra"
-      (onChange)="loadDocuments()"
-    >
-      <ng-template pTemplate="selectedItem">
-        <div class="flex align-items-center gap-2" *ngIf="currentIssueSelected">
-          <div>{{ currentIssueSelected.issueName }}</div>
-        </div>
-      </ng-template>
-      <ng-template let-issue pTemplate="item">
-        <div class="flex align-items-center gap-2">
-          <div>{{ issue.issueName }}</div>
-        </div>
-      </ng-template>
-    </p-dropdown>
-    <p-dropdown
-      [options]="schools"
-      [(ngModel)]="selectedSchool"
-      optionLabel="schoolName"
-      [filter]="true"
-      filterBy="schoolName"
-      [showClear]="true"
-      placeholder="Chọn 1 trường"
-      (onChange)="loadDocuments()"
-      *ngIf="!isPrincipal"
-    >
-      <ng-template pTemplate="selectedItem">
-        <div class="flex align-items-center gap-2" *ngIf="selectedSchool">
-          <div>{{ selectedSchool.schoolName }}</div>
-        </div>
-      </ng-template>
-      <ng-template let-school pTemplate="item">
-        <div class="flex align-items-center gap-2">
-          <div>{{ school.schoolName }}</div>
-        </div>
-      </ng-template>
-    </p-dropdown>
-    <p-dropdown
-      placeholder="Chọn 1 trạng thái"
-      [options]="statuses"
-      [(ngModel)]="selectedStatus"
-      [showClear]="true"
-      (onChange)="loadDocuments()"
-    ></p-dropdown>
-    <div class="row mt-3">
-      <div class="col-md-5">
-        <label>Tên kế hoạch</label>
-        <input
-          class="form-control"
-          [(ngModel)]="assignmentName"
-          name="planName"
-          id="planName"
-          (keyup)="loadDocuments()"
-          placeholder="(VD): VIMECO Mẫu công việc 2023 - 2024"
-        />
-      </div>
-
-      <div class="col-md-5"></div>
-    </div>
-  </div>
-  <div class="col-md-2">
-    <button (click)="onAdvanceSearch()" class="btn btn-primary">
-      {{ advanceSearchButtonText }}
-    </button>
-  </div>
-</div>
-<div class="container">
-  <table class="table table-hover table-responsive table-fit">
-    <thead>
-      <tr>
-        <th (click)="onSort('assignmentName')">
-          <div class="header-container">
-            <span class="icon-text">Tên công việc tổng</span>
-            <i
-              class="bi bi-sort-up"
-              *ngIf="sortBy === 'assignmentName' && sortDirection === 'asc'"
-            ></i>
-            <i
-              class="bi bi-sort-down"
-              *ngIf="sortBy === 'assignmentName' && sortDirection === 'desc'"
-            ></i>
-          </div>
-        </th>
-        <th (click)="onSort('issue.createdDate')">
-          <div class="header-container">
-            <span class="icon-text">Thuộc kế hoạch kiểm tra</span>
-            <i
-              class="bi bi-sort-up"
-              *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'asc'"
-            ></i>
-            <i
-              class="bi bi-sort-down"
-              *ngIf="sortBy === 'issue.createdDate' && sortDirection === 'desc'"
-            ></i>
-          </div>
-        </th>
-
-        <th (click)="onSort('school.schoolName')">
-          <div class="header-container">
-            <span class="icon-text">Trường</span>
-            <i
-              class="bi bi-sort-up"
-              *ngIf="sortBy === 'school.schoolName' && sortDirection === 'asc'"
-            ></i>
-            <i
-              class="bi bi-sort-down"
-              *ngIf="sortBy === 'school.schoolName' && sortDirection === 'desc'"
-            ></i>
-          </div>
-        </th>
-        <th (click)="onSort('status')">
-          <div class="header-container">
-            <span class="icon-text">Trạng thái</span>
-            <i
-              class="bi bi-sort-up"
-              *ngIf="sortBy === 'status' && sortDirection === 'asc'"
-            ></i>
-            <i
-              class="bi bi-sort-down"
-              *ngIf="sortBy === 'status' && sortDirection === 'desc'"
-            ></i>
-          </div>
-        </th>
-
-        <th></th>
-      </tr>
-      <span *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</span>
-    </thead>
-    <tbody *ngIf="taskTrees && taskTrees.length > 0">
-      <tr
-        *ngFor="
-          let task of taskTrees
-            | paginate
-              : {
-                  itemsPerPage: pageSize,
-                  currentPage: pageNo,
-                  totalItems: totalElements
-                };
-          let i = index
-        "
-      >
-        <td>{{ task.rootAssignmentName }}</td>
-        <td>{{ task.issue?.issueName }}</td>
-        <td>{{ task.school?.schoolName }}</td>
-        <td>{{ task.rootAssignmentStatus?.statusName }}</td>
-        <td>
-          <i
-            class="bi bi-info-circle-fill"
-            (click)="
-              onDetail(
-                task.school?.schoolId,
-                task.issue?.issueId,
-                task.rootAssignmentStatus?.statusId
-              )
-            "
-          ></i>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="d-flex justify-content-end mt-3">
-    <div
-      class="d-flex justify-content-center"
-      *ngIf="taskTrees && taskTrees.length > 0"
-    >
-      <label for="pageNo" style="margin-right: 10px">Trang: </label>
+<h5 class="mat-headline-5 fw-medium">Tra cứu tài liệu các trường</h5>
+<div class="table-container">
+  <div
+    class="my-4 row advance-search container-fluid d-flex flex-row justify-content-between"
+  >
+    <div class="form-group col-md-4" *ngIf="!advanceSearch">
       <input
-        class="form-control super-small-input mr-3"
-        min="1"
-        type="number"
-        id="pageNo"
-        name="pageNo"
-        max="{{ maxPage }} "
-        style="margin-right: 20px"
-        (keyup)="[maxPageOnKeyUp(), loadDocuments()]"
-        (mouseup)="[maxPageOnKeyUp(), loadDocuments()]"
-        [(ngModel)]="pageNo"
+        type="text"
+        name="globalSearch"
+        id="globalSearch"
+        class="form-control small-input fontAwesome mb-3"
+        [(ngModel)]="assignmentName"
+        (keyup)="loadDocuments()"
+        pInputText
+        placeholder="&#xF002; Tra cứu nhanh"
       />
-
-      <label for="pageNo" style="margin-right: 10px"
-        >Số bản ghi trên 1 trang:
-      </label>
-
-      <select
-        (change)="loadDocuments()"
-        class="form-control super-small-input ng-untouched ng-pristine ng-valid"
-        [(ngModel)]="pageSize"
-      >
-        <option *ngFor="let option of recordPerPageOption" [value]="option">
-          {{ option }}
-        </option>
-      </select>
-
-      <!--      <input class="form-control super-small-input"-->
-      <!--             min="1"-->
-      <!--             type="number"-->
-      <!--             id="pageSize"-->
-      <!--             name="pageSize"-->
-      <!--             style=" margin-right: 20px"-->
-      <!--             max="{{maxPage}} "-->
-      <!--             (keyup)="loadGuidanceDocuments()"-->
-      <!--             (mouseup)=" loadGuidanceDocuments()"-->
-
-      <!--             [(ngModel)]="pageSize"-->
-      <!--      >-->
     </div>
-
-    <div class="" *ngIf="taskTrees && taskTrees.length > 0">
-      <pagination-controls
-        previousLabel="Trước"
-        nextLabel="Sau"
-        (pageChange)="[onTableDataChange($event), maxPageOnKeyUp()]"
-      >
-      </pagination-controls>
+    <div *ngIf="advanceSearch" class="col-md-10">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="fw-medium">Tên công việc</label>
+          <input
+            class="form-control"
+            [(ngModel)]="assignmentName"
+            name="planName"
+            id="planName"
+            (keyup)="loadDocuments()"
+            pInputText
+            placeholder="(VD): VIMECO Mẫu công việc 2023 - 2024"
+          />
+        </div>
+        <div class="col-md-6">
+          <label class="fw-medium">Kế hoạch</label>
+          <p-dropdown
+            class="w-100"
+            [options]="issueDropDowns"
+            [(ngModel)]="currentIssueSelected"
+            optionLabel="issueName"
+            [filter]="true"
+            filterBy="issueName"
+            [showClear]="true"
+            placeholder="Chọn 1 kế hoạch kiểm tra"
+            (onChange)="loadDocuments()"
+          >
+            <ng-template pTemplate="selectedItem">
+              <div
+                class="flex align-items-center gap-2"
+                *ngIf="currentIssueSelected"
+              >
+                <div>{{ currentIssueSelected.issueName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-issue pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ issue.issueName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div
+      class="text-end justify-content-end"
+      [ngClass]="{
+        'col-md-2 d-flex align-items-end': advanceSearch,
+        'col-md-3 ': !advanceSearch
+      }"
+    >
+      <button (click)="onAdvanceSearch()" pButton>
+        {{ advanceSearchButtonText }}
+      </button>
+    </div>
+    <div *ngIf="advanceSearch" class="col-md-10 mt-2">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="fw-medium">Tên trường</label>
+          <p-dropdown
+            [options]="schools"
+            [(ngModel)]="selectedSchool"
+            optionLabel="schoolName"
+            [filter]="true"
+            filterBy="schoolName"
+            [showClear]="true"
+            placeholder="Chọn 1 trường"
+            (onChange)="loadDocuments()"
+            *ngIf="!isPrincipal"
+          >
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="selectedSchool">
+                <div>{{ selectedSchool.schoolName }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-school pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ school.schoolName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-md-6">
+          <label class="fw-medium">Trạng thái</label>
+          <p-dropdown
+            placeholder="Chọn 1 trạng thái"
+            [options]="statuses"
+            [(ngModel)]="selectedStatus"
+            [showClear]="true"
+            (onChange)="loadDocuments()"
+          >
+            <ng-template let-status pTemplate="item">
+              <p-tag
+                [rounded]="true"
+                [severity]="getStatusSeverity(status.value)"
+                [value]="status.label"
+              ></p-tag>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="advanceSearch"
+      class="d-flex justify-content-end align-items-end col-md-2"
+    >
+      <button pButton class="reset-button" (click)="reset()">Reset</button>
     </div>
   </div>
+  <div class="table-content">
+    <table class="table p-2 table-hover align-middle">
+      <thead>
+        <tr>
+          <th (click)="onSort('assignmentName')">
+            <div class="header-container">
+              <span class="icon-text">Tên công việc tổng</span>
+              <i
+                class="bi bi-sort-up"
+                *ngIf="sortBy === 'assignmentName' && sortDirection === 'asc'"
+              ></i>
+              <i
+                class="bi bi-sort-down"
+                *ngIf="sortBy === 'assignmentName' && sortDirection === 'desc'"
+              ></i>
+            </div>
+          </th>
+          <th (click)="onSort('issue.createdDate')">
+            <div class="header-container">
+              <span class="icon-text">Kế hoạch kiểm tra</span>
+              <i
+                class="bi bi-sort-up"
+                *ngIf="
+                  sortBy === 'issue.createdDate' && sortDirection === 'asc'
+                "
+              ></i>
+              <i
+                class="bi bi-sort-down"
+                *ngIf="
+                  sortBy === 'issue.createdDate' && sortDirection === 'desc'
+                "
+              ></i>
+            </div>
+          </th>
 
-  <p-toast key="paging" position="bottom-right"></p-toast>
-  <p-toast key="issueId" position="top-right"></p-toast>
+          <th (click)="onSort('school.schoolName')">
+            <div class="header-container">
+              <span class="icon-text">Trường</span>
+              <i
+                class="bi bi-sort-up"
+                *ngIf="
+                  sortBy === 'school.schoolName' && sortDirection === 'asc'
+                "
+              ></i>
+              <i
+                class="bi bi-sort-down"
+                *ngIf="
+                  sortBy === 'school.schoolName' && sortDirection === 'desc'
+                "
+              ></i>
+            </div>
+          </th>
+          <th (click)="onSort('status')">
+            <div class="header-container">
+              <span class="icon-text">Trạng thái</span>
+              <i
+                class="bi bi-sort-up"
+                *ngIf="sortBy === 'status' && sortDirection === 'asc'"
+              ></i>
+              <i
+                class="bi bi-sort-down"
+                *ngIf="sortBy === 'status' && sortDirection === 'desc'"
+              ></i>
+            </div>
+          </th>
+          <th></th>
+        </tr>
+        <span *ngIf="totalElements == 0"
+          >Không tìm thấy bản ghi nào phù hợp</span
+        >
+      </thead>
+      <tbody *ngIf="taskTrees && taskTrees.length > 0">
+        <tr
+          *ngFor="
+            let task of taskTrees
+              | paginate
+                : {
+                    itemsPerPage: pageSize,
+                    currentPage: pageNo,
+                    totalItems: totalElements
+                  };
+            let i = index
+          "
+        >
+          <td
+            class="py-4 px-2"
+            pTooltip="{{ task.rootAssignmentName }}"
+            tooltipPosition="top"
+          >
+            {{ task.rootAssignmentName }}
+          </td>
+          <td
+            class="py-4 px-2"
+            pTooltip="{{ task.issue?.issueName }}"
+            tooltipPosition="top"
+          >
+            {{ task.issue?.issueName }}
+          </td>
+          <td
+            class="py-4 px-2"
+            pTooltip="{{ task.school?.schoolName }}"
+            tooltipPosition="top"
+          >
+            {{ task.school?.schoolName }}
+          </td>
+          <td class="py-4 px-2">
+            <p-tag
+              [severity]="
+                getStatusSeverity(task.rootAssignmentStatus?.statusId)
+              "
+              [value]="task.rootAssignmentStatus?.statusName"
+            ></p-tag>
+          </td>
+          <td class="py-4 px-2">
+            <button
+              class="action-button"
+              type="button"
+              (click)="
+                onDetail(
+                  task.school?.schoolId,
+                  task.issue?.issueId,
+                  task.rootAssignmentStatus?.statusId
+                )
+              "
+            >
+              <i class="bi bi-info-circle-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center table-footer">
+      <div class="me-3 mt-3" *ngIf="taskTrees && taskTrees.length > 0">
+        <pagination-controls
+          previousLabel=""
+          nextLabel=""
+          (pageChange)="[onTableDataChange($event), maxPageOnKeyUp()]"
+        >
+        </pagination-controls>
+      </div>
+      <div
+        class="d-flex justify-content-center align-items-center"
+        *ngIf="taskTrees && taskTrees.length > 0"
+      >
+        <select
+          (change)="loadDocuments()"
+          class="form-select ng-untouched ng-pristine ng-valid"
+          [(ngModel)]="pageSize"
+        >
+          <option *ngFor="let option of recordPerPageOption" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <p-toast key="paging" position="bottom-right"></p-toast>
+    <p-toast key="issueId" position="top-right"></p-toast>
+  </div>
 </div>

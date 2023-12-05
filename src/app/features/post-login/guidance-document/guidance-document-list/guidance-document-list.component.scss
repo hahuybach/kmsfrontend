@@ -1,0 +1,196 @@
+@import "../../../../../assets/scss/base";
+
+:host ::ng-deep {
+  .p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+
+  .p-tag {
+    border-radius: 20px;
+  }
+}
+
+.p-inputtext {
+  border-radius: 8px;
+}
+
+.loading{
+  z-index: 100;
+}
+.fontAwesome {
+  font-family: Arial, 'Font Awesome 5 Free'
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+}
+
+.action-button {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background: $primary;
+
+  i {
+    color: white;
+  }
+}
+
+
+::ng-deep .p-dropdown {
+  width: 100%;
+  border-radius: 8px;
+}
+
+::ng-deep ul {
+  padding: 0;
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+.table-container {
+  border: 0.8px solid #d2d2d2;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  .advance-search {
+  }
+}
+
+.table-content {
+  margin-bottom: 0;
+  .table {
+    margin-bottom: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    thead {
+      font-size: 17px;
+      border-top: 0.8px solid #eef0f3;
+      tr {
+        th {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          border-bottom: none;
+          background-color: #f8f9fa;
+          font-weight: 600;
+          color: #495057;
+          padding-bottom: 20px !important;
+        }
+      }
+    }
+
+    tr {
+      border: none;
+    }
+
+    td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+      border: none;
+    }
+
+    th:first-child, td:first-child {
+      width: 5%;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+      width: 40%;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+      width: 25%;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
+      width: 10%;
+    }
+
+    th:nth-child(5), td:nth-child(5) {
+      width: 15%;
+    }
+
+    th:last-child, td:last-child {
+      width: 5%;
+    }
+  }
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #e9ecef;
+}
+
+.table-footer {
+  background-color: white;
+  border-radius: 0 0 8px 8px;
+  select {
+    margin-top: 8px;
+    option {
+      font-size: 20px;
+      background-color: white !important;
+      :hover {
+        background-color: $primary-hover;
+      }
+    }
+  }
+
+  ::ng-deep .ngx-pagination {
+    width: auto !important;
+    display: flex;
+    font-size: 20px;
+    margin-bottom: 20px !important;
+    .small-screen {
+      display: none;
+    }
+    .pagination-previous, .pagination-next {
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    li {
+      margin-right: 5px;
+      margin-left: 5px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      a {
+        text-decoration: none !important;
+        background: none !important;
+      }
+    }
+
+    .current {
+      background-color: $primary !important;
+      opacity: 0.5;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.reset-button{
+  background-color: white;
+  color: $primary;
+  border: 1px solid $primary;
+}
+

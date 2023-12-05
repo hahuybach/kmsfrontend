@@ -1,0 +1,611 @@
+<span>breadcrumb here</span>
+<!-- {{ issue | json }} -->
+<h5 class="mat-headline-5 fw-medium">Cập nhật kế hoạch kiểm tra</h5>
+<form
+  [formGroup]="issueForm"
+  class="row issue-content no-gutter-row"
+  *ngIf="issue"
+  (ngSubmit)="onSubmit()"
+>
+  <p-toast key="toastUpdateIssue"></p-toast>
+  <p-confirmDialog
+    key="confirmUpdateIssue"
+    [style]="{ width: '45vw' }"
+    rejectLabel="Hủy"
+    acceptLabel="Đồng ý"
+  ></p-confirmDialog>
+  <p-dialog
+    header="Danh sách đoàn kiểm tra"
+    [(visible)]="popupInspectorVisible"
+    [modal]="true"
+    [style]="{ width: '80vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div class="card">
+      <p-table
+        #dt
+        [value]="inspectorLeftList"
+        [(selection)]="selectedInspectors"
+        dataKey="accountId"
+        [rowHover]="true"
+        [rows]="5"
+        [showCurrentPageReport]="true"
+        [paginator]="true"
+        currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
+        [filterDelay]="0"
+        [globalFilterFields]="['user.fullName ', 'role', 'school.schoolName']"
+      >
+        <ng-template pTemplate="caption">
+          <div
+            class="table-header d-flex justify-content-between align-items-center"
+          >
+            <span class="p-input-icon-left">
+              <i class="fa-solid fa-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Tra cứu theo tên, chức vụ, trường"
+              />
+            </span>
+            <div>
+              <button
+                *ngIf="!filterVisible"
+                pButton
+                (click)="changeFilterVisible(true)"
+                class="advance-search"
+              >
+                Tra cứu nâng cao
+              </button>
+              <button
+                *ngIf="filterVisible"
+                pButton
+                (click)="changeFilterVisible(false)"
+                class="advance-search"
+              >
+                Ẩn tra cứu nâng cao
+              </button>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr *ngIf="filterVisible">
+            <th class="th-id"></th>
+            <th class="th-id"></th>
+            <th>
+              <p-columnFilter
+                type="text"
+                field="user.fullName"
+                pTooltip="(VD): Nguyễn Văn A"
+                tooltipPosition="top"
+                placeholder="Tên"
+              ></p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter
+                type="text"
+                field="roles[0].roleName"
+                pTooltip="(VD): Hiệu trưởng"
+                tooltipPosition="top"
+                placeholder="Chức vụ"
+              ></p-columnFilter>
+            </th>
+            <th>
+              <p-columnFilter
+                type="text"
+                field="school.schoolName"
+                pTooltip="(VD): Đơn vị"
+                tooltipPosition="top"
+                placeholder="Đơn vị"
+              ></p-columnFilter>
+            </th>
+          </tr>
+          <tr>
+            <th style="width: 4rem" class="th-id">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th class="th-id">
+              <div>Id</div>
+            </th>
+            <th pSortableColumn="user.fullName">
+              <div>
+                Tên
+                <p-sortIcon field="user.fullName"></p-sortIcon>
+              </div>
+            </th>
+            <th
+              pSortField="roles[0].roleName"
+              pSortableColumn="roles[0].roleName"
+            >
+              <div>
+                Chức vụ
+                <p-sortIcon field="roles[0].roleName"></p-sortIcon>
+              </div>
+            </th>
+            <th pSortableColumn="school.schoolName">
+              <div>
+                Tên trường
+                <p-sortIcon field="school.schoolName"></p-sortIcon>
+              </div>
+            </th>
+            <!-- <th class="th-small"></th> -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-inspector>
+          <tr class="p-selectable-row">
+            <td>
+              <p-tableCheckbox [value]="inspector"></p-tableCheckbox>
+            </td>
+            <td>
+              <span class="p-column-title">Id</span>
+              {{ inspector.accountId }}
+            </td>
+            <td>
+              <span class="p-column-title">Tên</span>
+              {{ inspector.user.fullName }}
+            </td>
+            <td>
+              <span class="p-column-title">Chức vụ</span>
+              {{ inspector.roles[0].roleName }}
+            </td>
+            <td>
+              <span class="p-column-title">Đơn vị</span>
+              {{ inspector.school.schoolName }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">Không tìm thấy người nào</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <button
+      pButton
+      (click)="addInspector()"
+      [disabled]="!selectedInspectors || !selectedInspectors.length"
+    >
+      Lưu
+    </button>
+  </p-dialog>
+  <!-- invalid doc popup -->
+  <p-dialog
+    header="Tài liệu không có hiệu lực"
+    [modal]="true"
+    [(visible)]="popupInvalidDocVisible"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <ng-container *ngFor="let document of issue.documentDtos">
+      <div
+        *ngIf="document.status.statusId == 1"
+        class="file-item py-1 d-flex mt-2"
+        (click)="openNewTab(document.documentLink)"
+      >
+        <div
+          class="file-item-icon d-flex justify-content-center align-items-center"
+        >
+          <img src="assets/img/pdf_logo.svg" alt="" />
+        </div>
+        <div class="row col-md-10 d-flex align-items-end mb-3">
+          <div class="col-md-8">
+            <p class="mb-0">
+              <span class="fw-bold">{{ document.documentName }}</span>
+              <span class="fw-bold">.pdf</span>
+            </p>
+            <p class="mb-0">
+              <span>Loại tài liệu: </span>
+              <span class="fw-bold">{{
+                document.documentType.documentTypeName
+              }}</span>
+            </p>
+            <p class="mb-0">
+              <span>Mã tài liệu: </span>
+              <span class="fw-bold">{{ document.documentCode }}</span>
+            </p>
+          </div>
+          <div class="col-md-4 text-end">
+            <p class="mb-0">
+              <span>Kích thước: </span>
+              <span class="fw-bold">{{
+                document.size | fileSizePipe : "MB"
+              }}</span>
+            </p>
+            <p class="mb-0">
+              <span>Ngày tạo: </span>
+              <span class="fw-bold">{{
+                document.uploadedDate | date : "dd/MM/yyyy"
+              }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </p-dialog>
+  <!-- file upload popup -->
+  <p-dialog
+    header="Cập nhật tài liệu"
+    [(visible)]="uploadFileVisible"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    [resizable]="false"
+    (onHide)="onHideEvent()"
+  >
+    <div class="row record-document">
+      <div class="col-md-8">
+        <label class="fw-medium"
+          >Tên tài liệu<span class="p-error">*</span></label
+        ><br />
+        <input
+          pInputText
+          placeholder="Điền tên tài liệu"
+          formControlName="documentName"
+        />
+        <div
+          *ngIf="issueForm.controls?.['documentName']?.invalid && (issueForm.controls?.['documentName']?.touched || issueForm.controls?.['documentName']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['documentName']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng điền tên tài liệu
+          </span>
+          <span
+            *ngIf="issueForm.controls?.['documentName']?.errors?.['maxLength']"
+            class="p-error"
+          >
+            Tên tài liệu quá dài
+          </span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="fw-medium"
+          >Mã tài liệu<span class="p-error">*</span></label
+        ><br />
+        <input
+          pInputText
+          placeholder="Điền mã tài liệu"
+          formControlName="documentCode"
+        />
+        <div
+          *ngIf="issueForm.controls?.['documentCode']?.invalid && (issueForm.controls?.['documentCode']?.touched || issueForm.controls?.['documentCode']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['documentCode']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng điền mã tài liệu
+          </span>
+          <span
+            *ngIf="issueForm.controls?.['documentCode']?.errors?.['maxLength']"
+            class="p-error"
+          >
+            Mã tài liệu quá dài
+          </span>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <label class="fw-medium">Tài liệu<span class="p-error">*</span></label
+        ><br />
+        <div class="input-file">
+          <input
+            type="file"
+            #fileInput
+            style="display: none"
+            (change)="handleFileInputChange(fileInput)"
+          />
+          <input
+            pInputText
+            readonly
+            class="col-md-9"
+            placeholder="{{
+              fileInputPlaceholders
+                ? fileInputPlaceholders
+                : 'Chọn file để tải lên'
+            }}"
+          />
+          <button
+            pButton
+            type="button"
+            label="Chọn tệp"
+            (click)="fileInput.click()"
+            class="col-md-3 h-100"
+          ></button>
+        </div>
+        <div
+          *ngIf="issueForm.controls?.['file']?.invalid && (issueForm.controls?.['file']?.touched || issueForm.controls?.['file']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['file']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng chọn tài liệu
+          </span>
+        </div>
+      </div>
+    </div>
+    <button class="mt-2" type="button" pButton (click)="upload()">
+      Lưu thay đổi
+    </button>
+  </p-dialog>
+  <!-- file preview -->
+  <p-dialog
+    [(visible)]="pdfLoaded"
+    [style]="{ width: '80vw' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div *ngIf="pdfLoaded">
+      <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
+    </div>
+  </p-dialog>
+  <app-loading-complete-dialog
+    [visible]="isLoading"
+    [completed]="submitCompleted"
+    [header]="'Đánh giá'"
+    [progress]="'Vui lòng đợi trong giây lát'"
+    [complete]="'Đánh giá thành công'"
+  ></app-loading-complete-dialog>
+  <div class="col-md-8 issue-content">
+    <div class="mb-2 issue-name">
+      <span class="fw-medium">Tên kế hoạch</span>
+      <input
+        pInputText
+        class="text-black-50 w-100"
+        value="{{ issue.issueName }}"
+        formControlName="issueName"
+      />
+      <span
+        *ngIf="issueForm.controls.issueName.errors?.['whitespace']"
+        class="p-error"
+        >Vui lòng điền tên kế hoạch</span
+      >
+      <!-- <pre>{{ issueForm.controls.name.errors | json }}</pre> -->
+    </div>
+    <div class="mb-2 issue-description">
+      <span class="fw-medium">Chi tiết</span>
+      <textarea
+        pInputTextarea
+        class="text-black-50 w-100"
+        value="{{ issue.description }}"
+        rows="3"
+        formControlName="description"
+      ></textarea>
+      <span
+        *ngIf="issueForm.controls.description.errors?.['whitespace']"
+        class="p-error"
+        >Vui lòng điền chi tiết kế hoạch</span
+      >
+    </div>
+    <div class="mb-2">
+      <h6 class="mb-2 mat-headline-6">Tài liệu công văn</h6>
+      <button
+        class="mb-3"
+        type="button"
+        pButton
+        (click)="togglePopupInvalidDoc()"
+      >
+        Xem tài liệu không có hiệu lực
+      </button>
+      <ng-container *ngFor="let document of issue.documentDtos | sortById">
+        <div
+          *ngIf="document.status.statusId == 1"
+          class="file-item py-1 d-flex mt-2"
+          (click)="
+            document.documentLink
+              ? openNewTab(document.documentLink)
+              : displayNewFileUpload(document.file)
+          "
+          pTooltip="{{ document.documentName }}"
+          tooltipPosition="top"
+        >
+          <div
+            class="file-item-icon d-flex justify-content-center align-items-center"
+          >
+            <img src="assets/img/pdf_logo.svg" alt="" />
+          </div>
+          <div class="row col-md-10 d-flex align-items-end file-item-content">
+            <div class="col-md-7 mb-3">
+              <p class="mb-0 document-name">
+                <span class="fw-bold span-doc-name">{{
+                  document.documentName
+                }}</span>
+                <span class="fw-bold">.pdf</span>
+              </p>
+              <p class="mb-0">
+                <span>Loại tài liệu: </span>
+                <span class="fw-bold">{{
+                  document.documentType.documentTypeName
+                }}</span>
+              </p>
+              <p class="mb-0">
+                <span>Mã tài liệu: </span>
+                <span class="fw-bold">{{ document.documentCode }}</span>
+              </p>
+            </div>
+            <div class="col-md-4 text-end mb-3">
+              <p class="mb-0">
+                <span>Kích thước: </span>
+                <span class="fw-bold">{{ document.sizeFormat }}</span>
+              </p>
+              <p class="mb-0">
+                <span>Ngày tạo: </span>
+                <span class="fw-bold">{{
+                  document.uploadedDate | date : "dd/MM/yyyy"
+                }}</span>
+              </p>
+            </div>
+            <div
+              class="align-self-center col-md-1 update-icon d-flex justify-content-center align-items-center"
+            >
+              <i
+                class="bi bi-pencil-square"
+                (click)="
+                  togglePopupFileUpload(
+                    $event,
+                    document.documentType.documentTypeId,
+                    document.documentId,
+                    document.documentName,
+                    document.documentType.documentTypeName
+                  )
+                "
+              ></i>
+            </div>
+          </div>
+        </div>
+        <!-- <div
+          *ngIf="item.status.statusId == 1"
+          class="mb-3"
+          (click)="
+            item.documentLink
+              ? openNewTab(item.documentLink)
+              : displayNewFileUpload(item.file)
+          "
+        >
+          <div class="file-item px-3 py-1 d-flex">
+            <div
+              class="file-item-icon ml-5 d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../assets/img/pdf.png" alt="" />
+            </div>
+            <div class="file-item-content">
+              <div class="row ms-5">
+                <div class="col-md-10">
+                  <span class="font-weight-bold font-size-18">{{
+                    item.documentName + "." + item.fileExtension
+                  }}</span>
+                  <br />
+                  <span>
+                    <span class="font-weight-bold">Loại TL:</span>
+                    {{ item.documentType.documentTypeName }}</span
+                  >
+                  <br />
+                  <span
+                    ><span class="font-weight-bold">Mã:</span>
+                    {{ item.documentCode }}</span
+                  >
+                </div>
+                <div class="col-md-2">
+                  <span class="text-black-50">{{ item.sizeFormat }}</span>
+                  <br />
+                  <span>{{ item.uploadedDate | date : "MM/dd/yyyy" }}</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="mx-auto d-flex justify-content-center align-items-center"
+            >
+              <p-tag class="status" [severity]="'success'" [rounded]="true">
+                {{ item.status.statusName }}
+              </p-tag>
+            </div>
+            <div
+              class="update-icon d-flex justify-content-center align-items-center"
+            >
+              <i
+                class="bi bi-pencil-square"
+                (click)="
+                  togglePopupFileUpload(
+                    $event,
+                    item.documentType.documentTypeId,
+                    item.documentId,
+                    item.documentName,
+                    item.documentType.documentTypeName
+                  )
+                "
+              ></i>
+            </div>
+          </div>
+        </div> -->
+      </ng-container>
+      <!-- <button type="button" pButton>Thêm mới</button> -->
+      <!-- <br /> -->
+      <button class="mt-3" pButton>Lưu</button>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="list-inspector">
+      <div class="list-inspector-header p-3 text-center">
+        <h6 class="mat-headline-6 mx-auto">Danh sách thanh tra</h6>
+        <div class="total">
+          <span class="mx-auto">Tổng số: {{ issue.inspectors.length }}</span>
+          <div *ngIf="isChanged"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="overflow-auto">
+          <ng-container *ngFor="let item of issue.inspectors">
+            <div *ngIf="issue.inspectors" class="mb-2">
+              <div class="scrollview-item d-flex px-3 py-2 h-full">
+                <div
+                  class="scrollview-item-icon d-flex justify-content-center align-items-center"
+                >
+                  <img src="../../../../../assets/img/user_icon.svg" alt="" />
+                </div>
+                <div class="scrollview-item-content ms-3">
+                  <span class="font-weight-bold font-size-18">{{
+                    item.user.fullName
+                  }}</span>
+                  <br />
+                  <span>
+                    {{ item.roles[0].roleName }}-
+                    {{ item.school.schoolName }}
+                  </span>
+                </div>
+                <div
+                  class="trash-icon d-flex justify-content-center align-items-center"
+                >
+                  <i
+                    *ngIf="isChanged"
+                    class="bi bi-trash-fill"
+                    (click)="confirmDelete(item)"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <div
+            class="d-flex justify-content-center align-items-center p-error"
+            *ngIf="issue.inspectors.length == 0"
+          >
+            <h6 class="mat-headline-6">
+              Danh sách ban kiểm tra không được để trống
+            </h6>
+          </div>
+        </div>
+      </div>
+      <div class="bottom p-2">
+        <div
+          class="bottom-item d-flex justify-content-center"
+          *ngIf="!isChanged"
+        >
+          <button pButton (click)="toggleStatus()">Thay đổi</button>
+        </div>
+        <div
+          class="bottom-item d-flex justify-content-between"
+          *ngIf="isChanged"
+        >
+          <button pButton class="cancel" (click)="toggleCancel()">Hủy</button>
+          <button pButton type="button" (click)="showInspectorPopup()">
+            <i class="bi bi-plus-lg"></i>
+          </button>
+          <button pButton (click)="toggleStore()">Lưu</button>
+        </div>
+        <input
+          hidden
+          type="text"
+          [(value)]="issue.inspector"
+          formControlName="inspector"
+        />
+        <!-- <pre>{{issueF}}</pre> -->
+      </div>
+    </div>
+  </div>
+  <!-- <pre>{{ issueForm.value | json }}</pre> -->
+</form>

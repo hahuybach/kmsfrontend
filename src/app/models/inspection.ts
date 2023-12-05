@@ -97,7 +97,7 @@ export interface InspectionDocument {
   taskListDtos: TaskListDto[];
   reportId: number;
   conclusionId: number;
-  isFinish: boolean;
+  canFinish: boolean;
   isChief: boolean;
 }
 

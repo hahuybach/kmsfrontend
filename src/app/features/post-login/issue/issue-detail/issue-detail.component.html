@@ -1,0 +1,196 @@
+<div class="container-fluid">
+  <span>breadcumb here</span>
+  <h5 class="mat-headline-5 fw-medium">Chi tiết kế hoạch kiểm tra</h5>
+  <div class="row issue-detail" *ngIf="issue">
+    <p-dialog
+      header="Xem tài liệu"
+      [(visible)]="pdfLoaded"
+      [style]="{ width: '90vw', height: '100vh' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div *ngIf="pdfLoaded">
+        <iframe [src]="safePdfUrl" width="100%" height="680px"></iframe>
+      </div>
+    </p-dialog>
+    <p-dialog
+      header="Tài liệu không có hiệu lực"
+      [modal]="true"
+      [(visible)]="popupInvalidDocVisible"
+      [style]="{ width: '60vw' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <ng-container *ngFor="let document of issue.documentDtos">
+        <div
+          *ngIf="document.status.statusId == 2"
+          class="file-item py-1 d-flex mt-2"
+          (click)="openNewTab(document.documentLink)"
+        >
+          <div
+            class="file-item-icon d-flex justify-content-center align-items-center"
+          >
+            <img src="assets/img/pdf_logo.svg" alt="" />
+          </div>
+          <div class="row col-md-10 d-flex align-items-end mb-3">
+            <div class="col-md-8">
+              <p class="mb-0">
+                <span class="fw-bold">{{ document.documentName }}</span>
+                <span class="fw-bold">.pdf</span>
+              </p>
+              <p class="mb-0">
+                <span>Loại tài liệu: </span>
+                <span class="fw-bold">{{
+                  document.documentType.documentTypeName
+                }}</span>
+              </p>
+              <p class="mb-0">
+                <span>Mã tài liệu: </span>
+                <span class="fw-bold">{{ document.documentCode }}</span>
+              </p>
+            </div>
+            <div class="col-md-4 text-end">
+              <p class="mb-0">
+                <span>Kích thước: </span>
+                <span class="fw-bold">{{
+                  document.size | fileSizePipe : "MB"
+                }}</span>
+              </p>
+              <p class="mb-0">
+                <span>Ngày tạo: </span>
+                <span class="fw-bold">{{
+                  document.uploadedDate | date : "dd/MM/yyyy"
+                }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </p-dialog>
+    <div class="row col-md-8">
+      <div class="col-6 mb-2">
+        <span class="span-heading-color">Tên kế hoạch</span>
+        <br />
+        <p class="fw-bold p-content-fs">{{ issue.issueName }}</p>
+      </div>
+      <div class="col-6 mb-2">
+        <span class="span-heading-color">Người tạo</span>
+        <br />
+        <p class="fw-bold p-content-fs">{{ issue.account.user.fullName }}</p>
+      </div>
+      <div class="col-6 mb-2">
+        <span class="span-heading-color">Chi tiết</span>
+        <br />
+        <p class="fw-bold p-content-fs">{{ issue.description }}</p>
+      </div>
+      <div class="col-6 mb-2">
+        <span class="span-heading-color">Ngày tạo</span>
+        <br />
+        <p class="fw-bold p-content-fs">
+          {{ issue.createdDate | date : "MM/dd/yyyy" }}
+        </p>
+      </div>
+      <div>
+        <h6 class="mat-headline-6">Tài liệu công văn</h6>
+        <button type="button" pButton (click)="togglePopupInvalidDoc()">
+          Xem tài liệu không có hiệu lực
+        </button>
+        <ng-container *ngFor="let document of issue.documentDtos | sortById">
+          <div
+            *ngIf="document.status.statusId == 1"
+            class="file-item py-1 d-flex mt-2"
+            (click)="openNewTab(document.documentLink)"
+            pTooltip="{{ document.documentName }}"
+            tooltipPosition="top"
+          >
+            <div
+              class="file-item-icon d-flex justify-content-center align-items-center"
+            >
+              <img src="assets/img/pdf_logo.svg" alt="" />
+            </div>
+            <div
+              class="row col-md-10 d-flex align-items-end mb-3 file-item-content"
+            >
+              <div class="col-md-8">
+                <p class="mb-0 document-name">
+                  <span class="fw-bold span-doc-name">{{
+                    document.documentName
+                  }}</span>
+                  <span class="fw-bold">.pdf</span>
+                </p>
+                <p class="mb-0">
+                  <span>Loại tài liệu: </span>
+                  <span class="fw-bold">{{
+                    document.documentType.documentTypeName
+                  }}</span>
+                </p>
+                <p class="mb-0">
+                  <span>Mã tài liệu: </span>
+                  <span class="fw-bold">{{ document.documentCode }}</span>
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <p class="mb-0">
+                  <span>Kích thước: </span>
+                  <span class="fw-bold">{{
+                    document.size | fileSizePipe : "MB"
+                  }}</span>
+                </p>
+                <p class="mb-0">
+                  <span>Ngày tạo: </span>
+                  <span class="fw-bold">{{
+                    document.uploadedDate | date : "dd/MM/yyyy"
+                  }}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="list-inspector">
+        <div class="list-inspector-header p-3 text-center">
+          <h6 class="mat-headline-6 mx-auto">Danh sách thanh tra</h6>
+          <div class="total">
+            <span class="mx-auto">Tổng số: {{ issue.inspectors.length }}</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="overflow-auto">
+            <ng-container *ngFor="let item of issue.inspectors">
+              <div *ngIf="issue.inspectors" class="mb-2">
+                <div class="scrollview-item d-flex px-3 py-2 h-full">
+                  <div
+                    class="scrollview-item-icon d-flex justify-content-center align-items-center"
+                  >
+                    <img src="../../../../../assets/img/user_icon.svg" alt="" />
+                  </div>
+                  <div class="scrollview-item-content ms-3">
+                    <span class="font-weight-bold font-size-18">{{
+                      item.user.fullName
+                    }}</span>
+                    <br />
+                    <span>
+                      {{ item.roles[0].roleName }}-
+                      {{ item.school.schoolName }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <div
+              class="d-flex justify-content-center align-items-center p-error"
+              *ngIf="issue.inspectors.length == 0"
+            >
+              <h6>Danh sách ban kiểm tra không được để trống</h6>
+            </div>
+          </div>
+
+          <!-- </p-virtualScroller> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

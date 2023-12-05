@@ -107,6 +107,16 @@ export class SchoolInitiationPlanListComponent implements OnInit {
       )
     }
 
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      6: 'info',
+      7: 'warning',
+      8: 'success',
+      9: 'danger',
+    };
+    return statusSeverityMap[statusId] || 'info'; // Default to ' info' if statusId is not in the map
+  }
+
     ngOnInit(): void {
       for (const role of this.auth.getRoleFromJwt()) {
         if (role.authority === Role.PRINCIPAL){
@@ -197,7 +207,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
         }
     }
 
-    private reset() {
+     protected reset() {
         this.pageNo = 1;
         this.sortBy = 'createdDate';
         this.sortDirection = 'desc';
@@ -228,9 +238,9 @@ export class SchoolInitiationPlanListComponent implements OnInit {
 
     onDetail(id: any) {
       if (this.isPrincipal){
-        this.router.navigate(['initiationplan/' + id])
+        this.router.navigate(['initiation-plan/' + id])
       }else {
-        this.router.navigate(['schoolinitiationplan/' + id])
+        this.router.navigate(['school-initiation-plan/' + id])
       }
     }
 
