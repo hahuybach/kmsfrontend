@@ -32,6 +32,10 @@ export class ChangePasswordComponent {
     console.log("I hide");
     this.form.reset()
     this.form.markAsPristine();
+    this.form.get('password')?.setErrors(null);
+    this.form.get('changePassword')?.setErrors(null);
+    this.form.get('confirmPassword')?.setErrors(null);
+
   }
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const changePassword = control.get('changePassword')?.value;
@@ -80,6 +84,10 @@ export class ChangePasswordComponent {
     }
   }
   confirm() {
+    if (this.form.invalid){
+      this.isSubmitted = true;
+      return
+    }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận việc thay đổi này không?',
       header: 'Xác nhận',
