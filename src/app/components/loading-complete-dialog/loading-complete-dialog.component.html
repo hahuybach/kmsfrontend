@@ -5,13 +5,14 @@
   [draggable]="false"
   [resizable]="false"
   [closable]="false"
+  [modal]="true"
 >
   <div *ngIf="!completed" class="spinner">
     <div class="spinner-border text-center" role="status"></div>
-    <p>{{progress}}</p>
+    <p class="mt-4 fw-medium">{{progress}}</p>
   </div>
   <div *ngIf="completed" class="d-flex flex-column justify-content-center align-items-center mt-5">
     <i class="bi bi-check-circle-fill icon"></i>
-    <p class="mt-1 icon-text">{{complete}}</p>
+    <p class="mt-4 icon-text fw-medium">{{complete}}</p>
   </div>
 </p-dialog>

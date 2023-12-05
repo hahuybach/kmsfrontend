@@ -1,127 +1,97 @@
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<form [formGroup]="updateForm">
-    <div class="m-3">
-        <h2>Cập nhật người dùng</h2>
-    </div>
+<div class="container-fluid">
+  <h5 class="mat-headline-5">Cập nhật người dùng</h5>
+  <form [formGroup]="updateForm">
     <div class="row">
-        <div class="m-1 col-md-5" *ngIf="user">
-            <div class="mb-4">
-                <div class="m-3">
-                    <p class="text-black-50">Tên</p>
-                </div>
-                <div class="m-3">
-                    <p class="font-weight-bold">{{user.fullName == null ? "Chưa nhập tên" : user.fullName}}</p>
-                </div>
-            </div>
-            <div class="mb-4">
-                <div class="m-3">
-                    <p class="text-black-50">Email</p>
-                </div>
-                <div class="m-3">
-                    <p class="font-weight-bold">{{user.email}}</p>
-                </div>
-            </div>
-            <div class="mb-4">
-                <div class="m-3">
-                    <p class="text-black-50">Số điện thoại</p>
-                </div>
-                <div class="m-3">
-                    <p class="font-weight-bold">{{user.phoneNumber == null ? "Chưa nhập số điện thoại" : user.phoneNumber}}</p>
-                </div>
-            </div>
-            <div class="mb-4">
-                <div class="m-3">
-                    <p class="text-black-50">Giới tính</p>
-                </div>
-                <div class="m-3">
-                    <p class="font-weight-bold">{{user.gender == "MALE" ? "Nam" : "Nữ"}}</p>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="m-3">
-                    <p class="text-black-50">Ngày sinh</p>
-                </div>
-                <div class="m-3">
-                    <p class="font-weight-bold">{{user.dob == null ? "Chưa nhập ngày sinh" : user.dob}}</p>
-                </div>
-            </div>
-            <div class="m-3">
-                <button type="submit" class="btn btn-primary"
-                (click)="confirm()"
-                >Lưu</button>
-            </div>
+      <div class="col-md-5" *ngIf="user">
+        <div class="mb-3">
+          <label class="span-heading-color mb-2">Tên hiển thị</label>
+          <p class="fw-medium">{{user.fullName == null ? "Chưa nhập tên" : user.fullName}}</p>
         </div>
-        <div class="m-1 col-md-5">
-            <div class="mb-4">
-                <div class="m-3">
-                    <p>Chức vụ</p>
-                </div>
-                <p-dropdown [options]="roles"
-                            optionLabel="roleName" [filter]="true"
-                            filterBy="roleName"
-                            [(ngModel)]="selectedRole"
-                            [ngModelOptions]="{standalone: true}"
-                            [showClear]="true"
-                            placeholder="Chọn 1 vai trò"
-                            (onChange)="patchRoleId()"
-                            class="m-3"
-                            *ngIf="isRoleUpdatable()"
-                >
+        <div class="mb-3">
+          <label class="span-heading-color mb-2">Email</label>
+          <p class="fw-medium">{{user.email}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="span-heading-color mb-2">Số điện thoại</label>
+          <p class="fw-medium">{{user.phoneNumber == null ? "Chưa nhập số điện thoại" : user.phoneNumber}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="span-heading-color mb-2">Giới tính</label>
+          <p class="fw-medium">{{user.gender == "MALE" ? "Nam" : "Nữ"}}</p>
+        </div>
+        <div class="mb-3">
+          <label class="span-heading-color mb-2">Ngày sinh</label>
+          <p class="fw-medium">{{user.dob == null ? "Chưa nhập ngày sinh" : user.dob}}</p>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="col-md-6 mb-3">
+          <label class="span-heading-color mb-2">Chức vụ</label>
+          <p-dropdown [options]="roles"
+                      optionLabel="roleName" [filter]="true"
+                      filterBy="roleName"
+                      [(ngModel)]="selectedRole"
+                      [ngModelOptions]="{standalone: true}"
+                      [showClear]="true"
+                      placeholder="Chọn 1 vai trò"
+                      (onChange)="patchRoleId()"
+                      *ngIf="isRoleUpdatable()"
+          >
 
-                    <ng-template let-role pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ role.roleName }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
-                <div class="m-3" *ngIf="!isRoleUpdatable()">
-                    <p class="font-weight-bold">
-                        <ng-container  *ngFor="let role of user.accountRoles; let last = last">
-                            {{ role.role?.roleName }}{{ last ? '' : ';' }}
-                        </ng-container>
-                    </p>
-                </div>
-                <div>
-                 <span class="p-error"
-                       *ngIf="updateForm.get('roleId')?.hasError('min')  &&
+            <ng-template let-role pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ role.roleName }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+        </div>
+        <div class="col-md-6 mb-3" *ngIf="!isRoleUpdatable()">
+          <p class="font-weight-bold">
+            <ng-container *ngFor="let role of user.accountRoles; let last = last">
+              {{ role.role?.roleName }}{{ last ? '' : ';' }}
+            </ng-container>
+          </p>
+          <span class="p-error"
+                *ngIf="updateForm.get('roleId')?.hasError('min')  &&
             ((this.updateForm.get('roleId')?.dirty ?? false) ||
                 (this.updateForm.get('roleId')?.touched ?? false) || this.isSubmitted)">
-      Không được để trống mục này
-    </span>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="m-3">
-                    <p>Trạng thái</p>
-                </div>
-                <div class="m-3">
-                    <p-dropdown [options]="statusOptions"
-                                optionLabel="label"
-                                formControlName="isActive"
-                                optionValue="value"
-                    ></p-dropdown>
-                </div>
-            </div>
+            Không được để trống mục này
+          </span>
         </div>
+        <div class="col-md-6 mb-3">
+          <label class="span-heading-color mb-2">Trạng thái</label>
+          <p-dropdown [options]="statusOptions"
+                      optionLabel="label"
+                      formControlName="isActive"
+                      optionValue="value"
+          >
+            <ng-template let-status pTemplate="item">
+              <p-tag
+                [rounded]="true"
+                [severity]="getStatusSeverity(status.value)"
+                [value]="status.label"
+              ></p-tag>
+            </ng-template>
+          </p-dropdown>
+        </div>
+      </div>
+      <div class="">
+        <button type="submit" pButton
+                (click)="confirm()"
+        >Cập nhật người dùng
+        </button>
+      </div>
     </div>
-</form>
+  </form>
 
 
-<p-toast position="top-right" key="error"></p-toast>
-<!--<div class="overlay" *ngIf="isLoading">-->
-<!--    <div class="spinner-container">-->
-<!--        <div class="spinner-border" role="status"></div>-->
-<!--    </div>-->
-<!--</div>-->
-<p-confirmDialog key="updateUserConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
-<app-loading-complete-dialog
-  [visible]="isLoading"
-  [completed]="submitCompleted"
-  [header]="'Cập nhật người dùng'"
-  [progress]="'Đang cập nhật người dùng'"
-  [complete]="'Cập nhật người dùng thành công'"
-></app-loading-complete-dialog>
+  <p-toast position="top-right" key="error"></p-toast>
+  <p-confirmDialog key="updateUserConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
+  <app-loading-complete-dialog
+    [visible]="isLoading"
+    [completed]="submitCompleted"
+    [header]="'Cập nhật người dùng'"
+    [progress]="'Đang cập nhật người dùng'"
+    [complete]="'Cập nhật người dùng thành công'"
+  ></app-loading-complete-dialog>
+</div>

@@ -202,6 +202,22 @@
       </div>
     </div>
 
+<<<<<<< HEAD
+  <div class="d-flex justify-content-end" *ngIf="guidanceDocuments.length < 10">
+    <button
+      class="btn btn-primary"
+      (click)="addGuidanceDocument()"
+      type="button"
+    >
+      Thêm văn bản
+    </button>
+  </div>
+  <div class="m-2">
+    <button class="btn btn-primary" type="submit" (click)="confirm()">
+      Tạo mới
+    </button>
+  </div>
+=======
     <div class="m-2">
       <button pButton type="submit" (click)="confirm()">Tạo mới</button>
     </div>
@@ -211,6 +227,7 @@
   <!--    <div class="spinner-border" role="status"></div>-->
   <!--  </div>-->
   <!--</div>-->
+>>>>>>> 8e15f75a5cb2d2557af5c7644ce63ad3be57e9d9
 
   <p-toast position="top-right" key="toastGuidanceDocumentCreate"></p-toast>
   <p-confirmDialog
