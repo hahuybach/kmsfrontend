@@ -43,7 +43,7 @@
           ></textarea>
           <br />
           <span *ngIf="isBlank('description')" class="p-error"
-            >Không được để trống mục này</span
+            >Không được để trống</span
           >
         </div>
       </div>
@@ -62,10 +62,10 @@
           >
             <div class="row mb-2 file-item py-2" formGroupName="{{ i }}">
               <div class="col-md-11 row">
-                <div class="col-md-6 file-info">
+                <div class="col-md-8 file-info">
                   <div class="mb-2">
                     <label class="fw-medium mb-1"
-                      >Tên tài liệu <span class="p-error">*</span></label
+                      >Tên tài liệu<span class="p-error">*</span></label
                     >
                     <br />
                     <div>
@@ -75,19 +75,20 @@
                         formControlName="documentName"
                         class=""
                         type="text"
+                        placeholder="Điền tên tài liệu"
                       />
                     </div>
                     <span
                       *ngIf="isBlankForGuidanceDocuments('documentName', i)"
                       class="p-error"
-                      >Không được để trống mục này</span
+                      >Không được để trống</span
                     >
                   </div>
                 </div>
-                <div class="col-md-6 file-info">
+                <div class="col-md-4 file-info">
                   <div class="mb-3">
                     <label class="fw-medium mb-1"
-                      >Mã tài liệu <span class="p-error">*</span></label
+                      >Mã tài liệu<span class="p-error">*</span></label
                     >
                     <br />
                     <div>
@@ -97,13 +98,14 @@
                         formControlName="documentCode"
                         class=""
                         type="text"
+                        placeholder="Điền mã tài liệu"
                       />
                     </div>
 
                     <span
                       *ngIf="isBlankForGuidanceDocuments('documentCode', i)"
                       class="p-error"
-                      >Không được để trống mục này</span
+                      >Không được để trống</span
                     >
                     <span
                       class="p-error"
@@ -210,9 +212,9 @@
   <!--  </div>-->
   <!--</div>-->
 
-  <p-toast position="top-right" key="error"></p-toast>
+  <p-toast position="top-right" key="toastGuidanceDocumentCreate"></p-toast>
   <p-confirmDialog
-    key="createConfirm"
+    key="confirmGuidanceDocumentCreate"
     [style]="{ width: '50vw' }"
   ></p-confirmDialog>
 </div>
