@@ -1,164 +1,105 @@
 <p-dialog header="Thông tin cá nhân"
           [(visible)]="visible"
-          [style]="{width: '60vw', height: '80vw'}"
+          [style]="{width: '40vw', height: '30vw'}"
           (onHide)="resetVisible()"
           [modal]="true"
 >
   <div class="row" *ngIf="!isUpdate && this.currentUser">
-    <div class="col-md-7">
+    <div class="col-md-6">
       <div>
-        <div>
-          <label>Email</label>
+        <div class="mb-3">
+          <span class="span-heading-color mb-2">Tên</span>
+          <p class="fw-medium">{{this.currentUser.fullName}}</p>
         </div>
-        <div>
-          <p>{{this.currentUser.email}}</p>
+        <div class="mb-3">
+          <span class="span-heading-color mb-2">Số điện thoại</span>
+          <p class="fw-medium">{{this.currentUser.phoneNumber}}</p>
         </div>
-
-        <div>
-          <label>Tên</label>
+        <div class="mb-3">
+          <span class="span-heading-color mb-2">Giới tính</span>
+          <p class="fw-medium">{{this.currentUser.gender == "MALE" ? "Nam" : "Nữ"}}</p>
         </div>
-        <div>
-          <p>{{this.currentUser.fullName}}</p>
+        <div class="mb-3">
+          <span class="span-heading-color mb-2">Năm sinh</span>
+          <p class="fw-medium">{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
         </div>
-
-        <div>
-          <label>Số điện thoại</label>
-        </div>
-        <div>
-          <p>{{this.currentUser.phoneNumber}}</p>
-        </div>
-
-        <div>
-          <label>Giới tính</label>
-        </div>
-        <div>
-          <p>{{this.currentUser.gender == "MALE" ? "Nam" : "Nữ"}}</p>
-        </div>
-
-        <div>
-          <label>Năm sinh</label>
-        </div>
-        <div>
-          <p>{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
-        </div>
-
       </div>
     </div>
-    <div class="col-md-5">
-      <div>
-        <div>
-          <label>Đơn vị</label>
-        </div>
-        <div>
-          <p>{{this.currentUser.school?.schoolName}}</p>
-        </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <span class="span-heading-color mb-2">Email</span>
+        <p class="fw-medium">{{this.currentUser.email}}</p>
       </div>
-      <div>
-        <div>
-          <label>Chức vụ</label>
-        </div>
-        <div>
-          <p>
-            <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
-              {{ role.role?.roleName }}{{ last ? '' : ';' }}
-            </ng-container>
-          </p>
-        </div>
+      <div class="mb-3">
+        <span class="span-heading-color mb-2">Đơn vị</span>
+        <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
       </div>
-
+      <div class="mb-3">
+        <span class="span-heading-color mb-2">Chức vụ</span>
+        <p class="fw-medium">
+          <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
+            {{ role.role?.roleName }}{{ last ? '' : ';' }}
+          </ng-container>
+        </p>
+      </div>
     </div>
   </div>
   <div class="row" *ngIf="isUpdate && this.currentUser" [formGroup]="form">
-    <div class="col-md-7">
-      <div>
-        <div>
-          <label>Email</label>
-        </div>
-        <div>
-          <p>{{this.currentUser.email}}</p>
-        </div>
-
-        <div>
-          <label>Tên</label>
-        </div>
-        <div>
-          <input type="text" formControlName='fullName' class="form-control">
-          <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
-        </div>
-
-        <div>
-          <label>Số điện thoại</label>
-        </div>
-        <div>
-          <input type="text" formControlName='phoneNumber' class="form-control">
-          <span class="p-error" *ngIf="isError('phoneNumber', 'pattern')">Sai định dạng số điện thoại</span>
-          <span class="p-error" *ngIf="isBlank('phoneNumber')">Mục này không được trống</span>
-
-        </div>
-
-        <div>
-          <label>Giới tính</label>
-        </div>
-        <div>
-          <p-dropdown [options]="genders" formControlName="gender">
-
-          </p-dropdown>
-        </div>
-
-        <div>
-          <label>Năm sinh</label>
-        </div>
-        <div>
-          <input type="date" formControlName='dob' class="form-control">
-          <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
-        </div>
-
+    <div class="col-md-6">
+      <div class="mb-2">
+        <label class="fw-medium mb-1">Tên</label>
+        <input type="text" pInputText formControlName='fullName' class="form-control">
+        <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
+      </div>
+      <div class="mb-2">
+        <label class="fw-medium mb-1">Số điện thoại</label>
+        <input pInputText type="text" formControlName='phoneNumber' class="form-control">
+        <span class="p-error" *ngIf="isError('phoneNumber', 'pattern')">Sai định dạng số điện thoại</span>
+        <span class="p-error" *ngIf="isBlank('phoneNumber')">Mục này không được trống</span>
+      </div>
+      <div class="mb-2">
+        <label class="fw-medium mb-1">Giới tính</label>
+        <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
+      </div>
+      <div class="mb-2">
+        <label class="fw-medium mb-1">Năm sinh</label>
+        <input pInputText type="date" formControlName='dob' class="form-control">
+        <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
       </div>
     </div>
-    <div class="col-md-5">
-      <div>
-        <div>
-          <label>Đơn vị</label>
-        </div>
-        <div>
-          <p>{{this.currentUser.school?.schoolName}}</p>
-        </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <span class="span-heading-color mb-2">Email</span>
+        <p class="fw-medium">{{this.currentUser.email}}</p>
       </div>
-      <div>
-        <div>
-          <label>Chức vụ</label>
-        </div>
-        <div>
-          <p>
-            <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
-              {{ role.role?.roleName }}{{ last ? '' : ';' }}
-            </ng-container>
-          </p>
-        </div>
+      <div class="mb-3">
+        <span class="span-heading-color mb-2">Đơn vị</span>
+        <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
       </div>
-
+      <div class="mb-3">
+        <span class="span-heading-color mb-2">Chức vụ</span>
+        <p class="fw-medium">
+          <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
+            {{ role.role?.roleName }}{{ last ? '' : ';' }}
+          </ng-container>
+        </p>
+      </div>
     </div>
   </div>
-  <button class="btn btn-primary"
-          (click)="confirm()"
-          *ngIf="isUpdate"
-  >Lưu
-  </button>
-  <button class="btn btn-primary"
-          (click)="onUpdate()"
-          *ngIf="!isUpdate"
-  >Cập nhật
-  </button>
-  <button class="btn btn-primary"
-          *ngIf="!isUpdate"
-          (click)="onClickChangePassword()"
-  >Thay mật khẩu
-  </button>
-  <button class="btn btn-primary"
-          (click)="onUpdate()"
-          *ngIf="isUpdate">Quay lại
-  </button>
-
+  <div class="row d-flex justify-content-center mt-3">
+    <div class="col-md-6 action-button" *ngIf="!isUpdate">
+      <button pButton class="mb-3 justify-content-center py-2" (click)="onUpdate()">Cập nhật thông tin</button>
+      <button pButton class="justify-content-center py-2" (click)="onClickChangePassword()">Đổi mật khẩu</button>
+    </div>
+    <div class="col-md-8 d-flex flex-row confirm-button" *ngIf="isUpdate">
+      <div class="col-md-6">
+        <button class="py-2" pButton (click)="confirm()">Cập nhật</button>
+      </div>
+      <div class="col-md-6 text-end">
+        <button class="reset-button py-2" pButton (click)="onUpdate()">Hủy cập nhập</button>
+      </div>
+    </div>
+  </div>
 </p-dialog>
 <p-toast position="top-right" key="error"></p-toast>
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
