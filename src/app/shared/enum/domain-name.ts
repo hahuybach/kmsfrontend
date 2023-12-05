@@ -1,5 +1,5 @@
 export enum DomainName{
   // with the slash
-  URL = "/apiUrl",
+  URL = "http://159.223.58.220:8080/",
 
 }
