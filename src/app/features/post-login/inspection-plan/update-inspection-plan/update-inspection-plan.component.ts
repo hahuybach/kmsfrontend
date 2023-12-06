@@ -71,6 +71,7 @@ export class UpdateInspectionPlanComponent {
   selectedInspectorList: any[] = [];
   defaultEndDate: Date = new Date();
   defaultStartDate: Date = new Date();
+  inspectorListIsValid: boolean = true;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -94,6 +95,7 @@ export class UpdateInspectionPlanComponent {
   }
 
   onResetList() {
+    this.inspectionplanInspectorService.setInspectorListIsValid(false);
     this.inspectionplanInspectorService.resetBothLists()
   }
 
@@ -109,7 +111,7 @@ export class UpdateInspectionPlanComponent {
     this.inspectionPlanForm = this.fb.group({
       inspectionPlanName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
       description: [null, Validators.compose([Validators.required])],
-      chiefId: [0, Validators.compose([Validators.required])],
+      chiefId: [null, Validators.compose([Validators.required])],
       inspectorIds: [[], Validators.compose([Validators.required])],
       startDate: [null, Validators.compose([Validators.required])],
       endDate: [null, Validators.compose([Validators.required])],
@@ -135,18 +137,19 @@ export class UpdateInspectionPlanComponent {
         this.inspectorList = data.inspectors;
         this.getInspectorIds(this.inspectorList);
         this.inspectionplanInspectorService.setInspectorList(this.inspectorList);
+        console.log(this.nonInspectorList);
         this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
+        this.inspectionplanInspectorService.setInspectorListIsValid(this.inspectorListIsValid);
         this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.inspectorList = list);
         this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.nonInspectorList = list);
+        this.inspectionplanInspectorService.inspectorListIsValid$.subscribe(isValid => this.inspectorListIsValid = isValid);
         this.getInspectorIds(this.inspectionPlanDetail.inspectors);
-        this.chiefInspector = this.inspectorList.filter(inspector => inspector.chief);
-        console.log(this.chiefInspector)
+        this.chiefInspector = this.inspectorList.filter(inspector => inspector.chief)[0];
         this.inspectionPlanForm.patchValue({
           inspectionPlanName: this.inspectionPlanDetail.inspectionPlan.inspectionPlanName,
           description: this.inspectionPlanDetail.inspectionPlan.description,
           startDate: new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0],
           endDate: new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0],
-          chiefId: this.chiefInspector.accountId,
         })
       },
       error: (error) => {
@@ -158,13 +161,12 @@ export class UpdateInspectionPlanComponent {
     this.minStartDate = this.defaultStartDate.toISOString().slice(0, 10);
     this.minEndDate = this.defaultEndDate.toISOString().slice(0, 10);
     this.maxStartDate = this.defaultEndDate.toISOString().slice(0, 10);
-    this.initInspectorList();
   }
 
   openNewTab(documentLink: string) {
     console.log(documentLink);
     this.pdfPreviewVisibility = true;
-    this.fileService.readInitiationplanPDF(documentLink).subscribe((response) => {
+    this.fileService.readInspectionPlanPDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
@@ -172,6 +174,11 @@ export class UpdateInspectionPlanComponent {
     });
   }
 
+  patchChiefId() {
+    this.inspectionPlanForm.patchValue({
+      chiefId: this.chiefInspector.accountId
+    })
+  }
 
   handleFileInputChange(fileInput: any): void {
     const files = fileInput.files;
@@ -251,16 +258,6 @@ export class UpdateInspectionPlanComponent {
     this.initInspectorList();
   }
 
-  public findInvalidControls() {
-    const invalid = [];
-    const controls = this.inspectionPlanForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    return invalid;
-  }
 
   onSubmit() {
     if (!this.documentUpdated) {
@@ -270,7 +267,6 @@ export class UpdateInspectionPlanComponent {
     }
 
     if (this.inspectionPlanForm.invalid) {
-      console.log(this.findInvalidControls())
       this.inspectionPlanForm.markAllAsTouched();
       return;
     }
