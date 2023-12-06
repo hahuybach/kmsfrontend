@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {switchMap} from "rxjs";
+import {Subscription, switchMap} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -72,6 +72,7 @@ export class UpdateInspectionPlanComponent {
   defaultEndDate: Date = new Date();
   defaultStartDate: Date = new Date();
   inspectorListIsValid: boolean = true;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -137,7 +138,6 @@ export class UpdateInspectionPlanComponent {
         this.inspectorList = data.inspectors;
         this.getInspectorIds(this.inspectorList);
         this.inspectionplanInspectorService.setInspectorList(this.inspectorList);
-        console.log(this.nonInspectorList);
         this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
         this.inspectionplanInspectorService.setInspectorListIsValid(this.inspectorListIsValid);
         this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.inspectorList = list);
@@ -150,6 +150,7 @@ export class UpdateInspectionPlanComponent {
           description: this.inspectionPlanDetail.inspectionPlan.description,
           startDate: new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0],
           endDate: new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0],
+          chiefId: this.chiefInspector.accountId
         })
       },
       error: (error) => {
@@ -307,5 +308,15 @@ export class UpdateInspectionPlanComponent {
         console.log(error)
       }
     })
+  }
+
+  private unsubscribeAll(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
   }
 }

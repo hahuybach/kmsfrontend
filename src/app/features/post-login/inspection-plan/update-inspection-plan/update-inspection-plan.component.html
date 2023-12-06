@@ -75,8 +75,8 @@
           </div>
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
-            <p-dropdown class="full-width-dropdown" optionLabel="user.fullName"
-                        [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true">
+            <p-dropdown class="full-width-dropdown" [options]="eligibleChiefList" dataKey="user.userId" formControlName="chiefId" optionLabel="user.fullName"
+                        [filter]="true" filterBy="user.fullName" optionValue="user.userId" [showClear]="true">
             </p-dropdown>
             <div
               *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)">
