@@ -32,7 +32,6 @@
                       filterBy="roleName"
                       [(ngModel)]="selectedRole"
                       [ngModelOptions]="{standalone: true}"
-                      [showClear]="true"
                       placeholder="Chọn 1 vai trò"
                       (onChange)="patchRoleId()"
                       *ngIf="isRoleUpdatable()"

@@ -7,16 +7,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { IssueService } from '../../../../../services/issue.service';
-import { error } from '@angular/compiler-cli/src/transformers/util';
 import { InspectionplanInspectorlistService } from '../../../../../services/inspectionplan-inspectorlist.service';
-
 @Component({
   selector: 'app-inspection-plan-inspector-popup',
   templateUrl: './inspection-plan-inspector-popup.component.html',
   styleUrls: ['./inspection-plan-inspector-popup.component.scss'],
 })
-export class InspectionPlanInspectorPopupComponent {
+export class InspectionPlanInspectorPopupComponent implements OnChanges{
   @Input() popupInspectorVisible: boolean;
   @Input() inspectorList: any[] = [];
   @Input() chiefList: any[] = [];
@@ -29,6 +26,8 @@ export class InspectionPlanInspectorPopupComponent {
   constructor(
     private readonly inspectionplanInspectorService: InspectionplanInspectorlistService
   ) {}
+
+
 
   resetInspectorListVisible() {
     this.popupInspectorVisibleChange.emit(this.popupInspectorVisible);
@@ -65,5 +64,9 @@ export class InspectionPlanInspectorPopupComponent {
   }
   changeFilterVisible(status: Boolean) {
     this.filterVisible = status;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.inspectorList);
   }
 }

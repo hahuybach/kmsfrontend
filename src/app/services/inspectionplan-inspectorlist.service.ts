@@ -22,6 +22,7 @@ export class InspectionplanInspectorlistService {
   }
 
   setPopupInspectorList(list: any[]) {
+    console.log(list)
     this.popupInspectorList.next(list);
     this.initialPopupInspectorList = [...list];
   }
