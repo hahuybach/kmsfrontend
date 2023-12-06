@@ -6,7 +6,7 @@ import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable()
 export class inspectionPlanService {
-  private inspectionApiUrl =DomainName.URL + 'api/v1/inspection_plan';
+  private inspectionApiUrl = DomainName.URL + 'api/v1/inspection_plan';
 
   constructor(private loggerService: LoggerService, private http: HttpClient) {
     this.loggerService.log('Inspection plan service constructed');

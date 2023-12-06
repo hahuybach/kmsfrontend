@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from './LoggerService';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {DomainName} from "../shared/enum/domain-name";
 @Injectable()
 export class AssignmentService {
-  private assignmentApiUrl = 'http://localhost:8080/api/v1/assignment/';
+  private assignmentApiUrl:string  = DomainName.URL + 'api/v1/assignment/';
 
   constructor(private http: HttpClient) {
     console.log('AssignmentService constructed');

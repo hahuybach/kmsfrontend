@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentService {
-  baseUrl: string = 'http://localhost:8080/api/v1/document/';
+  baseUrl: string = DomainName.URL +  'api/v1/document/';
 
   constructor(private httpClient: HttpClient) {}
 

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleService {
-  private baseUrl = "http://localhost:8080/api/v1/role/"
+  private baseUrl = DomainName.URL + "api/v1/role/"
   constructor(private http: HttpClient) { }
 
   findAll(){
