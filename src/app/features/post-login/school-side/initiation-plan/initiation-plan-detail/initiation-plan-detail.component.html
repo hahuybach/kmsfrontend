@@ -188,7 +188,6 @@
   </p-dialog>
 
   <form [formGroup]="inputFileForm">
-    <!-- reset deadline -->
     <p-dialog
       header="Nộp tài liệu"
       [(visible)]="uploadFileVisible"
@@ -198,81 +197,121 @@
       [resizable]="false"
       (onHide)="hideUploadPopup()"
     >
-      <label class="mb-1" for=""
-        >Tên tài liệu<span class="p-error">*</span></label
-      >
-      <br />
-      <input
-        pInputText
-        formControlName="documentName"
-        type="text"
-        placeholder="Tên tài liệu"
-      />
-      <br />
-      <span
-        *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
-        class="p-error"
-        >Vui lòng điền tên tài liệu</span
-      >
-      <br />
-      <label class="mb-1 mt-1" for=""
-        >Mã tài liệu <span class="p-error">*</span></label
-      >
-      <br />
-      <input
-        pInputText
-        formControlName="documentCode"
-        type="text"
-        placeholder="Mã tài liệu"
-      />
-      <br />
-      <span
-        *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
-        class="p-error"
-        >Vui lòng điền mã tài liệu</span
-      >
-      <br />
-      <label class="mb-1 mt-1" for=""
-        >Tài liệu<span class="p-error">*</span></label
-      >
-      <div class="mb-3 input-file-popup row">
-        <div class="col-md-9">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="mb-2">
+          <label class="fw-medium mb-1"
+            >Tên tài liệu<span class="p-error">*</span></label
+          >
+          <br />
           <input
-            type="file"
-            accept="application/pdf"
-            #fileInput
-            style="display: none"
-            (change)="handleFileInputChange(fileInput)"
-          />
-          <input
+            class="w-100"
             pInputText
-            readonly
-            class="col-md-9"
-            placeholder="{{
-              fileInputPlaceholders
-                ? fileInputPlaceholders
-                : 'Chọn file để tải lên'
-            }}"
+            formControlName="documentName"
+            type="text"
+            placeholder="Tên tài liệu"
           />
+          <div
+            *ngIf="inputFileForm.controls?.['documentName']?.invalid && (inputFileForm.controls?.['documentName']?.touched || inputFileForm.controls?.['documentName']?.dirty)"
+          >
+            <span
+              *ngIf="inputFileForm.controls?.['documentName']?.errors?.['required'] || inputFileForm.controls?.['documentName']?.errors?.['whitespace']"
+              class="p-error"
+            >
+              Vui lòng điền tên tài liệu
+            </span>
+            <span
+              *ngIf="inputFileForm.controls?.['documentName']?.errors?.['maxlength']"
+              class="p-error"
+            >
+              Tên tài liệu quá dài
+            </span>
+          </div>
         </div>
-        <div class="col-md-3">
-          <button
-            type="button"
-            pButton
-            label="Chọn tệp"
-            (click)="fileInput.click()"
-          ></button>
-        </div>
-
-        <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
-          >Vui lòng chọn tài liệu</span
-        > -->
       </div>
+      <div class="col-md-4">
+        <div class="mb-2">
+          <label class="mb-1 fw-medium"
+            >Mã tài liệu<span class="p-error">*</span></label
+          >
+          <input
+            class="w-100"
+            pInputText
+            formControlName="documentCode"
+            type="text"
+            placeholder="Mã tài liệu"
+          />
+          <div
+            *ngIf="inputFileForm.controls?.['documentCode']?.invalid && (inputFileForm.controls?.['documentCode']?.touched || inputFileForm.controls?.['documentCode']?.dirty)"
+          >
+            <span
+              *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['required'] || inputFileForm.controls?.['documentCode']?.errors?.['whitespace']"
+              class="p-error"
+            >
+              Vui lòng điền mã tài liệu
+            </span>
+            <span
+              *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['maxlength']"
+              class="p-error"
+            >
+              Mã tài liệu quá dài
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="mb-2">
+          <label class="mb-1 fw-medium"
+            >Tài liệu<span class="p-error">*</span></label
+          >
+          <div class="input-file row w-100">
+            <div class="col-md-9 padding-none">
+              <input
+                type="file"
+                accept="application/pdf"
+                #fileInput
+                style="display: none"
+                (change)="handleFileInputChange(fileInput)"
+                class="w-100"
+              />
+              <input
+                pInputText
+                readonly
+                placeholder="{{
+                  fileInputPlaceholders
+                    ? fileInputPlaceholders
+                    : 'Chọn file để tải lên'
+                }}"
+              />
+            </div>
+            <div class="col-md-3 padding-none">
+              <button
+                class="upload-file w-100"
+                type="button"
+                pButton
+                label="Chọn tệp"
+                (click)="fileInput.click()"
+              ></button>
+            </div>
+            <div
+              class="padding-none"
+              *ngIf="inputFileForm.controls?.['file']?.invalid && (inputFileForm.controls?.['file']?.touched || inputFileForm.controls?.['file']?.dirty)"
+            >
+              <span
+                *ngIf="inputFileForm.controls?.['file']?.errors?.['required']"
+                class="p-error"
+              >
+                Vui lòng chọn tài liệu
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
       <button
         type="button"
         pButton
         (click)="upload()"
-        [disabled]="inputFileForm.get('file')?.value == '' || inputFileForm.controls.documentName.errors?.['whitespace'] || inputFileForm.controls.documentCode.errors?.['whitespace'] "
       >
         Tải tài liệu
       </button>

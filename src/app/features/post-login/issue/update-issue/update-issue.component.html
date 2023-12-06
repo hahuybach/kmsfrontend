@@ -250,7 +250,7 @@
           *ngIf="issueForm.controls?.['documentName']?.invalid && (issueForm.controls?.['documentName']?.touched || issueForm.controls?.['documentName']?.dirty)"
         >
           <span
-            *ngIf="issueForm.controls?.['documentName']?.errors?.['required']"
+            *ngIf="issueForm.controls?.['documentName']?.errors?.['required'] || issueForm.controls?.['documentName']?.errors?.['whitespace']"
             class="p-error"
           >
             Vui lòng điền tên tài liệu
@@ -276,7 +276,7 @@
           *ngIf="issueForm.controls?.['documentCode']?.invalid && (issueForm.controls?.['documentCode']?.touched || issueForm.controls?.['documentCode']?.dirty)"
         >
           <span
-            *ngIf="issueForm.controls?.['documentCode']?.errors?.['required']"
+            *ngIf="issueForm.controls?.['documentCode']?.errors?.['required'] || issueForm.controls?.['documentCode']?.errors?.['whitespace']"
             class="p-error"
           >
             Vui lòng điền mã tài liệu

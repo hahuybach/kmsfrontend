@@ -74,7 +74,11 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     ],
     documentCode: [
       '',
-      Validators.compose([Validators.required, Validators.maxLength(256)]),
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
     ],
     inspector: [''],
   });

@@ -99,16 +99,24 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   inputFileForm = this.fb.group({
     documentName: [
       '',
-      Validators.compose([Validators.required, Validators.maxLength(256)]),
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
     ],
     documentCode: [
       '',
-      Validators.compose([Validators.required, Validators.maxLength(256)]),
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
     ],
     documentTypeId: 4,
     deadline: [this.today, Validators.required],
     isPasssed: [false, Validators.required],
-    file: [''],
+    file: ['', Validators.required],
   });
   getStatusSeverity(statusId: number): string {
     const statusSeverityMap: { [key: number]: string } = {
@@ -128,12 +136,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     this.fileInputPlaceholders = '';
   }
   approve() {
-    if (this.checkFormNull()) {
-      this.messageService.add({
-        severity: 'warn',
-        detail: 'Vui lòng điền đầy đủ các trường dữ liệu',
-        summary: 'Cảnh báo',
-      });
+    if (this.inputFileForm.invalid) {
+      this.inputFileForm.markAllAsTouched();
     } else {
       this.confirmationService.confirm({
         message: 'Bạn có chắc chắn phê duyệt kế hoạch này?',
@@ -195,20 +199,16 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       });
     }
   }
-  checkFormNull(): Boolean {
-    return (
-      this.inputFileForm.get('file')?.value == '' ||
-      this.inputFileForm.controls.documentName.errors?.['whitespace'] ||
-      this.inputFileForm.controls.documentCode.errors?.['whitespace']
-    );
-  }
+  // checkFormNull(): Boolean {
+  //   return (
+  //     this.inputFileForm.get('file')?.value == '' ||
+  //     this.inputFileForm.controls.documentName.errors?.['whitespace'] ||
+  //     this.inputFileForm.controls.documentCode.errors?.['whitespace']
+  //   );
+  // }
   reject() {
-    if (this.checkFormNull()) {
-      this.messageService.add({
-        severity: 'warn',
-        detail: 'Vui lòng điền trước đầy đủ các trường dữ liệu',
-        summary: 'Cảnh báo',
-      });
+    if (this.inputFileForm.invalid) {
+      this.inputFileForm.markAllAsTouched();
     } else {
       this.resetDeadlineVisible = true;
     }

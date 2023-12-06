@@ -107,8 +107,22 @@ export class InitiationPlanDetailComponent implements OnInit {
     protected toastService: ToastService
   ) {}
   inputFileForm = this.fb.group({
-    documentName: ['', NoWhitespaceValidator()],
-    documentCode: ['', NoWhitespaceValidator()],
+    documentName: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
+    documentCode: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
     documentTypeId: 4,
     // deadline: [this.today, Validators.required],
     isPasssed: [false, Validators.required],
@@ -182,6 +196,10 @@ export class InitiationPlanDetailComponent implements OnInit {
     }
   }
   upload() {
+    if (this.inputFileForm.invalid) {
+      this.inputFileForm.markAllAsTouched();
+      return;
+    }
     console.log(this.inputFileForm.value);
     this.uploadFileVisible = false;
     this.fileStatus = true;
