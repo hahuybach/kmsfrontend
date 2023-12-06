@@ -31,6 +31,16 @@ export class InspectionPlanListComponent implements OnInit{
   deadlineDateError: any;
   advanceSearchButtonText = "Hiện tra cứu nâng cao";
 
+  isDirector: boolean = false;
+  isAdmin: boolean = false;
+  isInspector: boolean = false;
+  isChiefInspector: boolean = false;
+  isViceDirector: boolean = false;
+  isSchoolNormalEmp: boolean = false;
+  isSpecialist: boolean = false;
+  schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY]
+
   constructor(
     private readonly router: Router,
     private readonly inspectionPlanService: inspectionPlanService,
@@ -57,6 +67,38 @@ export class InspectionPlanListComponent implements OnInit{
   maxPage: any;
   recordPerPageOption: number[] = [5, 15, 25];
   isPrincipal = false;
+  setAuth() {
+    if (this.auth.getRolesFromCookie()) {
+      for (const argument of this.auth.getRoleFromJwt()) {
+        if (argument.authority === Role.DIRECTOR) {
+          this.isDirector = true;
+        }
+        if (argument.authority === Role.PRINCIPAL) {
+          this.isPrincipal = true;
+        }
+        if (argument.authority === Role.ADMIN) {
+          this.isAdmin = true;
+        }
+        if (argument.authority === Role.VICE_DIRECTOR) {
+          this.isViceDirector = true;
+        }
+        if (argument.authority === Role.INSPECTOR) {
+          this.isInspector = true;
+        }
+        if (argument.authority === Role.CHIEF_INSPECTOR) {
+          this.isChiefInspector = true;
+        }
+        if (argument.authority === Role.SPECIALIST) {
+          this.isSpecialist = true;
+        }
+        if (this.schoolRoles.some(value => value === argument.authority)) {
+          this.isSchoolNormalEmp = true;
+        }
+
+      }
+
+    }
+  }
   initQuery(){
     this.activateRouter.queryParams.subscribe(
 
@@ -120,7 +162,7 @@ export class InspectionPlanListComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
+    this.setAuth()
     for (const role of this.auth.getRoleFromJwt()) {
       if (role.authority === Role.PRINCIPAL){
         this.isPrincipal = true;
@@ -237,7 +279,7 @@ export class InspectionPlanListComponent implements OnInit{
   }
 
   onDetail(initiationPlanId: any) {
-
+    this.router.navigate(['inspection-plan/' + initiationPlanId])
   }
 
 
@@ -260,5 +302,7 @@ export class InspectionPlanListComponent implements OnInit{
     this.loadDocuments()
   }
 
-  onCreateInspectionPlan(){}
+  onCreateInspectionPlan(){
+    this.router.navigate(['inspection-plan/create'])
+  }
 }

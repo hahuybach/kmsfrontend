@@ -175,7 +175,9 @@
     <div
       class="col-md-12 d-flex flex-row justify-content-end align-items-center mt-2"
     >
-      <button pButton (click)="onCreateInspectionPlan()">Tạo mới</button>
+      <button pButton (click)="onCreateInspectionPlan()"
+        *ngIf="isDirector"
+      >Tạo mới</button>
     </div>
   </div>
   <div class="table-content">
@@ -322,13 +324,22 @@
             ></p-tag>
           </td>
           <td class="py-3 px-2">
-            <button
-              class="action-button"
-              type="button"
-              (click)="onDetail(plan.inspectionPlanId)"
-            >
-              <i class="bi bi-info-circle-fill"></i>
-            </button>
+            <div class="d-flex justify-content-between align-items-center">
+              <button
+                class="action-button"
+                type="button"
+                (click)="onDetail(plan.inspectionPlanId)"
+              >
+                <i class="bi bi-info-circle-fill"></i>
+              </button>
+              <button
+                class="action-button"
+                type="button"
+                (click)="onDetail(plan.inspectionPlanId)"
+              >
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
