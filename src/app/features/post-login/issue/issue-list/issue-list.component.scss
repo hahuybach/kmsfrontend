@@ -36,6 +36,7 @@
             }
         }
         .top-button {
+            color: #fff;
             font-size: 16px;
             background-color: $primary;
             border-radius: 8px;
@@ -214,12 +215,12 @@ p-columnFilter[type="numeric"] {
 .reset-button {
     font-size: 16px;
     background-color: white;
-    color: $primary;
+    color: $primary !important;
     border: $primary 1px solid;
     border-radius: 8px;
     &:hover {
         background-color: $primary-hover;
         border-color: $primary-hover;
-        color: #fff;
+        color: #fff !important;
     }
 }

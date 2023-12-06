@@ -1,3 +1,10 @@
+import { NgDompurifySanitizer } from '@tinkoff/ng-dompurify';
+import {
+  TuiRootModule,
+  TuiDialogModule,
+  TuiAlertModule,
+  TUI_SANITIZER,
+} from '@taiga-ui/core';
 import { UpdateIssueComponent } from './features/post-login/issue/update-issue/update-issue.component';
 import { InspectorService } from './services/inspector.service';
 import { NgModule } from '@angular/core';
@@ -67,13 +74,15 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ChangePasswordComponent } from './components/user-profile/change-password/change-password.component';
 import { NotificationListAllComponent } from './components/notification-list/notification-list-all/notification-list-all.component';
 import { NotificationListUnseenComponent } from './components/notification-list/notification-list-unseen/notification-list-unseen.component';
-import {InspectionModule} from "./features/post-login/inspection/inspection.module";
+import { InspectionModule } from './features/post-login/inspection/inspection.module';
 import { SchoolListModule } from './features/post-login/school/school-list.module';
-import {MAT_DATE_LOCALE} from "@angular/material/core";
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { IssueBaseComponent } from './features/post-login/issue/issue-base/issue-base.component';
 import { InspectionPlanBaseComponent } from './features/post-login/inspection-plan/inspection-plan-base/inspection-plan-base.component';
 import { GuidanceDocumentBaseComponent } from './features/post-login/guidance-document/guidance-document-base/guidance-document-base.component';
 import { UserBaseComponent } from './features/post-login/user/user-base/user-base.component';
+import { TUI_LANGUAGE, TUI_VIETNAMESE_LANGUAGE } from '@taiga-ui/i18n';
+import { of } from 'rxjs';
 @NgModule({
   declarations: [
     AppComponent,
@@ -133,6 +142,9 @@ import { UserBaseComponent } from './features/post-login/user/user-base/user-bas
     SchoolAssignmentModule,
     InspectionModule,
     SchoolListModule,
+    TuiRootModule,
+    TuiDialogModule,
+    TuiAlertModule,
   ],
   providers: [
     MessageService,
@@ -155,7 +167,9 @@ import { UserBaseComponent } from './features/post-login/user/user-base/user-bas
       multi: true,
     },
     provideAnimations(),
-    {provide: MAT_DATE_LOCALE, useValue: 'vi-VN'},
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' },
+    { provide: TUI_LANGUAGE, useValue: of(TUI_VIETNAMESE_LANGUAGE) },
+    { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
   ],
   bootstrap: [AppComponent],
 })
