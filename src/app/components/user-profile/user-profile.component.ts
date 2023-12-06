@@ -105,6 +105,13 @@ export class UserProfileComponent implements OnInit{
     }
   }
   confirm() {
+    if (!this.form.touched){
+      return;
+    }
+    if (this.form.invalid ){
+      this.isSubmitted = true;
+      return
+    }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận việc thay đổi này không?',
       header: 'Xác nhân',
@@ -115,16 +122,6 @@ export class UserProfileComponent implements OnInit{
         this.onSubmit()
 
       },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc thay đổi');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc thay đổi');
-            break;
-        }
-      }
     });
   }
 

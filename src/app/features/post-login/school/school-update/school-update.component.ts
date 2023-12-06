@@ -36,6 +36,7 @@ export class SchoolUpdateComponent implements OnInit {
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
   submitCompleted = false;
+  visible = false;
 
 
   constructor(private router: Router,
@@ -62,7 +63,6 @@ export class SchoolUpdateComponent implements OnInit {
         schoolName: this.school.schoolName,
         address: this.school.exactAddress,
         isActive: this.school.isActive,
-        principalEmail: this.principal?.email
 
       })
       console.log(data);
@@ -76,7 +76,7 @@ export class SchoolUpdateComponent implements OnInit {
 
     console.log(this.updateForm.value);
     if ((!this.updateForm.get('schoolName')?.invalid && !this.updateForm.get('address')?.invalid && this.isUpdatePrincipalEmail == false)
-    || (this.isUpdatePrincipalEmail == true && !this.updateForm.invalid)
+      || (this.isUpdatePrincipalEmail == true && !this.updateForm.invalid)
     ) {
 
       this.isLoading = true;
@@ -90,7 +90,7 @@ export class SchoolUpdateComponent implements OnInit {
           },
           error: (err) => {
             this.isLoading = false;
-            this.toastService.showWarn('error', "Lỗi", err.error.message)
+            // this.toastService.showWarn('error', "Lỗi", err.error.message)
             console.log(err);
           }
         }
@@ -98,20 +98,6 @@ export class SchoolUpdateComponent implements OnInit {
     }
   }
 
-
-  onClickNotUpdatePrincipalEmail() {
-    if (this.isUpdatePrincipalEmail) {
-      this.isUpdatePrincipalEmail = false;
-      this.updateForm.patchValue({
-        principalEmail: this.principal?.email
-      })
-
-    } else {
-      this.isUpdatePrincipalEmail = true;
-
-    }
-
-  }
 
   isBlank(field: string): boolean | undefined {
     return (
@@ -197,29 +183,71 @@ export class SchoolUpdateComponent implements OnInit {
   onBack() {
     this.router.navigate(['school/' + this.school.schoolId])
   }
-  confirm() {
-    this.confirmationService.confirm({
-      message: 'Bạn có xác nhận hành động này không? (nếu bạn cập nhật hiệu trưởng, tài khoản hiệu trưởng cũ sẽ bị vô hiệu hóa',
-      header: 'Xác nhận',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Có',
-      rejectLabel:'Không',
-      accept: () => {
-        this.onSubmit()
 
-      },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toastService.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc cập nhật');
-            break;
-        }
-      },key: 'updateSchoolConfirm'
-    });
+  confirm() {
+    if (!this.updateForm.touched){
+      return
+    }
+    if (!this.updateForm.get('schoolName')?.invalid && !this.updateForm.get('address')?.invalid && this.isUpdatePrincipalEmail == false) {
+      this.updateForm.patchValue({
+        principalEmail: this.principal.email,
+        gender: this.principal.user?.gender,
+      })
+      this.confirmationService.confirm({
+        message: 'Bạn có xác nhận hành động này không? (nếu bạn cập nhật hiệu trưởng, tài khoản hiệu trưởng cũ sẽ bị vô hiệu hóa',
+        header: 'Xác nhận',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Có',
+        rejectLabel: 'Không',
+        accept: () => {
+          this.onSubmit()
+
+        }, key: 'updateSchoolConfirm'
+      });
+    } else {
+      this.isSubmitted = true;
+    }
+
   }
 
 
+  showDialog() {
+    this.visible = true;
+    this.isUpdatePrincipalEmail = true;
+  }
+
+  onSubmitPrincipal() {
+    this.ngOnInit();
+    if (this.isUpdatePrincipalEmail == true && !this.updateForm.invalid) {
+      this.isLoading = true;
+      this.schoolService.updateSchool(this.updateForm.value).subscribe(
+        {
+          next: (data) => {
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.router.navigate(['school/' + this.school.schoolId])
+            }, 1500)
+          },
+          error: (err) => {
+            this.isLoading = false;
+            this.toastService.showWarn('error', "Lỗi", err.error.message)
+            console.log(err);
+          }
+        }
+      )
+    } else {
+      this.isSubmitted = true;
+    }
+  }
+
+  reset() {
+    this.isUpdatePrincipalEmail = false;
+    this.updateForm.patchValue({
+      principalEmail: '',
+      fullName: '',
+      gender: '',
+      phoneNumber: null,
+      dob: null,
+    })
+  }
 }
