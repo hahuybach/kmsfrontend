@@ -281,6 +281,9 @@ export class InspectionPlanListComponent implements OnInit{
   onDetail(initiationPlanId: any) {
     this.router.navigate(['inspection-plan/' + initiationPlanId])
   }
+  onUpdate(initiationPlanId: any) {
+    this.router.navigate(['inspection-plan/update/' + initiationPlanId])
+  }
 
 
   maxPageOnKeyUp() {

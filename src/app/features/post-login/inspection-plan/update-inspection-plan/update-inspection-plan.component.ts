@@ -164,7 +164,7 @@ export class UpdateInspectionPlanComponent {
   openNewTab(documentLink: string) {
     console.log(documentLink);
     this.pdfPreviewVisibility = true;
-    this.fileService.readInitiationplanPDF(documentLink).subscribe((response) => {
+    this.fileService.readInspectionPlanPDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
