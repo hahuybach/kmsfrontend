@@ -20,6 +20,7 @@ export class InspectionPlanInspectorPopupComponent {
   @Input() popupInspectorVisible: boolean;
   @Input() inspectorList: any[] = [];
   @Input() chiefList: any[] = [];
+  @Input() inspectorListIsValid: boolean;
   @Output() popupInspectorVisibleChange = new EventEmitter<boolean>();
   @Output() selectedInspectorsList = new EventEmitter<any[]>();
   selectedInspectors: any[] = [];
@@ -37,7 +38,7 @@ export class InspectionPlanInspectorPopupComponent {
     if (!this.selectedInspectors || !this.selectedInspectors.length) {
       this.errorText = 'Vui lòng chọn ít nhất một thành viên cho đoàn kiểm tra';
       return;
-    } else if (!this.isEligibleInspectorExist(this.selectedInspectors)) {
+    } else if (!this.isEligibleInspectorExist(this.selectedInspectors) && !this.inspectorListIsValid) {
       this.errorText =
         'Đoàn kiểm tra phải bao gồm ít nhất một trưởng phòng hoặc phó phòng';
       return;
@@ -46,6 +47,7 @@ export class InspectionPlanInspectorPopupComponent {
     this.inspectionplanInspectorService.saveToInspectorList(
       this.selectedInspectors
     );
+    this.inspectionplanInspectorService.setInspectorListIsValid(true);
     this.selectedInspectorsList.emit(this.selectedInspectors);
     this.popupInspectorVisible = false;
     this.selectedInspectors = [];

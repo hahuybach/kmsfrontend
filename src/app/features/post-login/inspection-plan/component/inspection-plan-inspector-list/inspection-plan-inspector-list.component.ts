@@ -29,10 +29,10 @@ export class InspectionPlanInspectorListComponent {
   }
   confirmDeleteRemainingInspector(index: number) {
     this.confirmationService.confirm({
-      message: 'Xóa thanh tra này sẽ khiến danh sách danh tra bị xóa do không đủ ứng viên cho trưởng đoàn. Bạn có muốn tiếp tục?',
+      message: 'Xóa thanh tra này sẽ khiến danh sách danh tra bị xóa do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
       header: 'Xác nhận xóa thanh tra',
       key: 'confirmDeleteRemainingInspector',
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.recreateInspectorList.emit();
         return;
@@ -69,14 +69,11 @@ export class InspectionPlanInspectorListComponent {
   }
 
   changeInspectorVisible() {
-    console.log(this.selectedInspectors)
-    console.log(this.chiefList)
     this.toggleIssueListPopup.emit();
   }
   changeToggleStatus() {
     this.toggleChange = !this.toggleChange;
     this.deleteButtonVisibility = !this.deleteButtonVisibility;
-    console.log(this.selectedInspectors)
   }
 
   isEligibleInspectorExist(selectedInspectors: any[]): boolean {

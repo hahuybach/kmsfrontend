@@ -27,7 +27,7 @@ export class CreateInspectionPlanComponent {
   selectedInspectorList: any[] = [];
   createLoadingVisibility: boolean = false;
   createComplete: boolean = false;
-
+  inspectorListIsValid: boolean = false;
   constructor(
     private fb: FormBuilder,
     private readonly inspectionPlanService: inspectionPlanService,
@@ -41,7 +41,9 @@ export class CreateInspectionPlanComponent {
   ngOnInit() {
     this.inspectionplanInspectorService.setInspectorList(this.selectedInspectorList);
     this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.selectedInspectorList = list);
-
+    this.inspectionplanInspectorService.inspectorListIsValid$.subscribe(isValid => {
+      this.inspectorListIsValid = isValid;
+    });
     this.inspectionPlanService.getEligibleSchool().subscribe({
       next: (data) => {
         this.schoolList = data;
@@ -100,6 +102,7 @@ export class CreateInspectionPlanComponent {
 
   onResetList() {
     this.inspectionplanInspectorService.resetBothLists();
+    this.inspectionplanInspectorService.setInspectorListIsValid(false);
   }
 
   getInspectorIds(data: any) {

@@ -71,6 +71,7 @@ export class UpdateInspectionPlanComponent {
   selectedInspectorList: any[] = [];
   defaultEndDate: Date = new Date();
   defaultStartDate: Date = new Date();
+  inspectorListIsValid: boolean = true;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -94,6 +95,7 @@ export class UpdateInspectionPlanComponent {
   }
 
   onResetList() {
+    this.inspectionplanInspectorService.setInspectorListIsValid(false);
     this.inspectionplanInspectorService.resetBothLists()
   }
 
@@ -136,8 +138,10 @@ export class UpdateInspectionPlanComponent {
         this.getInspectorIds(this.inspectorList);
         this.inspectionplanInspectorService.setInspectorList(this.inspectorList);
         this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
+        this.inspectionplanInspectorService.setInspectorListIsValid(this.inspectorListIsValid);
         this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.inspectorList = list);
         this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.nonInspectorList = list);
+        this.inspectionplanInspectorService.inspectorListIsValid$.subscribe(isValid => this.inspectorListIsValid = isValid);
         this.getInspectorIds(this.inspectionPlanDetail.inspectors);
         this.chiefInspector = this.inspectorList.filter(inspector => inspector.chief);
         console.log(this.chiefInspector)
