@@ -26,7 +26,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
-import {TuiCalendarRangeModule, TuiInputDateModule, TuiInputDateRangeModule} from '@taiga-ui/kit';
+import {TuiInputDateModule, TuiInputDateRangeModule} from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
 @NgModule({
   declarations: [

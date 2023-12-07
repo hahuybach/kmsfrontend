@@ -12,6 +12,7 @@
   [style]="{ width: '50vw' }"
   acceptLabel="Xác nhận"
   rejectLabel="Hủy bỏ"
+  key="changeTime"
 ></p-confirmDialog>
 <app-loading-complete-dialog
   [visible]="createLoadingVisibility"
@@ -129,6 +130,7 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
             <tui-input-date
+              (tuiValueChanges)="onStartDateChange()"
               [min]="minStartDate"
               [max]="maxStartDate"
               class="tui-date"
@@ -139,6 +141,7 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
             <tui-input-date
+              (tuiValueChanges)="onEndDateChange()"
               [min]="minEndDate"
               class="tui-date"
               tuiTextfieldSize="m"

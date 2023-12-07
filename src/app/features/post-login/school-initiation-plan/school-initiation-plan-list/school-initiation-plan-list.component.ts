@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { InitiationplanService } from 'src/app/services/initiationplan.service';
-import { IssueDropDownResponse } from '../../../../models/issue-drop-down-response';
-import { SchoolResponse } from '../../../../models/school-response';
-import { SchoolService } from '../../../../services/school.service';
-import { IssueService } from '../../../../services/issue.service';
-import { ToastService } from '../../../../shared/toast/toast.service';
-import { InitiationPlanResponse } from '../../../../models/initiation-plan-response';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../../services/auth.service';
-import { Role } from '../../../../shared/enum/role';
-import {tuiDayToDate} from "../../../../shared/util/util";
-import {TuiDay} from "@taiga-ui/cdk";
+import {Component, OnInit} from '@angular/core';
+import {InitiationplanService} from 'src/app/services/initiationplan.service';
+import {IssueDropDownResponse} from '../../../../models/issue-drop-down-response';
+import {SchoolResponse} from '../../../../models/school-response';
+import {SchoolService} from '../../../../services/school.service';
+import {IssueService} from '../../../../services/issue.service';
+import {ToastService} from '../../../../shared/toast/toast.service';
+import {InitiationPlanResponse} from '../../../../models/initiation-plan-response';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthService} from '../../../../services/auth.service';
+import {Role} from '../../../../shared/enum/role';
+import {dateToTuiDay, tuiDayToDate} from "../../../../shared/util/util";
+import {TuiDay, TuiDayRange} from "@taiga-ui/cdk";
 
 @Component({
   selector: 'app-school-initiation-plan-list',
@@ -30,16 +30,18 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   deadlineEndDateTime: any;
   deadlineDateError: any;
 
+  createDateRange :any;
+  deadlineDateRange :any;
 
 
   advanceSearchButtonText = 'Hiện tra cứu nâng cao';
   schools: SchoolResponse[];
   selectedSchool: any;
   statuses = [
-    { label: 'Đang thực thi', value: 6 },
-    { label: 'Chờ phê duyệt', value: 7 },
-    { label: 'Phê duyệt', value: 8 },
-    { label: 'Không được phê duyệt', value: 9 },
+    {label: 'Đang thực thi', value: 6},
+    {label: 'Chờ phê duyệt', value: 7},
+    {label: 'Phê duyệt', value: 8},
+    {label: 'Không được phê duyệt', value: 9},
   ];
   selectedStatus: any;
 
@@ -60,7 +62,8 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private activateRouter: ActivatedRoute
-  ) {}
+  ) {
+  }
 
   initQuery() {
     this.activateRouter.queryParams.subscribe((value) => {
@@ -154,9 +157,14 @@ export class SchoolInitiationPlanListComponent implements OnInit {
         this.toastService.showError('error', 'Lỗi', error.error.message);
       },
     });
+
+
+
   }
 
   loadDocuments() {
+    console.log(this.createDateRange);
+
     if (
       this.creationStartDateTime != null &&
       this.creationEndDateTime != null &&
@@ -245,6 +253,8 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     this.creationEndDateTime = null;
     this.deadlineStartDateTime = null;
     this.deadlineEndDateTime = null;
+    this.createDateRange = null;
+    this.deadlineDateRange = null;
     this.loadDocuments();
   }
 
@@ -297,5 +307,21 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     this.loadDocuments();
   }
 
+  changeStartDate() {
+    if (this.createDateRange){
+      this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
+      this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
+      this.loadDocuments();
+    }
 
+  }
+
+  changeDeadlineDate() {
+    if (this.deadlineDateRange){
+      this.deadlineStartDateTime = tuiDayToDate(this.deadlineDateRange.from);
+      this.deadlineEndDateTime = tuiDayToDate(this.deadlineDateRange.to);
+      this.loadDocuments();
+    }
+
+  }
 }

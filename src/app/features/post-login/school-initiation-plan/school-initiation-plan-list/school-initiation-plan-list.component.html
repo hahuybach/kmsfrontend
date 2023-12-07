@@ -37,53 +37,29 @@
           </div>
         </div>
         <div class="col-md-4">
+          <label class="fw-medium">Khoảng ngày tạo</label>
+          <tui-input-date-range
+                  class="tui-date"
+                  tuiTextfieldSize="m"
+                  [(ngModel)]="createDateRange"
+                  (durationchange)="changeStartDate()"
+                  (ngModelChange)="changeStartDate()"
 
-
-          <mat-form-field class="w-100">
-            <mat-label>Khoảng thời gian tạo</mat-label>
-            <mat-date-range-input [rangePicker]="picker1">
-              <input
-                matStartDate
-                [(ngModel)]="creationStartDateTime"
-                placeholder="Bắt đầu"
-              />
-              <input
-                matEndDate
-                [(ngModel)]="creationEndDateTime"
-                placeholder="Kết thúc"
-                (dateChange)="loadDocuments()"
-              />
-            </mat-date-range-input>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker1"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #picker1></mat-date-range-picker>
-          </mat-form-field>
+          >
+          </tui-input-date-range>
         </div>
         <div class="col-md-4">
+          <label class="fw-medium">Khoảng hạn nộp</label>
+          <tui-input-date-range
+            class="tui-date"
+            tuiTextfieldSize="m"
+            [(ngModel)]="deadlineDateRange"
+            (durationchange)="changeDeadlineDate()"
+            (ngModelChange)="changeDeadlineDate()"
 
-          <mat-form-field class="w-100">
-            <mat-label>Khoảng hạn nộp</mat-label>
-            <mat-date-range-input [rangePicker]="picker2">
-              <input
-                matStartDate
-                [(ngModel)]="deadlineStartDateTime"
-                placeholder="Bắt đầu"
-              />
-              <input
-                matEndDate
-                [(ngModel)]="deadlineEndDateTime"
-                placeholder="Kết thúc"
-                (dateChange)="loadDocuments()"
-              />
-            </mat-date-range-input>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #picker2></mat-date-range-picker>
-          </mat-form-field>
+
+          >
+          </tui-input-date-range>
         </div>
       </div>
     </div>
@@ -127,7 +103,7 @@
             </ng-template>
           </p-dropdown>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="!isPrincipal">
           <label class="fw-medium">Tên trường</label>
           <p-dropdown
             [options]="schools"
@@ -138,7 +114,6 @@
             [showClear]="true"
             placeholder="Chọn 1 trường"
             (onChange)="loadDocuments()"
-            *ngIf="!isPrincipal"
           >
             <ng-template pTemplate="selectedItem">
               <div class="flex align-items-center gap-2" *ngIf="selectedSchool">
@@ -184,108 +159,108 @@
   <div class="table-content">
     <table class="table p-2 table-hover align-middle">
       <thead>
-        <tr>
-          <th (click)="onSort('initiationPlanName')">
-            <div class="header-container">
-              <span class="icon-text">Tên kế hoạch</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
+      <tr>
+        <th (click)="onSort('initiationPlanName')">
+          <div class="header-container">
+            <span class="icon-text">Tên kế hoạch</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="
                   sortBy === 'initiationPlanName' && sortDirection === 'asc'
                 "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="
                   sortBy === 'initiationPlanName' && sortDirection === 'desc'
                 "
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('issue.createdDate')">
-            <div class="header-container">
-              <span class="icon-text">Kế hoạch kiểm tra</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
+            ></i>
+          </div>
+        </th>
+        <th (click)="onSort('issue.createdDate')">
+          <div class="header-container">
+            <span class="icon-text">Kế hoạch kiểm tra</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="
                   sortBy === 'issue.createdDate' && sortDirection === 'asc'
                 "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="
                   sortBy === 'issue.createdDate' && sortDirection === 'desc'
                 "
-              ></i>
-            </div>
-          </th>
+            ></i>
+          </div>
+        </th>
 
-          <th (click)="onSort('school.schoolName')">
-            <div class="header-container">
-              <span class="icon-text">Trường</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
+        <th (click)="onSort('school.schoolName')">
+          <div class="header-container">
+            <span class="icon-text">Trường</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="
                   sortBy === 'school.schoolName' && sortDirection === 'asc'
                 "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="
                   sortBy === 'school.schoolName' && sortDirection === 'desc'
                 "
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('createdDate')">
-            <div class="header-container">
-              <span class="icon-text">Ngày tạo</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('deadline')">
-            <div class="header-container">
-              <span class="icon-text">Hạn nộp</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'deadline' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="sortBy === 'deadline' && sortDirection === 'desc'"
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('status')">
-            <div class="header-container">
-              <span class="icon-text">Trạng thái</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'status' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="sortBy === 'status' && sortDirection === 'desc'"
-              ></i>
-            </div>
-          </th>
+            ></i>
+          </div>
+        </th>
+        <th (click)="onSort('createdDate')">
+          <div class="header-container">
+            <span class="icon-text">Ngày tạo</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="sortBy === 'createdDate' && sortDirection === 'desc'"
+            ></i>
+          </div>
+        </th>
+        <th (click)="onSort('deadline')">
+          <div class="header-container">
+            <span class="icon-text">Hạn nộp</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="sortBy === 'deadline' && sortDirection === 'asc'"
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="sortBy === 'deadline' && sortDirection === 'desc'"
+            ></i>
+          </div>
+        </th>
+        <th (click)="onSort('status')">
+          <div class="header-container">
+            <span class="icon-text">Trạng thái</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="sortBy === 'status' && sortDirection === 'asc'"
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="sortBy === 'status' && sortDirection === 'desc'"
+            ></i>
+          </div>
+        </th>
 
-          <th></th>
-        </tr>
-        <span *ngIf="totalElements == 0"
-          >Không tìm thấy bản ghi nào phù hợp</span
-        >
+        <th></th>
+      </tr>
+      <span *ngIf="totalElements == 0"
+      >Không tìm thấy bản ghi nào phù hợp</span
+      >
       </thead>
       <tbody *ngIf="schoolInitPlans && schoolInitPlans.length > 0" class="px-2">
-        <tr
-          *ngFor="
+      <tr
+        *ngFor="
             let plan of schoolInitPlans
               | paginate
                 : {
@@ -295,48 +270,48 @@
                   };
             let i = index
           "
+      >
+        <td
+          class="py-4 px-2"
+          pTooltip="{{ plan.initiationPlanName }}"
+          tooltipPosition="top"
         >
-          <td
-            class="py-4 px-2"
-            pTooltip="{{ plan.initiationPlanName }}"
-            tooltipPosition="top"
+          {{ plan.initiationPlanName }}
+        </td>
+        <td
+          class="py-4 px-2"
+          pTooltip="{{ plan.issueName }}"
+          tooltipPosition="top"
+        >
+          {{ plan.issueName }}
+        </td>
+        <td
+          class="py-4 px-2"
+          pTooltip="{{ plan.schoolName }}"
+          tooltipPosition="top"
+        >
+          {{ plan.schoolName }}
+        </td>
+        <td class="py-4 px-2">
+          {{ plan.createdDate | date : "dd/MM/yyyy" }}
+        </td>
+        <td class="py-4 px-2">{{ plan.deadline | date : "dd/MM/yyyy" }}</td>
+        <td class="py-4 px-2">
+          <p-tag
+            [severity]="getStatusSeverity(plan?.status?.statusId)"
+            [value]="plan.statusName"
+          ></p-tag>
+        </td>
+        <td class="py-3 px-2">
+          <button
+            class="action-button"
+            type="button"
+            (click)="onDetail(plan.initiationPlanId)"
           >
-            {{ plan.initiationPlanName }}
-          </td>
-          <td
-            class="py-4 px-2"
-            pTooltip="{{ plan.issueName }}"
-            tooltipPosition="top"
-          >
-            {{ plan.issueName }}
-          </td>
-          <td
-            class="py-4 px-2"
-            pTooltip="{{ plan.schoolName }}"
-            tooltipPosition="top"
-          >
-            {{ plan.schoolName }}
-          </td>
-          <td class="py-4 px-2">
-            {{ plan.createdDate | date : "dd/MM/yyyy" }}
-          </td>
-          <td class="py-4 px-2">{{ plan.deadline | date : "dd/MM/yyyy" }}</td>
-          <td class="py-4 px-2">
-            <p-tag
-              [severity]="getStatusSeverity(plan?.status?.statusId)"
-              [value]="plan.statusName"
-            ></p-tag>
-          </td>
-          <td class="py-3 px-2">
-            <button
-              class="action-button"
-              type="button"
-              (click)="onDetail(plan.initiationPlanId)"
-            >
-              <i class="bi bi-info-circle-fill"></i>
-            </button>
-          </td>
-        </tr>
+            <i class="bi bi-info-circle-fill"></i>
+          </button>
+        </td>
+      </tr>
       </tbody>
     </table>
     <div class="d-flex justify-content-center table-footer">

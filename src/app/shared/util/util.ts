@@ -19,5 +19,6 @@ export function tuiDayToDate(date: TuiDay): Date{
   const day = date.day;
   const month = date.month;
   const year = date.year;
+  console.log("after parse " + day);
   return new Date(year, month, day);
 }
