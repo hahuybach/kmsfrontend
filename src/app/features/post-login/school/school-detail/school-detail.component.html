@@ -44,16 +44,28 @@
           <label class="span-heading-color mb-2">Email</label>
           <p class="fw-medium">{{ principal.email }}</p>
         </div>
-        <div class="mb-4">
-          <label class="span-heading-color mb-2">Tên</label>
-          <p class="fw-medium">{{ principal.user?.fullName }}</p>
+        <div class="mb-4 row">
+          <div class="col-md-6">
+            <label class="span-heading-color mb-2">Tên</label>
+            <p class="fw-medium">{{ principal.user?.fullName }}</p>
+          </div>
+          <div class="col-md-6">
+            <label class="span-heading-color mb-2">Giới tính</label>
+            <p class="fw-medium">
+              {{ principal.user?.gender ? "Nam" : "Nữ" }}
+            </p>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-6">
             <div class="mb-4">
-              <label class="span-heading-color mb-2">Giới tính</label>
+              <label class="span-heading-color mb-2">Số điện thoại</label>
               <p class="fw-medium">
-                {{ principal.user?.gender ? "Nam" : "Nữ" }}
+                {{
+                  principal.user?.phoneNumber == null
+                    ? "Chưa nhập số điện thoại"
+                    : principal.user?.phoneNumber
+                }}
               </p>
             </div>
           </div>
@@ -69,16 +81,6 @@
               </p>
             </div>
           </div>
-        </div>
-        <div class="mb-4">
-          <label class="span-heading-color mb-2">Số điện thoại</label>
-          <p class="fw-medium">
-            {{
-              principal.user?.phoneNumber == null
-                ? "Chưa nhập số điện thoại"
-                : principal.user?.phoneNumber
-            }}
-          </p>
         </div>
       </ng-container>
     </div>

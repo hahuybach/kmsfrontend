@@ -809,9 +809,9 @@
           *ngIf="action == 'addchild'"
           pButton
           (click)="add()"
-          [disabled]="assignmentForm.controls.assignmentName.errors?.['whitespace'] || 
-        assignmentForm.controls.assigneeId.errors?.['required'] || 
-        assignmentForm.controls.deadline.errors?.['required']  
+          [disabled]="assignmentForm.controls.assignmentName.errors?.['whitespace'] ||
+        assignmentForm.controls.assigneeId.errors?.['required'] ||
+        assignmentForm.controls.deadline.errors?.['required']
         "
         >
           Tạo mới
@@ -855,7 +855,7 @@
           <th>Người làm</th>
           <th>Hạn nộp</th>
           <th>Trạng thái</th>
-          <th></th>
+          <th class="width-200"></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-rowNode>
@@ -909,7 +909,7 @@
               {{ rowData.node?.status.statusName }}
             </p-tag>
           </td>
-          <td class="d-flex">
+          <td class="d-flex justify-content-around align-items-center width-200">
             <div
               pTooltip="Chi tiết"
               tooltipPosition="top"

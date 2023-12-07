@@ -3,6 +3,12 @@
   font-family: Arial, "Font Awesome 5 Free";
 }
 :host ::ng-deep {
+  .th-id {
+    width: 100px;
+  }
+  .th-200 {
+    width: 200px;
+  }
   table {
     table-layout: fixed;
     width: 100%;

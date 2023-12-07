@@ -26,6 +26,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
+import {TuiInputDateModule} from '@taiga-ui/kit';
 @NgModule({
   declarations: [
     FileSizePipePipe,
@@ -57,6 +58,7 @@ import { PrimeNGConfig } from 'primeng/api';
     MatNativeDateModule,
     MatDatepickerModule,
     MatFormFieldModule,
+    TuiInputDateModule
   ],
   exports: [
     InputTextModule,
@@ -85,6 +87,7 @@ import { PrimeNGConfig } from 'primeng/api';
     MatNativeDateModule,
     MatDatepickerModule,
     MatFormFieldModule,
+    TuiInputDateModule
   ],
 })
 export class SharedModule {

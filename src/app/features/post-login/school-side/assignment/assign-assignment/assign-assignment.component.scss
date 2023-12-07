@@ -51,6 +51,10 @@
 }
 
 :host ::ng-deep {
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
     .p-button {
         background-color: $primary;
         border-radius: 8px;
@@ -317,7 +321,7 @@ ul {
     width: 30%;
 }
 .width-200 {
-    width: 200px;
+    width: 300px;
 }
 a {
     text-decoration: none;
