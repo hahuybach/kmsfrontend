@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GuidanceDocumentService} from '../../../../services/guidance-document.service';
 import {IssueService} from '../../../../services/issue.service';
 import {
@@ -15,13 +15,15 @@ import {ToastService} from '../../../../shared/toast/toast.service';
 import {DocumentService} from '../../../../services/document.service';
 import {ConfirmationService, ConfirmEventType} from 'primeng/api';
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
+import {unSub} from "../../../../shared/util/util";
 
 @Component({
     selector: 'app-guidance-document-create',
     templateUrl: './guidance-document-create.component.html',
     styleUrls: ['./guidance-document-create.component.scss'],
 })
-export class GuidanceDocumentCreateComponent implements OnInit {
+export class GuidanceDocumentCreateComponent implements OnInit, OnDestroy {
+
     guidanceForm = this.fb.group({
         issueId: [''],
         guidanceDocumentName: ['', [Validators.required, NoWhitespaceValidator(), Validators.maxLength(254)]],
@@ -35,6 +37,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
     issue: IssueResponse;
     submitCompleted: boolean = false;
     fileInputPlaceholders: string[] = [];
+    subs: any[] = [];
 
     constructor(
         private guidanceService: GuidanceDocumentService,
@@ -76,7 +79,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
             });
         this.addGuidanceDocument();
         console.log(this.guidanceForm.value);
-        this.issueService
+     const sub =    this.issueService
             .getIssueById(
                 Number.parseInt(this.guidanceForm.get('issueId')?.value ?? '')
             )
@@ -88,6 +91,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
                     console.log(error);
                 },
             });
+     this.subs.push(sub);
     }
 
     onSubmit() {
@@ -102,7 +106,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
         if (!this.guidanceForm.invalid) {
             this.isLoading = true;
 
-            this.guidanceService
+          const sub =  this.guidanceService
                 .saveGuidanceDocument(this.guidanceForm.value, this.selectedFiles)
                 .subscribe({
                     next: (result) => {
@@ -120,6 +124,7 @@ export class GuidanceDocumentCreateComponent implements OnInit {
                         console.log(error);
                     },
                 });
+          this.subs.push(sub);
         }
     }
 
@@ -254,5 +259,8 @@ export class GuidanceDocumentCreateComponent implements OnInit {
         return (form.get(field)?.hasError('required') || form.get(field)?.hasError('whitespace')) &&
             ((form.get(field)?.dirty ?? false) ||
                 (form.get(field)?.touched ?? false) || this.isSubmitted)
+    }
+    ngOnDestroy(): void {
+        unSub(this.subs)
     }
 }
