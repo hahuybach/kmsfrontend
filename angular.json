@@ -77,6 +77,10 @@
               "browserTarget": "kms:build:development"
             }
           },
+          "options": {
+            "host": "kms.edu.vn",
+            "port": 80
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
