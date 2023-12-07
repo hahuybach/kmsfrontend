@@ -9,15 +9,16 @@
 }
 
 :host ::ng-deep .p-tabmenu-nav {
-  .p-menuitem-link {
+  .p-menuitem {
     text-decoration: none;
     color: $primary;
   }
-
+  .p-menuitem-text {
+    color: $primary;
+  }
   .p-highlight {
     a {
       border-bottom-color: $primary;
     }
   }
 }
-
