@@ -9,6 +9,8 @@ import { InitiationPlanResponse } from '../../../../models/initiation-plan-respo
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { Role } from '../../../../shared/enum/role';
+import {tuiDayToDate} from "../../../../shared/util/util";
+import {TuiDay} from "@taiga-ui/cdk";
 
 @Component({
   selector: 'app-school-initiation-plan-list',
@@ -27,6 +29,11 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   deadlineStartDateTime: any;
   deadlineEndDateTime: any;
   deadlineDateError: any;
+  dateRange = {
+    from: new TuiDay(0,0,0),
+    to: new TuiDay(0,0,0),
+  };
+
 
   advanceSearchButtonText = 'Hiện tra cứu nâng cao';
   schools: SchoolResponse[];
@@ -284,6 +291,12 @@ export class SchoolInitiationPlanListComponent implements OnInit {
 
   onTableDataChange($event: number) {
     this.pageNo = $event;
+    this.loadDocuments();
+  }
+
+  changeStartDate() {
+    this.creationStartDateTime = tuiDayToDate(this.dateRange.from).toISOString();
+    this.creationEndDateTime = tuiDayToDate(this.dateRange.to).toString();
     this.loadDocuments();
   }
 }

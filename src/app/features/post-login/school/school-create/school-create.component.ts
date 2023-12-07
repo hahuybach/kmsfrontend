@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {map, Observable} from "rxjs";
 import {SchoolService} from "../../../../services/school.service";
 import {AccountService} from "../../../../services/account.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
