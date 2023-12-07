@@ -46,7 +46,7 @@ import { GuidanceDocumentBaseComponent } from './features/post-login/guidance-do
 import { SchoolInitiationPlanBaseComponent } from './features/post-login/school-initiation-plan/school-initiation-plan-base/school-initiation-plan-base.component';
 import { SchoolBaseComponent } from './features/post-login/school/school-base/school-base.component';
 import { UserBaseComponent } from './features/post-login/user/user-base/user-base.component';
-import {InitiationPlanDetailGuardGuard} from "./shared/guards/initiation-plan-detail-guard.guard";
+import { InitiationPlanDetailGuardGuard } from './shared/guards/initiation-plan-detail-guard.guard';
 const routes: Routes = [
   {
     path: '',
@@ -140,7 +140,7 @@ const routes: Routes = [
             component: SchoolInitiationPlanDetailComponent,
           },
           {
-            path: ':id/school-side',
+            path: 'school-side/:id',
             canActivate: [InitiationPlanDetailGuardGuard],
             component: InitiationPlanDetailComponent,
           },

@@ -40,6 +40,7 @@ export class InitiationPlanDetailComponent implements OnInit {
   isFileLoading = false;
   pdfPreviewVisibility: boolean = false;
   ngOnInit(): void {
+    console.log('run here');
     this.route.params
       .pipe(
         switchMap((params) => {

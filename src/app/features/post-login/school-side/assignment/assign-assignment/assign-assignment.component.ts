@@ -61,8 +61,12 @@ export class AssignAssignmentComponent implements OnInit {
   fileInputPlaceholders: string;
   @ViewChild('fileInput') fileInput: any;
   fileInputForm = this.fb.group({
-    documentCode: ['', NoWhitespaceValidator()],
-    documentName: ['', NoWhitespaceValidator()],
+    documentCode: [''],
+    documentName: ['', Validators.compose([
+      Validators.required,
+      Validators.maxLength(256),
+      NoWhitespaceValidator(),
+    ])],
     file: ['', Validators.required],
   });
   historyDtos: any[] = [];
@@ -543,6 +547,10 @@ export class AssignAssignmentComponent implements OnInit {
     }
   }
   uploadFiles() {
+    if (this.fileInputForm.invalid) {
+      this.fileInputForm.markAllAsTouched();
+      return;
+    }
     this.isFileLoading = true;
     const documentData = {
       assignmentId: this.selectedAssignment.assignmentId,
