@@ -98,7 +98,7 @@ export class UserProfileComponent implements OnInit{
         }, error: (error) => {
           this.isLoading = false;
           this.submitCompleted = false;
-          this.toastService.showWarn("error", "Lỗi", error.error.message);
+          this.toastService.showWarn("user-profile", "Lỗi", error.error.message);
         }
 
       })
@@ -121,7 +121,7 @@ export class UserProfileComponent implements OnInit{
       accept: () => {
         this.onSubmit()
 
-      },
+      },key: "user-profile-confirm",
     });
   }
 

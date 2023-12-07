@@ -73,11 +73,11 @@ export class ChangePasswordComponent {
           this.form.reset()
           this.form.markAsPristine();
           this.isSubmitted = false;
-          this.toast.showSuccess("error", "Thông báo", "Đổi mật khẩu thành công")
+          this.toast.showSuccess("change-password", "Thông báo", "Đổi mật khẩu thành công")
 
         },
         error: (error) =>{
-          this.toast.showError("error", "Lỗi", error.error.message)
+          this.toast.showError("change-password", "Lỗi", error.error.message)
 
         }
       })
@@ -98,16 +98,7 @@ export class ChangePasswordComponent {
         this.onSubmit()
 
       },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc thay đổi');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc thay đổi');
-            break;
-        }
-      }
+      key: "change-password-confirm"
     });
   }
 
