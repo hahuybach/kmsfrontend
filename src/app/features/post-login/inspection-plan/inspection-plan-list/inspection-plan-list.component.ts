@@ -53,8 +53,6 @@ export class InspectionPlanListComponent implements OnInit{
   statuses = [
     {label: 'Chưa bắt đầu', value: 19},
     {label: 'Đang tiến hành', value: 20},
-    {label: 'Đã quá hạn', value: 21},
-    {label: 'Chưa hoàn thành', value: 22},
     {label: 'Hoàn thành', value: 23}
     ,
   ];

@@ -198,8 +198,8 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
       description: this.inspectionPlanForm.get('description')?.value,
       chiefId: this.inspectionPlanForm.get('chiefId')?.value,
       inspectorIds: this.inspectionPlanForm.get('inspectorIds')?.value,
-      startDate: new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString(),
-      endDate: new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString(),
+      startDate: new Date(tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value)).toISOString(),
+      endDate: new Date(tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value)).toISOString(),
       schoolId: this.inspectionPlanForm.get('schoolId')?.value,
       documentInspectionPlanDto: {
         documentName: this.inspectionPlanForm.get('documentInspectionPlanDto.documentName')?.value,
