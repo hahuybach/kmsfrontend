@@ -79,7 +79,8 @@
           },
           "options": {
             "host": "kms.edu.vn",
-            "port": 80
+            "port": 80,
+            "disableHostCheck": true
           },
           "defaultConfiguration": "development"
         },
