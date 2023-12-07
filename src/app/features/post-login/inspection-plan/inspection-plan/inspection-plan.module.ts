@@ -15,6 +15,7 @@ import {inspectionPlanService} from "../../../../services/inspectionplan.service
 import {RouterLink} from "@angular/router";
 import {NgxPaginationModule} from "ngx-pagination";
 import {TuiTextfieldControllerModule} from "@taiga-ui/core";
+import {TuiValueChangesModule} from "@taiga-ui/cdk";
 
 @NgModule({
   declarations: [
@@ -25,13 +26,14 @@ import {TuiTextfieldControllerModule} from "@taiga-ui/core";
     InspectionPlanInspectorListComponent,
     InspectionPlanInspectorPopupComponent,
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    RouterLink,
-    NgxPaginationModule,
-    TuiTextfieldControllerModule,
-  ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        RouterLink,
+        NgxPaginationModule,
+        TuiTextfieldControllerModule,
+        TuiValueChangesModule,
+    ],
     exports: [
         InspectionPlanInspectorListComponent
     ],

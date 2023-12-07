@@ -80,12 +80,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     })
     this.minEndDate = dateToTuiDay(tomorow);
     this.minStartDate = dateToTuiDay(tomorow);
-    this.inspectionPlanForm.get('endDate')?.valueChanges.subscribe( x => {
-      this.onEndDateChange();
-    })
-    this.inspectionPlanForm.get('startDate')?.valueChanges.subscribe( x => {
-      this.onStartDateChange();
-    })
+
     this.initInspectorList();
   }
 
@@ -141,7 +136,17 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
 
   onStartDateChange() {
     if (this.selectedInspectorList.length > 0) {
-      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+      this.confirmationService.confirm({
+        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        key:  'changeTime',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+        },
+        reject: (type: ConfirmEventType) => {
+        }
+      });
     }
     this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
     this.initInspectorList();
@@ -149,7 +154,17 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
 
   onEndDateChange() {
     if (this.selectedInspectorList.length > 0) {
-      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+      this.confirmationService.confirm({
+        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        key:  'changeTime',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+        },
+        reject: (type: ConfirmEventType) => {
+        }
+      });
     }
     this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
     this.initInspectorList();

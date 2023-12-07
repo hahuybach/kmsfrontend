@@ -60,6 +60,10 @@
           </mat-form-field>
         </div>
         <div class="col-md-4">
+          <tui-input-date-range
+
+          >
+          </tui-input-date-range>
           <mat-form-field class="w-100">
             <mat-label>Khoảng hạn nộp</mat-label>
             <mat-date-range-input [rangePicker]="picker2">
@@ -124,7 +128,7 @@
             </ng-template>
           </p-dropdown>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="!isPrincipal">
           <label class="fw-medium">Tên trường</label>
           <p-dropdown
             [options]="schools"
@@ -135,7 +139,6 @@
             [showClear]="true"
             placeholder="Chọn 1 trường"
             (onChange)="loadDocuments()"
-            *ngIf="!isPrincipal"
           >
             <ng-template pTemplate="selectedItem">
               <div class="flex align-items-center gap-2" *ngIf="selectedSchool">

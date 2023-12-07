@@ -163,12 +163,6 @@ export class UpdateInspectionPlanComponent {
     this.minEndDate = dateToTuiDay(tomorow);
     this.minStartDate = dateToTuiDay(tomorow);
 
-    this.inspectionPlanForm.get('endDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
-      this.onEndDateChange();
-    })
-    this.inspectionPlanForm.get('startDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
-      this.onStartDateChange();
-    })
   }
 
   openNewTab(documentLink: string) {
