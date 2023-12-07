@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class InspectionService {
-  private inspectionApiUrl = 'http://localhost:8080/api/v1/inspection';
+  private inspectionApiUrl = 'api/v1/inspection';
 
   constructor(private loggerService: LoggerService, private http: HttpClient) {
     this.loggerService.log('Inspection service constructed');

@@ -2,12 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
 import {FilterGuidanceDocumentResponse} from "../models/filter-guidance-document-response";
 import {Observable} from "rxjs";
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GuidanceDocumentService {
-  private baseUrl: string = 'http://localhost:8080/api/v1/guidance/'
+  private baseUrl: string = DomainName.URL +  'api/v1/guidance/'
 
   constructor(private httpClient: HttpClient) {
   }

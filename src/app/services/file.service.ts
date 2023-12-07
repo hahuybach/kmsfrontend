@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root',
 })
 export class FileService {
-  private issueApiUrl = 'http://localhost:8080/api/v1/issue';
   constructor(private http: HttpClient) {}
 
   readIssuePDF(id: string): Observable<HttpResponse<Blob>> {
-    const url = `http://localhost:8080/api/v1/issue/document/${id}`; // Replace with your API endpoint
+    const url = DomainName.URL +  `api/v1/issue/document/${id}`; // Replace with your API endpoint
     console.log(url);
     // Set the response type as 'blob' to handle binary files
     return this.http.get(url, {
@@ -19,7 +19,7 @@ export class FileService {
     });
   }
   readInitiationplanPDF(id: string): Observable<HttpResponse<Blob>> {
-    const url = `http://localhost:8080/api/v1/initiation_plan/view/document/${id}`; // Replace with your API endpoint
+    const url = DomainName.URL +  `api/v1/initiation_plan/view/document/${id}`; // Replace with your API endpoint
     console.log(url);
     // Set the response type as 'blob' to handle binary files
     return this.http.get(url, {
@@ -40,7 +40,7 @@ export class FileService {
     });
   }
   readAssignmentPDF(id: string): Observable<HttpResponse<Blob>> {
-    const url = `http://localhost:8080/api/v1/assignment/view/document/${id}`; // Replace with your API endpoint
+    const url = DomainName.URL + `api/v1/assignment/view/document/${id}`; // Replace with your API endpoint
     console.log(url);
     // Set the response type as 'blob' to handle binary files
     return this.http.get(url, {
