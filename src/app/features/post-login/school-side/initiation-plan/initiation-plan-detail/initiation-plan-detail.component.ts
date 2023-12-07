@@ -173,6 +173,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.pdfUrl = blobUrl;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
     this.pdfLoaded = true;
+    this.pdfPreviewVisibility = true;
   }
   openNewTab(documentLink: string) {
     this.pdfPreviewVisibility = true;
@@ -184,7 +185,6 @@ export class InitiationPlanDetailComponent implements OnInit {
         this.pdfUrl = blobUrl;
         this.safePdfUrl =
           this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-        this.pdfPreviewVisibility = false;
         this.pdfLoaded = true;
       });
   }
@@ -365,5 +365,6 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+    this.pdfPreviewVisibility = false;
   }
 }

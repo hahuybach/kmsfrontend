@@ -235,7 +235,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
           id: assignment.assignmentId,
         };
         console.log(deleteAssignment);
-        this.assignmentService
+        const method = this.assignmentService
           .deleteDeptAssignment(deleteAssignment)
           .subscribe({
             next: (response) => {
@@ -256,6 +256,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
               });
             },
           });
+        this.sub.push(method);
       },
       reject: (type: any) => {},
     });
@@ -295,22 +296,25 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
         icon: 'bi bi-exclamation-triangle-fill',
         key: 'confirm',
         accept: () => {
-          this.assignmentService.sendAssignmentsToSchool().subscribe({
-            next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Gửi thành công',
-                detail: 'Gửi template thành công',
-              });
-            },
-            error: (error) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Gửi thất bại',
-                detail: error.error.message,
-              });
-            },
-          });
+          const method = this.assignmentService
+            .sendAssignmentsToSchool()
+            .subscribe({
+              next: () => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Gửi thành công',
+                  detail: 'Gửi template thành công',
+                });
+              },
+              error: (error) => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Gửi thất bại',
+                  detail: error.error.message,
+                });
+              },
+            });
+          this.sub.push(method);
         },
         reject: (type: any) => {},
       });
