@@ -95,6 +95,7 @@ export class AssignAssignmentComponent implements OnInit {
   isFileLoading = false;
   tabs: MenuItem[];
   activeTab: MenuItem | undefined;
+  sub: any[] = [];
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -103,6 +104,7 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Thư mục', value: false },
       { label: 'Nộp tài liệu', value: true },
     ];
+    this.assignmentForm.get('isTask')?.setValue(true);
     this.tabs = [
       {
         label: 'Bình luận',
@@ -200,13 +202,19 @@ export class AssignAssignmentComponent implements OnInit {
   // ADD
   openDetail(assignment?: any, action?: string) {
     this.selectedAssignment = assignment;
-    this.assignmentVisible = true;
     const parentIdObj = { parentId: assignment.assignmentId };
     this.assignmentService.getPossibleAssignee(parentIdObj).subscribe({
       next: (data) => {
         console.log(data);
         console.log(data.listOfPossibleAssignees);
-        this.listOfPossibleAssignees = data.listOfPossibleAssignees;
+        if (data.listOfPossibleAssignees) {
+          this.listOfPossibleAssignees = data.listOfPossibleAssignees;
+          this.selectedAssignee = this.listOfPossibleAssignees[0];
+          this.assignmentForm
+            .get('assigneeId')
+            ?.setValue(this.listOfPossibleAssignees[0].accountId);
+        }
+        this.assignmentVisible = true;
       },
     });
     this.action = action;
@@ -242,12 +250,13 @@ export class AssignAssignmentComponent implements OnInit {
   add() {
     if (this.assignmentForm.invalid) {
       this.assignmentForm.markAllAsTouched();
+      console.log(this.assignmentForm.value);
       return;
     }
     const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
     const isoDateString = new Date(deadlineValue).toISOString();
     this.confirmationService.confirm({
-      message: 'Bạn có muốn tạo mới công việc  này?',
+      message: 'Bạn có muốn tạo mới công việc này?',
       header: 'Xác nhận tạo mới',
       key: 'confirmAssignment',
       accept: () => {
@@ -425,10 +434,11 @@ export class AssignAssignmentComponent implements OnInit {
     this.assignmentForm.reset();
     this.showComment = true;
     this.stompService.unsubscribe(this.selectedAssignment.assignmentId);
+    this.assignmentForm.get('isTask')?.setValue(false);
+    this.activeTab = this.tabs[0];
     this.router.navigate(['/assignassignment/' + this.issueId], {
       queryParams: {},
     });
-    this.activeTab = this.tabs[0];
   }
 
   getStatusSeverity(statusId: number): string {
@@ -649,6 +659,7 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentService.submitAssignment(jsonData).subscribe({
           next: (data) => {
             this.selectedAssignment = data;
+            this.initData();
             this.messageService.add({
               severity: 'success',
               summary: 'Nộp thành công',
@@ -683,6 +694,7 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentService.submitAssignment(jsonData).subscribe({
           next: (data) => {
             this.selectedAssignment = data;
+            this.initData();
             this.messageService.add({
               severity: 'success',
               summary: 'Hủy nộp thành công',
