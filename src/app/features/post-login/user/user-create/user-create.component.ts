@@ -223,6 +223,13 @@ export class UserCreateComponent implements OnInit {
   }
 
   confirm() {
+    if (this.createUserForm.invalid){
+      this.isSubmitted = true;
+      return
+    }
+    if (!this.createUserForm.touched){
+      return;
+    }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận muốn tạo người dùng này không?',
       header: 'Xác nhân',
