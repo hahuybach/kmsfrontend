@@ -11,7 +11,7 @@ import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {SchoolResponse} from "../../../../models/school-response";
 import {Role} from "../../../../shared/enum/role";
 import {SchoolService} from "../../../../services/school.service";
-import {keys} from "ag-grid-community/dist/lib/utils/map";
+
 
 @Component({
   selector: 'app-user-create',
@@ -25,9 +25,9 @@ export class UserCreateComponent implements OnInit {
     {label: 'Nữ', value: 'FEMALE'}]
 
   createUserForm = this.fb.group({
-    email: ['', [Validators.email, Validators.required], [this.validateEmailUnique.bind(this)]],
+    email: ['', [Validators.email, Validators.required, Validators.maxLength(254)], [this.validateEmailUnique.bind(this)]],
     roleId: [-1, [Validators.required, Validators.min(1)]],
-    fullName: ['', [NoWhitespaceValidator(), Validators.required]],
+    fullName: ['', [NoWhitespaceValidator(), Validators.required, Validators.maxLength(254)]],
     gender: ['MALE'],
     phoneNumber: [null, [Validators.pattern("^[0-9]{10}$")]],
     dob: [null, this.validateDateNotGreaterThanToday.bind(this)],
@@ -223,6 +223,13 @@ export class UserCreateComponent implements OnInit {
   }
 
   confirm() {
+    if (this.createUserForm.invalid){
+      this.isSubmitted = true;
+      return
+    }
+    if (!this.createUserForm.touched){
+      return;
+    }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận muốn tạo người dùng này không?',
       header: 'Xác nhân',

@@ -16,6 +16,10 @@
         <span *ngIf="  (this.createUserForm.get('fullName')?.hasError('required') || this.createUserForm.get('fullName')?.hasError('whitespace'))   &&
             ((this.createUserForm.get('fullName')?.dirty ?? false) ||
                 (this.createUserForm.get('fullName')?.touched ?? false) || this.isSubmitted)" class="p-error">Không được để trống mục này</span>
+        <span class="p-error"
+              *ngIf="createUserForm.get('fullName')?.hasError('maxlength')">
+          Họ và tên không được quá 254 ký tự, vui lòng điền lại
+        </span>
       </div>
       <div class="mb-2">
         <label class="fw-medium mb-1">Email<span class="p-error">*</span></label>
@@ -27,10 +31,14 @@
         >
         <span *ngIf="isBlank('email')" class="p-error">Không được để trống mục này</span>
         <span class="p-error"
-              *ngIf="createUserForm.get('email')?.hasError('email')">Sai định dạng gmail</span>
+              *ngIf="createUserForm.get('email')?.hasError('email')">Sai định dạng Email, Email phải dưới định dạng NguyenVanA@gmail.com</span>
         <span class="p-error"
               *ngIf="createUserForm.get('email')?.hasError('notUnique')">
-              Email này đã tồn tại vui lòng chọn email khác
+              Email này đã tồn tại, vui lòng chọn email khác
+        </span>
+        <span class="p-error"
+              *ngIf="createUserForm.get('email')?.hasError('maxlength')">
+              Email này vượt quá 254 ký tự, vui lòng chọn Email khác
         </span>
       </div>
       <div class="col-md-6 col-sm-12 mb-2">
@@ -67,7 +75,7 @@
         >
         <span class="p-error"
               *ngIf="isError('phoneNumber', 'pattern')">
-                Sai định dạng số điện thoại
+                Số điện thoại phải ở dưới định dạng 0123456789
         </span>
       </div>
       <div *ngIf="schools" class="col-md-6 col-sm-12 mb-2">
