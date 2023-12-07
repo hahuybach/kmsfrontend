@@ -27,11 +27,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
 import {TuiInputDateModule} from '@taiga-ui/kit';
+import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
 @NgModule({
   declarations: [
     FileSizePipePipe,
     LoadingCompleteDialogComponent,
     FileLoadingComponent,
+    DataNotExistComponent,
   ],
   imports: [
     CommonModule,
@@ -58,7 +60,7 @@ import {TuiInputDateModule} from '@taiga-ui/kit';
     MatNativeDateModule,
     MatDatepickerModule,
     MatFormFieldModule,
-    TuiInputDateModule
+    TuiInputDateModule,
   ],
   exports: [
     InputTextModule,
@@ -87,7 +89,8 @@ import {TuiInputDateModule} from '@taiga-ui/kit';
     MatNativeDateModule,
     MatDatepickerModule,
     MatFormFieldModule,
-    TuiInputDateModule
+    TuiInputDateModule,
+    DataNotExistComponent,
   ],
 })
 export class SharedModule {

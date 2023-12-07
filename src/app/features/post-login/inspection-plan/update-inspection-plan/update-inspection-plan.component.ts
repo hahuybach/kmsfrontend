@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subscription, switchMap} from "rxjs";
+import {skip, Subscription, switchMap} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -71,8 +71,6 @@ export class UpdateInspectionPlanComponent {
   eligibleChiefList: any[];
   chiefList: any[];
   selectedInspectorList: any[] = [];
-  defaultEndDate: Date = new Date();
-  defaultStartDate: Date = new Date();
   inspectorListIsValid: boolean = true;
   private subscriptions: Subscription[] = [];
 
@@ -164,10 +162,11 @@ export class UpdateInspectionPlanComponent {
 
     this.minEndDate = dateToTuiDay(tomorow);
     this.minStartDate = dateToTuiDay(tomorow);
-    this.inspectionPlanForm.get('endDate')?.valueChanges.subscribe( x => {
+
+    this.inspectionPlanForm.get('endDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
       this.onEndDateChange();
     })
-    this.inspectionPlanForm.get('startDate')?.valueChanges.subscribe( x => {
+    this.inspectionPlanForm.get('startDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
       this.onStartDateChange();
     })
   }
@@ -181,12 +180,6 @@ export class UpdateInspectionPlanComponent {
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
     });
-  }
-
-  patchChiefId() {
-    this.inspectionPlanForm.patchValue({
-      chiefId: this.chiefInspector.accountId
-    })
   }
 
   handleFileInputChange(fileInput: any): void {
@@ -231,14 +224,33 @@ export class UpdateInspectionPlanComponent {
 
   onStartDateChange() {
     if (this.inspectorList.length > 0) {
-      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+      this.confirmationService.confirm({
+        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+        },
+        reject: (type: ConfirmEventType) => {
+        }
+      });
     }
     this.initInspectorList();
   }
 
   onEndDateChange() {
     if (this.inspectorList.length > 0) {
-      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+      this.confirmationService.confirm({
+        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        key:  'changeTime',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+        },
+        reject: (type: ConfirmEventType) => {
+        }
+      });
     }
     this.initInspectorList()
   }
