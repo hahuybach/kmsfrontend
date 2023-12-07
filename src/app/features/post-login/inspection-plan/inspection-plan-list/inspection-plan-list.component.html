@@ -335,6 +335,7 @@
               <button
                 class="action-button"
                 type="button"
+                [disabled]="!isChiefInspector"
                 (click)="onUpdate(plan.inspectionPlanId)"
               >
                 <i class="bi bi-pencil-fill"></i>

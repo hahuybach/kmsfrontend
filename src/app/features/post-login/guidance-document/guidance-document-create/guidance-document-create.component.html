@@ -27,9 +27,14 @@
             class="w-100"
           />
           <br />
-          <span *ngIf="isBlank('guidanceDocumentName')" class="p-error"
-            >Không được để trống mục này</span
+          <span *ngIf="check('guidanceDocumentName', this.guidanceForm)" class="p-error"
+          >Không được để trống mục này</span
           >
+          <span class="p-error" *ngIf="this.guidanceForm.get('guidanceDocumentName')?.hasError('maxlength')">
+            Tên tiêu đề không được vượt quá 254 ký tự
+          </span>
+
+
         </div>
         <div class="mb-3">
           <label class="fw-medium mb-1"
@@ -42,9 +47,13 @@
             formControlName="description"
           ></textarea>
           <br />
-          <span *ngIf="isBlank('description')" class="p-error"
-            >Không được để trống</span
+          <span *ngIf="check('description', this.guidanceForm)" class="p-error"
+            >Không được để trống mục này</span
           >
+          <span class="p-error" *ngIf="this.guidanceForm.get('description')?.hasError('maxlength')">
+            Lời nhắn không được vượt quá 999 ký tự
+          </span>
+
         </div>
       </div>
       <div class="col-md-6">
@@ -80,8 +89,15 @@
                     </div>
                     <span
                       *ngIf="isBlankForGuidanceDocuments('documentName', i)"
+
                       class="p-error"
-                      >Không được để trống</span
+                      >Không được để trống mục này</span
+                    >
+                    <span
+                            *ngIf="isMaxLengthForGuidanceDocuments('documentName', i)"
+
+                            class="p-error"
+                    >Tên tài liệu không được vượt quá 254 ký tự</span
                     >
                   </div>
                 </div>
@@ -116,6 +132,12 @@
                         )
                       "
                       >Trùng lặp mã văn bản</span
+                    >
+                    <span
+                            *ngIf="isMaxLengthForGuidanceDocuments('documentCode', i)"
+
+                            class="p-error"
+                    >Mã tài liệu không được vượt quá 254 ký tự</span
                     >
                   </div>
                 </div>
