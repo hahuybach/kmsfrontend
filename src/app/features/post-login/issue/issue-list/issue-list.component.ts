@@ -115,5 +115,14 @@ export class IssueListComponent implements OnInit, OnDestroy {
   }
   changeFilterVisible(status: Boolean) {
     this.filterVisible = status;
+    if (!status) {
+      this.resetFilter();
+    }
+  }
+  resetFilter() {
+    if (this.dt) {
+      // Reset all column filters
+      this.dt.reset();
+    }
   }
 }

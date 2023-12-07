@@ -140,7 +140,7 @@
     </ng-template>
     <ng-template pTemplate="header">
       <tr>
-        <th pSortableColumn="schoolId">
+        <th class="th-id" pSortableColumn="schoolId">
           <div>
             Mã
             <p-sortIcon field="schoolId"></p-sortIcon>
@@ -164,12 +164,12 @@
             <p-sortIcon field="isActive"></p-sortIcon>
           </div>
         </th>
-        <th></th>
+        <th class="th-200"></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-school>
       <tr>
-        <td>{{ school.schoolId }}</td>
+        <td class="th-id">{{ school.schoolId }}</td>
         <td>{{ school.schoolName }}</td>
         <td>
           <div
@@ -191,7 +191,7 @@
         </td>
         <td
           style="text-align: center"
-          class="d-flex td-action justify-content-center align-items-center"
+          class="d-flex td-action justify-content-center align-items-center th-200"
         >
           <div
             class="action-item d-flex justify-content-center align-items-center mx-2"

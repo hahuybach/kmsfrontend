@@ -254,7 +254,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
 
   onDetail(id: any) {
     if (this.isPrincipal) {
-      this.router.navigate(['initiation-plan/' + id]);
+      this.router.navigate(['school-initiation-plan/school-side/' + id]);
     } else {
       this.router.navigate(['school-initiation-plan/' + id]);
     }

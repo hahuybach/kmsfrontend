@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import {LoggerService} from "./LoggerService";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root'
 })
 export class InspectionService {
-  private inspectionApiUrl = 'http://localhost:8080/api/v1/inspection';
+  private inspectionApiUrl = DomainName.URL +  'api/v1/inspection';
 
   constructor(private loggerService: LoggerService, private http: HttpClient) {
     this.loggerService.log('Inspection service constructed');

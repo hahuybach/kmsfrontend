@@ -238,7 +238,7 @@
   >
     <div class="row record-document">
       <div class="col-md-8">
-        <label class="fw-medium"
+        <label class="fw-medium mb-1"
           >Tên tài liệu<span class="p-error">*</span></label
         ><br />
         <input
@@ -250,13 +250,13 @@
           *ngIf="issueForm.controls?.['documentName']?.invalid && (issueForm.controls?.['documentName']?.touched || issueForm.controls?.['documentName']?.dirty)"
         >
           <span
-            *ngIf="issueForm.controls?.['documentName']?.errors?.['required']"
+            *ngIf="issueForm.controls?.['documentName']?.errors?.['required'] || issueForm.controls?.['documentName']?.errors?.['whitespace']"
             class="p-error"
           >
             Vui lòng điền tên tài liệu
           </span>
           <span
-            *ngIf="issueForm.controls?.['documentName']?.errors?.['maxLength']"
+            *ngIf="issueForm.controls?.['documentName']?.errors?.['maxlength']"
             class="p-error"
           >
             Tên tài liệu quá dài
@@ -264,7 +264,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label class="fw-medium"
+        <label class="fw-medium mb-1"
           >Mã tài liệu<span class="p-error">*</span></label
         ><br />
         <input
@@ -276,13 +276,13 @@
           *ngIf="issueForm.controls?.['documentCode']?.invalid && (issueForm.controls?.['documentCode']?.touched || issueForm.controls?.['documentCode']?.dirty)"
         >
           <span
-            *ngIf="issueForm.controls?.['documentCode']?.errors?.['required']"
+            *ngIf="issueForm.controls?.['documentCode']?.errors?.['required'] || issueForm.controls?.['documentCode']?.errors?.['whitespace']"
             class="p-error"
           >
             Vui lòng điền mã tài liệu
           </span>
           <span
-            *ngIf="issueForm.controls?.['documentCode']?.errors?.['maxLength']"
+            *ngIf="issueForm.controls?.['documentCode']?.errors?.['maxlength']"
             class="p-error"
           >
             Mã tài liệu quá dài
@@ -290,7 +290,8 @@
         </div>
       </div>
       <div class="col-md-12">
-        <label class="fw-medium">Tài liệu<span class="p-error">*</span></label
+        <label class="fw-medium mb-1"
+          >Tài liệu<span class="p-error">*</span></label
         ><br />
         <div class="input-file">
           <input
@@ -335,24 +336,24 @@
   </p-dialog>
   <!-- file preview -->
   <p-dialog
-  #pdfDialog
-  header="Xem tài liệu"
-  [(visible)]="pdfPreviewVisibility"
-  [style]="{ width: '90vw', height: '100vh' }"
-  [draggable]="false"
-  [resizable]="false"
-  [maximizable]="true"
-  [modal]="true"
-  (onHide)="onHideFilePreviewEvent()"
->
-  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
-    <div class="spinner-border text-center" role="status"></div>
-    <p>Đang tải...</p>
-  </div>
-  <ng-template #pdfIsLoaded>
-    <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
-  </ng-template>
-</p-dialog>
+    #pdfDialog
+    header="Xem tài liệu"
+    [(visible)]="pdfPreviewVisibility"
+    [style]="{ width: '90vw', height: '100vh' }"
+    [draggable]="false"
+    [resizable]="false"
+    [maximizable]="true"
+    [modal]="true"
+    (onHide)="onHideFilePreviewEvent()"
+  >
+    <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+      <div class="spinner-border text-center" role="status"></div>
+      <p>Đang tải...</p>
+    </div>
+    <ng-template #pdfIsLoaded>
+      <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
+    </ng-template>
+  </p-dialog>
   <app-loading-complete-dialog
     [visible]="isLoading"
     [completed]="submitCompleted"

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from './LoggerService';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {DomainName} from "../shared/enum/domain-name";
 @Injectable()
 export class IssueService {
-  private issueApiUrl = 'http://localhost:8080/api/v1/issue';
+  private issueApiUrl = DomainName.URL +  'api/v1/issue';
 
   constructor(private loggerService: LoggerService, private http: HttpClient) {
     this.loggerService.log('Issue service constructed');

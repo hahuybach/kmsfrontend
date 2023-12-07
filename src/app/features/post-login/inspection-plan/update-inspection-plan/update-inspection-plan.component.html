@@ -24,6 +24,7 @@
   [inspectorList]="nonInspectorList"
   [chiefList]="chiefList"
   (selectedInspectorsList)="getInspectorIds($event)"
+  [inspectorListIsValid]="inspectorListIsValid"
 ></app-inspection-plan-inspector-popup>
 <div class="container-fluid">
   <h5 class="mat-headline-5 fw-medium">Cập nhật quyết định kiểm tra</h5>
@@ -74,8 +75,7 @@
           </div>
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
-            <p-dropdown class="full-width-dropdown" [options]="eligibleChiefList" formControlName="chiefId"
-                        optionLabel="user.fullName"
+            <p-dropdown class="full-width-dropdown" optionLabel="user.fullName"
                         [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true">
             </p-dropdown>
             <div

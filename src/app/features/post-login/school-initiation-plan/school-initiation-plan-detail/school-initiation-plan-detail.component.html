@@ -232,7 +232,7 @@
       header="Đánh giá tài liệu"
       [(visible)]="uploadFileVisible"
       [modal]="true"
-      [style]="{ width: '60vw' }"
+      [style]="{ width: '50vw' }"
       [draggable]="false"
       [resizable]="false"
       (onHide)="hideUploadPopup()"
@@ -251,11 +251,22 @@
               type="text"
               placeholder="Tên tài liệu"
             />
-            <span
-              *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
-              class="p-error"
-              >Vui lòng điền tên tài liệu</span
+            <div
+              *ngIf="inputFileForm.controls?.['documentName']?.invalid && (inputFileForm.controls?.['documentName']?.touched || inputFileForm.controls?.['documentName']?.dirty)"
             >
+              <span
+                *ngIf="inputFileForm.controls?.['documentName']?.errors?.['required'] || inputFileForm.controls?.['documentName']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền tên tài liệu
+              </span>
+              <span
+                *ngIf="inputFileForm.controls?.['documentName']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Tên tài liệu quá dài
+              </span>
+            </div>
           </div>
         </div>
         <div class="col-md-4">
@@ -270,11 +281,22 @@
               type="text"
               placeholder="Mã tài liệu"
             />
-            <span
-              *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
-              class="p-error"
-              >Vui lòng điền mã tài liệu</span
+            <div
+              *ngIf="inputFileForm.controls?.['documentCode']?.invalid && (inputFileForm.controls?.['documentCode']?.touched || inputFileForm.controls?.['documentCode']?.dirty)"
             >
+              <span
+                *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['required'] || inputFileForm.controls?.['documentCode']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền mã tài liệu
+              </span>
+              <span
+                *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Mã tài liệu quá dài
+              </span>
+            </div>
           </div>
         </div>
         <div class="col-md-12">
@@ -283,30 +305,45 @@
               >Tài liệu<span class="p-error">*</span></label
             >
             <div class="input-file row w-100">
-              <input
-                type="file"
-                accept="application/pdf"
-                #fileInput
-                style="display: none"
-                (change)="handleFileInputChange(fileInput)"
-              />
-              <input
-                pInputText
-                readonly
-                class="col-md-9"
-                placeholder="{{
-                  fileInputPlaceholders
-                    ? fileInputPlaceholders
-                    : 'Chọn file để tải lên'
-                }}"
-              />
-              <button
-                class="col-md-3 upload-file"
-                type="button"
-                pButton
-                label="Chọn tệp"
-                (click)="fileInput.click()"
-              ></button>
+              <div class="col-md-9 padding-none">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  #fileInput
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput)"
+                  class="w-100"
+                />
+                <input
+                  pInputText
+                  readonly
+                  placeholder="{{
+                    fileInputPlaceholders
+                      ? fileInputPlaceholders
+                      : 'Chọn file để tải lên'
+                  }}"
+                />
+              </div>
+              <div class="col-md-3 padding-none">
+                <button
+                  class="upload-file w-100"
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput.click()"
+                ></button>
+              </div>
+              <div
+                class="padding-none"
+                *ngIf="inputFileForm.controls?.['file']?.invalid && (inputFileForm.controls?.['file']?.touched || inputFileForm.controls?.['file']?.dirty)"
+              >
+                <span
+                  *ngIf="inputFileForm.controls?.['file']?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng chọn tài liệu
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -404,7 +441,7 @@
         </div>
       </div>
       <div class="plan-file mt-3">
-        <span class="text-black-50">Tài liệu</span>
+        <label class="fw-medium mb-1">Tài liệu</label>
         <br />
         <div class="row">
           <div class="col-md-8">

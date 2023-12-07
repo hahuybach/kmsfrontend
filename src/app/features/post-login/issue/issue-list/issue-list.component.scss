@@ -35,11 +35,13 @@
                 color: $primary;
             }
         }
-        button {
+        .top-button {
+            color: #fff;
             font-size: 16px;
             background-color: $primary;
             border-radius: 8px;
             border: none;
+            margin-left: 20px;
             &:hover,
             &:active {
                 background-color: $primary-hover;
@@ -155,6 +157,9 @@
     font-size: 16px;
     width: 400px;
 }
+p-columnFilter[type="numeric"] {
+    font-size: 16px !important;
+}
 :host ::ng-deep .p-column-filter-operator {
     .p-dropdown {
         border-radius: 8px;
@@ -203,4 +208,19 @@
 }
 .advance-search {
     // background-color: $primary-hover;
+}
+* {
+    font-size: 16px;
+}
+.reset-button {
+    font-size: 16px;
+    background-color: white;
+    color: $primary !important;
+    border: $primary 1px solid;
+    border-radius: 8px;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+        color: #fff !important;
+    }
 }

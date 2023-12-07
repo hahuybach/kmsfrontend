@@ -284,9 +284,7 @@
           </th>
           <th></th>
         </tr>
-        <span *ngIf="totalElements == 0"
-          >Không tìm thấy bản ghi nào phù hợp</span
-        >
+        <p class="w-100" *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</p>
       </thead>
       <ng-container *ngIf="users">
         <tbody *ngIf="users.length > 0">

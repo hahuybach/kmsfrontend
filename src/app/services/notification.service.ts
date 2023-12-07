@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import {LoggerService} from "./LoggerService";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {DomainName} from "../shared/enum/domain-name";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private notificationApiUrl = 'http://localhost:8080/api/v1/notification';
+  private notificationApiUrl = DomainName.URL +  'api/v1/notification';
 
   constructor(private loggerService: LoggerService, private http: HttpClient) {
     this.loggerService.log('Notification service constructed');

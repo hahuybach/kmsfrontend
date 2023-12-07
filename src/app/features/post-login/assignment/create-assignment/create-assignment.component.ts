@@ -13,6 +13,7 @@ import { Issue } from 'src/app/models/issue.model';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { IssueService } from 'src/app/services/issue.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 interface TreeNode {
   assignmentId: number;
   assignmentName: string;
@@ -55,7 +56,14 @@ export class CreateAssignmentComponent {
   //   nodeName: ['', Validators.required],
   // });
   assignmentForm = this.fb.group({
-    assignmentName: ['', Validators.required],
+    assignmentName: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
     description: ['', Validators.required],
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
