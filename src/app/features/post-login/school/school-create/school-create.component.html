@@ -22,6 +22,11 @@
             class="p-error"
             >Tên trường này đã tồn tại</span
           >
+          <span
+                  *ngIf="saveSchoolForm.get('schoolName')?.hasError('maxlength')"
+                  class="p-error"
+          >Tên trường không được vượt quá 254 ký tự</span
+          >
         </div>
       </div>
       <div class="col-md-10">
@@ -38,6 +43,10 @@
           <span *ngIf="isBlank('exactAddress')" class="p-error"
             >Không được để trống mục này</span
           >
+          <span
+                  *ngIf="saveSchoolForm.get('exactAddress')?.hasError('maxlength')"
+                  class="p-error"
+          >Địa chỉ trường không được vượt quá 254 ký tự</span>
         </div>
       </div>
     </div>
@@ -66,7 +75,7 @@
             class="p-error"
             *ngIf="saveSchoolForm.get('email')?.hasError('notUnique')"
           >
-            Email này đã tồn tại vui lòng chọn email khác
+            Email này đã tồn tại, vui lòng chọn email khác
           </span>
         </div>
       </div>
@@ -84,6 +93,11 @@
           />
           <span class="p-error" *ngIf="checkError('fullName', 'whitespace')">
             Không được để trống mục này</span
+          >
+          <span
+                  *ngIf="saveSchoolForm.get('fullName')?.hasError('maxlength')"
+                  class="p-error"
+          >Tên không được vượt quá 254 ký tự</span
           >
         </div>
       </div>
