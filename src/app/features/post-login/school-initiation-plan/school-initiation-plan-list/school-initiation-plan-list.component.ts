@@ -29,10 +29,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   deadlineStartDateTime: any;
   deadlineEndDateTime: any;
   deadlineDateError: any;
-  dateRange = {
-    from: new TuiDay(0,0,0),
-    to: new TuiDay(0,0,0),
-  };
+
 
 
   advanceSearchButtonText = 'Hiện tra cứu nâng cao';
@@ -45,6 +42,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     { label: 'Không được phê duyệt', value: 9 },
   ];
   selectedStatus: any;
+
   pageNo: number = 1;
   pageSize: number = 5;
   sortBy: string = 'createdDate';
@@ -101,6 +99,10 @@ export class SchoolInitiationPlanListComponent implements OnInit {
       }
       if (value['selectedSchool'] && value['selectedSchool'] !== undefined) {
         this.selectedSchool.schoolId = value['selectedSchool'];
+      }
+      if (value['status'] && value['status'] !== undefined) {
+        this.selectedStatus = Number(value['status']) ;
+
       }
       if (value['advanceSearch']) {
         this.advanceSearch = value['advanceSearch'] == 'true';
@@ -208,6 +210,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
               deadlineEndDateTime: this.deadlineEndDateTime?.toISOString(),
               advanceSearch: this.advanceSearch,
               selectedSchool: this.selectedSchool?.schoolId,
+              status: this.selectedStatus
               // Add other query parameters as needed
             },
             queryParamsHandling: 'merge',
@@ -294,9 +297,5 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     this.loadDocuments();
   }
 
-  changeStartDate() {
-    this.creationStartDateTime = tuiDayToDate(this.dateRange.from).toISOString();
-    this.creationEndDateTime = tuiDayToDate(this.dateRange.to).toString();
-    this.loadDocuments();
-  }
+
 }

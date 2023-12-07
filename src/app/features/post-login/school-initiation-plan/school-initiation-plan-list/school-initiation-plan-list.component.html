@@ -38,16 +38,6 @@
         </div>
         <div class="col-md-4">
 
-          <tui-input-date-range
-                  [(ngModel)]="dateRange"
-                  (selectionchange)="changeStartDate()"
-          >
-            Choose dates
-            <input
-                    placeholder="From - To"
-                    tuiTextfield
-            />
-          </tui-input-date-range>
 
           <mat-form-field class="w-100">
             <mat-label>Khoảng thời gian tạo</mat-label>
@@ -170,6 +160,9 @@
             [(ngModel)]="selectedStatus"
             [showClear]="true"
             (onChange)="loadDocuments()"
+            dataKey="value"
+            optionValue="value"
+
           >
             <ng-template let-status pTemplate="item">
               <p-tag

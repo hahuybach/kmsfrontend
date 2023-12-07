@@ -41,6 +41,7 @@ export class InitiationplanService {
   filterInitiationPlan(pageNo: number = 0, pageSize: number = 5, sortBy: string = 'createdDate', sortDirection: string = 'asc',
                        planName: string = '', statusId?: any,issue? : any,school? :any,creationStartDateTime? : any,creationEndDateTime?: any,
                        deadlineStartDateTime?: any, deadlineEndDateTime? : any) {
+    console.log("status after service " + statusId);
     let headers = new HttpHeaders();
     let params = new HttpParams()
       .set('pageSize', pageSize.toString())
