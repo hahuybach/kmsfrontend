@@ -19,7 +19,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     isUpdate = false
     currentUser: UserResponseForUserList
     form = this.fb.group({
-        fullName: ['', NoWhitespaceValidator()],
+        fullName: ['', [NoWhitespaceValidator(), Validators.maxLength(254)]],
         dob: [null as unknown as Date, validateDateNotGreaterThanToday.bind(this)],
         gender: ['', Validators.required],
         phoneNumber: ['', [Validators.pattern("^[0-9]{10}$"), Validators.required]]
@@ -71,6 +71,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     onUpdate() {
         this.isUpdate = !this.isUpdate;
+        this.form.patchValue({
+            fullName: this.currentUser.fullName,
+            dob: this.currentUser?.dob,
+            gender: this.currentUser.gender,
+            phoneNumber: this.currentUser.phoneNumber,
+        })
     }
 
     isBlank(field: string): boolean | undefined {

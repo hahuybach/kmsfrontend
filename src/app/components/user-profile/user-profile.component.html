@@ -51,6 +51,7 @@
         <label class="fw-medium mb-1">Tên</label>
         <input type="text" pInputText formControlName='fullName' class="form-control">
         <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
+        <span class="p-error" *ngIf="this.form.get('fullName')?.hasError('maxlength')">Tên không được quá 254 ký tự</span>
       </div>
       <div class="mb-2">
         <label class="fw-medium mb-1">Số điện thoại</label>
