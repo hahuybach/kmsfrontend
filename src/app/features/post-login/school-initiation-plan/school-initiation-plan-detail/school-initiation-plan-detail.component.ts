@@ -145,6 +145,9 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
         icon: 'bi bi-exclamation-triangle-fill',
         key: 'confirmSchoolInitiationplan',
         accept: () => {
+          this.uploadFileVisible = false;
+          this.resetDeadlineVisible = false;
+          this.isLoading = true;
           this.inputFileForm.get('isPasssed')?.setValue(true);
           const formData = new FormData();
           const initiationplan = {
@@ -275,11 +278,6 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
 
         this.initiationplanService.putEvaluateSchoolDoc(formData).subscribe({
           next: (response) => {
-            console.log('Form data sent to the backend:', response);
-            console.log(
-              'after submit deadline ' + this.auth.getJwtFromCookie()
-            );
-
             this.submitCompleted = true;
             setTimeout(() => {
               this.initData();

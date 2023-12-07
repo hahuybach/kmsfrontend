@@ -85,22 +85,6 @@
             placeholder="Điền mã tài liệu"
           />
           <br />
-          <div
-            *ngIf="fileInputForm.controls?.['documentCode']?.invalid && (fileInputForm.controls?.['documentCode']?.touched || fileInputForm.controls?.['documentCode']?.dirty)"
-          >
-            <span
-              *ngIf="fileInputForm.controls?.['documentCode']?.errors?.['required'] || fileInputForm.controls?.['documentCode']?.errors?.['whitespace']"
-              class="p-error"
-            >
-              Vui lòng điền mã tài liệu
-            </span>
-            <span
-              *ngIf="fileInputForm.controls?.['documentCode']?.errors?.['maxlength']"
-              class="p-error"
-            >
-              Mã tài liệu quá dài
-            </span>
-          </div>
         </div>
 
         <div class="file-input">
@@ -173,6 +157,22 @@
                 type="text"
                 formControlName="assignmentName"
               />
+              <div
+                *ngIf="assignmentForm.controls?.['assignmentName']?.invalid && (assignmentForm.controls?.['assignmentName']?.touched || assignmentForm.controls?.['assignmentName']?.dirty)"
+              >
+                <span
+                  *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['required'] || assignmentForm.controls?.['assignmentName']?.errors?.['whitespace']"
+                  class="p-error"
+                >
+                  Vui lòng điền mã tài liệu
+                </span>
+                <span
+                  *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
+                  class="p-error"
+                >
+                  Mã tài liệu quá dài
+                </span>
+              </div>
             </div>
             <div class="height-100">
               <label class="span-heading-color mb-1">Chi tiết công việc</label>
@@ -732,9 +732,27 @@
               type="text"
               formControlName="assignmentName"
             />
+            <div
+              *ngIf="assignmentForm.controls?.['assignmentName']?.invalid && (assignmentForm.controls?.['assignmentName']?.touched || assignmentForm.controls?.['assignmentName']?.dirty)"
+            >
+              <span
+                *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['required'] || assignmentForm.controls?.['assignmentName']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền tên công việc
+              </span>
+              <span
+                *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Tên công việc quá dài
+              </span>
+            </div>
           </div>
           <div class="height-100">
-            <label class="mb-1 fw-medium">Mô tả chi tiết</label>
+            <label class="mb-1 fw-medium"
+              >Chi tiết công việc<span class="p-error">*</span></label
+            >
             <br />
             <textarea
               class="mb-1"
@@ -825,15 +843,7 @@
         </div>
       </div>
       <ng-template pTemplate="footer">
-        <button
-          *ngIf="action == 'addchild'"
-          pButton
-          (click)="add()"
-          [disabled]="assignmentForm.controls.assignmentName.errors?.['whitespace'] || 
-        assignmentForm.controls.assigneeId.errors?.['required'] || 
-        assignmentForm.controls.deadline.errors?.['required']  
-        "
-        >
+        <button *ngIf="action == 'addchild'" pButton (click)="add()">
           Tạo mới
         </button>
       </ng-template>

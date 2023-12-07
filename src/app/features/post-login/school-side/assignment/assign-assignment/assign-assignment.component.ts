@@ -29,8 +29,22 @@ export class AssignAssignmentComponent implements OnInit {
   selectedAssignment: any;
   action: string | undefined;
   assignmentForm = this.fb.group({
-    assignmentName: ['', NoWhitespaceValidator()],
-    description: [''],
+    assignmentName: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
+    description: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
     deadline: ['', Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
@@ -62,11 +76,14 @@ export class AssignAssignmentComponent implements OnInit {
   @ViewChild('fileInput') fileInput: any;
   fileInputForm = this.fb.group({
     documentCode: [''],
-    documentName: ['', Validators.compose([
-      Validators.required,
-      Validators.maxLength(256),
-      NoWhitespaceValidator(),
-    ])],
+    documentName: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
     file: ['', Validators.required],
   });
   historyDtos: any[] = [];
@@ -223,6 +240,10 @@ export class AssignAssignmentComponent implements OnInit {
     }
   }
   add() {
+    if (this.assignmentForm.invalid) {
+      this.assignmentForm.markAllAsTouched();
+      return;
+    }
     const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
     const isoDateString = new Date(deadlineValue).toISOString();
     this.confirmationService.confirm({
@@ -699,8 +720,10 @@ export class AssignAssignmentComponent implements OnInit {
               this.initData();
               this.messageService.add({
                 severity: 'success',
-                summary: 'Phê duyệt',
-                detail: 'Đánh giá thành công',
+                summary: 'Đánh giá',
+                detail: isPassed
+                  ? 'Phê duyệt thành công'
+                  : 'Không phê duyệt thành công',
               });
             },
             error: (error) => {
