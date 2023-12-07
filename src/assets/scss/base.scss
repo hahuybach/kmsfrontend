@@ -15,6 +15,10 @@ table.table-fit tfoot td {
 }
 
 :host ::ng-deep .tui-date{
+  border-radius: 8px;
+  .tui-autofill{
+    box-shadow: none;
+  }
   input{
     font-size: 16px !important;
     padding-top: 0 !important;

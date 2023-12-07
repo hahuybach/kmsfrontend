@@ -8,6 +8,8 @@ import {FileService} from "../../../../services/file.service";
 import {trigger, transition, state, animate, style, group} from "@angular/animations";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
 import {ConfirmEventType, ConfirmationService} from "primeng/api";
+import {TuiDay} from "@taiga-ui/cdk";
+import {dateToTuiDay} from "../../../../shared/util/util";
 
 @Component({
   selector: 'app-update-inspection-plan',
@@ -63,9 +65,9 @@ export class UpdateInspectionPlanComponent {
   inspectorList: any[];
   nonInspectorList: any[];
   chiefInspector: any;
-  minStartDate: string;
-  maxStartDate: string;
-  minEndDate: string;
+  minStartDate: TuiDay;
+  maxStartDate: TuiDay;
+  minEndDate: TuiDay;
   eligibleChiefList: any[];
   chiefList: any[];
   selectedInspectorList: any[] = [];
@@ -123,6 +125,8 @@ export class UpdateInspectionPlanComponent {
       })
     })
 
+    let tomorow: Date = new Date();
+    tomorow.setDate(tomorow.getDate() + 1);
 
     this.route.params
       .pipe(
@@ -148,8 +152,8 @@ export class UpdateInspectionPlanComponent {
         this.inspectionPlanForm.patchValue({
           inspectionPlanName: this.inspectionPlanDetail.inspectionPlan.inspectionPlanName,
           description: this.inspectionPlanDetail.inspectionPlan.description,
-          startDate: new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0],
-          endDate: new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0],
+          startDate: dateToTuiDay(new Date(this.inspectionPlanDetail.inspectionPlan.startDate)),
+          endDate: dateToTuiDay(new Date(this.inspectionPlanDetail.inspectionPlan.endDate)),
           chiefId: this.chiefInspector.accountId
         })
       },
@@ -157,11 +161,15 @@ export class UpdateInspectionPlanComponent {
         console.log(error);
       }
     });
-    this.defaultStartDate.setDate(this.defaultStartDate.getDate() + 1);
-    this.defaultEndDate.setDate(this.defaultStartDate.getDate() + 1);
-    this.minStartDate = this.defaultStartDate.toISOString().slice(0, 10);
-    this.minEndDate = this.defaultEndDate.toISOString().slice(0, 10);
-    this.maxStartDate = this.defaultEndDate.toISOString().slice(0, 10);
+
+    this.minEndDate = dateToTuiDay(tomorow);
+    this.minStartDate = dateToTuiDay(tomorow);
+    this.inspectionPlanForm.get('endDate')?.valueChanges.subscribe( x => {
+      this.onEndDateChange();
+    })
+    this.inspectionPlanForm.get('startDate')?.valueChanges.subscribe( x => {
+      this.onStartDateChange();
+    })
   }
 
   openNewTab(documentLink: string) {
@@ -222,7 +230,6 @@ export class UpdateInspectionPlanComponent {
 
 
   onStartDateChange() {
-    this.minEndDate = new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString().slice(0, 10);
     if (this.inspectorList.length > 0) {
       this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
     }
@@ -230,7 +237,6 @@ export class UpdateInspectionPlanComponent {
   }
 
   onEndDateChange() {
-    this.maxStartDate = new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString().slice(0, 10);
     if (this.inspectorList.length > 0) {
       this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
     }
