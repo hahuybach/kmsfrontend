@@ -197,20 +197,25 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
       this.inspectionPlanForm.markAllAsTouched();
       return;
     }
+    const startDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
+    startDate.setUTCHours(0);
+    const endDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
+    endDate.setUTCHours(0);
     const formData = new FormData();
     const inspectionPlan = {
       inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
       description: this.inspectionPlanForm.get('description')?.value,
       chiefId: this.inspectionPlanForm.get('chiefId')?.value,
       inspectorIds: this.inspectionPlanForm.get('inspectorIds')?.value,
-      startDate: new Date(tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value)).toISOString(),
-      endDate: new Date(tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value)).toISOString(),
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
       schoolId: this.inspectionPlanForm.get('schoolId')?.value,
       documentInspectionPlanDto: {
         documentName: this.inspectionPlanForm.get('documentInspectionPlanDto.documentName')?.value,
         documentCode: this.inspectionPlanForm.get('documentInspectionPlanDto.documentCode')?.value
       }
     }
+
 
     formData.append("request", new Blob([JSON.stringify(inspectionPlan)], {type: "application/json"}))
     const file = this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.value
