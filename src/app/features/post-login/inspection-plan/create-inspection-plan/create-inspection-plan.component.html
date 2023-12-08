@@ -17,9 +17,11 @@
 <app-loading-complete-dialog
   [visible]="createLoadingVisibility"
   [completed]="createComplete"
+  [failed]="createFailed"
   [header]="'Tạo mới quyết định kiểm tra'"
   [progress]="'Đang tạo quyết định kiểm tra'"
   [complete]="'Tạo quyết định kiểm tra thành công'"
+  [fail]="'Tạo quyết định kiểm tra không thành công'"
 >
 </app-loading-complete-dialog>
 <div class="container-fluid">
@@ -74,6 +76,30 @@
             </span>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6 mb-2">
+            <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
+            <tui-input-date
+              (tuiValueChanges)="onStartDateChange()"
+              [min]="minStartDate"
+              [max]="maxStartDate"
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="startDate">
+            </tui-input-date>
+          </div>
+          <div class="col-md-6 mb-2">
+            <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
+            <tui-input-date
+              (tuiValueChanges)="onEndDateChange()"
+              [min]="minEndDate"
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="endDate"
+            >
+            </tui-input-date>
+          </div>
+        </div>
         <div class="inspection-plan-school row">
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Trường kiểm tra<span class="p-error">*</span></label>
@@ -100,7 +126,7 @@
               </span>
             </div>
           </div>
-          <div class="col-md-6 mb-2">
+          <div class="col-md-6 mb-2" *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.valid">
             <label class="fw-medium mb-1">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
             <p-dropdown
               class="full-width-dropdown"
@@ -124,30 +150,6 @@
                 Vui lòng chọn trưởng đoàn kiểm tra
               </span>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 mb-2">
-            <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
-            <tui-input-date
-              (tuiValueChanges)="onStartDateChange()"
-              [min]="minStartDate"
-              [max]="maxStartDate"
-              class="tui-date"
-              tuiTextfieldSize="m"
-              formControlName="startDate">
-            </tui-input-date>
-          </div>
-          <div class="col-md-6 mb-2">
-            <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
-            <tui-input-date
-              (tuiValueChanges)="onEndDateChange()"
-              [min]="minEndDate"
-              class="tui-date"
-              tuiTextfieldSize="m"
-              formControlName="endDate"
-            >
-            </tui-input-date>
           </div>
         </div>
       </div>
@@ -214,6 +216,9 @@
               placeholder="Điền mã tài liệu"
               formControlName="documentCode"
             />
+            <div *ngIf="duplicateDocumentCode">
+              <span class="p-error">Mã tài liệu trùng lặp</span>
+            </div>
             <div
               *ngIf="
                   documentCodeControls?.invalid &&

@@ -28,7 +28,9 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
   selectedInspectorList: any[] = [];
   createLoadingVisibility: boolean = false;
   createComplete: boolean = false;
+  createFailed: boolean = false;
   inspectorListIsValid: boolean = false;
+  duplicateDocumentCode: boolean = false;
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -53,7 +55,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
           this.schoolList = data;
         },
         error: (error) => {
-          this.toastService.showError('deleteInComplete', "Xóa không thành công", error.error.message);
+          this.toastService.showError('deleteInComplete', "Lỗi danh sách trường", error.error.message);
         }
       })
 
@@ -103,7 +105,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
         this.subscriptions.push(setPopUpList);
       },
       error: (error) => {
-        console.log(error)
+        this.toastService.showError('deleteInComplete', "Lỗi danh sách thanh tra", error.error.message);
       }
     });
     this.subscriptions.push(getEligibleInspector);
@@ -169,18 +171,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     this.initInspectorList();
   }
 
-  confirm1(message: string, header: string) {
-    this.confirmationService.confirm({
-      message: message,
-      header: header,
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.resetInspectorList()
-      },
-      reject: (type: ConfirmEventType) => {
-      }
-    });
-  }
 
   resetInspectorList() {
     this.eligibleChiefList = [];
@@ -233,10 +223,18 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
         this.createComplete = true;
         setTimeout(() => {
           this.router.navigateByUrl("inspection-plan/" + response.inspectionPlan.inspectionPlanId);
-        }, 1500);
+        }, 1000);
       },
       error: (error) => {
-        console.log(error)
+        this.createFailed = true;
+        this.toastService.showError('deleteInComplete', "Tạo kế hoạch không thành công", error.error.message);
+        if(error.error.message == "Mã văn bản trùng lặp"){
+          this.duplicateDocumentCode = true;
+        }
+        setTimeout(() => {
+          this.createLoadingVisibility = false;
+          this.createFailed = false;
+        }, 1000)
       }
     })
 

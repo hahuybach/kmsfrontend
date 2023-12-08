@@ -292,7 +292,6 @@ export class UpdateInspectionPlanComponent {
         documentCode: null
       }
     }
-    console.log(this.documentUpdated)
     if (this.documentUpdated) {
       inspectionPlan.documentInspectionPlanDto.documentName = this.inspectionPlanForm.get('documentInspectionPlanDto.documentName')?.value;
       inspectionPlan.documentInspectionPlanDto.documentCode = this.inspectionPlanForm.get('documentInspectionPlanDto.documentCode')?.value;

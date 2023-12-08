@@ -10,8 +10,10 @@ export class LoadingCompleteDialogComponent{
   @Input() height: number = 50;
   @Input({required: true}) visible: boolean = false;
   @Input({required: true})  completed: boolean = false;
+  @Input() failed: boolean = false;
   @Input({required: true}) header: string = ""; //Ex: Tạo mới quyết định kiểm tra
   @Input({required: true}) progress: string = ""; //Ex: Đang tạo quyết định kiểm tra
   @Input({required: true}) complete: string = ""; //Ex: Tạo quyết định kiểm tra thành công
+  @Input() fail: string = ""; //Ex: Tạo quyết định kiểm tra không thành công
 
 }
