@@ -9,14 +9,15 @@ import {ToastService} from "../../../../shared/toast/toast.service";
 import {InspectionPlanResponse} from "../../../../models/inspection-plan-response";
 import {AuthService} from "../../../../services/auth.service";
 import {Role} from "../../../../shared/enum/role";
-import {tuiDayToDate, unSub} from "../../../../shared/util/util";
+import {dateToTuiDay, toIsoStringUrl, tuiDayToDate, unSub} from "../../../../shared/util/util";
+import {TuiDayRange} from "@taiga-ui/cdk";
 
 @Component({
   selector: 'app-inspection-plan-list',
   templateUrl: './inspection-plan-list.component.html',
   styleUrls: ['./inspection-plan-list.component.scss'],
 })
-export class InspectionPlanListComponent implements OnInit, OnDestroy{
+export class InspectionPlanListComponent implements OnInit, OnDestroy {
   inspectionPlans: InspectionPlanResponse[]
   advanceSearch = false;
   planName: any;
@@ -48,7 +49,9 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
     private toastService: ToastService,
     private auth: AuthService,
     private activateRouter: ActivatedRoute,
-  ) {}
+  ) {
+  }
+
   statuses = [
     {label: 'Chưa bắt đầu', value: 19},
     {label: 'Đang tiến hành', value: 20},
@@ -67,6 +70,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
   createDateRange: any;
   deadlineDateRange: any;
   subs: any[] = []
+
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
@@ -99,49 +103,66 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
 
     }
   }
-  initQuery(){
-    this.activateRouter.queryParams.subscribe(
 
+  initQuery() {
+    this.activateRouter.queryParams.subscribe(
       value => {
-        if(value['pageNo']){
+        if (value['pageNo']) {
           this.pageNo = value['pageNo'];
         }
-        if(value['pageSize']){
+        if (value['pageSize']) {
           this.pageSize = value['pageSize'];
         }
-        if(value['sortBy']){
+        if (value['sortBy']) {
           this.sortBy = value['sortBy'];
         }
-        if(value['sortDirection']){
+        if (value['sortDirection']) {
           this.sortDirection = value['sortDirection'];
         }
-        if(value['planName']){
+        if (value['planName']) {
           this.planName = value['planName'];
         }
-        if(value['currentIssueSelected'] && value['currentIssueSelected'] !== undefined){
-          this.currentIssueSelected.issueId = value['currentIssueSelected'];
+        if (value['currentIssueSelected'] && value['currentIssueSelected'] !== undefined) {
+          this.currentIssueSelected = Number(value['currentIssueSelected']);
         }
-        if(value['creationStartDateTime']){
+        if (value['creationStartDateTime']) {
           this.creationStartDateTime = value['creationStartDateTime'];
+          this.createDateRange = new TuiDayRange(
+            dateToTuiDay(new Date(value['creationStartDateTime']))
+            , dateToTuiDay(new Date())
+          )
         }
-        if(value['creationEndDateTime']){
-          this.creationEndDateTime = value['creationEndDateTime']
-        }
-        if(value['deadlineStartDateTime']){
-          this.deadlineStartDateTime = value['deadlineStartDateTime']
-        }
-        if(value['deadlineEndDateTime']){
-          this.deadlineEndDateTime = value['deadlineEndDateTime']
-        }
-        if(value['selectedSchool'] && value['selectedSchool'] !== undefined ){
-          this.selectedSchool.schoolId = value['selectedSchool']
+        if (value['creationEndDateTime']) {
+          this.creationEndDateTime = value['creationEndDateTime'];
+          this.createDateRange.to = dateToTuiDay(new Date(value['creationEndDateTime']))
         }
 
-        if(value['advanceSearch']){
-          this.advanceSearch = (value['advanceSearch'] == 'true' )
-          if (this.advanceSearch){
+        if (value['deadlineStartDateTime']) {
+          this.deadlineStartDateTime = value['deadlineStartDateTime'];
+          this.deadlineDateRange = new TuiDayRange(
+            dateToTuiDay(new Date(value['deadlineStartDateTime']))
+            , dateToTuiDay(new Date())
+          )
+        }
+        if (value['deadlineEndDateTime']) {
+          this.deadlineEndDateTime = value['deadlineEndDateTime'];
+          this.deadlineDateRange.to = dateToTuiDay(new Date(value['deadlineEndDateTime']))
+
+        }
+        if (value['schoolId'] && value['schoolId'] !== undefined) {
+          this.selectedSchool = Number(value['schoolId']) ;
+
+        }
+
+        if (value['status'] && value['status'] !== undefined) {
+          this.selectedStatus = Number(value['status']) ;
+        }
+
+        if (value['advanceSearch']) {
+          this.advanceSearch = (value['advanceSearch'] == 'true')
+          if (this.advanceSearch) {
             this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
-          }else {
+          } else {
             this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
 
           }
@@ -164,13 +185,13 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.setAuth()
     for (const role of this.auth.getRoleFromJwt()) {
-      if (role.authority === Role.PRINCIPAL){
+      if (role.authority === Role.PRINCIPAL) {
         this.isPrincipal = true;
         this.selectedSchool = this.auth.getSchoolFromJwt();
       }
     }
-    if (!this.isPrincipal){
-    const sub =  this.schoolService.findAllSchools().subscribe({
+    if (!this.isPrincipal) {
+      const sub = this.schoolService.findAllSchools().subscribe({
         next: (data) => {
           this.schools = data
         },
@@ -180,11 +201,10 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
       })
       this.subs.push(sub);
     }
-   const sub2 = this.issueService.getIssueDropDownResponse()
+    const sub2 = this.issueService.getIssueDropDownResponse()
       .subscribe({
         next: (result) => {
           this.issueDropDowns = result.issueDropDownBoxDtos;
-          this.currentIssueSelected = this.issueDropDowns.at(0);
           this.initQuery()
           this.loadDocuments();
 
@@ -198,10 +218,10 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
 
 
   loadDocuments() {
- const sub =  this.inspectionPlanService.filterInspectionPlan(this.pageNo, this.pageSize, this.sortBy,
+    const sub = this.inspectionPlanService.filterInspectionPlan(this.pageNo, this.pageSize, this.sortBy,
       this.sortDirection, this.planName, this.selectedStatus, this.currentIssueSelected, this.selectedSchool,
       this.creationStartDateTime, this.creationEndDateTime, this.deadlineStartDateTime, this.deadlineEndDateTime).subscribe({
-      next: (data) =>{
+      next: (data) => {
         this.inspectionPlans = data.inspectionPlanFilterDtos.content;
         this.maxPage = data.inspectionPlanFilterDtos.totalPages;
         this.totalElements = data.inspectionPlanFilterDtos.totalElements;
@@ -214,14 +234,16 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
             sortBy: this.sortBy,
             sortDirection: this.sortDirection,
             planName: this.planName,
-            currentIssueSelected: this.currentIssueSelected?.issueId,
-            creationStartDateTime:  this.creationStartDateTime.toISOString(),
-            creationEndDateTime: this.creationEndDateTime.toISOString(),
-            deadlineStartDateTime: this.deadlineStartDateTime.toISOString(),
-            deadlineEndDateTime: this.deadlineEndDateTime.toISOString(),
+            currentIssueSelected: this.currentIssueSelected,
+            deadlineStartDateTime: toIsoStringUrl(this.deadlineStartDateTime),
+            deadlineEndDateTime: toIsoStringUrl(this.deadlineEndDateTime),
+            creationStartDateTime: toIsoStringUrl(this.creationStartDateTime),
+            creationEndDateTime: toIsoStringUrl(this.creationEndDateTime),
             advanceSearch: this.advanceSearch,
-            selectedSchool: this.selectedSchool?.schoolId,
-            statusId: this.selectedStatus
+            status: this.selectedStatus,
+            schoolId: this.selectedSchool,
+
+
             // Add other query parameters as needed
           },
           queryParamsHandling: 'merge'
@@ -243,6 +265,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
       this.advanceSearchButtonText = 'Ẩn tra cứu nâng cao'
     }
   }
+
   protected reset() {
     this.pageNo = 1;
     this.sortBy = 'createdDate';
@@ -277,6 +300,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
   onDetail(initiationPlanId: any) {
     this.router.navigate(['inspection-plan/' + initiationPlanId])
   }
+
   onUpdate(initiationPlanId: any) {
     this.router.navigate(['inspection-plan/update/' + initiationPlanId])
   }
@@ -301,12 +325,12 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
     this.loadDocuments()
   }
 
-  onCreateInspectionPlan(){
+  onCreateInspectionPlan() {
     this.router.navigate(['inspection-plan/create'])
   }
 
   changeStartDate() {
-    if (this.createDateRange){
+    if (this.createDateRange) {
       this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
       this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
       this.loadDocuments();
@@ -315,7 +339,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
   }
 
   changeDeadlineDate() {
-    if (this.deadlineDateRange){
+    if (this.deadlineDateRange) {
       this.deadlineStartDateTime = tuiDayToDate(this.deadlineDateRange.from);
       this.deadlineEndDateTime = tuiDayToDate(this.deadlineDateRange.to);
       this.loadDocuments();

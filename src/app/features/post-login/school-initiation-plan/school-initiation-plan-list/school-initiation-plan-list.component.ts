@@ -109,12 +109,9 @@ export class SchoolInitiationPlanListComponent implements OnInit {
         this.deadlineDateRange.to = dateToTuiDay(new Date(value['deadlineEndDateTime']))
 
       }
-      if (value['selectedSchool'] && value['selectedSchool'] !== undefined) {
-        this.selectedSchool.schoolId = value['selectedSchool'];
-      }
+
       if (value['status'] && value['status'] !== undefined) {
         this.selectedStatus = Number(value['status']) ;
-
       }
       if (value['schoolId'] && value['schoolId'] !== undefined) {
         this.selectedSchool = Number(value['schoolId']) ;
@@ -213,7 +210,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
               creationEndDateTime: toIsoStringUrl(this.creationEndDateTime),
               schoolId: this.selectedSchool,
               advanceSearch: this.advanceSearch,
-              selectedSchool: this.selectedSchool?.schoolId,
               status: this.selectedStatus
               // Add other query parameters as needed
             },

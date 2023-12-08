@@ -76,54 +76,23 @@
       <div class="row">
         <div class="col-md-4">
           <label class="fw-medium">Kế hoạch</label>
-          <p-dropdown
-            [options]="issueDropDowns"
-            [(ngModel)]="currentIssueSelected"
-            optionLabel="issueName"
-            [filter]="true"
-            filterBy="issueName"
-            [showClear]="true"
-            placeholder="Chọn 1 kế hoạch thanh tra"
-            (onChange)="loadDocuments()"
+          <p-dropdown class="full-width-dropdown" [options]="issueDropDowns" dataKey="issueId"
+                      [(ngModel)]="currentIssueSelected"    optionLabel="issueName"
+                      [filter]="true" filterBy="issueName" optionValue="issueId" [showClear]="true"
+                      (onChange)="loadDocuments()"
+                      placeholder="Chọn 1 kế hoạch thanh tra"
           >
-            <ng-template pTemplate="selectedItem">
-              <div
-                class="flex align-items-center gap-2"
-                *ngIf="currentIssueSelected"
-              >
-                <div>{{ currentIssueSelected.issueName }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-issue pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ issue.issueName }}</div>
-              </div>
-            </ng-template>
           </p-dropdown>
+
         </div>
         <div class="col-md-4">
           <label class="fw-medium">Tên trường</label>
-          <p-dropdown
-            [options]="schools"
-            [(ngModel)]="selectedSchool"
-            optionLabel="schoolName"
-            [filter]="true"
-            filterBy="schoolName"
-            [showClear]="true"
-            placeholder="Chọn 1 trường"
-            (onChange)="loadDocuments()"
-            *ngIf="!isPrincipal"
+          <p-dropdown class="full-width-dropdown" [options]="schools" dataKey="schoolId"
+                      [(ngModel)]="selectedSchool"    optionLabel="schoolName"
+                      [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
+                      (onChange)="loadDocuments()"
+                      placeholder="Chọn 1 trường"
           >
-            <ng-template pTemplate="selectedItem">
-              <div class="flex align-items-center gap-2" *ngIf="selectedSchool">
-                <div>{{ selectedSchool.schoolName }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-school pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ school.schoolName }}</div>
-              </div>
-            </ng-template>
           </p-dropdown>
         </div>
         <div class="col-md-4">
@@ -134,6 +103,8 @@
             [(ngModel)]="selectedStatus"
             [showClear]="true"
             (onChange)="loadDocuments()"
+            dataKey="value"
+            optionValue="value"
           >
             <ng-template let-status pTemplate="item">
               <p-tag

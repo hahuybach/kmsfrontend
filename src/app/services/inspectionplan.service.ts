@@ -67,13 +67,13 @@ export class inspectionPlanService {
       params = params.set('pageNo', pageNo)
     }
     if (issue) {
-      params = params.set('issueId', issue.issueId)
+      params = params.set('issueId', issue)
     }
     if (statusId) {
       params = params.set('statusId', statusId)
     }
     if (school) {
-      params = params.set('schoolId', school.schoolId)
+      params = params.set('schoolId', school)
     }
     if (creationStartDateTime) {
       params = params.set('creationStartDateTime', toIsoString(creationStartDateTime));
