@@ -281,7 +281,11 @@ ul {
     margin-bottom: 0;
 }
 .children {
-    height: 40px;
+    height: 52px;
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(244, 244, 244);
+    }
 }
 .row {
     margin: 0;

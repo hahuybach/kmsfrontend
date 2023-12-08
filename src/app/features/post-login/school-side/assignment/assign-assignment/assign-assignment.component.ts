@@ -15,6 +15,8 @@ import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.
 import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import { Dialog } from 'primeng/dialog';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -96,6 +98,7 @@ export class AssignAssignmentComponent implements OnInit {
   tabs: MenuItem[];
   activeTab: MenuItem | undefined;
   sub: any[] = [];
+  pdfPreviewVisibility: boolean = false;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -141,7 +144,7 @@ export class AssignAssignmentComponent implements OnInit {
     //         this.assignments = data.assignmentListDtos;
     //       },
     //       error: (error) => {
-    //         this.messageService.add({
+    //         this.toastService.add({
     //           severity: 'error',
     //           summary: 'Xảy ra lỗi',
     //           detail: error.error.message,
@@ -183,7 +186,7 @@ export class AssignAssignmentComponent implements OnInit {
     private assignmentService: AssignmentService,
     private issueService: IssueService,
     private fb: FormBuilder,
-    private messageService: MessageService,
+    private toastService: ToastService,
     private confirmationService: ConfirmationService,
     private authService: AuthService,
     private fileService: FileService,
@@ -258,7 +261,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn tạo mới công việc này?',
       header: 'Xác nhận tạo mới',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
         const data = {
           parentId: this.selectedAssignment.assignmentId,
@@ -272,19 +275,19 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentService.addSchoolAssignment(data).subscribe({
           next: (data) => {
             this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Thêm mới thành công',
-              detail: 'Thêm mới thành công',
-            });
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Thêm mới thành công',
+              'Thêm mới thành công'
+            );
             this.assignmentVisible = false;
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Thêm mới thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'toastAssignAssignment',
+              'Thêm mới thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -298,7 +301,7 @@ export class AssignAssignmentComponent implements OnInit {
       message:
         'Bạn có muốn xóa công việc ' + assignment.assignmentName + ' này?',
       header: 'Xác nhận xóa',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
 
       // icon: 'pi pi-info-circle',
       accept: () => {
@@ -309,18 +312,18 @@ export class AssignAssignmentComponent implements OnInit {
           next: (response) => {
             console.log(response);
             this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xóa thành công',
-              detail: 'Xóa thành công',
-            });
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Xóa thành công',
+              'Xóa thành công'
+            );
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xóa thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'error',
+              'Xóa thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -348,11 +351,11 @@ export class AssignAssignmentComponent implements OnInit {
           this.comments = data.commentDtos;
         },
         error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Không tìm thấy công việc',
-            detail: error.error.message,
-          });
+          this.toastService.showError(
+            'error',
+            'Không tìm thấy công việc',
+            error.error.message
+          );
           this.router.navigate(['/assignassignment/' + this.issueId], {
             queryParams: {},
           });
@@ -397,7 +400,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn cập nhật công việc  này?',
       header: 'Xác nhận cập nhật',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
@@ -412,18 +415,18 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentService.updateSchoolAssignment(data).subscribe({
           next: (data) => {
             this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Cập nhật thành công',
-              detail: 'Cập nhật thành công',
-            });
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Cập nhật thành công',
+              'Cập nhật thành công'
+            );
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Cập nhật thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'toastAssignAssignment',
+              'Cập nhật thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -440,6 +443,13 @@ export class AssignAssignmentComponent implements OnInit {
       queryParams: {},
     });
   }
+  uploadFilePopupHideEvent() {
+    this.fileInputForm.reset();
+    this.fileInputPlaceholders = '';
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
 
   getStatusSeverity(statusId: number): string {
     const statusSeverityMap: { [key: number]: string } = {
@@ -453,7 +463,8 @@ export class AssignAssignmentComponent implements OnInit {
   }
 
   // PREVIEW PDF
-  openNewTab(documentLink: string) {
+  openNewTab(documentLink: string, fileExtension: string) {
+    this.pdfPreviewVisibility = true;
     console.log(documentLink);
     this.fileService.readAssignmentPDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
@@ -463,20 +474,20 @@ export class AssignAssignmentComponent implements OnInit {
     });
   }
   // preview docx and excel
-  previewFile(documentLink: string, fileExtension: string) {
-    this.isFileLoading = true;
-    this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
-      const blobUrl = window.URL.createObjectURL(data.body as Blob);
-      this.pdfUrl = blobUrl;
-      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-      if (this.safePdfUrl !== undefined) {
-        this.fileUrl = this.safePdfUrl + '';
-      }
-      this.isFileLoading = false;
-      this.pdfLoaded = true;
-      console.log(this.safePdfUrl);
-    });
-  }
+  // previewFile(documentLink: string, fileExtension: string) {
+  //   this.isFileLoading = true;
+  //   this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
+  //     const blobUrl = window.URL.createObjectURL(data.body as Blob);
+  //     this.pdfUrl = blobUrl;
+  //     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+  //     if (this.safePdfUrl !== undefined) {
+  //       this.fileUrl = this.safePdfUrl + '';
+  //     }
+  //     this.isFileLoading = false;
+  //     this.pdfLoaded = true;
+  //     console.log(this.safePdfUrl);
+  //   });
+  // }
   // check authorities
   hasAuthority(authority: string): boolean {
     // console.log('run here');
@@ -493,7 +504,7 @@ export class AssignAssignmentComponent implements OnInit {
         (status ? 'xác nhận hoàn thành' : 'hủy xác nhận') +
         ' công việc  này?',
       header: status ? 'Xác nhận hoàn thành' : 'Xác nhận hủy',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
@@ -504,20 +515,18 @@ export class AssignAssignmentComponent implements OnInit {
           next: (data) => {
             this.detailVisible = false;
             this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xác nhận',
-              detail: status
-                ? 'Xác nhận thành công'
-                : 'Hủy xác nhận thành công',
-            });
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Xác nhận',
+              status ? 'Xác nhận thành công' : 'Hủy xác nhận thành công'
+            );
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xác nhận thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'error',
+              'Xác nhận thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -544,18 +553,18 @@ export class AssignAssignmentComponent implements OnInit {
     this.assignmentService.assignAssignment(data).subscribe({
       next: (data) => {
         this.initData();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Đổi thành công',
-          detail: 'Đổi người làm thành công',
-        });
+        this.toastService.showSuccess(
+          'toastAssignAssignment',
+          'Đổi thành công',
+          'Đổi người làm thành công'
+        );
       },
       error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Đổi thất bại',
-          detail: 'Đổi người làm thất bại',
-        });
+        this.toastService.showError(
+          'toastAssignAssignment',
+          'Đổi thất bại',
+          'Đổi người làm thất bại'
+        );
       },
     });
   }
@@ -621,6 +630,7 @@ export class AssignAssignmentComponent implements OnInit {
       header: 'Xác nhận xóa',
       key: 'confirmAssignment',
       accept: () => {
+        this.isFileLoading = true;
         this.documents.splice(index, 1);
         const deleteDocument = {
           assignmentId: this.selectedAssignment.assignmentId,
@@ -628,18 +638,20 @@ export class AssignAssignmentComponent implements OnInit {
         };
         this.assignmentService.deleteDocument(deleteDocument).subscribe({
           next: (data) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xóa thành công',
-              detail: 'Xóa tài liệu thành công',
-            });
+            this.refreshSelectedAssignment();
+            this.isFileLoading = false;
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Xóa thành công',
+              'Xóa tài liệu thành công'
+            );
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xóa thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'toastAssignAssignment',
+              'Xóa thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -660,18 +672,18 @@ export class AssignAssignmentComponent implements OnInit {
           next: (data) => {
             this.selectedAssignment = data;
             this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Nộp thành công',
-              detail: 'Nộp thành công',
-            });
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Nộp thành công',
+              'Nộp thành công'
+            );
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Nộp thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'toastAssignAssignment',
+              'Nộp thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -695,18 +707,18 @@ export class AssignAssignmentComponent implements OnInit {
           next: (data) => {
             this.selectedAssignment = data;
             this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Hủy nộp thành công',
-              detail: 'Hủy nộp thành công',
-            });
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Hủy nộp thành công',
+              'Hủy nộp thành công'
+            );
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Hủy nộp thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'toastAssignAssignment',
+              'Hủy nộp thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -730,20 +742,18 @@ export class AssignAssignmentComponent implements OnInit {
             next: (data) => {
               this.selectedAssignment = data;
               this.initData();
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Đánh giá',
-                detail: isPassed
-                  ? 'Phê duyệt thành công'
-                  : 'Không phê duyệt thành công',
-              });
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Đánh giá',
+                isPassed ? 'Phê duyệt thành công' : 'Không phê duyệt thành công'
+              );
             },
             error: (error) => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Phê duyệt',
-                detail: error.error.message,
-              });
+              this.toastService.showError(
+                'toastAssignAssignment',
+                'Phê duyệt',
+                error.error.message
+              );
             },
           });
       },
@@ -758,11 +768,11 @@ export class AssignAssignmentComponent implements OnInit {
     };
     this.assignmentService.addComment(data).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Bình luận thành công',
-          detail: 'Bình luận thành công',
-        });
+        this.toastService.showSuccess(
+          'toastAssignAssignment',
+          'Bình luận thành công',
+          'Bình luận thành công'
+        );
         this.refreshSelectedAssignment();
       },
     });
@@ -822,19 +832,19 @@ export class AssignAssignmentComponent implements OnInit {
           })
           .subscribe({
             next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Xóa bình luận',
-                detail: 'Xóa bình luận thành công',
-              });
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Xóa bình luận',
+                'Xóa bình luận thành công'
+              );
               this.refreshSelectedAssignment();
             },
             error: (error) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Xóa bị lỗi',
-                detail: error.error.message,
-              });
+              this.toastService.showError(
+                'error',
+                'Xóa bị lỗi',
+                error.error.message
+              );
             },
           });
       },
@@ -875,6 +885,16 @@ export class AssignAssignmentComponent implements OnInit {
         break;
     }
     return extension;
+  }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
+  }
+  navigateChildren(assignmentId: number) {
+    this.router.navigate(['/assignassignment', this.issueId], {
+      queryParams: { id: assignmentId },
+    });
   }
   // viewDocxFile(documentLink: string) {
   //   this.fileService

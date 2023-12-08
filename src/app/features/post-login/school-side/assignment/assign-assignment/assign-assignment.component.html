@@ -1,11 +1,11 @@
 <div class="container-fluid">
   <!-- confirm and message -->
-  <p-toast></p-toast>
+  <p-toast key="toastAssignAssignment"></p-toast>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
     acceptLabel="Đồng ý"
     rejectLabel="Hủy"
-    key="confirmAssignment"
+    key="confirmAssignAssignment"
   ></p-confirmDialog>
   <app-file-loading
     [visible]="isFileLoading"
@@ -13,21 +13,23 @@
   ></app-file-loading>
   <!-- file preview -->
   <p-dialog
-    [(visible)]="pdfLoaded"
-    [style]="{ width: '80vw' }"
+    #pdfDialog
+    header="Xem tài liệu"
+    [(visible)]="pdfPreviewVisibility"
+    [style]="{ width: '90vw', height: '100vh' }"
     [draggable]="false"
     [resizable]="false"
+    [maximizable]="true"
+    [modal]="true"
+    (onHide)="onHideFilePreviewEvent()"
   >
-    <ngx-doc-viewer [url]="fileUrl"></ngx-doc-viewer>
-    <div *ngIf="documentContent">
-      <div [innerHTML]="documentContent"></div>
+    <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+      <div class="spinner-border text-center" role="status"></div>
+      <p>Đang tải...</p>
     </div>
-    <!-- app.component.html -->
-    <!-- <app-document-viewer></app-document-viewer> -->
-
-    <!-- <div *ngIf="pdfLoaded">
-    <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
-  </div> -->
+    <ng-template #pdfIsLoaded>
+      <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
+    </ng-template>
   </p-dialog>
   <!-- menu -->
   <p-menu
@@ -45,6 +47,7 @@
     [draggable]="false"
     [resizable]="false"
     [modal]="true"
+    (onHide)="uploadFilePopupHideEvent()"
   >
     <form [formGroup]="fileInputForm">
       <div class="row">
@@ -135,6 +138,7 @@
   <form [formGroup]="assignmentForm">
     <!-- Popup detail/update -->
     <p-dialog
+      #updateDialog
       [header]="
         action === 'update' ? 'Cập nhật công việc' : 'Chi tiết công việc'
       "
@@ -175,7 +179,7 @@
                   *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['required'] || assignmentForm.controls?.['assignmentName']?.errors?.['whitespace']"
                   class="p-error"
                 >
-                  Vui lòng điền mã tài liệu
+                  Vui lòng điền tên công việc
                 </span>
                 <span
                   *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
@@ -189,6 +193,22 @@
               <label class="span-heading-color mb-1">Chi tiết công việc</label>
               <br />
               <textarea pInputTextarea formControlName="description"></textarea>
+              <div
+                *ngIf="assignmentForm.controls?.['description']?.invalid && (assignmentForm.controls?.['description']?.touched || assignmentForm.controls?.['description']?.dirty)"
+              >
+                <span
+                  *ngIf="assignmentForm.controls?.['description']?.errors?.['required'] || assignmentForm.controls?.['description']?.errors?.['whitespace']"
+                  class="p-error"
+                >
+                  Vui lòng điền chi tiết công việc
+                </span>
+                <span
+                  *ngIf="assignmentForm.controls?.['description']?.errors?.['maxlength']"
+                  class="p-error"
+                >
+                  Chi tiết công việc quá dài
+                </span>
+              </div>
             </div>
           </ng-container>
           <ng-template #cannotEdit>
@@ -280,7 +300,7 @@
                         <!-- <div (click)="openNewTab(item.documentLink)"> -->
                         <div
                           (click)="
-                            previewFile(item.documentLink, item.fileExtension)
+                            openNewTab(item.documentLink, item.fileExtension)
                           "
                         >
                           <div class="file-item px-3 py-1 row">
@@ -360,7 +380,7 @@
                     <div class="row mb-3">
                       <div
                         (click)="
-                          previewFile(item.documentLink, item.fileExtension)
+                          openNewTab(item.documentLink, item.fileExtension)
                         "
                       >
                         <div class="file-item px-3 py-1 row">
@@ -422,12 +442,15 @@
               action === 'info'
             "
           >
-            <label class="fw-medium">Danh sách công việc con</label>
-            <ul class="mt-1" *ngFor="let item of selectedAssignment.children">
+            <label class="fw-medium mb-1">Danh sách công việc con</label>
+            <ng-container *ngFor="let item of selectedAssignment.children">
               <div
-                class="row children d-flex justify-content-center align-items-center"
+                class="mb-1 row children d-flex justify-content-center align-items-center"
+                (click)="navigateChildren(item.assignmentId)"
               >
-                <div class="col-md-1">
+                <div
+                  class="col-md-1 d-flex justify-content-center align-items-center"
+                >
                   <ng-container *ngIf="item.task">
                     <i class="bi bi-file-earmark-check-fill file-icon"></i>
                   </ng-container>
@@ -447,7 +470,7 @@
                   </p-tag>
                 </div>
               </div>
-            </ul>
+            </ng-container>
           </div>
 
           <!-- comment and history -->
@@ -664,9 +687,9 @@
             <!-- </form> -->
           </div>
           <div class="height-100">
-            <span class="text-black-50">Ngày tạo</span>
+            <span class="span-heading-color">Ngày tạo</span>
             <br />
-            <span class="font-weight-bold mt-1">{{
+            <span class="fw-medium mt-1">{{
               selectedAssignment.createdDate | date : "dd/MM/yyyy"
             }}</span>
           </div>
@@ -674,7 +697,7 @@
             *ngIf="action === 'info' && hasAuthority('canCompleteConfirm')"
             class="height-100"
           >
-            <span class="font-weight-bold">Xác nhận hoàn thành</span>
+            <span class="fw-medium">Xác nhận hoàn thành</span>
             <br />
             <button pButton (click)="completeOrCancelCF(true)">Xác nhận</button>
           </div>
@@ -878,17 +901,6 @@
       </ng-template>
     </p-dialog>
   </form>
-  <!-- Popup file preview -->
-  <p-dialog
-    [(visible)]="pdfLoaded"
-    [style]="{ width: '90vw', height: '1080px' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
-    <div *ngIf="pdfLoaded">
-      <iframe [src]="safePdfUrl" width="100%" height="650px"></iframe>
-    </div>
-  </p-dialog>
 
   <h5 class="mat-headline-5 fw-medium">Danh sách công việc</h5>
   <div class="card">
