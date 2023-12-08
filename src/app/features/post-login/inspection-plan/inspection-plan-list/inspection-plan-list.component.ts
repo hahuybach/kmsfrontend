@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {IssueDropDownResponse} from "../../../../models/issue-drop-down-response";
@@ -9,13 +9,14 @@ import {ToastService} from "../../../../shared/toast/toast.service";
 import {InspectionPlanResponse} from "../../../../models/inspection-plan-response";
 import {AuthService} from "../../../../services/auth.service";
 import {Role} from "../../../../shared/enum/role";
+import {tuiDayToDate, unSub} from "../../../../shared/util/util";
 
 @Component({
   selector: 'app-inspection-plan-list',
   templateUrl: './inspection-plan-list.component.html',
   styleUrls: ['./inspection-plan-list.component.scss'],
 })
-export class InspectionPlanListComponent implements OnInit{
+export class InspectionPlanListComponent implements OnInit, OnDestroy{
   inspectionPlans: InspectionPlanResponse[]
   advanceSearch = false;
   planName: any;
@@ -65,6 +66,9 @@ export class InspectionPlanListComponent implements OnInit{
   maxPage: any;
   recordPerPageOption: number[] = [5, 15, 25];
   isPrincipal = false;
+  createDateRange: any;
+  deadlineDateRange: any;
+  subs: any[] = []
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
@@ -168,7 +172,7 @@ export class InspectionPlanListComponent implements OnInit{
       }
     }
     if (!this.isPrincipal){
-      this.schoolService.findAllSchools().subscribe({
+    const sub =  this.schoolService.findAllSchools().subscribe({
         next: (data) => {
           this.schools = data
         },
@@ -176,8 +180,9 @@ export class InspectionPlanListComponent implements OnInit{
           this.toastService.showError("error", "Lỗi", error.error.message)
         }
       })
+      this.subs.push(sub);
     }
-    this.issueService.getIssueDropDownResponse()
+   const sub2 = this.issueService.getIssueDropDownResponse()
       .subscribe({
         next: (result) => {
           this.issueDropDowns = result.issueDropDownBoxDtos;
@@ -190,6 +195,7 @@ export class InspectionPlanListComponent implements OnInit{
           this.toastService.showError("error", "Lỗi", error.error.message)
         }
       })
+    this.subs.push(sub2)
   }
 
 
@@ -202,7 +208,7 @@ export class InspectionPlanListComponent implements OnInit{
       this.deadlineDateError = true;
       return
     }
-    this.inspectionPlanService.filterInspectionPlan(this.pageNo, this.pageSize, this.sortBy,
+ const sub =  this.inspectionPlanService.filterInspectionPlan(this.pageNo, this.pageSize, this.sortBy,
       this.sortDirection, this.planName, this.selectedStatus, this.currentIssueSelected, this.selectedSchool,
       this.creationStartDateTime, this.creationEndDateTime, this.deadlineStartDateTime, this.deadlineEndDateTime).subscribe({
       next: (data) =>{
@@ -232,6 +238,7 @@ export class InspectionPlanListComponent implements OnInit{
         });
       }
     })
+    this.subs.push(sub)
     this.creationDateError = false
     this.deadlineDateError = false
   }
@@ -259,6 +266,8 @@ export class InspectionPlanListComponent implements OnInit{
     this.creationEndDateTime = null;
     this.deadlineStartDateTime = null;
     this.deadlineEndDateTime = null;
+    this.createDateRange = null;
+    this.deadlineDateRange = null;
     this.loadDocuments();
   }
 
@@ -305,5 +314,27 @@ export class InspectionPlanListComponent implements OnInit{
 
   onCreateInspectionPlan(){
     this.router.navigate(['inspection-plan/create'])
+  }
+
+  changeStartDate() {
+    if (this.createDateRange){
+      this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
+      this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
+      this.loadDocuments();
+    }
+
+  }
+
+  changeDeadlineDate() {
+    if (this.deadlineDateRange){
+      this.deadlineStartDateTime = tuiDayToDate(this.deadlineDateRange.from);
+      this.deadlineEndDateTime = tuiDayToDate(this.deadlineDateRange.to);
+      this.loadDocuments();
+    }
+
+  }
+
+  ngOnDestroy(): void {
+    unSub(this.subs)
   }
 }

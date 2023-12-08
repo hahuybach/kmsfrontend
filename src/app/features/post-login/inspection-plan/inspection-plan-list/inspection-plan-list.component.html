@@ -35,50 +35,29 @@
           </div>
         </div>
         <div class="col-md-4">
-          <mat-form-field class="w-100">
-            <mat-label>Khoảng thời gian bắt đầu</mat-label>
-            <mat-date-range-input [rangePicker]="picker1">
-              <input
-                matStartDate
-                [(ngModel)]="creationStartDateTime"
-                placeholder="Bắt đầu"
-              />
-              <input
-                matEndDate
-                [(ngModel)]="creationEndDateTime"
-                placeholder="Kết thúc"
-                (dateChange)="loadDocuments()"
-              />
-            </mat-date-range-input>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker1"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #picker1></mat-date-range-picker>
-          </mat-form-field>
+          <label class="fw-medium">Khoảng ngày bắt đầu</label>
+          <tui-input-date-range
+            class="tui-date"
+            tuiTextfieldSize="m"
+            [(ngModel)]="createDateRange"
+            (durationchange)="changeStartDate()"
+            (ngModelChange)="changeStartDate()"
+
+          >
+          </tui-input-date-range>
         </div>
         <div class="col-md-4">
-          <mat-form-field class="w-100">
-            <mat-label>Khoảng thời gian kết thúc</mat-label>
-            <mat-date-range-input [rangePicker]="picker2">
-              <input
-                matStartDate
-                [(ngModel)]="deadlineStartDateTime"
-                placeholder="Bắt đầu"
-              />
-              <input
-                matEndDate
-                [(ngModel)]="deadlineEndDateTime"
-                placeholder="Kết thúc"
-                (dateChange)="loadDocuments()"
-              />
-            </mat-date-range-input>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #picker2></mat-date-range-picker>
-          </mat-form-field>
+          <label class="fw-medium">Khoảng ngày kết thúc</label>
+          <tui-input-date-range
+            class="tui-date"
+            tuiTextfieldSize="m"
+            [(ngModel)]="deadlineDateRange"
+            (durationchange)="changeDeadlineDate()"
+            (ngModelChange)="changeDeadlineDate()"
+
+
+          >
+          </tui-input-date-range>
         </div>
       </div>
     </div>
