@@ -54,7 +54,7 @@ export class InitiationplanService {
       params = params.set('pageNo', pageNo)
     }
     if (issue) {
-      params = params.set('issueId', issue.issueId)
+      params = params.set('issueId', issue)
     }
     if (statusId) {
       params = params.set('statusId', statusId)

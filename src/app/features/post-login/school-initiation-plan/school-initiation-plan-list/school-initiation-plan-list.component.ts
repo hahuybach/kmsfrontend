@@ -83,7 +83,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
         value['currentIssueSelected'] &&
         value['currentIssueSelected'] !== undefined
       ) {
-        this.currentIssueSelected.issueId = value['currentIssueSelected'];
+        this.currentIssueSelected = Number(value['currentIssueSelected']);
       }
       if (value['creationStartDateTime']) {
         this.creationStartDateTime = value['creationStartDateTime'];
@@ -159,7 +159,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     this.issueService.getIssueDropDownResponse().subscribe({
       next: (result) => {
         this.issueDropDowns = result.issueDropDownBoxDtos;
-        this.currentIssueSelected = this.issueDropDowns.at(0);
         this.initQuery();
         this.loadDocuments();
       },
@@ -203,7 +202,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
               sortBy: this.sortBy,
               sortDirection: this.sortDirection,
               planName: this.planName,
-              currentIssueSelected: this.currentIssueSelected?.issueId,
+              currentIssueSelected: this.currentIssueSelected,
               deadlineStartDateTime: toIsoStringUrl(this.deadlineStartDateTime),
               deadlineEndDateTime: toIsoStringUrl(this.deadlineEndDateTime),
               creationStartDateTime: toIsoStringUrl(this.creationStartDateTime),
