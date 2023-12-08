@@ -29,3 +29,7 @@ export function toIsoString(string: any){
   return date.toISOString()
 
 }
+
+export function toIsoStringUrl(string: any){
+  return new Date(string).toISOString()
+}

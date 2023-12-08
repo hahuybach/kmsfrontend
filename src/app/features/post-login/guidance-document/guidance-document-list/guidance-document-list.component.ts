@@ -7,8 +7,9 @@ import {IssueService} from "../../../../services/issue.service";
 import {MessageService} from "primeng/api";
 import {AuthService} from "../../../../services/auth.service";
 import {Role} from "../../../../shared/enum/role";
-import {tuiDayToDate, unSub} from "../../../../shared/util/util";
+import {dateToTuiDay, tuiDayToDate, unSub} from "../../../../shared/util/util";
 import {DatePipe} from "@angular/common";
+import {attrToNumber} from "ag-grid-community/dist/lib/utils/generic";
 
 @Component({
   selector: 'app-guidance-document-list',
@@ -35,8 +36,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
   advanceSearchButtonText = 'Hiện tra cứu nâng cao';
   maxPage: number = 0;
   maxPageError: boolean = false;
-    recordPerPageOption: number[] = [5, 15, 25];
-
+  recordPerPageOption: number[] = [5, 15, 25];
   issueId: number = -1
   isPrincipal: boolean = false;
   isDirector: boolean = false;
@@ -50,6 +50,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
     Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY];
   sub: any[] = []
   createDateRange: any;
+
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
@@ -82,13 +83,13 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
 
     }
   }
+
   constructor(private guidanceDocumentService: GuidanceDocumentService,
               private route: Router,
               private issueService: IssueService,
               private messageService: MessageService,
               private activateRouter: ActivatedRoute,
               private auth: AuthService,
-              private datePipe: DatePipe
   ) {
     this.guidanceDocuments = [];
   }
@@ -99,7 +100,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
       this.dateError = true;
       return
     }
-   const sub =  this.guidanceDocumentService
+    const sub = this.guidanceDocumentService
       .filterGuidanceDocuments(
         this.pageNo,
         this.pageSize,
@@ -118,7 +119,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
           this.guidanceDocuments = result.guidanceDocumentDtos;
           this.allGuidanceDocument = result.size;
           this.maxPage = result.maxPage;
-            this.onChangePageSize();
+          this.onChangePageSize();
           console.log("error " + this.startDateTime);
           this.startDateTime = new Date(this.startDateTime)
           this.route.navigate([], {
@@ -129,11 +130,11 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
               sortBy: this.sortBy,
               sortDirection: this.sortDirection,
               guidanceDocumentName: this.guidanceDocumentName,
-              startDateTime: (this.startDateTime as Date).toISOString() ,
+              startDateTime: (this.startDateTime as Date).toISOString(),
               endDateTime: (this.endDateTime as Date).toISOString(),
               fullName: this.fullName,
-              globalSearch     :this.globalSearch,
-                advanceSearch: this.advanceSearch
+              globalSearch: this.globalSearch,
+              advanceSearch: this.advanceSearch
 
               // Add other query parameters as needed
             },
@@ -166,53 +167,58 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-this.setAuth()
-  const sub =  this.issueService.getIssueDropDownResponse()
+    this.setAuth()
+    const sub = this.issueService.getIssueDropDownResponse()
       .subscribe({
         next: (result) => {
           this.issueDropDowns = result.issueDropDownBoxDtos;
         }
       })
-this.sub.push(sub)
- const sub2 =   this.activateRouter.queryParams.subscribe(
-        value => {
-          if(value['pageNo']){
-            this.pageNo = value['pageNo'];
-          }
-          if(value['pageSize']){
-            this.pageSize = value['pageSize'];
-          }
-          if(value['sortBy']){
-            this.sortBy = value['sortBy'];
-          }
-          if(value['sortDirection']){
-            this.sortDirection = value['sortDirection'];
-          }
-          if(value['guidanceDocumentName']){
-            this.guidanceDocumentName = value['guidanceDocumentName'];
-          }
-          if(value['startDateTime']){
-            this.startDateTime = new Date(value['startDateTime']) ;
-          }
-          if(value['endDateTime']){
-            this.endDateTime = new Date(value['endDateTime']) ;
-          }
-          if(value['fullName']){
-            this.fullName = value['fullName']
-          }
-          if(value['globalSearch']){
-            this.globalSearch = value['globalSearch']
-          }
-            if(value['advanceSearch']){
-                this.advanceSearch = (value['advanceSearch'] == 'true' )
-                if (this.advanceSearch){
-                  this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
-                }else {
-                    this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
-
-                }
-            }
+    this.sub.push(sub)
+    const sub2 = this.activateRouter.queryParams.subscribe(
+      value => {
+        if (value['pageNo']) {
+          this.pageNo = value['pageNo'];
         }
+        if (value['pageSize']) {
+          this.pageSize = value['pageSize'];
+        }
+        if (value['sortBy']) {
+          this.sortBy = value['sortBy'];
+        }
+        if (value['sortDirection']) {
+          this.sortDirection = value['sortDirection'];
+        }
+        if (value['guidanceDocumentName']) {
+          this.guidanceDocumentName = value['guidanceDocumentName'];
+        }
+        console.log(value['startDateTime'])
+        if (value['startDateTime']) {
+          console.log("run here")
+          this.startDateTime = new Date(value['startDateTime']);
+          
+          this.createDateRange.from = dateToTuiDay(new Date(value['startDateTime']))
+          console.log("get start date from url " + this.createDateRange.from);
+        }
+        if (value['endDateTime']) {
+          this.endDateTime = new Date(value['endDateTime']);
+        }
+        if (value['fullName']) {
+          this.fullName = value['fullName']
+        }
+        if (value['globalSearch']) {
+          this.globalSearch = value['globalSearch']
+        }
+        if (value['advanceSearch']) {
+          this.advanceSearch = (value['advanceSearch'] == 'true')
+          if (this.advanceSearch) {
+            this.advanceSearchButtonText = "Ẩn tra cứu nâng cao"
+          } else {
+            this.advanceSearchButtonText = "Hiện tra cứu nâng cao"
+
+          }
+        }
+      }
     )
     this.sub.push(sub2)
     this.loadGuidanceDocuments();
@@ -309,23 +315,23 @@ this.sub.push(sub)
     })
   }
 
-  onChangePageSize(){
-      if(this.guidanceDocuments.length == 0 && this.pageNo > 1){
+  onChangePageSize() {
+    if (this.guidanceDocuments.length == 0 && this.pageNo > 1) {
       this.pageNo = this.maxPage;
       this.loadGuidanceDocuments();
     }
   }
 
-    changePageSize() {
-        this.loadGuidanceDocuments();
-    }
+  changePageSize() {
+    this.loadGuidanceDocuments();
+  }
 
   ngOnDestroy(): void {
     unSub(this.sub)
   }
 
   changeStartDate() {
-    if (this.createDateRange){
+    if (this.createDateRange) {
       this.startDateTime = tuiDayToDate(this.createDateRange.from);
       this.endDateTime = tuiDayToDate(this.createDateRange.to);
       this.loadGuidanceDocuments();

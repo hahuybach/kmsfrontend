@@ -9,7 +9,8 @@ import {InitiationPlanResponse} from '../../../../models/initiation-plan-respons
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../../../../services/auth.service';
 import {Role} from '../../../../shared/enum/role';
-import { tuiDayToDate} from "../../../../shared/util/util";
+import {dateToTuiDay, toIsoStringUrl, tuiDayToDate} from "../../../../shared/util/util";
+import {TuiDayRange} from "@taiga-ui/cdk";
 
 @Component({
   selector: 'app-school-initiation-plan-list',
@@ -86,15 +87,27 @@ export class SchoolInitiationPlanListComponent implements OnInit {
       }
       if (value['creationStartDateTime']) {
         this.creationStartDateTime = value['creationStartDateTime'];
+        this.createDateRange = new TuiDayRange(
+          dateToTuiDay(new Date(value['creationStartDateTime']))
+          , dateToTuiDay(new Date())
+        )
       }
       if (value['creationEndDateTime']) {
         this.creationEndDateTime = value['creationEndDateTime'];
+        this.createDateRange.to = dateToTuiDay(new Date(value['creationEndDateTime']))
       }
+
       if (value['deadlineStartDateTime']) {
         this.deadlineStartDateTime = value['deadlineStartDateTime'];
+        this.deadlineDateRange = new TuiDayRange(
+          dateToTuiDay(new Date(value['deadlineStartDateTime']))
+          , dateToTuiDay(new Date())
+        )
       }
       if (value['deadlineEndDateTime']) {
         this.deadlineEndDateTime = value['deadlineEndDateTime'];
+        this.deadlineDateRange.to = dateToTuiDay(new Date(value['deadlineEndDateTime']))
+
       }
       if (value['selectedSchool'] && value['selectedSchool'] !== undefined) {
         this.selectedSchool.schoolId = value['selectedSchool'];
@@ -159,7 +172,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   }
 
   loadDocuments() {
-    console.log(this.createDateRange);
+    console.log(this.deadlineStartDateTime);
     this.initiationplanService
       .filterInitiationPlan(
         this.pageNo,
@@ -180,7 +193,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
           this.schoolInitPlans = data.initiationPlanDtoPage.content;
           this.maxPage = data.initiationPlanDtoPage.totalPages;
           this.totalElements = data.initiationPlanDtoPage.totalElements;
-          console.log(data);
           this.changePageSize();
           this.router.navigate([], {
             relativeTo: this.activateRouter,
@@ -191,10 +203,11 @@ export class SchoolInitiationPlanListComponent implements OnInit {
               sortDirection: this.sortDirection,
               planName: this.planName,
               currentIssueSelected: this.currentIssueSelected?.issueId,
-              creationStartDateTime: this.creationStartDateTime?.toISOString(),
-              creationEndDateTime: this.creationEndDateTime?.toISOString(),
-              deadlineStartDateTime: this.deadlineStartDateTime?.toISOString(),
-              deadlineEndDateTime: this.deadlineEndDateTime?.toISOString(),
+              deadlineStartDateTime: toIsoStringUrl(this.deadlineStartDateTime),
+              deadlineEndDateTime: toIsoStringUrl(this.deadlineEndDateTime),
+              creationStartDateTime: toIsoStringUrl(this.creationStartDateTime),
+              creationEndDateTime: toIsoStringUrl(this.creationEndDateTime),
+
               advanceSearch: this.advanceSearch,
               selectedSchool: this.selectedSchool?.schoolId,
               status: this.selectedStatus
