@@ -26,10 +26,8 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
   selectedSchool: any
   creationStartDateTime: any;
   creationEndDateTime: any;
-  creationDateError: boolean = false;
   deadlineStartDateTime: any;
   deadlineEndDateTime: any;
-  deadlineDateError: any;
   advanceSearchButtonText = "Hiện tra cứu nâng cao";
 
   isDirector: boolean = false;
@@ -200,14 +198,6 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
 
 
   loadDocuments() {
-    if ((this.creationStartDateTime != null && this.creationEndDateTime != null) && (new Date(this.creationStartDateTime) > new Date(this.creationEndDateTime))) {
-      this.creationDateError = true;
-      return
-    }
-    if ((this.deadlineStartDateTime != null && this.deadlineEndDateTime != null) && (new Date(this.deadlineStartDateTime) > new Date(this.deadlineEndDateTime))) {
-      this.deadlineDateError = true;
-      return
-    }
  const sub =  this.inspectionPlanService.filterInspectionPlan(this.pageNo, this.pageSize, this.sortBy,
       this.sortDirection, this.planName, this.selectedStatus, this.currentIssueSelected, this.selectedSchool,
       this.creationStartDateTime, this.creationEndDateTime, this.deadlineStartDateTime, this.deadlineEndDateTime).subscribe({
@@ -239,8 +229,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy{
       }
     })
     this.subs.push(sub)
-    this.creationDateError = false
-    this.deadlineDateError = false
+
   }
 
   onAdvanceSearch() {
