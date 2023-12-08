@@ -20,5 +20,12 @@ export function tuiDayToDate(date: TuiDay): Date{
   const month = date.month;
   const year = date.year;
   console.log("after parse " + day);
+  console.log("after parse "+ new Date(year, month, day));
   return new Date(year, month, day);
+}
+export function toIsoString(string: any){
+  let date = new Date(string);
+  date.setDate(date.getDate() + 1)
+  return date.toISOString()
+
 }

@@ -3,6 +3,7 @@ import { LoggerService } from './LoggerService';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {DomainName} from "../shared/enum/domain-name";
+import {toIsoString} from "../shared/util/util";
 @Injectable()
 export class InitiationplanService {
   private initiationplanApiUrl =
@@ -62,17 +63,17 @@ export class InitiationplanService {
       params = params.set('schoolId', school.schoolId)
     }
     if (creationStartDateTime) {
-      params = params.set('creationStartDateTime', new Date(creationStartDateTime.toString()).toISOString());
+      params = params.set('creationStartDateTime', toIsoString(creationStartDateTime));
     }
 
     if (creationEndDateTime) {
-      params = params.set('creationEndDateTime', new Date(creationEndDateTime).toISOString());
+      params = params.set('creationEndDateTime', toIsoString(creationEndDateTime));
     }
     if (deadlineStartDateTime) {
-      params = params.set('deadlineStartDateTime', new Date(deadlineStartDateTime).toISOString());
+      params = params.set('deadlineStartDateTime', toIsoString(deadlineStartDateTime));
     }
     if (deadlineEndDateTime) {
-      params = params.set('deadlineEndDateTime', new Date(deadlineEndDateTime).toISOString());
+      params = params.set('deadlineEndDateTime', toIsoString(deadlineEndDateTime));
     }
     console.log(params);
 

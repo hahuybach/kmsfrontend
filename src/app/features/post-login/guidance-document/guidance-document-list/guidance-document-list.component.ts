@@ -7,7 +7,7 @@ import {IssueService} from "../../../../services/issue.service";
 import {MessageService} from "primeng/api";
 import {AuthService} from "../../../../services/auth.service";
 import {Role} from "../../../../shared/enum/role";
-import {unSub} from "../../../../shared/util/util";
+import {tuiDayToDate, unSub} from "../../../../shared/util/util";
 import {DatePipe} from "@angular/common";
 
 @Component({
@@ -49,6 +49,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
   schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
     Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY];
   sub: any[] = []
+  createDateRange: any;
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
@@ -266,6 +267,7 @@ this.setAuth()
     this.startDateTime = '';
     this.globalSearch = '';
     this.fullName = '';
+    this.createDateRange = null;
     this.loadGuidanceDocuments();
   }
 
@@ -319,6 +321,14 @@ this.setAuth()
 
   ngOnDestroy(): void {
     unSub(this.sub)
+  }
+
+  changeStartDate() {
+    if (this.createDateRange){
+      this.startDateTime = tuiDayToDate(this.createDateRange.from);
+      this.endDateTime = tuiDayToDate(this.createDateRange.to);
+      this.loadGuidanceDocuments();
+    }
   }
 }
 

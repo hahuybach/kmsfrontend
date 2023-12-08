@@ -33,10 +33,12 @@ export class GuidanceDocumentService {
       params = params.set('issueId', issueId)
     }
     if (startDateTime instanceof Date && !isNaN(startDateTime.getTime())) {
+      startDateTime.setDate(startDateTime.getDate() + 1);
       params = params.set('startDateTime', startDateTime.toISOString());
     }
 
     if (endDateTime instanceof Date && !isNaN(endDateTime.getTime())) {
+      endDateTime.setDate(endDateTime.getDate() + 1);
       params = params.set('endDateTime', endDateTime.toISOString());
     }
     console.log(params);

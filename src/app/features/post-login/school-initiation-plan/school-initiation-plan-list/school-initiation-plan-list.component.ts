@@ -9,8 +9,7 @@ import {InitiationPlanResponse} from '../../../../models/initiation-plan-respons
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../../../../services/auth.service';
 import {Role} from '../../../../shared/enum/role';
-import {dateToTuiDay, tuiDayToDate} from "../../../../shared/util/util";
-import {TuiDay, TuiDayRange} from "@taiga-ui/cdk";
+import { tuiDayToDate} from "../../../../shared/util/util";
 
 @Component({
   selector: 'app-school-initiation-plan-list',
@@ -25,11 +24,8 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   currentIssueSelected: any;
   creationStartDateTime: any;
   creationEndDateTime: any;
-  creationDateError: boolean = false;
   deadlineStartDateTime: any;
   deadlineEndDateTime: any;
-  deadlineDateError: any;
-
   createDateRange :any;
   deadlineDateRange :any;
 
@@ -164,23 +160,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
 
   loadDocuments() {
     console.log(this.createDateRange);
-
-    if (
-      this.creationStartDateTime != null &&
-      this.creationEndDateTime != null &&
-      new Date(this.creationStartDateTime) > new Date(this.creationEndDateTime)
-    ) {
-      this.creationDateError = true;
-      return;
-    }
-    if (
-      this.deadlineStartDateTime != null &&
-      this.deadlineEndDateTime != null &&
-      new Date(this.deadlineStartDateTime) > new Date(this.deadlineEndDateTime)
-    ) {
-      this.deadlineDateError = true;
-      return;
-    }
     this.initiationplanService
       .filterInitiationPlan(
         this.pageNo,
@@ -225,8 +204,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
           });
         },
       });
-    this.creationDateError = false;
-    this.deadlineDateError = false;
   }
 
   onAdvanceSearch() {
