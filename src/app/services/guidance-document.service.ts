@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common
 import {FilterGuidanceDocumentResponse} from "../models/filter-guidance-document-response";
 import {Observable} from "rxjs";
 import {DomainName} from "../shared/enum/domain-name";
+import {toIsoString} from "../shared/util/util";
 
 @Injectable({
   providedIn: 'root'
@@ -33,13 +34,12 @@ export class GuidanceDocumentService {
       params = params.set('issueId', issueId)
     }
     if (startDateTime instanceof Date && !isNaN(startDateTime.getTime())) {
-      startDateTime.setDate(startDateTime.getDate() + 1);
-      params = params.set('startDateTime', startDateTime.toISOString());
+
+      params = params.set('startDateTime', toIsoString(startDateTime));
     }
 
     if (endDateTime instanceof Date && !isNaN(endDateTime.getTime())) {
-      endDateTime.setDate(endDateTime.getDate() + 1);
-      params = params.set('endDateTime', endDateTime.toISOString());
+      params = params.set('endDateTime', toIsoString(endDateTime));
     }
     console.log(params);
 

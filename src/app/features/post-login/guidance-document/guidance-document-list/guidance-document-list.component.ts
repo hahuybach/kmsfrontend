@@ -167,14 +167,14 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 this.setAuth()
-    this.issueService.getIssueDropDownResponse()
+  const sub =  this.issueService.getIssueDropDownResponse()
       .subscribe({
         next: (result) => {
           this.issueDropDowns = result.issueDropDownBoxDtos;
         }
       })
-
-    this.activateRouter.queryParams.subscribe(
+this.sub.push(sub)
+ const sub2 =   this.activateRouter.queryParams.subscribe(
         value => {
           if(value['pageNo']){
             this.pageNo = value['pageNo'];
@@ -214,6 +214,7 @@ this.setAuth()
             }
         }
     )
+    this.sub.push(sub2)
     this.loadGuidanceDocuments();
 
 
