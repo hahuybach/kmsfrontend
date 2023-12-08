@@ -92,7 +92,6 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
             <tui-input-date
-              (tuiValueChanges)="onStartDateChange()"
               [min]="minStartDate"
               [max]="maxStartDate"
               tuiTextfieldSize="m"
@@ -104,7 +103,6 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
             <tui-input-date
-              (tuiValueChanges)="onEndDateChange()"
               [min]="minEndDate"
               class="tui-date"
               tuiTextfieldSize="m"

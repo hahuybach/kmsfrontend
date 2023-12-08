@@ -96,7 +96,6 @@ export class UpdateInspectionPlanComponent {
   }
 
   onResetList() {
-    this.inspectionplanInspectorService.setInspectorListIsValid(false);
     this.inspectionplanInspectorService.resetBothLists()
   }
 
@@ -159,10 +158,15 @@ export class UpdateInspectionPlanComponent {
         console.log(error);
       }
     });
-
     this.minEndDate = dateToTuiDay(tomorow);
     this.minStartDate = dateToTuiDay(tomorow);
 
+    this.inspectionPlanForm.get('startDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
+      this.onStartDateChange();
+    });
+    this.inspectionPlanForm.get('endDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
+      this.onEndDateChange();
+    });
   }
 
   openNewTab(documentLink: string) {
@@ -217,6 +221,7 @@ export class UpdateInspectionPlanComponent {
 
 
   onStartDateChange() {
+    console.log('start')
     if (this.inspectorList.length > 0) {
       this.confirmationService.confirm({
         message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
@@ -233,11 +238,12 @@ export class UpdateInspectionPlanComponent {
   }
 
   onEndDateChange() {
+    console.log('end')
     if (this.inspectorList.length > 0) {
       this.confirmationService.confirm({
         message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
         header: 'Xác nhận thay đổi',
-        key:  'changeTime',
+        key: 'changeTime',
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
           this.resetInspectorList()
@@ -249,25 +255,13 @@ export class UpdateInspectionPlanComponent {
     this.initInspectorList()
   }
 
-  confirm1(message: string, header: string) {
-    this.confirmationService.confirm({
-      message: message,
-      header: header,
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.resetInspectorList()
-      },
-      reject: (type: ConfirmEventType) => {
-      }
-    });
-  }
-
   resetInspectorList() {
     this.eligibleChiefList = [];
     this.selectedInspectorList = [];
     this.chiefList = [];
     this.inspectorList = [];
     this.inspectionplanInspectorService.clearBothList();
+    this.inspectionplanInspectorService.setInspectorListIsValid(false);
     this.initInspectorList();
   }
 

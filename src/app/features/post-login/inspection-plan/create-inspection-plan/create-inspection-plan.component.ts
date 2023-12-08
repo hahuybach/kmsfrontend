@@ -111,7 +111,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
 
   onResetList() {
     this.inspectionplanInspectorService.resetBothLists();
-    this.inspectionplanInspectorService.setInspectorListIsValid(false);
   }
 
   getInspectorIds(data: any) {
@@ -188,6 +187,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     this.selectedInspectorList = [];
     this.chiefList = [];
     this.inspectorList = [];
+    this.inspectionplanInspectorService.setInspectorListIsValid(false);
     this.initInspectorList();
   }
 
