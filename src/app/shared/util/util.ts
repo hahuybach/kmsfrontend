@@ -19,8 +19,6 @@ export function tuiDayToDate(date: TuiDay): Date{
   const day = date.day;
   const month = date.month;
   const year = date.year;
-  console.log("after parse " + day);
-  console.log("after parse "+ new Date(year, month, day));
   return new Date(year, month, day);
 }
 export function toIsoString(string: any){
@@ -31,6 +29,7 @@ export function toIsoString(string: any){
 }
 
 export function toIsoStringUrl(string: any){
+  console.log(string);
   if (string){
     return new Date(string).toISOString()
   }

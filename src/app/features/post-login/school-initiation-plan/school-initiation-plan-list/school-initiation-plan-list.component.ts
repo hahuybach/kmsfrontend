@@ -172,7 +172,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   }
 
   loadDocuments() {
-    console.log(this.selectedSchool);
     this.initiationplanService
       .filterInitiationPlan(
         this.pageNo,
