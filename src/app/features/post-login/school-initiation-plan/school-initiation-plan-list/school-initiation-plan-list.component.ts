@@ -116,6 +116,10 @@ export class SchoolInitiationPlanListComponent implements OnInit {
         this.selectedStatus = Number(value['status']) ;
 
       }
+      if (value['schoolId'] && value['schoolId'] !== undefined) {
+        this.selectedSchool = Number(value['schoolId']) ;
+
+      }
       if (value['advanceSearch']) {
         this.advanceSearch = value['advanceSearch'] == 'true';
         if (this.advanceSearch) {
@@ -172,7 +176,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   }
 
   loadDocuments() {
-    console.log(this.deadlineStartDateTime);
+    console.log(this.selectedSchool);
     this.initiationplanService
       .filterInitiationPlan(
         this.pageNo,
@@ -207,7 +211,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
               deadlineEndDateTime: toIsoStringUrl(this.deadlineEndDateTime),
               creationStartDateTime: toIsoStringUrl(this.creationStartDateTime),
               creationEndDateTime: toIsoStringUrl(this.creationEndDateTime),
-
+              schoolId: this.selectedSchool,
               advanceSearch: this.advanceSearch,
               selectedSchool: this.selectedSchool?.schoolId,
               status: this.selectedStatus

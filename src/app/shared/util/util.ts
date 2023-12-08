@@ -31,5 +31,8 @@ export function toIsoString(string: any){
 }
 
 export function toIsoStringUrl(string: any){
-  return new Date(string).toISOString()
+  if (string){
+    return new Date(string).toISOString()
+  }
+  return null
 }

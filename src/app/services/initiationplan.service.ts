@@ -60,7 +60,7 @@ export class InitiationplanService {
       params = params.set('statusId', statusId)
     }
     if (school) {
-      params = params.set('schoolId', school.schoolId)
+      params = params.set('schoolId', school)
     }
     if (creationStartDateTime) {
       params = params.set('creationStartDateTime', toIsoString(creationStartDateTime));
