@@ -1,191 +1,209 @@
-<div class="row create-issue">
-  <h4 class="mb-3">Tạo mới kế hoạch triển khai</h4>
-  <app-issue-list-pop-up
-    (popupInspectorVisibleChange)="changeInspectorVisible()"
-    [popupInspectorVisible]="popupInspectorVisible"
-  ></app-issue-list-pop-up>
-  <form class="row" [formGroup]="issueForm" (ngSubmit)="onSubmit()">
-    <div class="form-content col-md-8">
-      <div class="issue-name mb-1">
-        <h6>Tên kế hoạch triển khai</h6>
-        <input
-          type="text"
-          pInputText
-          placeholder="Tên kế hoạch triển khai"
-          class="w-100"
-          formControlName="issueName"
-        />
-      </div>
-      <div class="issue-detail mb-1">
-        <h6>Chi tiết</h6>
-        <textarea
-          type="text"
-          pInputTextarea
-          placeholder="Chi tiết kế hoạch triển khai"
-          rows="5"
-          class="w-100"
-          formControlName="issueDetail"
-        ></textarea>
-      </div>
-      <h6>Tài liệu công văn</h6>
-      <div class="document" formGroupName="issueDocList">
-        <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_1">
-          <div class="col-md-12 d-flex flex-row">
-            <div class="col-md-6 pe-3">
-              <label>Tên tài liệu</label><br/>
-              <input
-                pInputText
-                placeholder="Điền tên tài liệu"
-                formControlName="documentName"
-              />
+<app-issue-list-pop-up
+  (popupInspectorVisibleChange)="changeInspectorVisible()"
+  [popupInspectorVisible]="popupInspectorVisible"
+></app-issue-list-pop-up>
+<div class="container-fluid">
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
+  <h5 class="mat-headline-5 mb-2">Tạo mới kế hoạch triển khai</h5>
+  <div class="row create-issue">
+    <form class="row" [formGroup]="issueForm" (ngSubmit)="onSubmit()">
+      <div class="form-content col-md-8">
+        <div class="issue-name mb-1">
+          <h6>Tên kế hoạch triển khai</h6>
+          <input
+            type="text"
+            pInputText
+            placeholder="Tên kế hoạch triển khai"
+            class="w-100"
+            formControlName="issueName"
+          />
+        </div>
+        <div class="issue-detail mb-1">
+          <h6>Chi tiết</h6>
+          <textarea
+            type="text"
+            pInputTextarea
+            placeholder="Chi tiết kế hoạch triển khai"
+            rows="5"
+            class="w-100"
+            formControlName="issueDetail"
+          ></textarea>
+        </div>
+        <h6>Tài liệu công văn</h6>
+        <div class="document" formGroupName="issueDocList">
+          <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_1">
+            <div class="col-md-12 d-flex flex-row">
+              <div class="col-md-6 pe-3">
+                <label>Tên tài liệu</label><br/>
+                <input
+                  pInputText
+                  placeholder="Điền tên tài liệu"
+                  formControlName="documentName"
+                />
+              </div>
+              <div class="col-md-3 pe-3">
+                <label>Loại tài liệu</label><br/>
+                <select title="docType" formControlName="documentTypeId" class="form-select"
+                        (change)="onChange1($event)">
+                  <option value="0" selected>Chọn loại tài liệu</option>
+                  <ng-container *ngFor="let type of docTypes_select_1">
+                    <option [value]="type.id"
+                            *ngIf="type.id != selectedValue_2 && type.id != selectedValue_3">{{type.name}}</option>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label>Mã tài liệu</label><br/>
+                <input
+                  pInputText
+                  placeholder="Điền mã tài liệu"
+                  formControlName="documentCode"
+                />
+              </div>
             </div>
-            <div class="col-md-3 pe-3">
-              <label>Loại tài liệu</label><br/>
-              <select title="docType" formControlName="documentTypeId" class="form-select" (change)="onChange1($event)">
-                <option value="0" selected>Chọn loại tài liệu</option>
-                <ng-container *ngFor="let type of docTypes_select_1">
-                  <option [value]="type.id"
-                          *ngIf="type.id != selectedValue_2 && type.id != selectedValue_3">{{type.name}}</option>
-                </ng-container>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label>Mã tài liệu</label><br/>
-              <input
-                pInputText
-                placeholder="Điền mã tài liệu"
-                formControlName="documentCode"
-              />
+            <div class="col-md-12">
+              <label>Tài liệu</label><br/>
+              <div class="input-file">
+                <input
+                  type="file"
+                  #fileInput_1
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput_1, 1)"
+                />
+                <input pInputText readonly class="col-md-9"
+                       placeholder="{{fileInputPlaceholders[0] ? fileInputPlaceholders[0] : 'Chọn file để tải lên'}}"/>
+                <button
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput_1.click()"
+                  class="col-md-3"
+                ></button>
+              </div>
             </div>
           </div>
-          <div class="col-md-12">
-            <label>Tài liệu</label><br/>
-            <div class="input-file">
-              <input
-                type="file"
-                #fileInput_1
-                style="display: none"
-                (change)="handleFileInputChange(fileInput_1, 1)"
-              />
-              <input pInputText readonly class="col-md-9"
-                     placeholder="{{fileInputPlaceholders[0] ? fileInputPlaceholders[0] : 'Chọn file để tải lên'}}"/>
-              <button
-                type="button"
-                pButton
-                label="Chọn tệp"
-                (click)="fileInput_1.click()"
-                class="col-md-3"
-              ></button>
+          <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_2">
+            <div class="col-md-12 d-flex flex-row">
+              <div class="col-md-6 pe-3">
+                <label>Tên tài liệu</label><br/>
+                <input
+                  pInputText
+                  placeholder="Điền tên tài liệu"
+                  formControlName="documentName"
+                />
+              </div>
+              <div class="col-md-3 pe-3">
+                <label>Loại tài liệu</label><br/>
+                <select title="docType" formControlName="documentTypeId" class="form-select"
+                        (change)="onChange2($event)">
+                  <option value="0" selected>Chọn loại tài liệu</option>
+                  <ng-container *ngFor="let type of docTypes_select_2">
+                    <option [value]="type.id"
+                            *ngIf="type.id != selectedValue_1 && type.id != selectedValue_3">{{type.name}}</option>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label>Mã tài liệu</label><br/>
+                <input
+                  pInputText
+                  placeholder="Điền mã tài liệu"
+                  formControlName="documentCode"
+                />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label>Tài liệu</label><br/>
+              <div class="input-file">
+                <input
+                  type="file"
+                  #fileInput_2
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput_2, 2)"
+                />
+                <input pInputText readonly class="col-md-9"
+                       placeholder="{{fileInputPlaceholders[1] ? fileInputPlaceholders[1] : 'Chọn file để tải lên'}}"/>
+                <button
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput_2.click()"
+                  class="col-md-3"
+                ></button>
+              </div>
+            </div>
+          </div>
+          <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_3">
+            <div class="col-md-12 d-flex flex-row">
+              <div class="col-md-6 pe-3">
+                <label>Tên tài liệu</label><br/>
+                <input
+                  pInputText
+                  placeholder="Điền tên tài liệu"
+                  formControlName="documentName"
+                />
+              </div>
+              <div class="col-md-3 pe-3">
+                <label>Loại tài liệu</label><br/>
+                <select title="docType" formControlName="documentTypeId" class="form-select"
+                        (change)="onChange3($event)">
+                  <option value="0" selected>Chọn loại tài liệu</option>
+                  <ng-container *ngFor="let type of docTypes_select_3">
+                    <option [value]="type.id"
+                            *ngIf="type.id != selectedValue_1 && type.id != selectedValue_2">{{type.name}}</option>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label>Mã tài liệu</label><br/>
+                <input
+                  pInputText
+                  placeholder="Điền mã tài liệu"
+                  formControlName="documentCode"
+                />
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label>Tài liệu</label><br/>
+              <div class="input-file">
+                <input
+                  type="file"
+                  #fileInput_3
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput_3, 3)"
+                />
+                <input pInputText readonly class="col-md-9"
+                       placeholder="{{fileInputPlaceholders[2] ? fileInputPlaceholders[2] : 'Chọn file để tải lên'}}"/>
+                <button
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput_3.click()"
+                  class="col-md-3"
+                ></button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_2">
-          <div class="col-md-12 d-flex flex-row">
-            <div class="col-md-6 pe-3">
-              <label>Tên tài liệu</label><br/>
-              <input
-                pInputText
-                placeholder="Điền tên tài liệu"
-                formControlName="documentName"
-              />
-            </div>
-            <div class="col-md-3 pe-3">
-              <label>Loại tài liệu</label><br/>
-              <select title="docType" formControlName="documentTypeId" class="form-select" (change)="onChange2($event)">
-                <option value="0" selected>Chọn loại tài liệu</option>
-                <ng-container *ngFor="let type of docTypes_select_2">
-                  <option [value]="type.id"
-                          *ngIf="type.id != selectedValue_1 && type.id != selectedValue_3">{{type.name}}</option>
-                </ng-container>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label>Mã tài liệu</label><br/>
-              <input
-                pInputText
-                placeholder="Điền mã tài liệu"
-                formControlName="documentCode"
-              />
-            </div>
-          </div>
-          <div class="col-md-12">
-            <label>Tài liệu</label><br/>
-            <div class="input-file">
-              <input
-                type="file"
-                #fileInput_2
-                style="display: none"
-                (change)="handleFileInputChange(fileInput_2, 2)"
-              />
-              <input pInputText readonly class="col-md-9"
-                     placeholder="{{fileInputPlaceholders[1] ? fileInputPlaceholders[1] : 'Chọn file để tải lên'}}"/>
-              <button
-                type="button"
-                pButton
-                label="Chọn tệp"
-                (click)="fileInput_2.click()"
-                class="col-md-3"
-              ></button>
-            </div>
-          </div>
-        </div>
-        <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_3">
-          <div class="col-md-12 d-flex flex-row">
-            <div class="col-md-6 pe-3">
-              <label>Tên tài liệu</label><br/>
-              <input
-                pInputText
-                placeholder="Điền tên tài liệu"
-                formControlName="documentName"
-              />
-            </div>
-            <div class="col-md-3 pe-3">
-              <label>Loại tài liệu</label><br/>
-              <select title="docType" formControlName="documentTypeId" class="form-select" (change)="onChange3($event)">
-                <option value="0" selected>Chọn loại tài liệu</option>
-                <ng-container *ngFor="let type of docTypes_select_3">
-                  <option [value]="type.id"
-                          *ngIf="type.id != selectedValue_1 && type.id != selectedValue_2">{{type.name}}</option>
-                </ng-container>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label>Mã tài liệu</label><br/>
-              <input
-                pInputText
-                placeholder="Điền mã tài liệu"
-                formControlName="documentCode"
-              />
-            </div>
-          </div>
-          <div class="col-md-12">
-            <label>Tài liệu</label><br/>
-            <div class="input-file">
-              <input
-                type="file"
-                #fileInput_3
-                style="display: none"
-                (change)="handleFileInputChange(fileInput_3, 3)"
-              />
-              <input pInputText readonly class="col-md-9"
-                     placeholder="{{fileInputPlaceholders[2] ? fileInputPlaceholders[2] : 'Chọn file để tải lên'}}"/>
-              <button
-                type="button"
-                pButton
-                label="Chọn tệp"
-                (click)="fileInput_3.click()"
-                class="col-md-3"
-              ></button>
-            </div>
-          </div>
+        <div class="col-12 save-button w-100 mb-2">
+          <button class="btn text-white">Lưu kế hoạch</button>
         </div>
       </div>
-      <div class="col-12 save-button w-100 mb-2">
-        <button class="btn text-white">Lưu kế hoạch</button>
+      <div class="col-md-4 h-25 d-flex justify-content-center align-items-center">
+        <app-issue-list-right-side (toggleIssueListPopup)="changeInspectorVisible()"></app-issue-list-right-side>
       </div>
-    </div>
-    <div class="col-md-4 h-25 d-flex justify-content-center align-items-center">
-      <app-issue-list-right-side (toggleIssueListPopup)="changeInspectorVisible()"></app-issue-list-right-side>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

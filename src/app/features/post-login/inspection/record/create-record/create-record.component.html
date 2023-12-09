@@ -19,8 +19,8 @@
   ></app-loading-complete-dialog>
   <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
     <div class="row">
-      <div class="record-name col-md-12 mt-1">
-        <label class="fw-medium">Mục kiểm tra<span class="p-error">*</span></label>
+      <div class="record-name col-md-12 mb-2">
+        <label class="fw-medium mb-1">Mục kiểm tra<span class="p-error">*</span></label>
         <input
           type="text"
           pInputText
@@ -39,8 +39,8 @@
                     </span>
         </div>
       </div>
-      <div class="record-description col-md-12 mt-1">
-        <label class="fw-medium">Chi tiết<span class="p-error">*</span></label>
+      <div class="record-description col-md-12 mb-2">
+        <label class="fw-medium mb-1">Chi tiết<span class="p-error">*</span></label>
         <textarea
           type="text"
           pInputTextarea
@@ -56,8 +56,14 @@
                     </span>
         </div>
       </div>
-      <div class="record-deadline col-md-6 mt-1">
-        <label for="deadline" class="fw-medium">Hạn nộp<span class="p-error">*</span></label>
+      <div class="record-deadline col-md-6 mb-2">
+        <label for="deadline" class="fw-medium mb-1">Hạn nộp<span class="p-error">*</span></label>
+        <tui-input-date
+          tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
+          class="tui-date"
+          tuiTextfieldSize="m"
+          formControlName="startDate">
+        </tui-input-date>
         <input id="deadline" class="form-control" type="date" formControlName="deadline" [min]="startDate" [max]="endDate"/>
         <div
           *ngIf="recordForm.controls?.['deadline']?.invalid && (recordForm.controls?.['deadline']?.touched ||recordForm.controls?.['deadline']?.dirty)">
@@ -66,8 +72,8 @@
                     </span>
         </div>
       </div>
-      <div class="record-assignee col-md-6 mt-1" *ngIf="inspectionPlan">
-        <label for="deadline" class="fw-medium">Người thực hiện<span class="p-error">*</span></label>
+      <div class="record-assignee col-md-6 mb-2" *ngIf="inspectionPlan">
+        <label for="deadline" class="fw-medium mb-1">Người thực hiện<span class="p-error">*</span></label>
         <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors" formControlName="assigneeId"
                     optionLabel="user.fullName"
                     [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"

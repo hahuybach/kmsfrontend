@@ -5,37 +5,38 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IssueService } from '../../../../services/issue.service';
-import { switchMap } from 'rxjs';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import {ActivatedRoute, Router} from '@angular/router';
+import {IssueService} from '../../../../services/issue.service';
+import {switchMap} from 'rxjs';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {
   ConfirmationService,
   MessageService,
   ConfirmEventType,
 } from 'primeng/api';
-import { InspectorService } from 'src/app/services/inspector.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
-import { AuthService } from 'src/app/services/auth.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { FileService } from 'src/app/services/file.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ToastService } from 'src/app/shared/toast/toast.service';
-import { Dialog } from 'primeng/dialog';
+import {InspectorService} from 'src/app/services/inspector.service';
+import {FormBuilder, Validators} from '@angular/forms';
+import {NoWhitespaceValidator} from 'src/app/shared/validators/no-white-space.validator';
+import {AuthService} from 'src/app/services/auth.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {FileService} from 'src/app/services/file.service';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {ToastService} from 'src/app/shared/toast/toast.service';
+import {Dialog} from 'primeng/dialog';
 
 interface DocumentIssue {
   documentName: string;
   documentCode: string;
   file: any; // Update the type of 'file' as per your requirements
 }
+
 @Component({
   selector: 'app-update-issue',
   templateUrl: './update-issue.component.html',
   styleUrls: ['./update-issue.component.scss'],
 })
 export class UpdateIssueComponent implements OnInit, AfterViewInit {
-  @ViewChild('fileInput', { static: false }) fileInputRef!: ElementRef;
+  @ViewChild('fileInput', {static: false}) fileInputRef!: ElementRef;
   addedDocumentIssues = new Map<number, object>();
   file: File;
   fileInputPlaceholders: string;
@@ -82,7 +83,23 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   submitCompleted: boolean = false;
   pdfPreviewVisibility: boolean = false;
+
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch kiểm tra',
+      routerLink: '/issue/list',
+    },
+    {
+      caption: 'Cập nhật kế hoạch kiểm tra'
+    },
+  ];
+
   @ViewChild('pdfDialog') yourDialog!: Dialog;
+
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
@@ -94,8 +111,11 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     private router: Router,
     protected http: HttpClient,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer,
+  ) {
+    this.issueId = null;
+  }
+
   ngOnInit(): void {
     const sub = this.route.params
       .pipe(
@@ -121,10 +141,12 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     });
     this.sub.push(sub);
   }
+
   //toggle status in scrollview
   toggleStatus() {
     this.isChanged = !this.isChanged;
   }
+
   // store button in scrollview
   toggleStore() {
     this.isChanged = !this.isChanged;
@@ -134,6 +156,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       inspectorId: this.issue.inspectors.map((item: any) => item.accountId),
     });
   }
+
   // click trash icon event in scrollview
   confirmDelete(inspector: any) {
     if (this.issue.inspectors.length == 1) {
@@ -165,10 +188,12 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
   //toggle inspector group popup
   showInspectorPopup() {
     this.popupInspectorVisible = true;
   }
+
   //toggle cancel button scrollview
   toggleCancel() {
     this.isChanged = false;
@@ -194,11 +219,13 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     );
     // scroll to first
   }
+
   resetFileInput() {
     if (this.fileInputRef) {
       this.fileInputRef.nativeElement.value = null;
     }
   }
+
   handleFileInputChange(fileInput: any): void {
     const files = fileInput.files;
     if (files.length > 0) {
@@ -207,6 +234,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       this.fileInputPlaceholders = file.name;
     }
   }
+
   getSize(size: number): string {
     const n: number = 1024;
     let s: string = '';
@@ -229,6 +257,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
 
     return s;
   }
+
   upload() {
     const dataObject = {
       documentName: this.issueForm.get('documentName')?.value,
@@ -286,6 +315,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     );
     this.uploadFileVisible = false;
   }
+
   onHideEvent() {
     this.issueForm.get('documentName')?.setValue('');
     this.issueForm.get('documentCode')?.setValue('');
@@ -324,6 +354,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       },
     });
   }
+
   togglePopupInvalidDoc() {
     this.invalidDoc = this.issue.documentDtos.filter(
       (document: any) => document.status.statusId === 2
@@ -331,6 +362,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
 
     this.popupInvalidDocVisible = true;
   }
+
   openNewTab(documentLink: string) {
     this.pdfPreviewVisibility = true;
     console.log(documentLink);
@@ -345,12 +377,14 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       });
     this.sub.push(sub);
   }
+
   displayNewFileUpload(file: File) {
     const blobUrl = window.URL.createObjectURL(file as Blob);
     this.pdfUrl = blobUrl;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
     this.pdfLoaded = true;
   }
+
   onSubmit() {
     this.isLoading = true;
     const inspectorFormAttr = this.issueForm.get('inspectorId');
@@ -378,7 +412,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     const files = addedDocumentIssues.map((item) => item.file);
     console.log(files);
     const addedDocumentIssuesFinal = addedDocumentIssues.map(
-      ({ file, ...rest }) => rest
+      ({file, ...rest}) => rest
     );
     const formData = new FormData();
     const issue = {
@@ -393,7 +427,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     console.log(issue);
     formData.append(
       'issue',
-      new Blob([JSON.stringify(issue)], { type: 'application/json' })
+      new Blob([JSON.stringify(issue)], {type: 'application/json'})
     );
     files.forEach((item) => {
       const file: File = item; // Assuming the file property is of type File
@@ -423,18 +457,22 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       },
     });
   }
+
   changeFilterVisible(status: Boolean) {
     this.filterVisible = status;
   }
+
   maximizeDialogIfVisible() {
     if (this.pdfPreviewVisibility && this.yourDialog) {
       this.yourDialog.maximize();
     }
   }
+
   ngAfterViewInit() {
     this.maximizeDialogIfVisible();
     console.log('run ng after view init');
   }
+
   onHideFilePreviewEvent() {
     this.pdfUrl = '';
     this.safePdfUrl = '';

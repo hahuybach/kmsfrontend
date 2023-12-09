@@ -11,6 +11,7 @@ import { CreateRecordComponent } from './record/create-record/create-record.comp
 import { UpdateRecordComponent } from './record/update-record/update-record.component';
 import { RecordDetailComponent } from './record/record-detail/record-detail.component';
 import { InspectionMytaskComponent } from './inspection-mytask/inspection-mytask.component';
+import {TuiUnfinishedValidatorModule} from "@taiga-ui/kit";
 
 
 
@@ -26,10 +27,11 @@ import { InspectionMytaskComponent } from './inspection-mytask/inspection-mytask
     RecordDetailComponent,
     InspectionMytaskComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    InspectionPlanModule
-  ]
+    imports: [
+        CommonModule,
+        SharedModule,
+        InspectionPlanModule,
+        TuiUnfinishedValidatorModule
+    ]
 })
 export class InspectionModule { }

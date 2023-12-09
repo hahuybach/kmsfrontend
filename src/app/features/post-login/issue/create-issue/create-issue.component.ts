@@ -76,6 +76,22 @@ export class CreateIssueComponent implements OnInit {
 
   issueForm: FormGroup;
 
+  //breadcrumb
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch kiểm tra',
+      routerLink: '/issue/list',
+    },
+    {
+      caption: 'Tạo mới kế hoạch kiểm tra',
+      routerLink: '/issue/create',
+    },
+  ];
+
   constructor(
     private fb: FormBuilder,
     protected http: HttpClient
