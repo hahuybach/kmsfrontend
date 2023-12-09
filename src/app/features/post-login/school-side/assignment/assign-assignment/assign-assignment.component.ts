@@ -17,6 +17,7 @@ import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { Dialog } from 'primeng/dialog';
+import { TreeTable } from 'primeng/treetable';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -99,7 +100,8 @@ export class AssignAssignmentComponent implements OnInit {
   activeTab: MenuItem | undefined;
   sub: any[] = [];
   pdfPreviewVisibility: boolean = false;
-  // @ViewChild('treeTable') treeTable: TreeTable;
+  @ViewChild('treeTable') treeTable: TreeTable;
+  nodeStateMap: { [key: number]: boolean } = {};
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -136,6 +138,9 @@ export class AssignAssignmentComponent implements OnInit {
       )
       .subscribe((data) => {
         this.assignments = data.assignmentListDtos;
+        // this.setExpandedForAllNodes(this.assignments);
+        this.restoreNodeState(this.assignments);
+        // this.treeTable.expandAll();
       });
     // this.issueService.getCurrentActiveIssue().subscribe({
     //   next: (data) => {
@@ -200,8 +205,10 @@ export class AssignAssignmentComponent implements OnInit {
     this.assignmentService.getAssignmentByIssueId(this.issueId).subscribe({
       next: (data) => {
         this.assignments = data.assignmentListDtos;
+        this.restoreNodeState(this.assignments);
       },
     });
+    console.log(this.nodeStateMap);
   }
   // ADD
   openDetail(assignment?: any, action?: string) {
@@ -921,4 +928,36 @@ export class AssignAssignmentComponent implements OnInit {
   //       console.error('Error reading Word document:', error);
   //     });
   // }
+  setExpandedForAllNodes(nodes: any[]) {
+    nodes.forEach((node) => {
+      if (node.children && node.children.length > 0) {
+        this.setExpandedForAllNodes(node.children);
+      }
+      node.expanded = true;
+      this.nodeStateMap[node.assignmentId] = true;
+    });
+  }
+  onNodeExpand(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+  onNodeCollapse(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+  restoreNodeState(nodes: any[]) {
+    nodes.forEach((node) => {
+      if (this.nodeStateMap[node.assignmentId] !== undefined) {
+        node.expanded = this.nodeStateMap[node.assignmentId];
+      }
+
+      if (node.children && node.children.length > 0) {
+        this.restoreNodeState(node.children);
+      }
+    });
+  }
 }

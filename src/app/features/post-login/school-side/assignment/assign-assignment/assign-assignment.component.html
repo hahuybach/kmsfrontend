@@ -968,6 +968,8 @@
       [style]="{ 'min-width': '50rem' }"
       scrollHeight="600px"
       class="tree-table"
+      (onNodeExpand)="onNodeExpand($event)"
+      (onNodeCollapse)="onNodeCollapse($event)"
     >
       <ng-template pTemplate="caption">
         <div class="d-flex justify-content-between align-items-center">
