@@ -251,8 +251,6 @@ export class UserListComponent implements OnInit, OnDestroy {
               fullName: this.fullName,
               globalSearch: this.globalSearch,
               advanceSearch: this.advanceSearch
-
-
               // Add other query parameters as needed
             },
             queryParamsHandling: 'merge'
