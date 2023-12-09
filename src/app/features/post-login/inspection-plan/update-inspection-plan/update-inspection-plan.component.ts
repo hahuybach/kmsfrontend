@@ -188,8 +188,9 @@ export class UpdateInspectionPlanComponent {
     this.minStartDate = dateToTuiDay(tomorow);
 
     this.inspectionPlanForm.get('startDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
-      this.onStartDateChange();
+      this.onStartDateChange()
     });
+
     this.inspectionPlanForm.get('endDate')?.valueChanges.pipe(skip(1)).subscribe(x => {
       this.onEndDateChange();
     });
@@ -231,8 +232,8 @@ export class UpdateInspectionPlanComponent {
   }
 
   initInspectorList() {
-    let startDate = new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString();
-    let endDate = new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString();
+    let startDate = new Date(tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value)).toISOString();
+    let endDate = new Date(tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value)).toISOString();
     const initInspector = this.inspectionPlanService.getEligibleInspector(startDate, endDate).subscribe({
       next: (data: any) => {
         this.nonInspectorList = data.inspectorDtos;
@@ -247,26 +248,7 @@ export class UpdateInspectionPlanComponent {
     this.subscriptions.push(initInspector)
   }
 
-
-  onStartDateChange() {
-    console.log('start')
-    if (this.inspectorList.length > 0) {
-      this.confirmationService.confirm({
-        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
-        header: 'Xác nhận thay đổi',
-        icon: 'bi bi-exclamation-triangle',
-        accept: () => {
-          this.resetInspectorList()
-        },
-        reject: (type: ConfirmEventType) => {
-        }
-      });
-    }
-    this.initInspectorList();
-  }
-
   onEndDateChange() {
-    console.log('end')
     if (this.inspectorList.length > 0) {
       this.confirmationService.confirm({
         message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
@@ -280,10 +262,31 @@ export class UpdateInspectionPlanComponent {
         }
       });
     }
+    this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
     this.initInspectorList()
   }
 
+  onStartDateChange() {
+    if (this.inspectorList.length > 0) {
+      this.confirmationService.confirm({
+        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        key: 'changeTime',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+        },
+        reject: (type: ConfirmEventType) => {
+        }
+      });
+    }
+    this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
+    this.initInspectorList();
+  }
+
   resetInspectorList() {
+    this.inspectionPlanForm.get('chiefId')?.setValue(null);
+    this.inspectionPlanForm.get('inspectorIds')?.setValue(null);
     this.eligibleChiefList = [];
     this.selectedInspectorList = [];
     this.chiefList = [];
@@ -305,10 +308,9 @@ export class UpdateInspectionPlanComponent {
       this.inspectionPlanForm.markAllAsTouched();
       return;
     }
-
     const startDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
     startDate.setUTCHours(0);
-    const endDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
+    const endDate = tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value);
     endDate.setUTCHours(0);
 
     const formData = new FormData();

@@ -12,6 +12,7 @@ import { UpdateRecordComponent } from './record/update-record/update-record.comp
 import { RecordDetailComponent } from './record/record-detail/record-detail.component';
 import { InspectionMytaskComponent } from './inspection-mytask/inspection-mytask.component';
 import {TuiUnfinishedValidatorModule} from "@taiga-ui/kit";
+import {TuiTextfieldControllerModule} from "@taiga-ui/core";
 
 
 
@@ -31,7 +32,8 @@ import {TuiUnfinishedValidatorModule} from "@taiga-ui/kit";
         CommonModule,
         SharedModule,
         InspectionPlanModule,
-        TuiUnfinishedValidatorModule
+        TuiUnfinishedValidatorModule,
+        TuiTextfieldControllerModule
     ]
 })
 export class InspectionModule { }

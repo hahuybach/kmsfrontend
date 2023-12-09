@@ -29,10 +29,12 @@ export class InspectionDocumentComponent implements OnInit {
   ) {}
 
   changeCreateRecordVisible() {
+    this.initInspectionData();
     this.createRecordPopupVisible = !this.createRecordPopupVisible;
   }
 
   changeUpdateRecordVisible() {
+    this.initInspectionData();
     this.updateRecordPopupVisible = !this.updateRecordPopupVisible;
   }
 
@@ -98,7 +100,6 @@ export class InspectionDocumentComponent implements OnInit {
     this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
       next: (data) => {
         this.inspectionDocument = data;
-        console.log(this.inspectionDocument);
       },
       error: (error) => {
         console.log(error);

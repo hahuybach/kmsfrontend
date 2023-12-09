@@ -190,6 +190,8 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
 
 
   resetInspectorList() {
+    this.inspectionPlanForm.get('chiefId')?.setValue(null);
+    this.inspectionPlanForm.get('inspectorIds')?.setValue(null);
     this.eligibleChiefList = [];
     this.selectedInspectorList = [];
     this.chiefList = [];
@@ -216,7 +218,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     }
     const startDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
     startDate.setUTCHours(0);
-    const endDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
+    const endDate = tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value);
     endDate.setUTCHours(0);
     const formData = new FormData();
     const inspectionPlan = {
