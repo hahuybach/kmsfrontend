@@ -48,7 +48,7 @@ export class DocumentService {
       params = params.set('statusId', status);
     }
     if (school) {
-      params = params.set('schoolId', school.schoolId);
+      params = params.set('schoolId', school);
     }
 
     console.log(params);

@@ -87,10 +87,10 @@ export class AssignmentTreeListComponent implements OnInit {
               sortBy: this.sortBy,
               sortDirection: this.sortDirection,
               assignmentName: this.assignmentName,
-              currentIssueSelected: this.currentIssueSelected?.issueId,
+              currentIssueSelected: this.currentIssueSelected,
               advanceSearch: this.advanceSearch,
-              selectedSchool: this.selectedSchool?.schoolId,
               status: this.selectedStatus,
+              schoolId: this.selectedSchool
             },
             queryParamsHandling: 'merge',
           });
@@ -142,7 +142,6 @@ export class AssignmentTreeListComponent implements OnInit {
     this.issueService.getIssueDropDownResponse().subscribe({
       next: (result) => {
         this.issueDropDowns = result.issueDropDownBoxDtos;
-        this.currentIssueSelected = this.issueDropDowns.at(0);
         this.initQuery();
         this.loadDocuments();
       },
@@ -186,11 +185,12 @@ export class AssignmentTreeListComponent implements OnInit {
         value['currentIssueSelected'] &&
         value['currentIssueSelected'] !== undefined
       ) {
-        this.currentIssueSelected.issueId = value['currentIssueSelected'];
+        this.currentIssueSelected = Number(value['currentIssueSelected']);
       }
 
-      if (value['selectedSchool'] && value['selectedSchool'] !== undefined) {
-        this.selectedSchool.schoolId = value['selectedSchool'];
+      if (value['schoolId'] && value['schoolId'] !== undefined) {
+        this.selectedSchool = Number(value['schoolId']) ;
+
       }
       if (value['advanceSearch']) {
         this.advanceSearch = value['advanceSearch'] == 'true';
@@ -200,8 +200,8 @@ export class AssignmentTreeListComponent implements OnInit {
           this.advanceSearchButtonText = 'Hiện tra cứu nâng cao';
         }
       }
-      if (value['status']) {
-        this.selectedStatus.value = value['status'];
+      if (value['status'] && value['status'] !== undefined) {
+        this.selectedStatus = Number(value['status']) ;
       }
     });
   }
