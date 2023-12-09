@@ -1,11 +1,7 @@
 @import "../../../../../assets/scss/base";
 
-.inspection-detail {
+* {
   font-size: 16px;
-}
-
-:host ::ng-deep .p-tag {
-  font-size: 15px;
 }
 
 :host ::ng-deep .p-tabmenu-nav {
@@ -13,9 +9,11 @@
     text-decoration: none;
     color: $primary;
   }
+
   .p-menuitem-text {
     color: $primary;
   }
+
   .p-highlight {
     a {
       border-bottom-color: $primary;

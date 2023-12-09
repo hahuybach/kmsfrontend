@@ -1,35 +1,35 @@
-<div class="container-fluid">
+<div class="container-fluid mt-2">
+  <h5 class="mat-headline-5 mb-2">Chi tiết quyết định kiểm tra</h5>
   <div class="row">
-    <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
     <div class="row" *ngIf="inspection">
       <div class="form-content col-md-8 d-flex flex-column justify-content-between">
         <div class="row mb-2">
           <div class="col-md-9">
-            <div class="inspection-plan-name mb-1">
-              <span>Tên phiên kiểm tra</span>
-              <p class="fw-bolder">{{inspection.inspectionName}}</p>
+            <div class="inspection-plan-name">
+              <label class="span-heading-color mb-2">Tên phiên kiểm tra</label>
+              <p class="fw-medium">{{inspection.inspectionName}}</p>
             </div>
           </div>
           <div class="col-md-3">
-            <span>Ngày bắt đầu</span>
-            <p class="fw-bolder">{{inspection.startDate | date: "dd/MM/yyyy"}}</p>
+            <label  class="span-heading-color mb-2">Ngày bắt đầu</label>
+            <p class="fw-medium">{{inspection.startDate | date: "dd/MM/yyyy"}}</p>
           </div>
         </div>
         <div class="row mb-2">
           <div class="col-md-9">
-            <div class="inspection-plan-name mb-1">
-              <span>Tên trường</span>
-              <p class="fw-bolder">{{inspection.schoolName}}</p>
+            <div class="inspection-plan-name mb-2">
+              <label class="span-heading-color mb-2">Tên trường</label>
+              <p class="fw-medium">{{inspection.schoolName}}</p>
             </div>
           </div>
           <div class="col-md-3">
-            <span>Ngày kết thúc</span>
-            <p class="fw-bolder">{{inspection.endDate | date: "dd/MM/yyyy"}}</p>
+            <label class="span-heading-color mb-2">Ngày kết thúc</label>
+            <p class="fw-medium">{{inspection.endDate | date: "dd/MM/yyyy"}}</p>
           </div>
         </div>
         <div class="row mb-2">
           <div class="col-md-3">
-            <span>Trạng thái</span>
+            <label class="span-heading-color mb-2">Trạng thái</label>
             <p-tag
               class="status"
               [severity]="getStatusSeverity(inspection.statusName)"
@@ -39,7 +39,7 @@
             </p-tag>
           </div>
         </div>
-        <h5 class="my-2">Tài liệu công văn</h5>
+        <h6 class="mat-headline-6 mb-1">Tài liệu công văn</h6>
         <p-tabMenu [model]="tabs" [activeItem]="activeTab" class="mb-2"></p-tabMenu>
         <div class="file-item-container">
           <div *ngIf="issueDocumentVisibility">
