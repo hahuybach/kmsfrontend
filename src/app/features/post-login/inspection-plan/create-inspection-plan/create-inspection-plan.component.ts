@@ -32,7 +32,23 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
   createFailed: boolean = false;
   inspectorListIsValid: boolean = false;
   duplicateDocumentCode: boolean = false;
+
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch thanh tra',
+      routerLink: '/inspection-plan/list',
+    },
+    {
+      caption: 'Tạo mới kế hoạch thanh tra'
+    },
+  ];
+
   private subscriptions: Subscription[] = [];
+
 
   constructor(
     private fb: FormBuilder,

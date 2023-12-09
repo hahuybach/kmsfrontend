@@ -16,6 +16,19 @@
   </ng-template>
 </p-dialog>
 <div class="container-fluid">
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium">Chi tiết quyết định kiểm tra</h5>
   <div class="row inspection-plan-detail">
     <div class="row">

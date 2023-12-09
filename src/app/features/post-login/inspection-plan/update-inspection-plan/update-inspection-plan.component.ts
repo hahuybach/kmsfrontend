@@ -81,6 +81,20 @@ export class UpdateInspectionPlanComponent {
   updateFailed: boolean = false;
   duplicateDocumentCode: boolean = false;
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch thanh tra',
+      routerLink: '/inspection-plan/list',
+    },
+    {
+      caption: 'Cập nhật kế hoạch thanh tra'
+    },
+  ];
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,

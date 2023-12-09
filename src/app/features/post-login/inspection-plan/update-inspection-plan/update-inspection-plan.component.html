@@ -39,6 +39,19 @@
 >
 </app-loading-complete-dialog>
 <div class="container-fluid">
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium">Cập nhật quyết định kiểm tra</h5>
   <div class="row update-inspection-plan">
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
