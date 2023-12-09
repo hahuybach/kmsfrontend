@@ -54,7 +54,8 @@
           <div
             *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
             <span
-              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
+              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']"
+              class="p-error">
               Vui lòng điền tên quyết định kiểm tra
             </span>
             <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxlength']" class="p-error">
@@ -73,7 +74,9 @@
           ></textarea>
           <div
             *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
-            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
+            <span
+              *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['description']?.errors?.['required']"
+              class="p-error">
               Vui lòng điền chi tiết quyết định kiểm tra
             </span>
           </div>
@@ -132,23 +135,41 @@
             </div>
             <div class="row col-md-10 d-flex align-items-end mb-3">
               <div class="col-md-8">
-                <label class="fw-medium w-100 overflow-text" pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}" tooltipPosition="top">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}</label>
+                <div class="d-flex flex-row w-100">
+                  <label
+                    pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}"
+                    tooltipPosition="top"
+                    class="fw-medium overflow-text">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}
+                    .</label>
+                  <label
+                    class="fw-medium">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}</label>
+                </div>
                 <p class="mb-0 w-100">
-                  <label pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}"  tooltipPosition="right"
-                    class="fw-medium w-100 overflow-text"><span class="fw-normal">Loại tài liệu: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}</label>
+                  <label
+                    pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}"
+                    tooltipPosition="right"
+                    class="fw-medium w-100 overflow-text"><span
+                    class="fw-normal">Loại tài liệu: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}
+                  </label>
                 </p>
                 <p class="mb-0 w-100">
-                  <label class="fw-medium w-100 overflow-text"><span class="fw-normal">Mã tài liệu: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentCode}}</label>
+                  <label class="fw-medium w-100 overflow-text"><span
+                    class="fw-normal">Mã tài liệu: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentCode}}
+                  </label>
                 </p>
               </div>
               <div class="col-md-4 text-end">
                 <p class="mb-0">
                   <label
-                    class="fw-medium"><span class="fw-normal">Kích thước: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.size  | fileSizePipe:'MB' }}</label>
+                    class="fw-medium"><span
+                    class="fw-normal">Kích thước: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.size  | fileSizePipe:'MB' }}
+                  </label>
                 </p>
                 <p class="mb-0">
                   <label
-                    class="fw-medium"><span class="fw-normal">Ngày tạo: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.uploadedDate | date : "MM/dd/yyyy" }}</label>
+                    class="fw-medium"><span
+                    class="fw-normal">Ngày tạo: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.uploadedDate | date : "MM/dd/yyyy" }}
+                  </label>
               </div>
             </div>
           </div>
@@ -172,7 +193,9 @@
                   />
                   <div class="mt-1"
                        *ngIf="documentUpdated && documentNameControls?.invalid && (documentNameControls?.touched || documentNameControls?.dirty)">
-                <span *ngIf="documentUpdated && documentNameControls?.errors?.['whitespace'] || documentUpdated && documentNameControls?.errors?.['required']" class="p-error">
+                <span
+                  *ngIf="documentUpdated && documentNameControls?.errors?.['whitespace'] || documentUpdated && documentNameControls?.errors?.['required']"
+                  class="p-error">
                   Vui lòng điền tên tài liệu
                 </span>
                     <span *ngIf="documentUpdated && documentNameControls?.errors?.['maxlength']" class="p-error">
@@ -192,7 +215,9 @@
                   </div>
                   <div class="mt-1"
                        *ngIf="documentUpdated && documentCodeControls?.invalid && (documentCodeControls?.touched || documentCodeControls?.dirty)">
-                    <span *ngIf="documentUpdated && documentCodeControls?.errors?.['whitespace'] || documentUpdated && documentCodeControls?.errors?.['required']" class="p-error">
+                    <span
+                      *ngIf="documentUpdated && documentCodeControls?.errors?.['whitespace'] || documentUpdated && documentCodeControls?.errors?.['required']"
+                      class="p-error">
                       Vui lòng điền mã tài liệu
                     </span>
                     <span *ngIf="documentUpdated && documentCodeControls?.errors?.['maxlength']" class="p-error">

@@ -21,8 +21,11 @@
   </div>
   <div class="row col-md-10 d-flex align-items-end mb-3">
     <div class="col-md-8">
-      <label pTooltip="{{document.documentName}}" tooltipPosition="top"
-             class="fw-medium w-100 overflow-text">{{ document.documentName}} {{ document.documentName}}</label>
+      <div class="d-flex flex-row w-100">
+        <label pTooltip="{{document.documentName}}.{{document.fileExtension}}" tooltipPosition="top"
+               class="fw-medium overflow-text">{{ document.documentName}}.</label>
+        <label class="fw-medium">{{document.fileExtension}}</label>
+      </div>
       <p class="mb-0 w-100">
         <label pTooltip="{{document.documentType.documentTypeName}}" tooltipPosition="right" class="fw-medium w-100 overflow-text"> <span class="fw-normal">Loại tài liệu: </span>{{ document.documentType.documentTypeName}}</label>
       </p>

@@ -102,7 +102,11 @@
           </div>
           <div class="row col-md-10 d-flex align-items-end mb-3">
             <div class="col-md-8">
-              <label class="fw-medium w-100 overflow-text" pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}" tooltipPosition="top">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}</label>
+              <div class="d-flex flex-row w-100">
+                <label pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}" tooltipPosition="top"
+                       class="fw-medium overflow-text">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.</label>
+                <label class="fw-medium">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}</label>
+              </div>
               <p class="mb-0 w-100">
                 <label pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}"  tooltipPosition="right"
                        class="fw-medium w-100 overflow-text"><span class="fw-normal">Loại tài liệu: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}</label>
