@@ -2,7 +2,20 @@
 <p-toast position="center" key="confirm"></p-toast>
 <p-confirmDialog key="popUpConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
 <form class="container-fluid" [formGroup]="createUserForm">
-  <h5 class="mat-headline-5 fw-medium">Tạo người dùng</h5>
+  <tui-breadcrumbs
+          size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+              *tuiItem
+              tuiLink
+              [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
+  <h5 class="mat-headline-5 fw-medium">Tạo mới người dùng</h5>
   <div class="row">
     <div class="col-md-6 col-sm-12">
       <div class="mb-2">
