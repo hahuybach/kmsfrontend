@@ -144,7 +144,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         }
       }
     );
-    this.currentSchool = this.currentUser.school;
+    this.currentSchool = this.currentUser.school?.schoolId;
     this.sub.push(roleSub)
   }
 

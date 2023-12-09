@@ -187,7 +187,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
     for (const role of this.auth.getRoleFromJwt()) {
       if (role.authority === Role.PRINCIPAL) {
         this.isPrincipal = true;
-        this.selectedSchool = this.auth.getSchoolFromJwt();
+        this.selectedSchool = this.auth.getSchoolFromJwt().schoolId;
       }
     }
     if (!this.isPrincipal) {
