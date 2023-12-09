@@ -18,6 +18,20 @@ export class GuidanceDocumentDetailComponent implements OnInit {
   pdfUrl: string | undefined;
   pdfPreviewVisibility: boolean = false;
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách văn bản bổ sung',
+      routerLink: '/inspection-plan/list',
+    },
+    {
+      caption: 'Chi tiết văn bản bổ sung'
+    },
+  ];
+
   constructor(
     private guidanceDocumentService: GuidanceDocumentService,
     private route: ActivatedRoute,
