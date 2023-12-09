@@ -25,7 +25,7 @@ export class GuidanceDocumentDetailComponent implements OnInit {
     },
     {
       caption: 'Danh sách văn bản bổ sung',
-      routerLink: '/inspection-plan/list',
+      routerLink: '/guidance-document/list',
     },
     {
       caption: 'Chi tiết văn bản bổ sung'

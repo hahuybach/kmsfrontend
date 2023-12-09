@@ -46,7 +46,7 @@ export class GuidanceDocumentCreateComponent implements OnInit, OnDestroy {
     },
     {
       caption: 'Danh sách văn bản bổ sung',
-      routerLink: '/inspection-plan/list',
+      routerLink: '/guidance-document/list',
     },
     {
       caption: 'Tạo mới văn bản bổ sung'

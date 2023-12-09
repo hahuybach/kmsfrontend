@@ -39,6 +39,20 @@ export class SchoolUpdateComponent implements OnInit {
   visible = false;
 
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách các trường',
+      routerLink: '/school/list',
+    },
+    {
+      caption: 'Cập nhật trường'
+    },
+  ];
+
   constructor(private router: Router,
               private schoolService: SchoolService,
               private fb: FormBuilder,
