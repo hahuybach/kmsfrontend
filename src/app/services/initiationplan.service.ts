@@ -80,4 +80,9 @@ export class InitiationplanService {
     // Make the GET request
     return this.http.get<any>(this.initiationplanApiUrl + 'list', {params, headers});
   }
+
+  getDashBoardInitiationPlanResponse(issueId: any){
+    return this.http.get<any>(this.initiationplanApiUrl + 'getDashBoardInitiationPlanResponse?issueId=' + issueId);
+
+  }
 }

@@ -1,4 +1,33 @@
 <h5 class="mat-headline-5 fw-medium">Dashboard</h5>
-<div class="card" style="width: 400px">
-  <p-chart type="pie" [data]="basicData" [options]="basicOptions"></p-chart>
+<div>
+  <p>Số trường chưa kiểm tra: {{numberOfInspectedSchool}}/ {{totalSchool}}</p>
+  <button pButton (click)="createInspectionPlan()">Tạo quyết định kiểm tra</button>
 </div>
+
+<div>
+  <p>Kế hoạch thực hiện cần duyệt:{{numberOfIniPlanWait}}</p>
+  <button pButton (click)="viewInitiationPlanList()">Xem chi tiết</button>
+</div>
+
+<div>
+  <p>Số trường đã nộp hồ sơ:{{numberOfSchoolCompletedAssignment}}</p>
+  <button pButton (click)="viewCompletedSchoolAssignmentList()">Xem chi tiết</button>
+</div>
+
+<div>
+  <p>Lối tắt</p>
+  <button pButton (click)="createGuidanceDocument()">Tạo văn bản bổ sung</button>
+  <button pButton (click)="viewMyInspection()">Cuộc thanh tra của tôi</button>
+  <button pButton (click)="viewTreeList()">Xem văn bản các trường</button>
+  <button pButton (click)="viewTemplate()">Xem mẫu hồ sơ</button>
+</div>
+
+<div class="card flex justify-content-center w-25" >
+  <p>Thống kê thực trạng kế hoạch thực hiện</p>
+  <p-chart type="pie" [data]="initiationPlanDataChart" [options]="initiationPlanOptionsChart"></p-chart>
+</div>
+<div class="card flex justify-content-center w-25" >
+  <p>Thống kê thực trạng kế hoạch thanh tra</p>
+  <p-chart type="pie" [data]="inspectionPlanDataChart" [options]="inspectionPlanOptionsChart"></p-chart>
+</div>
+<p-toast position="top-right" key="dashboard-toast"></p-toast>

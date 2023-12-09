@@ -54,8 +54,8 @@ export class inspectionPlanService {
 
 
   filterInspectionPlan(pageNo: number = 0, pageSize: number = 5, sortBy: string = 'startDate', sortDirection: string = 'asc',
-                       planName: string = '', statusId?: any,issue? : any,school? :any,creationStartDateTime? : any,creationEndDateTime?: any,
-                       deadlineStartDateTime?: any, deadlineEndDateTime? : any) {
+                       planName: string = '', statusId?: any, issue?: any, school?: any, creationStartDateTime?: any, creationEndDateTime?: any,
+                       deadlineStartDateTime?: any, deadlineEndDateTime?: any) {
     let headers = new HttpHeaders();
     let params = new HttpParams()
       .set('pageSize', pageSize.toString())
@@ -91,6 +91,15 @@ export class inspectionPlanService {
 
     // Make the GET request
     return this.http.get<any>(this.inspectionApiUrl + '/filter', {params, headers});
+  }
+
+  getNumberOfInspectedSchool(issueId: any) {
+    return this.http.get<any>(this.inspectionApiUrl + '/getNumberOfInspectedSchool?issueId=' + issueId);
+  }
+
+  getDashboardInspectionPlanResponse(issueId: any){
+    return this.http.get<any>(this.inspectionApiUrl + '/getDashboardInspectionPlanResponse?issueId=' + issueId);
+
   }
 
 }
