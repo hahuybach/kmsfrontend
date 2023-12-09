@@ -279,7 +279,7 @@
               <div>
                 <div class="d-flex justify-content-between">
                   <div>
-                    <label class="fw-medium mb-1">Tài liệu</label>
+                    <h6 class="mat-headline-6 mb-1">Tài liệu</h6>
                   </div>
                   <div
                     class="add-file-item d-flex align-items-center justify-content-center"
@@ -287,6 +287,11 @@
                   >
                     <i class="bi bi-plus-circle-fill"></i>
                   </div>
+                </div>
+                <div *ngIf="selectedAssignment.documents.length == 0">
+                  <span class="span-heading-color"
+                    >Hiện tại chưa có tài liệu</span
+                  >
                 </div>
                 <ng-container *ngIf="hasAuthority('canSubmit')">
                   <ng-container
@@ -296,45 +301,55 @@
                     "
                   >
                     <div class="row mb-3">
-                      <div class="col-md-11">
-                        <!-- <div (click)="openNewTab(item.documentLink)"> -->
+                      <div
+                        class="file-item col-md-11 py-1 d-flex"
+                        (click)="
+                          openNewTab(item.documentLink, item.fileExtension)
+                        "
+                        pTooltip="{{ item.documentName }}..{{
+                          getFileExtension(item.fileExtension)
+                        }}"
+                        tooltipPosition="top"
+                      >
                         <div
-                          (click)="
-                            openNewTab(item.documentLink, item.fileExtension)
-                          "
+                          class="file-item-icon d-flex justify-content-center align-items-center"
                         >
-                          <div class="file-item px-3 py-1 row">
-                            <div
-                              class="col-md-2 file-item-icon ml-5 d-flex justify-content-center align-items-center"
-                            >
-                              <img
-                                [src]="getIconFileType(item.fileExtension)"
-                                alt=""
-                              />
-                            </div>
-                            <div class="col-md-10 file-item-content">
-                              <div class="row ms-2">
-                                <div class="col-md-9">
-                                  <span class="font-weight-bold font-size-18">{{
-                                    item.documentName
-                                  }}</span>
-                                  <br />
-                                  <span
-                                    ><span class="font-weight-bold">Mã:</span>
-                                    {{ item.documentCode }}</span
-                                  >
-                                </div>
-                                <div class="col-md-3">
-                                  <span class="text-black-50">{{
-                                    item.sizeFormat || item.file.size
-                                  }}</span>
-                                  <br />
-                                  <span class="text-black-50">{{
-                                    item.uploadedDate | date : "MM/dd/yyyy"
-                                  }}</span>
-                                </div>
-                              </div>
-                            </div>
+                          <img
+                            [src]="getIconFileType(item.fileExtension)"
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          class="row col-md-10 d-flex align-items-center mb-3"
+                        >
+                          <div class="col-md-8">
+                            <p class="mb-0">
+                              <span class="fw-medium"
+                                >{{ item.documentName }}.{{
+                                  getFileExtension(item.fileExtension)
+                                }}</span
+                              ><span></span>
+                            </p>
+                            <p class="mb-0" *ngIf="item.documentCode">
+                              <span>Mã tài liệu: </span>
+                              <span class="fw-medium">{{
+                                item.documentCode
+                              }}</span>
+                            </p>
+                          </div>
+                          <div class="col-md-4 text-end">
+                            <p class="mb-0">
+                              <!-- <span>Kích thước: </span> -->
+                              <span class="fw-medium">{{
+                                item.sizeFormat || item.file.size
+                              }}</span>
+                            </p>
+                            <p class="mb-0">
+                              <!-- <span>Ngày tạo: </span> -->
+                              <span class="fw-medium">{{
+                                item.uploadedDate | date : "dd/MM/yyyy"
+                              }}</span>
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -342,7 +357,7 @@
                         class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
                         (click)="removeDoc(i, item.documentId)"
                       >
-                        <i class="bi bi-x-lg"></i>
+                        <i class="bi bi-trash"></i>
                       </div>
                     </div>
                   </ng-container>
@@ -352,7 +367,11 @@
                       hasAuthority('canSubmit')
                     "
                   >
-                    <button pButton (click)="submit()">Xác nhận nộp</button>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <button pButton (click)="submit()">Xác nhận nộp</button>
+                    </div>
                   </ng-container>
                 </ng-container>
               </div>
@@ -361,12 +380,12 @@
               <div>
                 <div class="d-flex justify-content-between">
                   <div class="mb-1">
-                    <span class="text-black-50">Tài liệu</span>
+                    <h6 class="mat-headline-6">Tài liệu</h6>
                   </div>
                 </div>
                 <!-- <br /> -->
                 <div *ngIf="selectedAssignment.documents.length == 0">
-                  <span class="font-weight-bold"
+                  <span class="span-heading-color"
                     >Hiện tại chưa có tài liệu</span
                   >
                 </div>
@@ -379,43 +398,54 @@
                   >
                     <div class="row mb-3">
                       <div
+                        class="file-item py-1 d-flex"
                         (click)="
                           openNewTab(item.documentLink, item.fileExtension)
                         "
+                        pTooltip="{{ item.documentName }}..{{
+                          getFileExtension(item.fileExtension)
+                        }}"
+                        tooltipPosition="top"
                       >
-                        <div class="file-item px-3 py-1 row">
-                          <div
-                            class="col-md-1 file-item-icon ml-5 d-flex justify-content-center align-items-center"
-                          >
-                            <img
-                              [src]="getIconFileType(item.fileExtension)"
-                              alt=""
-                            />
+                        <div
+                          class="file-item-icon d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            [src]="getIconFileType(item.fileExtension)"
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          class="row col-md-10 d-flex align-items-center mb-3"
+                        >
+                          <div class="col-md-8">
+                            <p class="mb-0">
+                              <span class="fw-medium"
+                                >{{ item.documentName }}.{{
+                                  getFileExtension(item.fileExtension)
+                                }}</span
+                              ><span></span>
+                            </p>
+                            <p class="mb-0" *ngIf="item.documentCode">
+                              <span>Mã tài liệu: </span>
+                              <span class="fw-medium">{{
+                                item.documentCode
+                              }}</span>
+                            </p>
                           </div>
-                          <div class="col-md-11 file-item-content">
-                            <div class="row ms-2">
-                              <div class="col-md-8">
-                                <span class="font-weight-bold font-size-18"
-                                  >{{ item.documentName }}.{{
-                                    getFileExtension(item.fileExtension)
-                                  }}</span
-                                >
-                                <br />
-                                <span
-                                  ><span class="font-weight-bold">Mã:</span>
-                                  {{ item.documentCode }}</span
-                                >
-                              </div>
-                              <div class="col-md-4">
-                                <span class="text-black-50">{{
-                                  item.sizeFormat || item.file.size
-                                }}</span>
-                                <br />
-                                <span class="text-black-50">{{
-                                  item.uploadedDate | date : "MM/dd/yyyy"
-                                }}</span>
-                              </div>
-                            </div>
+                          <div class="col-md-4 text-end">
+                            <p class="mb-0">
+                              <!-- <span>Kích thước: </span> -->
+                              <span class="fw-medium">{{
+                                item.sizeFormat || item.file.size
+                              }}</span>
+                            </p>
+                            <p class="mb-0">
+                              <!-- <span>Ngày tạo: </span> -->
+                              <span class="fw-medium">{{
+                                item.uploadedDate | date : "dd/MM/yyyy"
+                              }}</span>
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -429,7 +459,9 @@
                     action === 'info'
                   "
                 >
-                  <button pButton (click)="cancel()">Hủy</button>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <button pButton (click)="cancel()">Hủy nộp</button>
+                  </div>
                 </ng-container>
               </div>
             </ng-template>
@@ -695,19 +727,31 @@
           </div>
           <div
             *ngIf="action === 'info' && hasAuthority('canCompleteConfirm')"
-            class="height-100"
+            class="approvement"
           >
-            <span class="fw-medium">Xác nhận hoàn thành</span>
-            <br />
-            <button pButton (click)="completeOrCancelCF(true)">Xác nhận</button>
+            <div
+              class="approvement-heading p-3 d-flex justify-content-center align-items-center"
+            >
+              <h6 class="mat-headline-6">Xác nhận hoàn thành</h6>
+            </div>
+            <div class="p-3 d-flex justify-content-center align-items-center">
+              <button pButton (click)="completeOrCancelCF(true)">
+                Xác nhận
+              </button>
+            </div>
           </div>
           <div
             *ngIf="action === 'info' && hasAuthority('canCancelConfirm')"
-            class="height-100"
+            class="approvement"
           >
-            <span class="font-weight-bold">Hủy xác nhận hoàn thành</span>
-            <br />
-            <button pButton (click)="completeOrCancelCF(false)">Hủy</button>
+            <div
+              class="approvement-heading p-3 d-flex justify-content-center align-items-center"
+            >
+              <h6 class="mat-headline-6">Hủy xác nhận hoàn thành</h6>
+            </div>
+            <div class="p-3 d-flex justify-content-center align-items-center">
+              <button pButton (click)="completeOrCancelCF(false)">Hủy</button>
+            </div>
           </div>
           <div
             *ngIf="
@@ -715,17 +759,29 @@
               hasAuthority('canEvaluate') &&
               action === 'info'
             "
-            class="height-100 approvement"
+            class="approvement"
           >
-            <h6 class="mat-headline-6">Đánh giá</h6>
-            <div class="d-flex justify-content-between">
+            <div
+              class="approvement-heading p-3 d-flex justify-content-center align-items-center"
+            >
+              <h6 class="mat-headline-6">Đánh giá</h6>
+            </div>
+            <div
+              class="p-3 d-flex"
+              [ngClass]="
+                selectedAssignment.status.statusId == 16
+                  ? 'justify-content-between'
+                  : 'justify-content-center'
+              "
+            >
               <div
                 *ngIf="
                   selectedAssignment.status.statusId == 16 ||
                   selectedAssignment.status.statusId == 17
                 "
               >
-                <button pButton (click)="evaluate(false)">
+                <button class="reject-btn" pButton (click)="evaluate(false)">
+                  <!-- <i class="bi bi-x"></i>  -->
                   Không phê duyệt
                 </button>
               </div>
@@ -735,7 +791,8 @@
                   selectedAssignment.status.statusId == 18
                 "
               >
-                <button class="approve" (click)="evaluate(true)" pButton>
+                <button class="approve-btn" (click)="evaluate(true)" pButton>
+                  <!-- <i class="bi bi-check2"></i>  -->
                   Phê duyệt
                 </button>
               </div>
@@ -824,7 +881,7 @@
           <div class="height-100">
             <label class="mb-1 fw-medium">Thuộc</label>
             <br />
-            <span class="text-black-50">{{
+            <span class="span-heading-color">{{
               selectedAssignment.assignmentName
             }}</span>
           </div>

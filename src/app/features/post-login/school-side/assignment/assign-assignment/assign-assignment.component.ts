@@ -99,6 +99,7 @@ export class AssignAssignmentComponent implements OnInit {
   activeTab: MenuItem | undefined;
   sub: any[] = [];
   pdfPreviewVisibility: boolean = false;
+  // @ViewChild('treeTable') treeTable: TreeTable;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -368,6 +369,7 @@ export class AssignAssignmentComponent implements OnInit {
         this.selectedAssignment = data;
         this.listOfPossibleAssignees = data.listOfPossibleAssginees;
         console.log(this.selectedAssignment);
+        console.log(this.selectedAssignment.documents.length == 0);
         this.documents = data.documents;
         if (this.selectedAssignment) {
           this.assignmentForm
@@ -628,7 +630,7 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn xóa tài liệu  này?',
       header: 'Xác nhận xóa',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
         this.isFileLoading = true;
         this.documents.splice(index, 1);
@@ -662,7 +664,7 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn nộp công việc này?',
       header: 'Xác nhận nộp',
       icon: 'bi bi-exclamation-triangle-fill',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
         const jsonData = {
           assignmentId: this.selectedAssignment.assignmentId,
@@ -696,7 +698,7 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn hủy công việc này?',
       header: 'Xác nhận hủy',
       icon: 'bi bi-exclamation-triangle-fill',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
 
       accept: () => {
         const jsonData = {
@@ -731,7 +733,7 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn đánh giá công việc này?',
       header: 'Xác nhận đánh giá',
       icon: 'bi bi-exclamation-triangle-fill',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
         this.assignmentService
           .evaluateTask({
@@ -854,7 +856,7 @@ export class AssignAssignmentComponent implements OnInit {
     let url = '';
     switch (fileExtension) {
       case 'application/pdf':
-        url = '../../../../../assets/img/pdf.png';
+        url = '../../../../../assets/img/pdf_logo.svg';
         break;
       case 'application/msword':
         url = '../../../../../assets/img/doc.png';

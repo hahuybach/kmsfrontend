@@ -153,9 +153,10 @@ ul {
         border-radius: 40px;
         border: none;
         padding: 0 20px;
-        box-shadow:
-            rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-            rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        // box-shadow:
+        //     rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+        //     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     }
 }
 .comment-content {
@@ -234,7 +235,10 @@ ul {
     }
 }
 .delete-file-item {
-    font-size: 30px;
+    i {
+        font-size: 30px;
+        cursor: pointer;
+    }
     color: #b42318;
     transition: all 0.5s ease;
     &:hover {
@@ -254,24 +258,20 @@ ul {
 }
 .file-item {
     background-color: #f9fafb;
-    height: 80px;
     border-radius: 10px;
     font-size: 16px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    .file-item-content {
-        span {
-            max-width: 100%;
-            white-space: wrap; /* Prevent text from wrapping */
-            overflow: hidden; /* Hide overflowing text */
-            text-overflow: ellipsis; /* Display ellipsis for overflowing text */
-        }
-    }
+    // height: 80px;
     .file-item-icon {
         img {
-            width: 40px;
-            height: 40px;
+            width: 100%;
+            height: 100px;
         }
     }
+
+    .file-item-content {
+    }
+
     &:hover {
         cursor: pointer;
         background-color: rgb(244, 244, 244);
@@ -282,6 +282,7 @@ ul {
 }
 .children {
     height: 52px;
+    transition: all 0.5s ease;
     &:hover {
         cursor: pointer;
         background-color: rgb(244, 244, 244);
@@ -313,6 +314,18 @@ ul {
 }
 .approvement {
     font-size: 14px;
+
+    border-radius: 10px;
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    .approvement-heading {
+        h6 {
+            margin: 0;
+        }
+        border-radius: 10px 10px 0 0;
+        background-color: $primary;
+        color: #fff;
+    }
 }
 .width-40 {
     width: 40%;
@@ -355,4 +368,13 @@ th {
             border-bottom-color: $primary;
         }
     }
+}
+.reject-btn {
+    // background-color: #fff;
+    // color: $primary !important;
+    // &:hover {
+    //     color: #fff !important;
+    // }
+}
+.approve-btn {
 }
