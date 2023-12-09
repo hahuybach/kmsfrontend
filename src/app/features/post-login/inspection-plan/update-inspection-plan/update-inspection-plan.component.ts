@@ -11,6 +11,7 @@ import {ConfirmEventType, ConfirmationService} from "primeng/api";
 import {TuiDay} from "@taiga-ui/cdk";
 import {dateToTuiDay, tuiDayToDate} from "../../../../shared/util/util";
 import {ToastService} from "../../../../shared/toast/toast.service";
+import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-update-inspection-plan',
@@ -116,15 +117,15 @@ export class UpdateInspectionPlanComponent {
 
   ngOnInit() {
     this.inspectionPlanForm = this.fb.group({
-      inspectionPlanName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      description: [null, Validators.compose([Validators.required])],
+      inspectionPlanName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+      description: [null, Validators.compose([NoWhitespaceValidator(), Validators.required])],
       chiefId: [null, Validators.compose([Validators.required])],
       inspectorIds: [[], Validators.compose([Validators.required])],
       startDate: [null, Validators.compose([Validators.required])],
       endDate: [null, Validators.compose([Validators.required])],
       documentInspectionPlanDto: this.fb.group({
-        documentName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-        documentCode: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
+        documentName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+        documentCode: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
         documentFile: [null, Validators.compose([Validators.required])]
       })
     })

@@ -9,6 +9,7 @@ import {ToastService} from "../../../../shared/toast/toast.service";
 import {Subscription} from "rxjs";
 import {TuiDay} from "@taiga-ui/cdk";
 import {dateToTuiDay, tuiDayToDate} from "../../../../shared/util/util";
+import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-create-inspection-plan',
@@ -67,16 +68,16 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     tomorow.setDate(tomorow.getDate() + 1);
 
     this.inspectionPlanForm = this.fb.group({
-      inspectionPlanName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      description: [null, Validators.compose([Validators.required])],
+      inspectionPlanName: [null, Validators.compose([NoWhitespaceValidator() , Validators.required, Validators.maxLength(256)])],
+      description: [null, Validators.compose([NoWhitespaceValidator() , Validators.required])],
       chiefId: [null, Validators.compose([Validators.required])],
       inspectorIds: [[], Validators.compose([Validators.required])],
       startDate: [dateToTuiDay(tomorow), Validators.compose([Validators.required])],
       endDate: [dateToTuiDay(tomorow), Validators.compose([Validators.required])],
       schoolId: [null, Validators.compose([Validators.required])],
       documentInspectionPlanDto: this.fb.group({
-        documentName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-        documentCode: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
+        documentName: [null, Validators.compose([NoWhitespaceValidator() , Validators.required, Validators.maxLength(256)])],
+        documentCode: [null, Validators.compose([NoWhitespaceValidator() , Validators.required, Validators.maxLength(256)])],
         documentFile: [null, Validators.compose([Validators.required])]
       })
     })

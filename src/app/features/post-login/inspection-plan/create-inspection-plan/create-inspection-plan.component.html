@@ -42,7 +42,7 @@
             *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)"
           >
             <span
-              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']"
+              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']"
               class="p-error"
             >
               Vui lòng điền tên quyết định kiểm tra
@@ -69,7 +69,7 @@
             *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)"
           >
             <span
-              *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']"
+              *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['description']?.errors?.['required']"
               class="p-error"
             >
               Vui lòng điền chi tiết quyết định kiểm tra
@@ -80,6 +80,7 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
             <tui-input-date
+              tuiUnfinishedValidator="Vui lòng chọn ngày bắt đầu"
               (tuiValueChanges)="onStartDateChange()"
               [min]="minStartDate"
               [max]="maxStartDate"
@@ -91,6 +92,7 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
             <tui-input-date
+              tuiUnfinishedValidator="Vui lòng chọn ngày kết thúc"
               (tuiValueChanges)="onEndDateChange()"
               [min]="minEndDate"
               class="tui-date"
@@ -196,7 +198,7 @@
                 "
             >
                 <span
-                  *ngIf="documentNameControls?.errors?.['required']"
+                  *ngIf="documentNameControls?.errors?.['whitespace'] ||documentNameControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng điền tên tài liệu
@@ -226,7 +228,7 @@
                 "
             >
                 <span
-                  *ngIf="documentCodeControls?.errors?.['required']"
+                  *ngIf="documentCodeControls?.errors?.['whitespace'] || documentCodeControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng điền mã tài liệu

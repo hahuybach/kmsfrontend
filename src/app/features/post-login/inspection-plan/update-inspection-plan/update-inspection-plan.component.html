@@ -54,7 +54,7 @@
           <div
             *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.invalid && (inspectionPlanForm.controls?.['inspectionPlanName']?.touched ||inspectionPlanForm.controls?.['inspectionPlanName']?.dirty)">
             <span
-              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
+              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
               Vui lòng điền tên quyết định kiểm tra
             </span>
             <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxlength']" class="p-error">
@@ -73,7 +73,7 @@
           ></textarea>
           <div
             *ngIf="inspectionPlanForm.controls?.['description']?.invalid && (inspectionPlanForm.controls?.['description']?.touched ||inspectionPlanForm.controls?.['description']?.dirty)">
-            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
+            <span *ngIf="inspectionPlanForm.controls?.['description']?.errors?.['whitespace'] || inspectionPlanForm.controls?.['description']?.errors?.['required']" class="p-error">
               Vui lòng điền chi tiết quyết định kiểm tra
             </span>
           </div>
@@ -82,6 +82,7 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
             <tui-input-date
+              tuiUnfinishedValidator="Vui lòng chọn ngày bắt đầu"
               [min]="minStartDate"
               [max]="maxStartDate"
               tuiTextfieldSize="m"
@@ -93,6 +94,7 @@
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
             <tui-input-date
+              tuiUnfinishedValidator="Vui lòng chọn ngày kết thúc"
               [min]="minEndDate"
               class="tui-date"
               tuiTextfieldSize="m"
@@ -176,7 +178,7 @@
                   />
                   <div class="mt-1"
                        *ngIf="documentUpdated && documentNameControls?.invalid && (documentNameControls?.touched || documentNameControls?.dirty)">
-                <span *ngIf="documentUpdated && documentNameControls?.errors?.['required']" class="p-error">
+                <span *ngIf="documentUpdated && documentNameControls?.errors?.['whitespace'] || documentUpdated && documentNameControls?.errors?.['required']" class="p-error">
                   Vui lòng điền tên tài liệu
                 </span>
                     <span *ngIf="documentUpdated && documentNameControls?.errors?.['maxlength']" class="p-error">
@@ -196,7 +198,7 @@
                   </div>
                   <div class="mt-1"
                        *ngIf="documentUpdated && documentCodeControls?.invalid && (documentCodeControls?.touched || documentCodeControls?.dirty)">
-                    <span *ngIf="documentUpdated && documentCodeControls?.errors?.['required']" class="p-error">
+                    <span *ngIf="documentUpdated && documentCodeControls?.errors?.['whitespace'] || documentUpdated && documentCodeControls?.errors?.['required']" class="p-error">
                       Vui lòng điền mã tài liệu
                     </span>
                     <span *ngIf="documentUpdated && documentCodeControls?.errors?.['maxlength']" class="p-error">
