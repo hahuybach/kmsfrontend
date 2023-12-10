@@ -37,7 +37,8 @@ import {TuiUnfinishedValidatorModule} from "@taiga-ui/kit";
         TuiUnfinishedValidatorModule,
     ],
     exports: [
-        InspectionPlanInspectorListComponent
+        InspectionPlanInspectorListComponent,
+        InspectionPlanInspectorPopupComponent
     ],
   providers:[
     inspectionPlanService

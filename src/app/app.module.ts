@@ -3,7 +3,7 @@ import {
   TuiRootModule,
   TuiDialogModule,
   TuiAlertModule,
-  TUI_SANITIZER,
+  TUI_SANITIZER, TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { UpdateIssueComponent } from './features/post-login/issue/update-issue/update-issue.component';
 import { InspectorService } from './services/inspector.service';
@@ -42,8 +42,6 @@ import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.inte
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
-import { IssueListPopUpComponent } from './features/post-login/issue/component/issue-list-pop-up/issue-list-pop-up.component';
-import { IssueListRightSideComponent } from './features/post-login/issue/component/issue-list-right-side/issue-list-right-side.component';
 import { SortByIdPipe } from './shared/pipes/sortByDocumentTypeIdPipe.pipe';
 import { InspectionPlanModule } from './features/post-login/inspection-plan/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
@@ -79,6 +77,9 @@ import { GuidanceDocumentBaseComponent } from './features/post-login/guidance-do
 import { UserBaseComponent } from './features/post-login/user/user-base/user-base.component';
 import { TUI_LANGUAGE, TUI_VIETNAMESE_LANGUAGE } from '@taiga-ui/i18n';
 import { of } from 'rxjs';
+import {TuiUnfinishedValidatorModule} from "@taiga-ui/kit";
+import { IssueInspectorPopupComponent } from './features/post-login/issue/component/issue-inspector-popup/issue-inspector-popup.component';
+import { IssueInspectorListComponent } from './features/post-login/issue/component/issue-inspector-list/issue-inspector-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -94,8 +95,6 @@ import { of } from 'rxjs';
     LoginBaseComponent,
     UpdateIssueComponent,
     PagenotfoundComponent,
-    IssueListPopUpComponent,
-    IssueListRightSideComponent,
     SortByIdPipe,
     GuidanceDocumentListComponent,
     GuidanceDocumentDetailComponent,
@@ -114,6 +113,8 @@ import { of } from 'rxjs';
     InspectionPlanBaseComponent,
     GuidanceDocumentBaseComponent,
     UserBaseComponent,
+    IssueInspectorPopupComponent,
+    IssueInspectorListComponent,
   ],
   imports: [
     BrowserModule,
@@ -141,6 +142,8 @@ import { of } from 'rxjs';
     TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
+    TuiTextfieldControllerModule,
+    TuiUnfinishedValidatorModule,
   ],
   providers: [
     MessageService,

@@ -1,13 +1,13 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {InspectionplanInspectorlistService} from "../../../../../services/inspectionplan-inspectorlist.service";
-import {ConfirmEventType, ConfirmationService} from "primeng/api";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
-  selector: 'app-inspection-plan-inspector-list',
-  templateUrl: './inspection-plan-inspector-list.component.html',
-  styleUrls: ['./inspection-plan-inspector-list.component.scss']
+  selector: 'app-issue-inspector-list',
+  templateUrl: './issue-inspector-list.component.html',
+  styleUrls: ['./issue-inspector-list.component.scss']
 })
-export class InspectionPlanInspectorListComponent {
+export class IssueInspectorListComponent {
   @Input() listEditable: boolean = false;
   @Input() selectedInspectors: any[] = [];
   @Input() chiefList: any[] = [];
@@ -24,9 +24,10 @@ export class InspectionPlanInspectorListComponent {
 
   constructor(
     private readonly inspectionplanInspectorService: InspectionplanInspectorlistService,
-    private readonly confirmationService : ConfirmationService,
+    private readonly confirmationService: ConfirmationService,
   ) {
   }
+
   confirmDeleteRemainingInspector(index: number) {
     this.confirmationService.confirm({
       message: 'Xóa thanh tra này sẽ khiến danh sách danh tra bị xóa do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
@@ -37,8 +38,8 @@ export class InspectionPlanInspectorListComponent {
         this.recreateInspectorList.emit();
         return;
       },
-      reject: (type : ConfirmEventType) => {
-        switch (type){
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
           case ConfirmEventType.REJECT:
             break;
           case ConfirmEventType.CANCEL:
@@ -47,6 +48,7 @@ export class InspectionPlanInspectorListComponent {
       }
     });
   }
+
   confirmDeleteInspector(index: number) {
     this.confirmationService.confirm({
       message: 'Xác nhận xóa thanh tra này ?',
@@ -57,8 +59,8 @@ export class InspectionPlanInspectorListComponent {
         this.deleteInspector(index);
         return;
       },
-      reject: (type : ConfirmEventType) => {
-        switch (type){
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
           case ConfirmEventType.REJECT:
             break;
           case ConfirmEventType.CANCEL:
@@ -71,31 +73,39 @@ export class InspectionPlanInspectorListComponent {
   changeInspectorVisible() {
     this.toggleIssueListPopup.emit();
   }
+
   changeToggleStatus() {
     this.toggleChange = !this.toggleChange;
     this.deleteButtonVisibility = !this.deleteButtonVisibility;
   }
 
   isEligibleInspectorExist(selectedInspectors: any[]): boolean {
-    let eligibleChiefList = selectedInspectors.filter((eligibleInspector: { accountId: number; }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
+    let eligibleChiefList = selectedInspectors.filter((eligibleInspector: {
+      accountId: number;
+    }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
     return eligibleChiefList.length > 0;
   }
 
-  onDeleteInspector(index: number){
+  onDeleteInspector(index: number) {
     let tempSelectedInspectors = this.selectedInspectors.slice();
     tempSelectedInspectors.splice(index, 1);
+    if (!this.isEligibleInspectorExist(tempSelectedInspectors)) {
+      this.confirmDeleteRemainingInspector(index);
+    } else {
+      this.confirmDeleteInspector(index);
+    }
   }
 
-  deleteInspector(index: number){
+  deleteInspector(index: number) {
     this.inspectionplanInspectorService.deleteFromInspectorList(this.selectedInspectors[index]);
   }
 
-  onReset(){
+  onReset() {
     this.resetList.emit();
     this.changeToggleStatus();
   }
 
-  onSave(){
+  onSave() {
     let inspectorList = this.inspectionplanInspectorService.saveChanges();
     this.inspectorList.emit(inspectorList);
     this.changeToggleStatus();

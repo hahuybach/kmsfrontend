@@ -1,0 +1,71 @@
+@import "../../../../../../assets/scss/base";
+@import "../../../../../../assets/scss/prime-custom";
+
+:host ::ng-deep {
+  .p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}
+
+.scrollview-item {
+  img {
+    width: 60px;
+    height: 60px;
+  }
+
+}
+
+.delete-button{
+  border: none;
+  background: none;
+  i{
+    font-size: 1.2rem;
+    color: rgb(255, 86, 86);
+  }
+}
+
+.card{
+  span:not(:first-child){
+    font-size: 13px;
+  }
+}
+
+.scrollable-container {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.inspector-item{
+  box-shadow: rgba(0, 0, 0, 0.16) 0 1px 4px;
+}
+
+.list-inspector{
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius: 8px;
+  .list-inspector-header{
+    background-color: $primary;
+    border-radius:8px 8px 0 0;
+    color: white;
+  }
+  .card{
+    border: none;
+  }
+}
+
+:host ::ng-deep .p-dialog-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .p-button {
+    margin-left: 30px;
+    width: 150px;
+  }
+}
