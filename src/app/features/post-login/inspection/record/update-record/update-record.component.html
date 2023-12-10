@@ -13,9 +13,11 @@
     [width]="80"
     [visible]="formSubmitted"
     [completed]="formCompleted"
+    [failed]="formFailed"
     [header]="'Tạo mới mục kiểm tra'"
     [progress]="'Đang tạo mới mục kiểm tra'"
     [complete]="'Tạo mới mục kiểm tra thành công'"
+    [fail]="'Tạo mới mục kiểm tra không thành công'"
   ></app-loading-complete-dialog>
   <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
     <div class="row">

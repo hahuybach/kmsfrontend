@@ -27,6 +27,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   endDate: TuiDay;
   formSubmitted: boolean = false;
   formCompleted: boolean = false;
+  formFailed: boolean = false;
   task: TaskDetailDto;
   taskId: number;
   inspectionPlan: {
@@ -131,6 +132,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
         })
       },
       error: (error) => {
+        this.formFailed = true;
         this.toastService.showError('updateRecordFail', "Không tìm thấy dữ liệu mục kiểm tra", error.error.message);
       }
     })

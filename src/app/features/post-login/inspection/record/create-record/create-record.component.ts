@@ -21,6 +21,7 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
   @Output() createRecordPopupVisibleChange = new EventEmitter<boolean>();
   formSubmitted:boolean = false;
   formCompleted:boolean = false;
+  formFailed:boolean = false;
   recordForm: FormGroup;
   startDate: TuiDay;
   endDate: TuiDay;
@@ -105,6 +106,7 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
         },1000)
       },
       error: (error) => {
+        this.formFailed = true;
         this.toastService.showError('createRecordError', "Tạo mục kiểm tra không thành công", error.error.message);
       }
     });

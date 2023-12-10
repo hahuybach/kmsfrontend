@@ -23,6 +23,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   documentForm: FormGroup;
   updateDocumentSubmitted: boolean = false;
   updateDocumentCompleted: boolean = false;
+  updateDocumentFailed: boolean = false;
   deleteDocumentSubmitted: boolean = false;
   deleteDocumentCompleted: boolean = false;
   private subscriptions: Subscription[] = [];
@@ -137,6 +138,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         }, 1000);
       },
       error: (error) => {
+        this.updateDocumentFailed = true;
         this.toastService.showError('deleteInComplete', "Cập nhật tài liệu không thành công", error.error.message);
       }
     })
