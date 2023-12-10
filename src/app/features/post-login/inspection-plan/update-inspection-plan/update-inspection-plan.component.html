@@ -2,6 +2,7 @@
   [style]="{width: '50vw'}"
   acceptLabel="Xác nhận"
   rejectLabel="Hủy bỏ"
+  key="changeTime"
 ></p-confirmDialog>
 <p-dialog
   header="Xem tài liệu"
@@ -45,7 +46,7 @@
               *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['required']" class="p-error">
               Vui lòng điền tên quyết định kiểm tra
             </span>
-            <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxLength']" class="p-error">
+            <span *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxlength']" class="p-error">
               Tên quyết định kiểm tra quá dài
             </span>
           </div>
@@ -75,8 +76,9 @@
           </div>
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
-            <p-dropdown class="full-width-dropdown" optionLabel="user.fullName"
-                        [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true">
+            <p-dropdown class="full-width-dropdown" [options]="eligibleChiefList" dataKey="user.userId"
+                        formControlName="chiefId" optionLabel="user.fullName"
+                        [filter]="true" filterBy="user.fullName" optionValue="user.userId" [showClear]="true">
             </p-dropdown>
             <div
               *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)">
@@ -87,13 +89,27 @@
           </div>
         </div>
         <div class="row mb-3">
-          <div class="col-md-3 mb-2">
+          <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
-            <input class="form-control" type="date" formControlName="startDate" [min]="minStartDate" [max]="maxStartDate" (change)="onStartDateChange()"/>
+            <tui-input-date
+              (tuiValueChanges)="onStartDateChange()"
+              [min]="minStartDate"
+              [max]="maxStartDate"
+              tuiTextfieldSize="m"
+              class="tui-date"
+              formControlName="startDate"
+            >
+            </tui-input-date>
           </div>
-          <div class="col-md-3 mb-2">
+          <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
-            <input class="form-control" type="date" formControlName="endDate"  [min]="minEndDate" (change)="onEndDateChange()"/>
+            <tui-input-date
+              (tuiValueChanges)="onEndDateChange()"
+              [min]="minEndDate"
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="endDate">
+            </tui-input-date>
           </div>
         </div>
         <div>
@@ -155,7 +171,7 @@
                 <span *ngIf="documentUpdated && documentNameControls?.errors?.['required']" class="p-error">
                   Vui lòng điền tên tài liệu
                 </span>
-                    <span *ngIf="documentUpdated && documentNameControls?.errors?.['maxLength']" class="p-error">
+                    <span *ngIf="documentUpdated && documentNameControls?.errors?.['maxlength']" class="p-error">
                   Tên tài liệu quá dài
                 </span>
                   </div>
@@ -172,7 +188,7 @@
                 <span *ngIf="documentUpdated && documentCodeControls?.errors?.['required']" class="p-error">
                   Vui lòng điền mã tài liệu
                 </span>
-                    <span *ngIf="documentUpdated && documentCodeControls?.errors?.['maxLength']" class="p-error">
+                    <span *ngIf="documentUpdated && documentCodeControls?.errors?.['maxlength']" class="p-error">
                   Mã tài liệu quá dài
                 </span>
                   </div>

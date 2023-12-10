@@ -35,50 +35,29 @@
           </div>
         </div>
         <div class="col-md-4">
-          <mat-form-field class="w-100">
-            <mat-label>Khoảng thời gian bắt đầu</mat-label>
-            <mat-date-range-input [rangePicker]="picker1">
-              <input
-                matStartDate
-                [(ngModel)]="creationStartDateTime"
-                placeholder="Bắt đầu"
-              />
-              <input
-                matEndDate
-                [(ngModel)]="creationEndDateTime"
-                placeholder="Kết thúc"
-                (dateChange)="loadDocuments()"
-              />
-            </mat-date-range-input>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker1"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #picker1></mat-date-range-picker>
-          </mat-form-field>
+          <label class="fw-medium">Khoảng ngày bắt đầu</label>
+          <tui-input-date-range
+            class="tui-date"
+            tuiTextfieldSize="m"
+            [(ngModel)]="createDateRange"
+            (durationchange)="changeStartDate()"
+            (ngModelChange)="changeStartDate()"
+
+          >
+          </tui-input-date-range>
         </div>
         <div class="col-md-4">
-          <mat-form-field class="w-100">
-            <mat-label>Khoảng thời gian kết thúc</mat-label>
-            <mat-date-range-input [rangePicker]="picker2">
-              <input
-                matStartDate
-                [(ngModel)]="deadlineStartDateTime"
-                placeholder="Bắt đầu"
-              />
-              <input
-                matEndDate
-                [(ngModel)]="deadlineEndDateTime"
-                placeholder="Kết thúc"
-                (dateChange)="loadDocuments()"
-              />
-            </mat-date-range-input>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker2"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #picker2></mat-date-range-picker>
-          </mat-form-field>
+          <label class="fw-medium">Khoảng ngày kết thúc</label>
+          <tui-input-date-range
+            class="tui-date"
+            tuiTextfieldSize="m"
+            [(ngModel)]="deadlineDateRange"
+            (durationchange)="changeDeadlineDate()"
+            (ngModelChange)="changeDeadlineDate()"
+
+
+          >
+          </tui-input-date-range>
         </div>
       </div>
     </div>
@@ -97,54 +76,23 @@
       <div class="row">
         <div class="col-md-4">
           <label class="fw-medium">Kế hoạch</label>
-          <p-dropdown
-            [options]="issueDropDowns"
-            [(ngModel)]="currentIssueSelected"
-            optionLabel="issueName"
-            [filter]="true"
-            filterBy="issueName"
-            [showClear]="true"
-            placeholder="Chọn 1 kế hoạch thanh tra"
-            (onChange)="loadDocuments()"
+          <p-dropdown class="full-width-dropdown" [options]="issueDropDowns" dataKey="issueId"
+                      [(ngModel)]="currentIssueSelected"    optionLabel="issueName"
+                      [filter]="true" filterBy="issueName" optionValue="issueId" [showClear]="true"
+                      (onChange)="loadDocuments()"
+                      placeholder="Chọn 1 kế hoạch thanh tra"
           >
-            <ng-template pTemplate="selectedItem">
-              <div
-                class="flex align-items-center gap-2"
-                *ngIf="currentIssueSelected"
-              >
-                <div>{{ currentIssueSelected.issueName }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-issue pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ issue.issueName }}</div>
-              </div>
-            </ng-template>
           </p-dropdown>
+
         </div>
         <div class="col-md-4">
           <label class="fw-medium">Tên trường</label>
-          <p-dropdown
-            [options]="schools"
-            [(ngModel)]="selectedSchool"
-            optionLabel="schoolName"
-            [filter]="true"
-            filterBy="schoolName"
-            [showClear]="true"
-            placeholder="Chọn 1 trường"
-            (onChange)="loadDocuments()"
-            *ngIf="!isPrincipal"
+          <p-dropdown class="full-width-dropdown" [options]="schools" dataKey="schoolId"
+                      [(ngModel)]="selectedSchool"    optionLabel="schoolName"
+                      [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
+                      (onChange)="loadDocuments()"
+                      placeholder="Chọn 1 trường"
           >
-            <ng-template pTemplate="selectedItem">
-              <div class="flex align-items-center gap-2" *ngIf="selectedSchool">
-                <div>{{ selectedSchool.schoolName }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-school pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ school.schoolName }}</div>
-              </div>
-            </ng-template>
           </p-dropdown>
         </div>
         <div class="col-md-4">
@@ -155,6 +103,8 @@
             [(ngModel)]="selectedStatus"
             [showClear]="true"
             (onChange)="loadDocuments()"
+            dataKey="value"
+            optionValue="value"
           >
             <ng-template let-status pTemplate="item">
               <p-tag
@@ -170,7 +120,7 @@
       *ngIf="advanceSearch"
       class="d-flex justify-content-end align-items-center col-md-2"
     >
-      <button pButton class="reset-button" (click)="reset()">Reset</button>
+      <button pButton class="reset-button" (click)="reset()">Đặt lại</button>
     </div>
     <div
       class="col-md-12 d-flex flex-row justify-content-end align-items-center mt-2"
@@ -335,6 +285,7 @@
               <button
                 class="action-button"
                 type="button"
+                [disabled]="!isChiefInspector"
                 (click)="onUpdate(plan.inspectionPlanId)"
               >
                 <i class="bi bi-pencil-fill"></i>

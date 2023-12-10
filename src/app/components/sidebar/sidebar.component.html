@@ -45,9 +45,8 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector"
         >
-          <a class="" [routerLink]="['/inspection-plan']">
+          <a class="" [routerLink]="['/inspection-plan']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-file-earmark-person"></i>
               &nbsp; Thanh tra

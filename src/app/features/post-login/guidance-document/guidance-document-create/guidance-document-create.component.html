@@ -27,9 +27,14 @@
             class="w-100"
           />
           <br />
-          <span *ngIf="isBlank('guidanceDocumentName')" class="p-error"
-            >Không được để trống mục này</span
+          <span *ngIf="check('guidanceDocumentName', this.guidanceForm)" class="p-error"
+          >Không được để trống mục này</span
           >
+          <span class="p-error" *ngIf="this.guidanceForm.get('guidanceDocumentName')?.hasError('maxlength')">
+            Tên tiêu đề không được vượt quá 254 ký tự
+          </span>
+
+
         </div>
         <div class="mb-3">
           <label class="fw-medium mb-1"
@@ -42,9 +47,13 @@
             formControlName="description"
           ></textarea>
           <br />
-          <span *ngIf="isBlank('description')" class="p-error"
-            >Không được để trống</span
+          <span *ngIf="check('description', this.guidanceForm)" class="p-error"
+            >Không được để trống mục này</span
           >
+          <span class="p-error" *ngIf="this.guidanceForm.get('description')?.hasError('maxlength')">
+            Lời nhắn không được vượt quá 999 ký tự
+          </span>
+
         </div>
       </div>
       <div class="col-md-6">
@@ -80,8 +89,15 @@
                     </div>
                     <span
                       *ngIf="isBlankForGuidanceDocuments('documentName', i)"
+
                       class="p-error"
-                      >Không được để trống</span
+                      >Không được để trống mục này</span
+                    >
+                    <span
+                            *ngIf="isMaxLengthForGuidanceDocuments('documentName', i)"
+
+                            class="p-error"
+                    >Tên tài liệu không được vượt quá 254 ký tự</span
                     >
                   </div>
                 </div>
@@ -116,6 +132,12 @@
                         )
                       "
                       >Trùng lặp mã văn bản</span
+                    >
+                    <span
+                            *ngIf="isMaxLengthForGuidanceDocuments('documentCode', i)"
+
+                            class="p-error"
+                    >Mã tài liệu không được vượt quá 254 ký tự</span
                     >
                   </div>
                 </div>
@@ -160,8 +182,8 @@
                       (change)="onSubmitFile($event, i)"
                       type="file"
                     />
-  
-                    
+
+
                   </div> -->
               </div>
               <div
@@ -195,30 +217,14 @@
         </ng-container>
 
         <div class="mt-3 d-flex justify-content-start">
-          <button pButton (click)="addGuidanceDocument()" type="button">
+          <button pButton (click)="addGuidanceDocument()" *ngIf="guidanceDocuments.length < 10" type="button">
             Thêm văn bản
           </button>
         </div>
       </div>
     </div>
 
-<<<<<<< HEAD
-  <div class="d-flex justify-content-end" *ngIf="guidanceDocuments.length < 10">
-    <button
-      class="btn btn-primary"
-      (click)="addGuidanceDocument()"
-      type="button"
-    >
-      Thêm văn bản
-    </button>
-  </div>
-  <div class="m-2">
-    <button class="btn btn-primary" type="submit" (click)="confirm()">
-      Tạo mới
-    </button>
-  </div>
-=======
-    <div class="m-2">
+    <div class="m-2" >
       <button pButton type="submit" (click)="confirm()">Tạo mới</button>
     </div>
   </form>
@@ -227,7 +233,6 @@
   <!--    <div class="spinner-border" role="status"></div>-->
   <!--  </div>-->
   <!--</div>-->
->>>>>>> 8e15f75a5cb2d2557af5c7644ce63ad3be57e9d9
 
   <p-toast position="top-right" key="toastGuidanceDocumentCreate"></p-toast>
   <p-confirmDialog

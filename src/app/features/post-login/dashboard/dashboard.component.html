@@ -1,4 +1,175 @@
-<h5 class="mat-headline-5 fw-medium">Dashboard</h5>
-<div class="card" style="width: 400px">
-  <p-chart type="pie" [data]="basicData" [options]="basicOptions"></p-chart>
+<div class="container-fluid">
+  <h5 class="mat-headline-5 fw-medium">Trang chủ</h5>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card mb-0 p-4">
+        <div class="row">
+          <div class="col-md-10">
+            <h6 class="mat-headline-6 fs-18 mb-2">Số trường chưa kiểm tra</h6>
+            <label class="fs-24 fw-medium mb-2">{{
+              numberOfInspectedSchool
+            }}</label>
+            <br />
+          </div>
+          <div class="col-md-2 d-flex justify-content-end">
+            <!-- <p-knob [(ngModel)]="value" [readonly]="true"></p-knob> -->
+            <div
+              class="icon-1 d-flex justify-content-center align-items-center"
+            >
+              <i class="bi bi-list-check"></i>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <span class="color-gray"
+              >trên tổng số {{ totalSchool }} trường</span
+            >
+          </div>
+          <div class="col-md-6 d-flex justify-content-end">
+            <span class="redirect-link" (click)="createInspectionPlan()"
+              >Tạo quyết định kiểm tra</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-0 p-4">
+        <div class="row">
+          <div class="col-md-10">
+            <h6 class="mat-headline-6 fs-18 mb-2">
+              Kế hoạch thực hiện cần duyệt
+            </h6>
+            <label class="fs-24 fw-medium mb-2">{{
+              numberOfIniPlanWait
+            }}</label>
+            <br />
+          </div>
+          <div class="col-md-2 d-flex justify-content-end">
+            <!-- <p-knob [(ngModel)]="value" [readonly]="true"></p-knob> -->
+            <div
+              class="icon-2 d-flex justify-content-center align-items-center"
+            >
+              <i class="bi bi-calendar2-check-fill"></i>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <span class="color-gray"
+              >trên tổng số {{ totalSchool }} kế hoạch</span
+            >
+          </div>
+          <div class="col-md-6 d-flex justify-content-end">
+            <span class="redirect-link" (click)="viewInitiationPlanList()"
+              >Xem chi tiết</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-0 p-4">
+        <div class="row">
+          <div class="col-md-10">
+            <h6 class="mat-headline-6 fs-18 mb-2">Số trường đã nộp hồ sơ</h6>
+            <label class="fs-24 fw-medium mb-2">{{
+              numberOfSchoolCompletedAssignment
+            }}</label>
+            <br />
+          </div>
+          <div class="col-md-2 d-flex justify-content-end">
+            <!-- <p-knob [(ngModel)]="value" [readonly]="true"></p-knob> -->
+            <div
+              class="icon-3 d-flex justify-content-center align-items-center"
+            >
+              <i class="bi bi-building-check"></i>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <span class="color-gray"
+              >trên tổng số {{ totalSchool }} trường</span
+            >
+          </div>
+          <div class="col-md-6 d-flex justify-content-end redirect">
+            <span
+              class="redirect-link"
+              (click)="viewCompletedSchoolAssignmentList()"
+              >Xem chi tiết</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thanh tra</h6>
+        <p-chart
+          type="pie"
+          [data]="inspectionPlanDataChart"
+          [options]="inspectionPlanOptionsChart"
+        ></p-chart>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thực hiện</h6>
+        <p-chart
+          type="pie"
+          [data]="initiationPlanDataChart"
+          [options]="initiationPlanOptionsChart"
+        ></p-chart>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6 class="mat-headline-6">Truy cập nhanh</h6>
+        <div>
+          <div
+            class="card mb-2 shortcut-item"
+            (click)="createGuidanceDocument()"
+          >
+            <div class="p-3 d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fs-18">Tạo văn bản bổ sung</span>
+              </div>
+              <div class="shortcut-icon">
+                <i class="bi bi-caret-right-fill"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-2 shortcut-item" (click)="viewMyInspection()">
+            <div class="p-3 d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fs-18">Cuộc thanh tra của tôi</span>
+              </div>
+              <div class="shortcut-icon">
+                <i class="bi bi-caret-right-fill"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-2 shortcut-item" (click)="viewTreeList()">
+            <div class="p-3 d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fs-18">Xem văn bản các trường</span>
+              </div>
+              <div class="shortcut-icon">
+                <i class="bi bi-caret-right-fill"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card mb-2 shortcut-item" (click)="viewTemplate()">
+            <div class="p-3 d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fs-18">Xem mẫu hồ sơ</span>
+              </div>
+              <div class="shortcut-icon">
+                <i class="bi bi-caret-right-fill"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p-toast position="top-right" key="dashboard-toast"></p-toast>
 </div>

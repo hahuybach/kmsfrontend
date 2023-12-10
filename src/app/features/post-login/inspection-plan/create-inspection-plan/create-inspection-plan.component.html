@@ -12,6 +12,7 @@
   [style]="{ width: '50vw' }"
   acceptLabel="Xác nhận"
   rejectLabel="Hủy bỏ"
+  key="changeTime"
 ></p-confirmDialog>
 <app-loading-complete-dialog
   [visible]="createLoadingVisibility"
@@ -45,7 +46,7 @@
               Vui lòng điền tên quyết định kiểm tra
             </span>
             <span
-              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxLength']"
+              *ngIf="inspectionPlanForm.controls?.['inspectionPlanName']?.errors?.['maxlength']"
               class="p-error"
             >
               Tên quyết định kiểm tra quá dài
@@ -126,29 +127,27 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3 mb-2">
-            <label for="startDate" class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
-            <input
-              id="startDate"
-              class="form-control"
-              type="date"
-              formControlName="startDate"
+          <div class="col-md-6 mb-2">
+            <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
+            <tui-input-date
+              (tuiValueChanges)="onStartDateChange()"
               [min]="minStartDate"
               [max]="maxStartDate"
-              (change)="onStartDateChange()"
-            />
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="startDate">
+            </tui-input-date>
           </div>
-          <div class="col-md-3 mb-2">
-            <label for="endDate" class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
-            <input
-              id="endDate"
-              class="form-control"
-              type="date"
-              formControlName="endDate"
+          <div class="col-md-6 mb-2">
+            <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
+            <tui-input-date
+              (tuiValueChanges)="onEndDateChange()"
               [min]="minEndDate"
-              (change)="onEndDateChange()"
-            />
-            <span id="endDateSelected"></span>
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="endDate"
+            >
+            </tui-input-date>
           </div>
         </div>
       </div>
@@ -177,7 +176,7 @@
           </span>
         </div>
       </div>
-      <h6 class="mat-headline-6 fw-medium">Tài liệu công văn</h6>
+      <h6 class="mat-headline-6 fw-medium mb-1">Tài liệu công văn</h6>
       <div class="document col-md-8" formGroupName="documentInspectionPlanDto">
         <div class="row document-item">
           <div class="col-md-8 mb-2">
@@ -201,7 +200,7 @@
                   Vui lòng điền tên tài liệu
                 </span>
               <span
-                *ngIf="documentNameControls?.errors?.['maxLength']"
+                *ngIf="documentNameControls?.errors?.['maxlength']"
                 class="p-error"
               >
                   Tên tài liệu quá dài
@@ -228,7 +227,7 @@
                   Vui lòng điền mã tài liệu
                 </span>
               <span
-                *ngIf="documentCodeControls?.errors?.['maxLength']"
+                *ngIf="documentCodeControls?.errors?.['maxlength']"
                 class="p-error">
                 Mã tài liệu quá dài
                 </span>

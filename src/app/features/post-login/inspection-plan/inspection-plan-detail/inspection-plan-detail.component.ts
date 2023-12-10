@@ -86,10 +86,8 @@ export class InspectionPlanDetailComponent implements OnInit {
       ).subscribe({
       next: (data) => {
         this.data = data;
-        console.log(data)
       },
       error: (error) => {
-        console.log(error);
       }
     })
   }

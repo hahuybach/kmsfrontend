@@ -183,8 +183,12 @@
   }
 }
 
-.reset-button{
+.reset-button {
   background-color: white;
-  color: $primary;
+  color: $primary !important;
   border: 1px solid $primary;
+
+  &:hover {
+    color: white !important;
+  }
 }

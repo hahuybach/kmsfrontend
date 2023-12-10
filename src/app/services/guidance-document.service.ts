@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common
 import {FilterGuidanceDocumentResponse} from "../models/filter-guidance-document-response";
 import {Observable} from "rxjs";
 import {DomainName} from "../shared/enum/domain-name";
+import {toIsoString} from "../shared/util/util";
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,8 @@ export class GuidanceDocumentService {
   }
 
   filterGuidanceDocuments(pageNo: number = 0, pageSize: number = 5, sortBy: string = 'createdDate', sortDirection: string = 'asc',
-                          guidanceDocumentName: string = '', description: string = '', startDateTime?: Date,
-                          endDateTime?: Date, fullName: string = '', issueId?: any, globalSearch? : any ) {
+                          guidanceDocumentName: string = '', description: string = '', startDateTime?: any,
+                          endDateTime?: any, fullName: string = '', issueId?: any, globalSearch? : any ) {
     let headers = new HttpHeaders();
     let params = new HttpParams()
       .set('pageSize', pageSize.toString())
@@ -32,12 +33,12 @@ export class GuidanceDocumentService {
     if (issueId) {
       params = params.set('issueId', issueId)
     }
-    if (startDateTime instanceof Date && !isNaN(startDateTime.getTime())) {
-      params = params.set('startDateTime', startDateTime.toISOString());
+    if (startDateTime) {
+      params = params.set('startDateTime', toIsoString(startDateTime));
     }
 
-    if (endDateTime instanceof Date && !isNaN(endDateTime.getTime())) {
-      params = params.set('endDateTime', endDateTime.toISOString());
+    if (endDateTime) {
+      params = params.set('endDateTime', toIsoString(endDateTime));
     }
     console.log(params);
 

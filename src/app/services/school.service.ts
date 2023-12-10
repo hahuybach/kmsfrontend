@@ -62,4 +62,8 @@ export class SchoolService {
       observe: 'response',
     });
   }
+
+  getNumberOfSchools(){
+    return this.httpClient.get<any>(this.baseUrl + "totalNumberOfSchool");
+  }
 }

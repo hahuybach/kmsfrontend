@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {switchMap} from "rxjs";
+import {skip, Subscription, switchMap} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -8,6 +8,8 @@ import {FileService} from "../../../../services/file.service";
 import {trigger, transition, state, animate, style, group} from "@angular/animations";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
 import {ConfirmEventType, ConfirmationService} from "primeng/api";
+import {TuiDay} from "@taiga-ui/cdk";
+import {dateToTuiDay} from "../../../../shared/util/util";
 
 @Component({
   selector: 'app-update-inspection-plan',
@@ -63,15 +65,14 @@ export class UpdateInspectionPlanComponent {
   inspectorList: any[];
   nonInspectorList: any[];
   chiefInspector: any;
-  minStartDate: string;
-  maxStartDate: string;
-  minEndDate: string;
+  minStartDate: TuiDay;
+  maxStartDate: TuiDay;
+  minEndDate: TuiDay;
   eligibleChiefList: any[];
   chiefList: any[];
   selectedInspectorList: any[] = [];
-  defaultEndDate: Date = new Date();
-  defaultStartDate: Date = new Date();
   inspectorListIsValid: boolean = true;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -122,6 +123,8 @@ export class UpdateInspectionPlanComponent {
       })
     })
 
+    let tomorow: Date = new Date();
+    tomorow.setDate(tomorow.getDate() + 1);
 
     this.route.params
       .pipe(
@@ -137,7 +140,6 @@ export class UpdateInspectionPlanComponent {
         this.inspectorList = data.inspectors;
         this.getInspectorIds(this.inspectorList);
         this.inspectionplanInspectorService.setInspectorList(this.inspectorList);
-        console.log(this.nonInspectorList);
         this.inspectionplanInspectorService.setPopupInspectorList(this.nonInspectorList);
         this.inspectionplanInspectorService.setInspectorListIsValid(this.inspectorListIsValid);
         this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.inspectorList = list);
@@ -148,19 +150,19 @@ export class UpdateInspectionPlanComponent {
         this.inspectionPlanForm.patchValue({
           inspectionPlanName: this.inspectionPlanDetail.inspectionPlan.inspectionPlanName,
           description: this.inspectionPlanDetail.inspectionPlan.description,
-          startDate: new Date(this.inspectionPlanDetail.inspectionPlan.startDate).toISOString().split('T')[0],
-          endDate: new Date(this.inspectionPlanDetail.inspectionPlan.endDate).toISOString().split('T')[0],
+          startDate: dateToTuiDay(new Date(this.inspectionPlanDetail.inspectionPlan.startDate)),
+          endDate: dateToTuiDay(new Date(this.inspectionPlanDetail.inspectionPlan.endDate)),
+          chiefId: this.chiefInspector.accountId
         })
       },
       error: (error) => {
         console.log(error);
       }
     });
-    this.defaultStartDate.setDate(this.defaultStartDate.getDate() + 1);
-    this.defaultEndDate.setDate(this.defaultStartDate.getDate() + 1);
-    this.minStartDate = this.defaultStartDate.toISOString().slice(0, 10);
-    this.minEndDate = this.defaultEndDate.toISOString().slice(0, 10);
-    this.maxStartDate = this.defaultEndDate.toISOString().slice(0, 10);
+
+    this.minEndDate = dateToTuiDay(tomorow);
+    this.minStartDate = dateToTuiDay(tomorow);
+
   }
 
   openNewTab(documentLink: string) {
@@ -172,12 +174,6 @@ export class UpdateInspectionPlanComponent {
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
     });
-  }
-
-  patchChiefId() {
-    this.inspectionPlanForm.patchValue({
-      chiefId: this.chiefInspector.accountId
-    })
   }
 
   handleFileInputChange(fileInput: any): void {
@@ -221,17 +217,34 @@ export class UpdateInspectionPlanComponent {
 
 
   onStartDateChange() {
-    this.minEndDate = new Date(this.inspectionPlanForm.get('startDate')?.value).toISOString().slice(0, 10);
     if (this.inspectorList.length > 0) {
-      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+      this.confirmationService.confirm({
+        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+        },
+        reject: (type: ConfirmEventType) => {
+        }
+      });
     }
     this.initInspectorList();
   }
 
   onEndDateChange() {
-    this.maxStartDate = new Date(this.inspectionPlanForm.get('endDate')?.value).toISOString().slice(0, 10);
     if (this.inspectorList.length > 0) {
-      this.confirm1("Thay đổi thời gian kiểm tra sẽ xóa toàn bộ danh sách đoàn kiểm tra. Bạn có muốn tiếp tục", "Xác nhận");
+      this.confirmationService.confirm({
+        message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        key:  'changeTime',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+        },
+        reject: (type: ConfirmEventType) => {
+        }
+      });
     }
     this.initInspectorList()
   }
@@ -307,5 +320,15 @@ export class UpdateInspectionPlanComponent {
         console.log(error)
       }
     })
+  }
+
+  private unsubscribeAll(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
   }
 }
