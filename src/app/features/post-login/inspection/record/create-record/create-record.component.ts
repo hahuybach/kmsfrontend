@@ -8,6 +8,7 @@ import {error} from "@angular/compiler-cli/src/transformers/util";
 import {ToastService} from "../../../../../shared/toast/toast.service";
 import {TuiDay} from "@taiga-ui/cdk";
 import {dateToTuiDay, tuiDayToDate} from "../../../../../shared/util/util";
+import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-create-record',
@@ -71,8 +72,8 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
     this.initInspectionPlan()
 
     this.recordForm = this.fb.group({
-      recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      recordDescription: [null, Validators.compose([Validators.required])],
+      recordName: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required, Validators.maxLength(256)])],
+      recordDescription: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
       assigneeId: [null, Validators.compose([Validators.required])]
     })

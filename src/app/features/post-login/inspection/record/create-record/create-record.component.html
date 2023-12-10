@@ -31,10 +31,10 @@
                 <div
                         *ngIf="recordForm.controls?.['recordName']?.invalid && (recordForm.controls?.['recordName']?.touched ||recordForm.controls?.['recordName']?.dirty)">
                     <span
-                            *ngIf="recordForm.controls?.['recordName']?.errors?.['required']" class="p-error">
+                            *ngIf="recordForm.controls?.['recordName']?.errors?.['whitespace'] || recordForm.controls?.['recordName']?.errors?.['required']" class="p-error">
                       Vui lòng điền tên mục kiểm tra
                     </span>
-                    <span *ngIf="recordForm.controls?.['recordName']?.errors?.['maxLength']" class="p-error">
+                    <span *ngIf="recordForm.controls?.['recordName']?.errors?.['maxlength']" class="p-error">
                       Tên mục kiểm tra quá dài
                     </span>
                 </div>

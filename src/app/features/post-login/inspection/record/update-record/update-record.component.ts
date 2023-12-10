@@ -10,6 +10,7 @@ import {Subscription} from "rxjs";
 import {ToastService} from "../../../../../shared/toast/toast.service";
 import {TuiDay} from "@taiga-ui/cdk";
 import {dateToTuiDay, tuiDayToDate} from "../../../../../shared/util/util";
+import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-update-record',
@@ -43,6 +44,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   }
 
   resetUpdateRecordPopupVisible() {
+    this.resetForm();
     this.updateRecordPopupVisibleChange.emit(this.updateRecordPopupVisible);
   }
 
@@ -71,8 +73,8 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     this.initInspectionPlan();
 
     this.recordForm = this.fb.group({
-      recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      recordDescription: [null, Validators.compose([Validators.required])],
+      recordName: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required, Validators.maxLength(256)])],
+      recordDescription: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
       assigneeId: [null, Validators.compose([Validators.required])]
     })
@@ -117,9 +119,6 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
-      return;
-    }
     const getRecordData = this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;

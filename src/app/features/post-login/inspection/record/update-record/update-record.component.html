@@ -31,10 +31,10 @@
         <div
           *ngIf="recordForm.controls?.['recordName']?.invalid && (recordForm.controls?.['recordName']?.touched ||recordForm.controls?.['recordName']?.dirty)">
                     <span
-                      *ngIf="recordForm.controls?.['recordName']?.errors?.['required']" class="p-error">
+                      *ngIf="recordForm.controls?.['recordName']?.errors?.['whitespace'] || recordForm.controls?.['recordName']?.errors?.['required']" class="p-error">
                       Vui lòng điền tên mục kiểm tra
                     </span>
-          <span *ngIf="recordForm.controls?.['recordName']?.errors?.['maxLength']" class="p-error">
+          <span *ngIf="recordForm.controls?.['recordName']?.errors?.['maxlength']" class="p-error">
                       Tên mục kiểm tra quá dài
                     </span>
         </div>
@@ -51,7 +51,7 @@
         ></textarea>
         <div
           *ngIf="recordForm.controls?.['recordDescription']?.invalid && (recordForm.controls?.['recordDescription']?.touched ||recordForm.controls?.['recordDescription']?.dirty)">
-                    <span *ngIf="recordForm.controls?.['recordDescription']?.errors?.['required']" class="p-error">
+                    <span *ngIf="recordForm.controls?.['recordDescription']?.errors?.['whitespace'] || recordForm.controls?.['recordDescription']?.errors?.['required']" class="p-error">
                       Vui lòng điền chi tiết mục kiểm tra
                     </span>
         </div>
@@ -61,7 +61,7 @@
         <tui-input-date
                 [min]="startDate"
                 [max]="endDate"
-                tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
+                tuiUnfinishedValidator="Vui lòng chọn hạn nộp mục kiểm tra"
                 class="tui-date"
                 tuiTextfieldSize="m"
                 formControlName="deadline">
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="record-assignee col-md-6 mt-1" *ngIf="inspectionPlan">
-        <label for="deadline" class="fw-medium">Người thực hiện<span class="p-error">*</span></label>
+        <label class="fw-medium">Người thực hiện<span class="p-error">*</span></label>
         <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors" formControlName="assigneeId"
                     optionLabel="user.fullName"
                     [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
@@ -90,7 +90,7 @@
     </div>
     <div class="mt-5 mb-3 row w-100">
       <div class="col-12 save-button d-flex w-100 justify-content-center">
-        <button class="btn text-white">Lưu</button>
+        <button class="btn text-white">Cập nhật</button>
       </div>
     </div>
   </form>

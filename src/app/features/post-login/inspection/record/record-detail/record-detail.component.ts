@@ -5,6 +5,7 @@ import {RecordService} from "../../../../../services/record.service";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {ToastService} from "../../../../../shared/toast/toast.service";
 import {Subscription} from "rxjs";
+import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-record-detail',
@@ -144,8 +145,8 @@ export class RecordDetailComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     this.documentForm = this.fb.group({
-      documentName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      documentCode: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
+      documentName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+      documentCode: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
       documentFile: [null, Validators.compose([Validators.required])]
     })
   }
