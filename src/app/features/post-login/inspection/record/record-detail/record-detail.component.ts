@@ -103,9 +103,6 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
-      return;
-    }
     this.initRecordData();
   }
 

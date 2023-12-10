@@ -29,18 +29,22 @@ export class InspectionDocumentComponent implements OnInit {
   ) {}
 
   changeCreateRecordVisible() {
-    this.initInspectionData();
+    this.initAfterChange();
     this.createRecordPopupVisible = !this.createRecordPopupVisible;
   }
 
   changeUpdateRecordVisible() {
-    this.initInspectionData();
+    this.initAfterChange();
     this.updateRecordPopupVisible = !this.updateRecordPopupVisible;
   }
 
   initUpdateRecordData(recordId: number) {
     this.recordId = recordId;
     this.changeUpdateRecordVisible();
+  }
+
+  initAfterChange(){
+    this.initInspectionData();
   }
 
   changeDetailRecordVisible() {
