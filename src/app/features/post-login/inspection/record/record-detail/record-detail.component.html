@@ -17,11 +17,13 @@
   <app-loading-complete-dialog
     [width]="80"
     [height]="70"
+    [failed]="updateDocumentFailed"
     [visible]="updateDocumentSubmitted"
     [completed]="updateDocumentCompleted"
     [header]="'Cập nhật tài liệu'"
     [progress]="'Đang cập nhật tài liệu'"
     [complete]="'Cập nhật tài liệu thành công'"
+    [fail]="'Cập nhật tài liệu không thành công'"
   >
   </app-loading-complete-dialog>
   <app-loading-complete-dialog
@@ -65,10 +67,10 @@
               />
               <div
                 *ngIf="documentForm.controls?.['documentName']?.invalid && (documentForm.controls?.['documentName']?.touched || documentForm.controls?.['documentName']?.dirty)">
-                <span *ngIf="documentForm.controls?.['documentName']?.errors?.['required']" class="p-error">
+                <span *ngIf="documentForm.controls?.['whitespace']?.errors?.['required'] || documentForm.controls?.['documentName']?.errors?.['required']" class="p-error">
                   Vui lòng điền tên tài liệu
                 </span>
-                <span *ngIf="documentForm.controls?.['documentName']?.errors?.['maxLength']" class="p-error">
+                <span *ngIf="documentForm.controls?.['documentName']?.errors?.['maxength']" class="p-error">
                   Tên tài liệu quá dài
                 </span>
               </div>
@@ -82,16 +84,16 @@
               />
               <div
                 *ngIf="documentForm.controls?.['documentCode']?.invalid && (documentForm.controls?.['documentCode']?.touched || documentForm.controls?.['documentCode']?.dirty)">
-                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['required']" class="p-error">
+                <span *ngIf="documentForm.controls?.['whitespace']?.errors?.['required'] || documentForm.controls?.['documentCode']?.errors?.['required']" class="p-error">
                   Vui lòng điền mã tài liệu
                 </span>
-                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['maxLength']" class="p-error">
+                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['maxlength']" class="p-error">
                   Mã tài liệu quá dài
                 </span>
               </div>
             </div>
             <div class="col-md-12">
-              <label class="fw-medium">Tài liệu<span class="p-error">*</span></label><br/>
+              <label class="fw-medium mb-2">Tài liệu<span class="p-error">*</span></label><br/>
               <div class="input-file">
                 <input
                   type="file"

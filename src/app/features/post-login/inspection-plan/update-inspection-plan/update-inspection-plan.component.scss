@@ -60,7 +60,10 @@
     }
   }
 
-  .file-item-content {
+  .overflow-text{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &:hover {
@@ -172,6 +175,6 @@
 
   .p-button {
     margin-left: 30px;
-    width: 120px;
+    width: 150px;
   }
 }

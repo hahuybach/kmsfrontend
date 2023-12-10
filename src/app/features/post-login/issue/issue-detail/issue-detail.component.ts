@@ -30,6 +30,22 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
   sub: any[] = [];
   pdfPreviewVisibility: boolean = false;
   @ViewChild('pdfDialog') yourDialog!: Dialog;
+
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch kiểm tra',
+      routerLink: '/issue/list',
+    },
+    {
+      caption: 'Chi tiết kế hoạch kiểm tra'
+    },
+  ];
+
+
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,

@@ -123,3 +123,16 @@
 .search-input {
   width: 400px;
 }
+
+:host ::ng-deep .p-dialog-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .p-button {
+    background-color: $primary !important;
+    border-radius: 8px;
+    margin-left: 30px;
+    width: 150px;
+  }
+}

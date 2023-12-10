@@ -1,5 +1,17 @@
 <div class="container-fluid">
-  <span>breadcrumb</span>
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium mb-4">
     Kế hoạch thực hiện nhiệm vụ năm học
   </h5>

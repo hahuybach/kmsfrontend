@@ -18,6 +18,20 @@ export class UserDetailComponent implements OnInit {
   isActives: any[] = [{label: 'Đang hoạt động', value: 'true'},
     {label: 'Ngưng hoạt động', value: 'false'}]
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách người dùng',
+      routerLink: '/user/list',
+    },
+    {
+      caption: 'Chi tiết người dùng'
+    },
+  ];
+
   constructor(private accountService: AccountService,
               private router: Router,
               private activateRouter: ActivatedRoute,

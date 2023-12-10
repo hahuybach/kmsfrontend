@@ -244,7 +244,20 @@
                   : "Chưa có hạn nộp"
               }}</span
             >
-            <input
+            <tui-input-date
+              *ngIf="
+                action === 'update' &&
+                hasAuthority('canModifyFolderAsmMetaData')
+              "
+              [min]="minDate"
+              [max]="maxDate"
+              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="deadline"
+            >
+            </tui-input-date>
+            <!-- <input
               pInputText
               *ngIf="
                 action === 'update' &&
@@ -252,7 +265,7 @@
               "
               type="date"
               formControlName="deadline"
-            />
+            /> -->
           </div>
           <div
             *ngIf="
@@ -873,7 +886,14 @@
             <label class="mb-1 fw-medium"
               >Hạn nộp<span class="p-error">*</span></label
             ><br />
-            <input pInputText type="date" formControlName="deadline" />
+            <tui-input-date
+              [min]="minDate"
+              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="deadline"
+            >
+            </tui-input-date>
           </div>
         </div>
 
@@ -1039,7 +1059,9 @@
               {{ rowData.node?.status.statusName }}
             </p-tag>
           </td>
-          <td class="d-flex justify-content-around align-items-center width-200">
+          <td
+            class="d-flex justify-content-around align-items-center width-200"
+          >
             <div
               pTooltip="Chi tiết"
               tooltipPosition="top"

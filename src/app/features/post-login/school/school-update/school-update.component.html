@@ -1,242 +1,257 @@
-<h2>Cập nhật trường</h2>
-
-<form [formGroup]="updateForm"
-      class="row"
-
->
-    <div class="col-md-6" *ngIf="school">
-        <h5 class="m-3">Thông tin trường</h5>
-        <div class="col-md-10">
-            <div class="m-3">
-                <label>Tên trường</label>
-            </div>
-            <div class="m-3">
-                <input
-                        class="form-control"
-                        type="text"
-                        formControlName='schoolName'
-                >
-                                <span *ngIf="check('schoolName','whitespace')" class="p-error">Không được để trống mục này</span>
-                                <span *ngIf="updateForm.get('schoolName')?.hasError('notUnique')" class="p-error">Tên trường này đã tồn tại</span>
-
-            </div>
-        </div>
-        <div class="col-md-10">
-            <div class="m-3">
-                <label>Địa chỉ</label>
-
-            </div>
-            <div class="m-3">
-                <input
-                        class="form-control"
-                        type="text"
-                        formControlName='address'
-                >
-                                <span *ngIf="check('address','whitespace')" class="p-error">Không được để trống mục này</span>
-
-            </div>
-
-        </div>
-        <div class="col-md-10">
-            <div class="m-3">
-                <label>Trạng thái</label>
-
-            </div>
-            <div class="m-3">
-                <select class="form-control"
-                        formControlName='isActive'>
-                    <option value="true"><span class="badge bg-success">Đang hoạt động</span></option>
-                    <option value="false"><span class="badge bg-success">Ngưng hoạt động</span></option>
-                </select>
-
-            </div>
-
-        </div>
-        <button class="m-3 btn btn-primary" type="submit" (click)="confirm()">Cập nhật</button>
-<!--        <button class="m-3 btn btn-primary" (click)="onBack()" >Quay lại</button>-->
-
-    </div>
-  <div class="col-md-6">
-    <div class="m-3">
-      <div class="d-flex justify-content-start">
-        <h5>Thông tin hiệu trưởng</h5>
-
-        <i
-          (click)="showDialog()"
-          [ngClass]="isUpdatePrincipalEmail ?'icon bi bi-x' : 'icon bi bi-pencil-fill' "></i>
-      </div>
-    </div>
-
-
-    <ng-container >
-      <ng-container *ngIf="!principal">
-        <div class="mb-4">
-          <div class="m-3">
-            <p class="text-black-50">Email</p>
-          </div>
-          <div class="m-3">
-            <p class="font-weight-bold">Chưa có hiệu trưởng</p>
-          </div>
-        </div>
-
-      </ng-container>
-      <ng-container *ngIf="principal">
-        <div class="mb-4">
-          <div class="m-3">
-            <p class="text-black-50">Email</p>
-          </div>
-          <div class="m-3">
-            <p class="font-weight-bold">{{principal.email}}</p>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="m-3">
-            <p class="text-black-50">Tên</p>
-          </div>
-          <div class="m-3">
-            <p class="font-weight-bold">{{principal.user?.fullName}}</p>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="m-3">
-            <p class="text-black-50">Giới tính</p>
-          </div>
-          <div class="m-3">
-            <p class="font-weight-bold">{{principal.user?.gender == "MALE" ? "Nam" : "Nữ" }}</p>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="m-3">
-            <p class="text-black-50">Ngày sinh</p>
-          </div>
-          <div class="m-3">
-            <p class="font-weight-bold">{{principal.user?.dob == null ? "Chưa nhập ngày sinh" : principal.user?.dob }}</p>
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="m-3">
-            <p class="text-black-50">Số điện thoại</p>
-          </div>
-          <div class="m-3">
-            <p class="font-weight-bold">{{principal.user?.phoneNumber == null ? "Chưa nhập số điện thoại" : principal.user?.phoneNumber  }}</p>
-          </div>
-        </div>
-      </ng-container>
-    </ng-container>
-
-  </div>
-
-  <p-dialog header="Thay thế hiệu trưởng" [(visible)]="visible"
-            [modal]="true"
-            [style]="{ width: '50vw' }"
-            [draggable]="false" [resizable]="false"
-            (onHide)="reset()"
+<div class="container-fluid">
+  <tui-breadcrumbs
+    size="l"
   >
-    <ng-container >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
+  <h5 class="mat-headline-5 mb-2">Cập nhật trường</h5>
+  <form [formGroup]="updateForm"
+        class="row"
+
+  >
+    <div class="col-md-6" *ngIf="school">
+      <h5 class="m-3">Thông tin trường</h5>
       <div class="col-md-10">
         <div class="m-3">
-          <label><span class="p-error">*</span>Email <span class="p-error">(bắt buộc)</span></label>
+          <label>Tên trường</label>
         </div>
         <div class="m-3">
           <input
             class="form-control"
             type="text"
-            formControlName='principalEmail'
-            placeholder="(VD): nguyenvan-a@mamnon.edu.vn"
+            formControlName='schoolName'
           >
-          <span class="p-error"
-                *ngIf="isBlank('principalEmail')">Không được để trống mục này</span>
-          <span class="p-error"
-                *ngIf="updateForm.get('principalEmail')?.hasError('email')">Sai định dạng gmail</span>
-          <span class="p-error"
-                *ngIf="updateForm.get('principalEmail')?.hasError('notUnique')">
+          <span *ngIf="check('schoolName','whitespace')" class="p-error">Không được để trống mục này</span>
+          <span *ngIf="updateForm.get('schoolName')?.hasError('notUnique')"
+                class="p-error">Tên trường này đã tồn tại</span>
+
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div class="m-3">
+          <label>Địa chỉ</label>
+
+        </div>
+        <div class="m-3">
+          <input
+            class="form-control"
+            type="text"
+            formControlName='address'
+          >
+          <span *ngIf="check('address','whitespace')" class="p-error">Không được để trống mục này</span>
+
+        </div>
+
+      </div>
+      <div class="col-md-10">
+        <div class="m-3">
+          <label>Trạng thái</label>
+
+        </div>
+        <div class="m-3">
+          <select class="form-control"
+                  formControlName='isActive'>
+            <option value="true"><span class="badge bg-success">Đang hoạt động</span></option>
+            <option value="false"><span class="badge bg-success">Ngưng hoạt động</span></option>
+          </select>
+
+        </div>
+
+      </div>
+      <button class="m-3 btn btn-primary" type="submit" (click)="confirm()">Cập nhật</button>
+      <!--        <button class="m-3 btn btn-primary" (click)="onBack()" >Quay lại</button>-->
+
+    </div>
+    <div class="col-md-6">
+      <div class="m-3">
+        <div class="d-flex justify-content-start">
+          <h5>Thông tin hiệu trưởng</h5>
+
+          <i
+            (click)="showDialog()"
+            [ngClass]="isUpdatePrincipalEmail ?'icon bi bi-x' : 'icon bi bi-pencil-fill' "></i>
+        </div>
+      </div>
+
+
+      <ng-container>
+        <ng-container *ngIf="!principal">
+          <div class="mb-4">
+            <div class="m-3">
+              <p class="text-black-50">Email</p>
+            </div>
+            <div class="m-3">
+              <p class="font-weight-bold">Chưa có hiệu trưởng</p>
+            </div>
+          </div>
+
+        </ng-container>
+        <ng-container *ngIf="principal">
+          <div class="mb-4">
+            <div class="m-3">
+              <p class="text-black-50">Email</p>
+            </div>
+            <div class="m-3">
+              <p class="font-weight-bold">{{principal.email}}</p>
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="m-3">
+              <p class="text-black-50">Tên</p>
+            </div>
+            <div class="m-3">
+              <p class="font-weight-bold">{{principal.user?.fullName}}</p>
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="m-3">
+              <p class="text-black-50">Giới tính</p>
+            </div>
+            <div class="m-3">
+              <p class="font-weight-bold">{{principal.user?.gender == "MALE" ? "Nam" : "Nữ" }}</p>
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="m-3">
+              <p class="text-black-50">Ngày sinh</p>
+            </div>
+            <div class="m-3">
+              <p
+                class="font-weight-bold">{{principal.user?.dob == null ? "Chưa nhập ngày sinh" : principal.user?.dob }}</p>
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="m-3">
+              <p class="text-black-50">Số điện thoại</p>
+            </div>
+            <div class="m-3">
+              <p
+                class="font-weight-bold">{{principal.user?.phoneNumber == null ? "Chưa nhập số điện thoại" : principal.user?.phoneNumber  }}</p>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+    </div>
+
+    <p-dialog header="Thay thế hiệu trưởng" [(visible)]="visible"
+              [modal]="true"
+              [style]="{ width: '50vw' }"
+              [draggable]="false" [resizable]="false"
+              (onHide)="reset()"
+    >
+      <ng-container>
+        <div class="col-md-10">
+          <div class="m-3">
+            <label><span class="p-error">*</span>Email <span class="p-error">(bắt buộc)</span></label>
+          </div>
+          <div class="m-3">
+            <input
+              class="form-control"
+              type="text"
+              formControlName='principalEmail'
+              placeholder="(VD): nguyenvan-a@mamnon.edu.vn"
+            >
+            <span class="p-error"
+                  *ngIf="isBlank('principalEmail')">Không được để trống mục này</span>
+            <span class="p-error"
+                  *ngIf="updateForm.get('principalEmail')?.hasError('email')">Sai định dạng gmail</span>
+            <span class="p-error"
+                  *ngIf="updateForm.get('principalEmail')?.hasError('notUnique')">
       Email này đã tồn tại vui lòng chọn email khác
     </span>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-10">
-        <div class="m-3">
-          <label><span class="p-error">*</span>Tên <span class="p-error">(bắt buộc)</span></label>
-        </div>
-        <div class="m-3">
-          <input
-            class="form-control"
-            type="text"
-            formControlName='fullName'
-            placeholder="(VD): Nguyen Van A"
-          >
-          <span class="p-error"
-                *ngIf="check('fullName', 'whitespace')">
+        <div class="col-md-10">
+          <div class="m-3">
+            <label><span class="p-error">*</span>Tên <span class="p-error">(bắt buộc)</span></label>
+          </div>
+          <div class="m-3">
+            <input
+              class="form-control"
+              type="text"
+              formControlName='fullName'
+              placeholder="(VD): Nguyen Van A"
+            >
+            <span class="p-error"
+                  *ngIf="check('fullName', 'whitespace')">
             Không được để trống mục này</span>
 
 
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-10">
-        <div class="m-3">
-          <label>Giới tính</label>
+        <div class="col-md-10">
+          <div class="m-3">
+            <label>Giới tính</label>
+          </div>
+          <div class="m-3">
+            <p-dropdown [options]="genders" formControlName="gender">
+            </p-dropdown>
+          </div>
         </div>
-        <div class="m-3">
-          <p-dropdown [options]="genders" formControlName = "gender">
-          </p-dropdown>
-        </div>
-      </div>
 
-      <div class="col-md-10">
-        <div class="m-3">
-          <label>Ngày sinh</label>
-        </div>
-        <div class="m-3">
-          <input
-            class="form-control"
-            type="date"
-            formControlName='dob'
-          >
-          <span class="p-error"
-                *ngIf="check('dob', 'invalidDate')">
+        <div class="col-md-10">
+          <div class="m-3">
+            <label>Ngày sinh</label>
+          </div>
+          <div class="m-3">
+            <input
+              class="form-control"
+              type="date"
+              formControlName='dob'
+            >
+            <span class="p-error"
+                  *ngIf="check('dob', 'invalidDate')">
       Ngày sinh không thể là tương lai
     </span>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-10">
-        <div class="m-3">
-          <label>Số điện thoại</label>
-        </div>
-        <div class="m-3">
-          <input
-            class="form-control"
-            type="text"
-            formControlName='phoneNumber'
-            placeholder="(VD): 0123456789"
-          >
-          <span class="p-error"
-                *ngIf="check('phoneNumber', 'pattern')">
+        <div class="col-md-10">
+          <div class="m-3">
+            <label>Số điện thoại</label>
+          </div>
+          <div class="m-3">
+            <input
+              class="form-control"
+              type="text"
+              formControlName='phoneNumber'
+              placeholder="(VD): 0123456789"
+            >
+            <span class="p-error"
+                  *ngIf="check('phoneNumber', 'pattern')">
       Sai định dạng số điện thoại
     </span>
+          </div>
         </div>
-      </div>
-      <button class="m-3 btn btn-primary" (click)="onSubmitPrincipal()">Cập nhật hiệu trưởng</button>
-    </ng-container>
-  </p-dialog>
-</form>
-<p-toast position="top-right" key="error"></p-toast>
-<!--<div class="overlay" *ngIf="isLoading">-->
-<!--    <div class="spinner-container">-->
-<!--        <div class="spinner-border" role="status"></div>-->
-<!--    </div>-->
-<!--</div>-->
-<p-confirmDialog key="updateSchoolConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
+        <button class="m-3 btn btn-primary" (click)="onSubmitPrincipal()">Cập nhật hiệu trưởng</button>
+      </ng-container>
+    </p-dialog>
+  </form>
+  <p-toast position="top-right" key="error"></p-toast>
+  <!--<div class="overlay" *ngIf="isLoading">-->
+  <!--    <div class="spinner-container">-->
+  <!--        <div class="spinner-border" role="status"></div>-->
+  <!--    </div>-->
+  <!--</div>-->
+  <p-confirmDialog key="updateSchoolConfirm" [style]="{width: '50vw'}"></p-confirmDialog>
 
-<app-loading-complete-dialog
-  [visible]="isLoading"
-  [completed]="submitCompleted"
-  [header]="'Cập nhật trường học'"
-  [progress]="'Đang cập nhật trường học'"
-  [complete]="'Cập nhật trường học thành công'"
+  <app-loading-complete-dialog
+    [visible]="isLoading"
+    [completed]="submitCompleted"
+    [header]="'Cập nhật trường học'"
+    [progress]="'Đang cập nhật trường học'"
+    [complete]="'Cập nhật trường học thành công'"
 
-></app-loading-complete-dialog>
-
-
+  ></app-loading-complete-dialog>
+</div>

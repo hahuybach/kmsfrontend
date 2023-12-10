@@ -22,7 +22,6 @@ export class InspectionplanInspectorlistService {
   }
 
   setPopupInspectorList(list: any[]) {
-    console.log(list)
     this.popupInspectorList.next(list);
     this.initialPopupInspectorList = [...list];
   }
@@ -33,23 +32,26 @@ export class InspectionplanInspectorlistService {
 
     selectedInspectors.forEach(inspector => {
       inspectorList.push(inspector);
-      popupInspectorList = popupInspectorList.filter(i => i !== inspector);
     });
 
     this.inspectorList.next(inspectorList);
-    this.popupInspectorList.next(popupInspectorList);
+    this.popupInspectorList.next(popupInspectorList.filter(i => !selectedInspectors.includes(i)));
 
     this.initialInspectorList = [...inspectorList];
-    this.initialPopupInspectorList = [...popupInspectorList];
+    this.initialPopupInspectorList = [...popupInspectorList.filter(i => !selectedInspectors.includes(i))];
   }
+
 
   deleteFromInspectorList(inspector: any) {
     let inspectorList = this.inspectorList.getValue();
     let popupInspectorList = this.popupInspectorList.getValue();
-    inspectorList = inspectorList.filter(i => i !== inspector);
-    popupInspectorList.push(inspector);
-    this.inspectorList.next(inspectorList);
-    this.popupInspectorList.next(popupInspectorList);
+
+    const updatedPopupList = JSON.parse(JSON.stringify(popupInspectorList));
+
+    updatedPopupList.push(inspector);
+
+    this.inspectorList.next(inspectorList.filter(i => i !== inspector));
+    this.popupInspectorList.next(updatedPopupList);
   }
 
   resetBothLists() {
@@ -60,11 +62,11 @@ export class InspectionplanInspectorlistService {
   saveChanges() {
     this.initialInspectorList = [...this.inspectorList.getValue()];
     this.initialPopupInspectorList = [...this.popupInspectorList.getValue()];
-
     return this.initialInspectorList;
   }
 
   setInspectorListIsValid(isValid: boolean) {
+    console.log(isValid)
     this.inspectorListIsValid.next(isValid);
   }
 

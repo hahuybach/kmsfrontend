@@ -37,6 +37,19 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
   submitCompleted = false;
   sub: any[] = []
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách người dùng',
+      routerLink: '/user/list',
+    },
+    {
+      caption: 'Cập nhật người dùng'
+    },
+  ];
 
   constructor(private activatedRoute: ActivatedRoute,
               private accountService: AccountService,

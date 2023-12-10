@@ -39,6 +39,20 @@ export class GuidanceDocumentCreateComponent implements OnInit, OnDestroy {
     fileInputPlaceholders: string[] = [];
     subs: any[] = [];
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách văn bản bổ sung',
+      routerLink: '/guidance-document/list',
+    },
+    {
+      caption: 'Tạo mới văn bản bổ sung'
+    },
+  ];
+
     constructor(
         private guidanceService: GuidanceDocumentService,
         private issueService: IssueService,

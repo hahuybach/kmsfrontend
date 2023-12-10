@@ -41,6 +41,20 @@ export class UserCreateComponent implements OnInit {
   selectedSchool: any
   submitCompleted = false;
 
+    breadCrumb = [
+        {
+            caption: 'Trang chủ',
+            routerLink: '/',
+        },
+        {
+            caption: 'Danh sách người dùng',
+            routerLink: '/user/list',
+        },
+        {
+            caption: 'Tạo mới người dùng'
+        },
+    ];
+
   constructor(private accountService: AccountService,
               private route: Router,
               private auth: AuthService,

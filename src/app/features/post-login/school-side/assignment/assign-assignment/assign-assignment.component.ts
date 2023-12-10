@@ -18,7 +18,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from 'src/app/shared/toast/toast.service';
 import { Dialog } from 'primeng/dialog';
 import { TreeTable } from 'primeng/treetable';
-import { unSub } from 'src/app/shared/util/util';
+import {
+  dateToTuiDay,
+  toIsoString,
+  tuiDayToDate,
+  tuiDayToDateNull,
+  unSub,
+} from 'src/app/shared/util/util';
+import { TuiDay } from '@taiga-ui/cdk';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -49,7 +56,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         NoWhitespaceValidator(),
       ]),
     ],
-    deadline: ['', Validators.required],
+    deadline: [dateToTuiDay(new Date()), Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
     isTask: [false, Validators.required],
@@ -103,6 +110,9 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   pdfPreviewVisibility: boolean = false;
   @ViewChild('treeTable') treeTable: TreeTable;
   nodeStateMap: { [key: number]: boolean } = {};
+  minDate: TuiDay;
+  maxDate: TuiDay;
+  today: Date = new Date();
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -144,6 +154,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         // this.treeTable.expandAll();
       });
     this.sub.push(method);
+    this.minDate = dateToTuiDay(new Date());
     // this.issueService.getCurrentActiveIssue().subscribe({
     //   next: (data) => {
     //     issueId = data.issueDto.issueId;
@@ -257,9 +268,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
             this.assignmentForm
               .get('deadline')
               ?.setValue(
-                new Date(this.selectedAssignment.deadline)
-                  .toISOString()
-                  .split('T')[0]
+                dateToTuiDay(new Date(this.selectedAssignment.deadline))
               );
           }
         }
@@ -273,8 +282,9 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
       console.log(this.assignmentForm.value);
       return;
     }
-    const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
-    const isoDateString = new Date(deadlineValue).toISOString();
+    const deadlineValue = tuiDayToDateNull(
+      this.assignmentForm.get('deadline')?.value
+    );
     this.confirmationService.confirm({
       message: 'Bạn có muốn tạo mới công việc này?',
       header: 'Xác nhận tạo mới',
@@ -283,7 +293,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         const data = {
           parentId: this.selectedAssignment.assignmentId,
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
-          deadline: isoDateString,
+          deadline: deadlineValue?.toISOString(),
           description: this.assignmentForm.get('description')?.value,
           assigneeId: this.assignmentForm.get('assigneeId')?.value,
           isTask: this.assignmentForm.get('isTask')?.value,
@@ -405,9 +415,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
           this.assignmentForm
             .get('deadline')
             ?.setValue(
-              new Date(this.selectedAssignment.deadline)
-                .toISOString()
-                .split('T')[0]
+              dateToTuiDay(new Date(this.selectedAssignment.deadline))
             );
           this.selectedAssignee = this.selectedAssignment.assignee;
           this.detailVisible = true;
@@ -423,8 +431,11 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     });
   }
   update() {
-    const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
-    const isoDateString = new Date(deadlineValue).toISOString();
+    const deadlineValue = tuiDayToDateNull(
+      this.assignmentForm.get('deadline')?.value
+    );
+
+    // console.log(toIsoString(deadlineValue));
     this.confirmationService.confirm({
       message: 'Bạn có muốn cập nhật công việc  này?',
       header: 'Xác nhận cập nhật',
@@ -435,7 +446,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
           updateAssignmentDto: {
             assignmentId: this.selectedAssignment.assignmentId,
             assignmentName: this.assignmentForm.get('assignmentName')?.value,
-            deadline: isoDateString,
+            deadline: deadlineValue?.toISOString(),
             description: this.assignmentForm.get('description')?.value,
           },
         };

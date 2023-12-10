@@ -1,6 +1,6 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
-import {switchMap} from "rxjs";
+import {Subscription, switchMap} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {FileService} from "../../../../services/file.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
@@ -10,7 +10,7 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
   templateUrl: './inspection-plan-detail.component.html',
   styleUrls: ['./inspection-plan-detail.component.scss']
 })
-export class InspectionPlanDetailComponent implements OnInit {
+export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
   data: any;
   inspectionPlanId: number;
   inspectionPlanDetail: any;
@@ -18,6 +18,22 @@ export class InspectionPlanDetailComponent implements OnInit {
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
   pdfPreviewVisibility: boolean = false;
+
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch thanh tra',
+      routerLink: '/inspection-plan/list',
+    },
+    {
+      caption: 'Chi tiết kế hoạch thanh tra'
+    },
+  ];
+
+  private subscriptions: Subscription[] = [];
 
   getStatusSeverity(status: string): string {
     const statusSeverityMap: { [key: string]: string } = {
@@ -33,12 +49,12 @@ export class InspectionPlanDetailComponent implements OnInit {
   openNewTab(documentLink: string) {
     console.log(documentLink);
     this.pdfPreviewVisibility = true;
-    this.fileService.readInspectionPlanPDF(documentLink).subscribe((response) => {
+    this.subscriptions.push(this.fileService.readInspectionPlanPDF(documentLink).subscribe((response) => {
       const blobUrl = window.URL.createObjectURL(response.body as Blob);
       this.pdfUrl = blobUrl;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
       this.pdfLoaded = true;
-    });
+    }))
   }
 
   constructor(
@@ -77,19 +93,19 @@ export class InspectionPlanDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params
+    this.subscriptions.push(this.route.params
       .pipe(
         switchMap((params) => {
           this.inspectionPlanId = +params['id'];
           return this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId);
         })
       ).subscribe({
-      next: (data) => {
-        this.data = data;
-      },
-      error: (error) => {
-      }
-    })
+        next: (data) => {
+          this.data = data;
+        },
+        error: (error) => {
+        }
+      }))
   }
 
   ngAfterContentChecked() {
@@ -97,5 +113,15 @@ export class InspectionPlanDetailComponent implements OnInit {
       this.inspectionPlanDetail = this.data;
       this.cdref.detectChanges();
     }
+  }
+
+  private unsubscribeAll(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
   }
 }

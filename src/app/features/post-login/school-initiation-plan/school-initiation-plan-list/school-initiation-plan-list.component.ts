@@ -296,12 +296,11 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   }
 
   changeStartDate() {
-    if (this.createDateRange){
-      this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
-      this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
-      this.loadDocuments();
-    }
-
+    console.log(this.createDateRange.from)
+    console.log(this.createDateRange.to)
+    this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
+    this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
+    this.loadDocuments();
   }
 
   changeDeadlineDate() {
