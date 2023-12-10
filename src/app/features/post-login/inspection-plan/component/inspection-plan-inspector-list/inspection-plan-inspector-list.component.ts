@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {InspectionplanInspectorlistService} from "../../../../../services/inspectionplan-inspectorlist.service";
 import {ConfirmEventType, ConfirmationService} from "primeng/api";
+import {getFirstAndLastName} from "../../../../../shared/util/util";
 
 @Component({
   selector: 'app-inspection-plan-inspector-list',
@@ -29,7 +30,7 @@ export class InspectionPlanInspectorListComponent {
   }
   confirmDeleteRemainingInspector(index: number) {
     this.confirmationService.confirm({
-      message: 'Xóa thanh tra này sẽ khiến danh sách danh tra bị xóa do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
+      message: 'Xóa thanh tra này sẽ xóa danh sách do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
       header: 'Xác nhận xóa thanh tra',
       key: 'confirmDeleteRemainingInspector',
       icon: 'bi bi-exclamation-triangle',
@@ -76,17 +77,28 @@ export class InspectionPlanInspectorListComponent {
     this.deleteButtonVisibility = !this.deleteButtonVisibility;
   }
 
+  getAvatar(fullName: string){
+    return getFirstAndLastName(fullName);
+  }
+
   isEligibleInspectorExist(selectedInspectors: any[]): boolean {
-    let eligibleChiefList = selectedInspectors.filter((eligibleInspector: { accountId: number; }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
+    let eligibleChiefList = selectedInspectors.filter((eligibleInspector: {
+      accountId: number;
+    }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
     return eligibleChiefList.length > 0;
   }
 
-  onDeleteInspector(index: number){
+  onDeleteInspector(index: number) {
     let tempSelectedInspectors = this.selectedInspectors.slice();
     tempSelectedInspectors.splice(index, 1);
+    if (!this.isEligibleInspectorExist(tempSelectedInspectors)) {
+      this.confirmDeleteRemainingInspector(index);
+    } else {
+      this.confirmDeleteInspector(index);
+    }
   }
 
-  deleteInspector(index: number){
+  deleteInspector(index: number) {
     this.inspectionplanInspectorService.deleteFromInspectorList(this.selectedInspectors[index]);
   }
 

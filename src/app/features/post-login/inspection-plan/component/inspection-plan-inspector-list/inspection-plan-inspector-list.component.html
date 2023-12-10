@@ -31,8 +31,10 @@
                 <div class=" d-flex flex-row justify-content-center align-items-center">
                   <div class="scrollview-item-icon">
                     <tui-avatar
+                      text="{{getAvatar(item.user.fullName)}}"
+                      [rounded]="true"
+                      [autoColor]="true"
                     >
-
                     </tui-avatar>
                   </div>
                   <div class="scrollview-item-content ms-3">
