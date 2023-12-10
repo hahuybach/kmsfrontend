@@ -10,12 +10,22 @@ export class IssueService {
   constructor(private loggerService: LoggerService, private http: HttpClient) {
     this.loggerService.log('Issue service constructed');
   }
+
+  public saveIssue(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'undefined');
+
+    const url = `${this.issueApiUrl}/save`;
+    return this.http.post(url, formData, {headers});
+  }
+
   public getIssues(): Observable<any[]> {
     let headers = new HttpHeaders();
     // headers = headers.append('Content-Type', 'undefined');
     const url = `${this.issueApiUrl}/findAll`;
     return this.http.get<any[]>(url, { headers });
   }
+
   public getIssueById(issueId: number): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.issueApiUrl}/${issueId}`;

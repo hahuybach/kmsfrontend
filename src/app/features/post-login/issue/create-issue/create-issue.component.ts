@@ -1,14 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
-import {dateToTuiDay} from "../../../../shared/util/util";
+import {dateToTuiDay, tuiDayToDate} from "../../../../shared/util/util";
 import {TuiDay} from "@taiga-ui/cdk";
 import {SelectItem} from "primeng/api";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
 import {InspectorService} from "../../../../services/inspector.service";
 import {UserResponseForUserList} from "../../../../models/user-response-for-user-list";
 import {Subscription} from "rxjs";
+import {IssueService} from "../../../../services/issue.service";
+import {Router} from "@angular/router";
+import {ToastService} from "../../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-create-issue',
@@ -17,7 +20,7 @@ import {Subscription} from "rxjs";
 })
 
 
-export class CreateIssueComponent implements OnInit {
+export class CreateIssueComponent implements OnInit, OnDestroy {
   tomorrowDate: Date;
   tomorrow: TuiDay;
   issueForm: FormGroup;
@@ -25,6 +28,9 @@ export class CreateIssueComponent implements OnInit {
   inspectors: UserResponseForUserList[];
   inspectorListIsValid: boolean = false;
   popupInspectorVisible: boolean = false;
+  formSubmitted: boolean = false;
+  formCompleted: boolean = false;
+  formFailed: boolean = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -49,6 +55,9 @@ export class CreateIssueComponent implements OnInit {
     protected http: HttpClient,
     private readonly inspectionplanInspectorService: InspectionplanInspectorlistService,
     private readonly inspectorService: InspectorService,
+    private readonly issueService: IssueService,
+    private readonly router: Router,
+    private readonly toastService: ToastService
   ) {
   }
 
@@ -90,7 +99,11 @@ export class CreateIssueComponent implements OnInit {
       this.inspectorListIsValid = isValid;
     });
 
-    this.initInspectorList();;
+    this.subscriptions.push(setInspectorList)
+    this.subscriptions.push(setInspectorListValid)
+
+    this.initInspectorList();
+    ;
 
     this.fileInputPlaceholders = ['', '', ''];
   }
@@ -174,6 +187,37 @@ export class CreateIssueComponent implements OnInit {
     return (this.issueForm.get('issueDocList.issueDoc_1') as FormGroup).controls['documentFile'];
   }
 
+  get documentSecondNameControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_2') as FormGroup).controls['documentName'];
+  }
+
+  get documentSecondTypeControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_2') as FormGroup).controls['documentTypeId'];
+  }
+
+  get documentSecondCodeControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_2') as FormGroup).controls['documentCode'];
+  }
+
+  get documentSecondFileControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_2') as FormGroup).controls['documentFile'];
+  }
+
+  get documentThirdNameControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_3') as FormGroup).controls['documentName'];
+  }
+
+  get documentThirdTypeControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_3') as FormGroup).controls['documentTypeId'];
+  }
+
+  get documentThirdCodeControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_3') as FormGroup).controls['documentCode'];
+  }
+
+  get documentThirdFileControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_3') as FormGroup).controls['documentFile'];
+  }
 
   onSubmit() {
     if (this.issueForm.invalid) {
@@ -181,11 +225,15 @@ export class CreateIssueComponent implements OnInit {
       return;
     }
 
+    const endDate = tuiDayToDate(this.issueForm.get('endDate')?.value);
+    endDate.setUTCHours(0);
+
     const formData = new FormData();
     const issue = {
       issueName: this.issueForm.get('issueName')?.value,
-      inspectorId: [],
+      inspectorId: this.issueForm.get('inspectorId')?.value,
       description: this.issueForm.get('issueDetail')?.value,
+      initiationPlanDeadline: this.issueForm.get('endDate')?.value,
       documentIssues: [],
     }
 
@@ -213,17 +261,31 @@ export class CreateIssueComponent implements OnInit {
 
     formData.append("issue", new Blob([JSON.stringify(issue)], {type: "application/json"}));
 
-    const headers = new HttpHeaders();
-    headers.append('Content-Type', 'undefined');
-
-    this.http.post('http://localhost:8080/api/v1/issue/save', formData, {headers}).subscribe(
-      (response) => {
-        console.log('Form data sent to the backend:', response);
+    this.formSubmitted = true;
+    const saveIssue = this.issueService.saveIssue(formData).subscribe({
+      next: (response) => {
+        this.formCompleted = true;
+        setTimeout(() => {
+          this.router.navigateByUrl("issue/" + response.issue.issueId);
+        }, 1000);
       },
-      (error) => {
-        console.error('Error while sending form data:', error);
+      error: (err) => {
+        this.formFailed = true;
+        console.log(err);
       }
-    );
+    })
+
+    this.subscriptions.push(saveIssue);
+  }
+
+  private unsubscribeAll(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribeAll();
   }
 
   filterOptions(options: SelectItem[], value1: any, value2: any): SelectItem[] {
