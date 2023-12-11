@@ -67,11 +67,19 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     file: [null, Validators.required],
     documentName: [
       '',
-      Validators.compose([Validators.required, Validators.maxLength(256)]),
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
     ],
     documentCode: [
       '',
-      Validators.compose([Validators.required, Validators.maxLength(256)]),
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
     ],
     inspector: [''],
   });
@@ -231,6 +239,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     if (files.length > 0) {
       const file = files[0];
       this.file = file;
+      this.issueForm.get('file')?.setValue(file);
       this.fileInputPlaceholders = file.name;
     }
   }
@@ -259,6 +268,10 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
   }
 
   upload() {
+    if (this.issueForm.invalid) {
+      this.issueForm.markAllAsTouched();
+      return;
+    }
     const dataObject = {
       documentName: this.issueForm.get('documentName')?.value,
       documentCode: this.issueForm.get('documentCode')?.value,
@@ -477,5 +490,12 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+  }
+  checkFormInvalid(): boolean {
+    return (
+      this.issueForm.controls?.['documentName']?.invalid &&
+      (this.issueForm.controls?.['documentName']?.touched ||
+        this.issueForm.controls?.['documentName']?.dirty)
+    );
   }
 }

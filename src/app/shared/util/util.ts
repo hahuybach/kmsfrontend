@@ -1,12 +1,11 @@
-import {TuiDay} from "@taiga-ui/cdk";
+import { TuiDay } from '@taiga-ui/cdk';
 
 export function unSub(sub: any[]) {
   if (sub) {
     for (const subElement of sub) {
-      subElement.unsubscribe()
+      subElement.unsubscribe();
     }
   }
-
 }
 
 export function dateToTuiDay(date: Date): TuiDay {
@@ -44,3 +43,28 @@ export function getFirstAndLastName(fullName: any): string {
 
   return firstName.concat(" ", lastName);
 }
+export function toIsoString(string: any) {
+  let date = new Date(string);
+  date.setDate(date.getDate() + 1)
+  return date.toISOString()
+
+}
+
+export function toIsoStringUrl(string: any) {
+  console.log(string);
+  if (string) {
+    return new Date(string).toISOString();
+  }
+  return null;
+}
+export function tuiDayToDateNull(date: TuiDay | null | undefined): Date | null {
+  if (!date) {
+    return null; // Return null if date is null or undefined
+  }
+
+  const day = date.day + 1;
+  const month = date.month;
+  const year = date.year;
+  return new Date(year, month, day);
+}
+

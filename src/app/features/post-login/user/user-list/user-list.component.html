@@ -23,27 +23,14 @@
       <div class="row">
         <div class="col-md-4" *ngIf="!hasPrincipalRow">
           <label class="fw-medium">Tên trường</label>
-          <p-dropdown
-            [options]="schools"
-            [(ngModel)]="currentSchool"
-            optionLabel="schoolName"
-            [filter]="true"
-            filterBy="schoolName"
-            [showClear]="true"
-            placeholder="Chọn 1 nơi làm việc"
-            (onChange)="loadUsers()"
+          <p-dropdown class="full-width-dropdown" [options]="schools" dataKey="schoolId"
+                      [(ngModel)]="currentSchool"    optionLabel="schoolName"
+                      [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
+                      (onChange)="loadUsers()"
+                      placeholder="Chọn 1 nơi làm việc"
           >
-            <ng-template pTemplate="selectedItem">
-              <div class="flex align-items-center gap-2" *ngIf="currentSchool">
-                <div>{{ currentSchool.schoolName }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-school pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ school.schoolName }}</div>
-              </div>
-            </ng-template>
           </p-dropdown>
+
         </div>
         <div
           class=""
@@ -53,27 +40,14 @@
           }"
         >
           <label class="fw-medium">Chức vụ</label>
-          <p-dropdown
-            [options]="roles"
-            [(ngModel)]="selectedRole"
-            optionLabel="roleName"
-            [filter]="true"
-            filterBy="roleName"
-            [showClear]="true"
-            placeholder="Chọn 1 chức vụ"
-            (onChange)="loadUsers()"
+          <p-dropdown class="full-width-dropdown" [options]="roles" dataKey="schoolId"
+                      [(ngModel)]="selectedRole"    optionLabel="roleName"
+                      [filter]="true" filterBy="roleName" optionValue="roleId" [showClear]="true"
+                      (onChange)="loadUsers()"
+                      placeholder="Chọn 1 chức vụ"
           >
-            <ng-template pTemplate="selectedItem">
-              <div class="flex align-items-center gap-2" *ngIf="selectedRole">
-                <div>{{ selectedRole.roleName }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-role pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ role.roleName }}</div>
-              </div>
-            </ng-template>
           </p-dropdown>
+
         </div>
         <div
           class=""

@@ -24,6 +24,8 @@ export class AssignmentDetailComponent implements OnInit {
   fileUrl: string;
   school: any;
   header: string;
+  pdfPreviewVisibility: boolean = false;
+  sub: any[] = [];
   constructor(
     private assignmentService: AssignmentService,
     private route: ActivatedRoute,
@@ -85,7 +87,7 @@ export class AssignmentDetailComponent implements OnInit {
     let url = '';
     switch (fileExtension) {
       case 'application/pdf':
-        url = '../../../../../assets/img/pdf.png';
+        url = '../../../../../assets/img/pdf_logo.svg';
         break;
       case 'application/msword':
         url = '../../../../../assets/img/doc.png';
@@ -98,5 +100,43 @@ export class AssignmentDetailComponent implements OnInit {
         break;
     }
     return url;
+  }
+  openNewTab(documentLink: string, fileExtension: string) {
+    if (fileExtension === 'application/pdf') {
+      this.pdfPreviewVisibility = true;
+    }
+    const method = this.fileService
+      .readAssignmentPDF(documentLink)
+      .subscribe((response) => {
+        const blobUrl = window.URL.createObjectURL(response.body as Blob);
+        this.pdfUrl = blobUrl;
+        this.safePdfUrl =
+          this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        this.pdfLoaded = true;
+      });
+    this.sub.push(method);
+  }
+  getFileExtension(fileExtension: string): string {
+    let extension = '';
+    switch (fileExtension) {
+      case 'application/pdf':
+        extension = 'pdf';
+        break;
+      case 'application/msword':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        extension = 'docx';
+        break;
+      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+        extension = 'xlsx';
+        break;
+    }
+    return extension;
+  }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
   }
 }

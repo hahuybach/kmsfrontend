@@ -3,7 +3,7 @@
   <h5 class="mat-headline-5 fw-medium mb-4">
     Kế hoạch thực hiện nhiệm vụ năm học
   </h5>
-  <p-toast></p-toast>
+  <p-toast key="toastInitiationPlan"></p-toast>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
     acceptLabel="Đồng ý"
@@ -23,23 +23,23 @@
   ></app-file-loading>
   <!-- file preview -->
   <p-dialog
-  header="Xem tài liệu"
-  [(visible)]="pdfPreviewVisibility"
-  [style]="{ width: '90vw', height: '100vh' }"
-  [draggable]="false"
-  [resizable]="false"
-  [maximizable]="true"
-  [modal]="true"
-  (onHide)="onHideFilePreviewEvent()"
->
-  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
-    <div class="spinner-border text-center" role="status"></div>
-    <p>Đang tải...</p>
-  </div>
-  <ng-template #pdfIsLoaded>
-    <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
-  </ng-template>
-</p-dialog>
+    header="Xem tài liệu"
+    [(visible)]="pdfPreviewVisibility"
+    [style]="{ width: '90vw', height: '100vh' }"
+    [draggable]="false"
+    [resizable]="false"
+    [maximizable]="true"
+    [modal]="true"
+    (onHide)="onHideFilePreviewEvent()"
+  >
+    <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+      <div class="spinner-border text-center" role="status"></div>
+      <p>Đang tải...</p>
+    </div>
+    <ng-template #pdfIsLoaded>
+      <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
+    </ng-template>
+  </p-dialog>
   <!--doc history -->
   <p-dialog
     header="Lịch sử phê duyệt"
@@ -188,94 +188,130 @@
   </p-dialog>
 
   <form [formGroup]="inputFileForm">
-    <!-- reset deadline -->
+    <!-- file upload -->
     <p-dialog
       header="Nộp tài liệu"
       [(visible)]="uploadFileVisible"
       [modal]="true"
-      [style]="{ width: '60vw', height: '600px' }"
+      [style]="{ width: '50vw' }"
       [draggable]="false"
       [resizable]="false"
       (onHide)="hideUploadPopup()"
     >
-      <label class="mb-1" for=""
-        >Tên tài liệu<span class="p-error">*</span></label
-      >
-      <br />
-      <input
-        pInputText
-        formControlName="documentName"
-        type="text"
-        placeholder="Tên tài liệu"
-      />
-      <br />
-      <span
-        *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
-        class="p-error"
-        >Vui lòng điền tên tài liệu</span
-      >
-      <br />
-      <label class="mb-1 mt-1" for=""
-        >Mã tài liệu <span class="p-error">*</span></label
-      >
-      <br />
-      <input
-        pInputText
-        formControlName="documentCode"
-        type="text"
-        placeholder="Mã tài liệu"
-      />
-      <br />
-      <span
-        *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
-        class="p-error"
-        >Vui lòng điền mã tài liệu</span
-      >
-      <br />
-      <label class="mb-1 mt-1" for=""
-        >Tài liệu<span class="p-error">*</span></label
-      >
-      <div class="mb-3 input-file-popup row">
-        <div class="col-md-9">
-          <input
-            type="file"
-            accept="application/pdf"
-            #fileInput
-            style="display: none"
-            (change)="handleFileInputChange(fileInput)"
-          />
-          <input
-            pInputText
-            readonly
-            class="col-md-9"
-            placeholder="{{
-              fileInputPlaceholders
-                ? fileInputPlaceholders
-                : 'Chọn file để tải lên'
-            }}"
-          />
+      <div class="row">
+        <div class="col-md-8">
+          <div class="mb-2">
+            <label class="fw-medium mb-1"
+              >Tên tài liệu<span class="p-error">*</span></label
+            >
+            <br />
+            <input
+              class="w-100"
+              pInputText
+              formControlName="documentName"
+              type="text"
+              placeholder="Tên tài liệu"
+            />
+            <div
+              *ngIf="inputFileForm.controls?.['documentName']?.invalid && (inputFileForm.controls?.['documentName']?.touched || inputFileForm.controls?.['documentName']?.dirty)"
+            >
+              <span
+                *ngIf="inputFileForm.controls?.['documentName']?.errors?.['required'] || inputFileForm.controls?.['documentName']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền tên tài liệu
+              </span>
+              <span
+                *ngIf="inputFileForm.controls?.['documentName']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Tên tài liệu quá dài
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="col-md-3">
-          <button
-            type="button"
-            pButton
-            label="Chọn tệp"
-            (click)="fileInput.click()"
-          ></button>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label class="mb-1 fw-medium"
+              >Mã tài liệu<span class="p-error">*</span></label
+            >
+            <input
+              class="w-100"
+              pInputText
+              formControlName="documentCode"
+              type="text"
+              placeholder="Mã tài liệu"
+            />
+            <div
+              *ngIf="inputFileForm.controls?.['documentCode']?.invalid && (inputFileForm.controls?.['documentCode']?.touched || inputFileForm.controls?.['documentCode']?.dirty)"
+            >
+              <span
+                *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['required'] || inputFileForm.controls?.['documentCode']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền mã tài liệu
+              </span>
+              <span
+                *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Mã tài liệu quá dài
+              </span>
+            </div>
+          </div>
         </div>
-
-        <!-- <span *ngIf="inputFileForm.get('file')?.value == ''" class="p-error"
-          >Vui lòng chọn tài liệu</span
-        > -->
+        <div class="col-md-12">
+          <div class="mb-2">
+            <label class="mb-1 fw-medium"
+              >Tài liệu<span class="p-error">*</span></label
+            >
+            <div class="input-file row w-100">
+              <div class="col-md-9 padding-none">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  #fileInput
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput)"
+                  class="w-100"
+                />
+                <input
+                  pInputText
+                  readonly
+                  placeholder="{{
+                    fileInputPlaceholders
+                      ? fileInputPlaceholders
+                      : 'Chọn file để tải lên'
+                  }}"
+                />
+              </div>
+              <div class="col-md-3 padding-none">
+                <button
+                  class="upload-file w-100"
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput.click()"
+                ></button>
+              </div>
+              <div
+                class="padding-none"
+                *ngIf="inputFileForm.controls?.['file']?.invalid && (inputFileForm.controls?.['file']?.touched || inputFileForm.controls?.['file']?.dirty)"
+              >
+                <span
+                  *ngIf="inputFileForm.controls?.['file']?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng chọn tài liệu
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <button
-        type="button"
-        pButton
-        (click)="upload()"
-        [disabled]="inputFileForm.get('file')?.value == '' || inputFileForm.controls.documentName.errors?.['whitespace'] || inputFileForm.controls.documentCode.errors?.['whitespace'] "
-      >
-        Tải tài liệu
-      </button>
+      <div class="d-flex justify-content-center align-items-center">
+        <button type="button" pButton (click)="upload()">Tải tài liệu</button>
+      </div>
     </p-dialog>
   </form>
 
@@ -286,7 +322,7 @@
         <div class="row mb-2">
           <div class="col-md-8">
             <div class="mb-1">
-              <span class="mb-2 span-heading-color">Tên kế hoạch</span>
+              <label class="mb-2 span-heading-color">Tên kế hoạch</label>
               <p class="fw-medium p-content-fs">
                 {{ schoolinitiationplan.initiationPlanName }}
               </p>
@@ -294,7 +330,7 @@
           </div>
           <div class="col-md-4">
             <div class="mb-1">
-              <span class="mb-2 text-black-50">Người lên kế hoạch</span>
+              <span class="mb-2 span-heading-color">Người lên kế hoạch</span>
               <p class="fw-medium p-content-fs">
                 {{ schoolinitiationplan.createdBy }}
               </p>
@@ -313,7 +349,7 @@
           </div>
           <div class="col-md-4">
             <div class="mb-1">
-              <span class="mb-2 text-black-50">Trạng thái</span>
+              <span class="mb-2 span-heading-color">Trạng thái</span>
               <br />
               <p-tag
                 *ngIf="
@@ -334,7 +370,7 @@
         <div class="row mb-2">
           <div class="col-md-8">
             <div class="mb-1">
-              <span class="mb-2 text-black-50">Ngày tạo</span>
+              <span class="mb-2 span-heading-color">Ngày tạo</span>
               <p class="fw-medium p-content-fs">
                 {{ schoolinitiationplan.createdDate | date : "dd/MM/yyyy" }}
               </p>
@@ -342,7 +378,7 @@
           </div>
           <div class="col-md-4">
             <div class="mb-1">
-              <span class="mb-2 text-black-50">Hạn nộp</span>
+              <span class="mb-2 span-heading-color">Hạn nộp</span>
               <p class="fw-medium p-error">
                 {{ schoolinitiationplan?.deadline | date : "dd/MM/yyyy" }}
               </p>
@@ -351,20 +387,19 @@
         </div>
       </div>
       <div class="plan-file mt-3">
-        <span class="text-black-50">Tài liệu</span>
-        <br />
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-8 d-flex align-items-center">
+            <label class="mb-1 fw-medium p-content-fs">Tài liệu</label>
+          </div>
+          <div class="col-md-4">
             <button pButton class="mb-2" (click)="docHistoryVisible = true">
               Xem lịch sử phê duyệt tài liệu
             </button>
           </div>
-          <!-- <div class="col-md-4">
-            <button pButton class="mb-2" (click)="redirectToIssue()">
-              Kế hoạch kiểm tra
-            </button>
-          </div> -->
         </div>
+
+        <br />
+
         <ng-container *ngIf="lastDocs?.departmentDocument">
           <div
             *ngIf="schoolinitiationplan?.status.statusId != 6"
@@ -376,7 +411,7 @@
             >
               <img src="assets/img/pdf_logo.svg" alt="" />
             </div>
-            <div class="row col-md-10 d-flex align-items-end mb-3">
+            <div class="row col-md-10 d-flex align-items-center mb-3">
               <div class="col-md-8">
                 <p class="mb-0">
                   <span class="fw-medium"
@@ -438,7 +473,7 @@
             <div
               class="file-item py-1 d-flex"
               (click)="displayNewFileUpload(newFile)"
-              pTooltip="{{ lastDocs.departmentDocument.documentName }}.pdf"
+              pTooltip="{{ lastDocs?.schoolDocument?.documentName }}.pdf"
               tooltipPosition="top"
             >
               <div
@@ -446,7 +481,7 @@
               >
                 <img src="assets/img/pdf_logo.svg" alt="" />
               </div>
-              <div class="row col-md-10 d-flex align-items-end">
+              <div class="row col-md-10 d-flex align-items-center">
                 <div class="col-md-6 mb-3">
                   <p class="mb-0">
                     <span class="fw-medium"
@@ -479,7 +514,7 @@
                   <div
                     *ngIf="iconStatus"
                     class="delete-icon d-flex justify-content-center align-items-center"
-                    (click)="deleteFile($event)"
+                    (click)="deleteFile($event, 0)"
                   >
                     <i class="bi bi-x-lg"></i>
                   </div>
@@ -509,59 +544,6 @@
               >
             </div>
             <div
-              *ngIf="inputFileForm.get('documentName')?.value"
-              class="file-item py-1 d-flex"
-              (click)="displayNewFileUpload(newFile)"
-              pTooltip="{{ inputFileForm.get('documentName')?.value }}.pdf"
-              tooltipPosition="top"
-            >
-              <div
-                class="file-item-icon d-flex justify-content-center align-items-center"
-              >
-                <img src="assets/img/pdf_logo.svg" alt="" />
-              </div>
-              <div class="row col-md-10 d-flex align-items-end">
-                <div class="col-md-6 mb-3">
-                  <p class="mb-0">
-                    <span class="fw-medium"
-                      >{{ inputFileForm.get("documentName")?.value }}.pdf</span
-                    >
-                    <span></span>
-                  </p>
-                  <p class="mb-0">
-                    <span>Mã tài liệu: </span>
-                    <span class="fw-medium">{{
-                      inputFileForm.get("documentCode")?.value
-                    }}</span>
-                  </p>
-                </div>
-                <div class="col-md-4 mb-3 text-end">
-                  <p class="mb-0">
-                    <!-- <span>Kích thước: </span> -->
-                    <span class="fw-medium">{{ getSize(newFile.size) }}</span>
-                  </p>
-                  <p class="mb-0">
-                    <!-- <span>Ngày tạo: </span> -->
-                    <span class="fw-medium">{{
-                      today | date : "dd/MM/yyyy"
-                    }}</span>
-                  </p>
-                </div>
-                <div
-                  class="align-self-center col-md-2 d-flex justify-content-center align-items-center"
-                >
-                  <div
-                    *ngIf="iconStatus"
-                    class="delete-icon d-flex justify-content-center align-items-center"
-                    (click)="deleteFile($event)"
-                  >
-                    <i class="bi bi-x-lg"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              *ngIf="!inputFileForm.get('documentName')?.value"
               class="file-item py-1 d-flex"
               (click)="openNewTab(lastDocs.schoolDocument?.documentLink)"
               pTooltip="{{ lastDocs.schoolDocument.documentName }}.pdf"
@@ -572,7 +554,7 @@
               >
                 <img src="assets/img/pdf_logo.svg" alt="" />
               </div>
-              <div class="row col-md-10 d-flex align-items-end">
+              <div class="row col-md-10 d-flex align-items-center">
                 <div class="col-md-6 mb-3">
                   <p class="mb-0">
                     <span class="fw-medium"
@@ -604,7 +586,9 @@
                   <div
                     *ngIf="iconStatus"
                     class="delete-icon d-flex justify-content-center align-items-center"
-                    (click)="deleteFile($event)"
+                    (click)="
+                      deleteFile($event, lastDocs.schoolDocument.documentId)
+                    "
                   >
                     <i class="bi bi-x-lg"></i>
                   </div>
@@ -630,17 +614,6 @@
               </div>
             </div>
           </div>
-          <div
-            *ngIf="!fileStatus"
-            class="d-flex justify-content-center align-items-center btn-upload mt-5"
-          >
-            <button
-              type="button"
-              pButton
-              label="Nộp"
-              (click)="uploadFileVisible = true"
-            ></button>
-          </div>
         </ng-container>
         <ng-container *ngIf="schoolinitiationplan?.status.statusId == 8">
           <div class="px-4 my-4">
@@ -655,7 +628,7 @@
               >
                 <img src="assets/img/pdf_logo.svg" alt="" />
               </div>
-              <div class="row col-md-10 d-flex align-items-end mb-3">
+              <div class="row col-md-10 d-flex align-items-center mb-3">
                 <div class="col-md-8">
                   <p class="mb-0">
                     <span class="fw-medium"
