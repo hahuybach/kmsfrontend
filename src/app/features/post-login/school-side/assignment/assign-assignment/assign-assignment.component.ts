@@ -585,6 +585,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     const method = this.assignmentService.assignAssignment(data).subscribe({
       next: (data) => {
         this.initData();
+        this.refreshSelectedAssignment();
         this.toastService.showSuccess(
           'toastAssignAssignment',
           'Đổi thành công',
