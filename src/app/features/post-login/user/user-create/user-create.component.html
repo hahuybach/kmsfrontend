@@ -110,11 +110,13 @@
       </div>
       <div class="col-md-6 col-sm-12 mb-2">
         <label class="fw-medium mb-1">Ngày sinh</label>
-        <input
-          class="form-control"
-          type="date"
-          formControlName='dob'
+        <tui-input-date
+        tuiTextfieldSize="m"
+        class="tui-date"
+        formControlName='dob'
+        [max]="today"
         >
+        </tui-input-date>
         <span class="p-error"
               *ngIf="isError('dob', 'invalidDate')">
               Ngày sinh không thể là tương lai

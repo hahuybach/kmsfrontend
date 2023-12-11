@@ -11,6 +11,8 @@ import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {SchoolResponse} from "../../../../models/school-response";
 import {Role} from "../../../../shared/enum/role";
 import {SchoolService} from "../../../../services/school.service";
+import {dateToTuiDay} from "../../../../shared/util/util";
+import {TuiDay} from "@taiga-ui/cdk";
 
 
 @Component({
@@ -30,16 +32,16 @@ export class UserCreateComponent implements OnInit {
     fullName: ['', [NoWhitespaceValidator(), Validators.required, Validators.maxLength(254)]],
     gender: ['MALE'],
     phoneNumber: [null, [Validators.pattern("^[0-9]{10}$")]],
-    dob: [null, this.validateDateNotGreaterThanToday.bind(this)],
+    dob: [dateToTuiDay(new Date()), this.validateDateNotGreaterThanToday.bind(this)],
     isActive: [true],
     schoolId: [-1, [Validators.required, Validators.min(1)]]
-
   })
   isSubmitted: boolean = false;
   isLoading: boolean = false;
   schools: SchoolResponse[]
   selectedSchool: any
   submitCompleted = false;
+  today: TuiDay;
 
     breadCrumb = [
         {
@@ -126,6 +128,7 @@ export class UserCreateComponent implements OnInit {
       }
     }
 
+    this.today = dateToTuiDay(new Date());
   }
 
   setRole(schoolId: number, roleName: string, isActive: boolean) {
