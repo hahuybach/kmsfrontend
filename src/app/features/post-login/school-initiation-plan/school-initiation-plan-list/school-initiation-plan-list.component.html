@@ -9,16 +9,19 @@
     class="my-4 px-3 row advance-search d-flex flex-row justify-content-between"
   >
     <div class="form-group col-md-6" *ngIf="!advanceSearch">
-      <input
-        type="text"
-        name="globalSearch"
-        id="globalSearch"
-        class="form-control fontAwesome h-100"
-        [(ngModel)]="planName"
-        (keyup)="loadDocuments()"
-        pInputText
-        placeholder="&#xF002; Tra cứu nhanh theo tên kế hoạch"
-      />
+      <span class="p-input-icon-left search-with-icon w-100">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          name="globalSearch"
+          id="globalSearch"
+          class="w-100 fw-medium"
+          [(ngModel)]="planName"
+          (keyup)="loadDocuments()"
+          pInputText
+          placeholder="Tra cứu nhanh theo tên kế hoạch"
+        />
+      </span>
     </div>
     <div *ngIf="advanceSearch" class="col-md-10">
       <div class="row">
@@ -39,11 +42,11 @@
         <div class="col-md-4">
           <label class="fw-medium">Khoảng ngày tạo</label>
           <tui-input-date-range
-                  class="tui-date"
-                  tuiTextfieldSize="m"
-                  [(ngModel)]="createDateRange"
-                  (durationchange)="changeStartDate()"
-                  (ngModelChange)="changeStartDate()"
+            class="tui-date"
+            tuiTextfieldSize="m"
+            [(ngModel)]="createDateRange"
+            (durationchange)="changeStartDate()"
+            (ngModelChange)="changeStartDate()"
 
           >
           </tui-input-date-range>
@@ -79,7 +82,7 @@
         <div class="col-md-4">
           <label class="fw-medium">Kế hoạch</label>
           <p-dropdown class="full-width-dropdown" [options]="issueDropDowns" dataKey="issueId"
-                      [(ngModel)]="currentIssueSelected"    optionLabel="issueName"
+                      [(ngModel)]="currentIssueSelected" optionLabel="issueName"
                       [filter]="true" filterBy="issueName" optionValue="issueId" [showClear]="true"
                       (onChange)="loadDocuments()"
                       placeholder="Chọn 1 kế hoạch thanh tra"
@@ -90,7 +93,7 @@
           <label class="fw-medium">Tên trường</label>
 
           <p-dropdown class="full-width-dropdown" [options]="schools" dataKey="schoolId"
-                      [(ngModel)]="selectedSchool"    optionLabel="schoolName"
+                      [(ngModel)]="selectedSchool" optionLabel="schoolName"
                       [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
                       (onChange)="loadDocuments()"
                       placeholder="Chọn 1 trường"
