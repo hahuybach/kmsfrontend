@@ -101,5 +101,10 @@ export class inspectionPlanService {
     return this.http.get<any>(this.inspectionApiUrl + '/getDashboardInspectionPlanResponse?issueId=' + issueId);
 
   }
+  public getInspectionDoctree(inspectionId: number | null): Observable<any> {
+    let headers = new HttpHeaders();
+    const url = `${this.inspectionApiUrl}/get-doc-tree-info/${inspectionId}`;
+    return this.http.get(url, {headers});
+  }
 
 }
