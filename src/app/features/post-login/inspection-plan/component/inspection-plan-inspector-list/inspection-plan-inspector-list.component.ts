@@ -30,7 +30,7 @@ export class InspectionPlanInspectorListComponent {
   }
   confirmDeleteRemainingInspector(index: number) {
     this.confirmationService.confirm({
-      message: 'Xóa thanh tra này sẽ xóa danh sách do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
+      message: ' . Bạn có muốn tiếp tục?',
       header: 'Xác nhận xóa thanh tra',
       key: 'confirmDeleteRemainingInspector',
       icon: 'bi bi-exclamation-triangle',

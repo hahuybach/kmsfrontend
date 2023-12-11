@@ -110,7 +110,7 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
 
   initInspectorList() {
     this.subscriptions.push(
-      this.inspectorService.getNoneInspectors().subscribe({
+      this.inspectorService.getInspectorsForIssue().subscribe({
         next: (data) => {
           this.inspectors = data;
           this.inspectionplanInspectorService.setPopupInspectorList(this.inspectors);

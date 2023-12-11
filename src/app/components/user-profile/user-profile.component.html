@@ -6,7 +6,7 @@
           [draggable]="false"
 >
   <div class="row" *ngIf="!isUpdate && this.currentUser">
-    <div class="col-md-3">
+    <div class="col-md-3 d-flex flex-column justify-content-between">
       <div class="col-md-12 d-flex justify-content-center">
         <tui-avatar
           text="{{this.avatar}}"
@@ -16,7 +16,7 @@
         ></tui-avatar>
       </div>
       <div class="col-md-12 text-center">
-        <p class="fw-medium user-name mt-4 mb-2">{{this.currentUser.fullName}}</p>
+        <p class="fw-medium user-name mt-4 mb-0">{{this.currentUser.fullName}}</p>
       </div>
     </div>
     <div class="col-md-6 d-flex justify-content-between flex-column">
@@ -28,9 +28,9 @@
         <label class="span-heading-color mb-2">Đơn vị</label>
         <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
       </div>
-      <div class="mb-3">
+      <div class="">
         <label class="span-heading-color mb-2">Chức vụ</label>
-        <p class="fw-medium">
+        <p class="fw-medium mb-0">
           <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
             {{ role.role?.roleName }}{{ last ? '' : ';' }}
           </ng-container>
@@ -46,44 +46,46 @@
         <label class="span-heading-color mb-2">Giới tính</label>
         <p class="fw-medium">{{this.currentUser.gender == "MALE" ? "Nam" : "Nữ"}}</p>
       </div>
-      <div class="mb-3">
+      <div class="">
         <label class="span-heading-color mb-2">Năm sinh</label>
-        <p class="fw-medium">{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
+        <p class="fw-medium mb-0">{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
       </div>
     </div>
   </div>
   <div class="row" *ngIf="isUpdate && this.currentUser" [formGroup]="form">
-    <div class="col-md-12 d-flex flex-row justify-content-between">
-      <div class="col-md-6">
+    <div class="col-md-6">
+      <div class="mb-2">
         <label class="fw-medium mb-1">Tên</label>
         <input type="text" pInputText formControlName='fullName' class="form-control">
         <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
-        <span class="p-error"
-              *ngIf="this.form.get('fullName')?.hasError('maxlength')">Tên không được quá 254 ký tự</span>
+        <span class="p-error" *ngIf="this.form.get('fullName')?.hasError('maxlength')">Tên không được quá 254 ký tự</span>
       </div>
-      <div class="col-md-6 flex-column d-flex justify-content-end align-items-start">
-        <label class="span-heading-color mb-2">Email</label>
-        <p class="fw-medium">{{this.currentUser.email}}</p>
-      </div>
-    </div>
-    <div class="col-md-12">
-      <div class="col-md-6">
+      <div class="mb-2">
         <label class="fw-medium mb-1">Số điện thoại</label>
         <input pInputText type="text" formControlName='phoneNumber' class="form-control">
         <span class="p-error" *ngIf="isError('phoneNumber', 'pattern')">Sai định dạng số điện thoại</span>
         <span class="p-error" *ngIf="isBlank('phoneNumber')">Mục này không được trống</span>
       </div>
-      <div class="col-md-6">
-        <label class="span-heading-color mb-2">Đơn vị</label>
-        <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
-      </div>
-    </div>
-    <div class="col-md-12">
-      <div class="col-md-6">
+      <div class="mb-2">
         <label class="fw-medium mb-1">Giới tính</label>
         <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
       </div>
-      <div class="col-md-6">
+      <div class="mb-2">
+        <label class="fw-medium mb-1">Năm sinh</label>
+        <input pInputText type="date" formControlName='dob' class="form-control">
+        <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Email</label>
+        <p class="fw-medium">{{this.currentUser.email}}</p>
+      </div>
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Đơn vị</label>
+        <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
+      </div>
+      <div class="mb-3">
         <label class="span-heading-color mb-2">Chức vụ</label>
         <p class="fw-medium">
           <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
@@ -92,14 +94,9 @@
         </p>
       </div>
     </div>
-    <div class="col-md-6">
-      <label class="fw-medium mb-1">Năm sinh</label>
-      <input pInputText type="date" formControlName='dob' class="form-control">
-      <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
-    </div>
   </div>
   <div class="row mt-3">
-    <div class="col-md-12 action-button d-flex flex-row justify-content-between mt-3" *ngIf="!isUpdate">
+    <div class="col-md-12 action-button d-flex flex-row justify-content-between mt-5" *ngIf="!isUpdate">
       <div class="col-md-6 text-center">
         <button pButton class="justify-content-center py-2 w-75" (click)="onUpdate()">Cập nhật thông tin</button>
       </div>
