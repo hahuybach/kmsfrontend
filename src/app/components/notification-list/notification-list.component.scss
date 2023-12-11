@@ -32,7 +32,7 @@
 
   .notification-list{
     width: 370px;
-    max-height: 450px;
+    max-height: 500px;
     .notification-change-view{
       .button-active{
         background-color: $primary-hover;
@@ -51,6 +51,13 @@
           color: white;
         }
       }
+    }
+    .notification-item-list{
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    .notification-footer{
+      height: 25px;
     }
   }
   .dropdown-toggle::after {
