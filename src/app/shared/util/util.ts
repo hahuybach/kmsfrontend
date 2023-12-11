@@ -16,6 +16,17 @@ export function dateToTuiDay(date: Date): TuiDay {
   return new TuiDay(year, month, day);
 }
 
+export function dateToTuiDayU(date: Date | undefined): TuiDay {
+  const validDate = date ?? new Date();
+
+  const day = validDate.getDate();
+  const month = validDate.getMonth();
+  const year = validDate.getFullYear();
+
+  return new TuiDay(year, month, day);
+}
+
+
 export function tuiDayToDate(date: TuiDay): Date {
   const day = date.day + 1;
   const month = date.month;
