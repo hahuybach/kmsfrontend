@@ -224,7 +224,13 @@
     </tbody>
   </table>
 
-
+  <tui-ring-chart
+    [value]="value"
+    [(activeItemIndex)]="index"
+  >
+    <p >{{sum}}</p>
+    <div>{{ label }}</div>
+  </tui-ring-chart>
 </ng-container>
 
 <p-toast position="top-right" key="dashboard-toast"></p-toast>

@@ -29,6 +29,9 @@ import { PrimeNGConfig } from 'primeng/api';
 import {TuiInputDateModule, TuiInputDateRangeModule} from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
 import {CheckboxModule} from "primeng/checkbox";
+import {TuiRingChartModule} from '@taiga-ui/addon-charts';
+import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
+
 @NgModule({
   declarations: [
     FileSizePipePipe,
@@ -64,7 +67,8 @@ import {CheckboxModule} from "primeng/checkbox";
     TuiInputDateModule,
     TuiInputDateRangeModule,
     CheckboxModule,
-
+    TuiRingChartModule,
+    TuiMoneyModule
   ],
   exports: [
     InputTextModule,
@@ -97,6 +101,8 @@ import {CheckboxModule} from "primeng/checkbox";
     DataNotExistComponent,
     TuiInputDateRangeModule,
     CheckboxModule,
+    TuiRingChartModule,
+    TuiMoneyModule
   ],
 })
 export class SharedModule {

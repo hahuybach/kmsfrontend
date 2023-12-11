@@ -84,6 +84,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   asmChartData: any;
   amsChartOptions: any;
   guidanceDocuments: FilterGuidanceDocumentResponse[];
+  private readonly labels = ['Chưa hoàn thành', 'Hoàn thành', 'Đang chờ phê duyệt', 'Phê duyệt', 'Không phê duyệt'];
+   value : any[];
+  index = NaN;
+  get sum(): number {
+    return Number.isNaN(this.index) ? this.totalAsm : this.value[this.index];
+  }
+
+  get label(): string {
+    return Number.isNaN(this.index) ? 'Total' : this.labels[this.index];
+  }
 
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
@@ -212,7 +222,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   setAsmChartData() {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
-
+    this.value = [this.numberOfNotCompletedAsm,
+      this.numberOfCompletedAsm, this.numberWaitingForApprovalAsm,
+      this.numberApprovedAsm, this.numberDisApprovedAsm]
     this.asmChartData = {
       labels: ['Chưa hoàn thành', 'Hoàn thành', 'Đang chờ phê duyệt', 'Phê duyệt', 'Không phê duyệt'],
       datasets: [
