@@ -244,9 +244,13 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               .get('assigneeId')
               ?.setValue(this.listOfPossibleAssignees[0].accountId);
           }
+          if (data.maxDate) {
+            this.maxDate = data.maxDate;
+          }
           this.assignmentVisible = true;
         },
       });
+
     this.action = action;
     switch (action) {
       case 'addchild': {
