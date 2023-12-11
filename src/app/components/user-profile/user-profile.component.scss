@@ -42,14 +42,19 @@
     width: 150px;
     justify-content: center;
   }
-  .reset-button {
-    background-color: white;
-    color: $primary !important;
-    border: 1px solid $primary;
-    &:hover{
-      background-color: $primary-hover;
-      color: white !important;
-      border: 1px solid $primary-hover;
-    }
+}
+
+.reset-button {
+  background-color: white;
+  color: $primary !important;
+  border: 1px solid $primary;
+  &:hover{
+    background-color: $primary-hover;
+    color: white !important;
+    border: 1px solid $primary-hover;
   }
+}
+
+.user-name{
+font-size: 1.5rem;
 }
