@@ -1,33 +1,230 @@
-<h5 class="mat-headline-5 fw-medium">Dashboard</h5>
-<div>
-  <p>Số trường chưa kiểm tra: {{numberOfInspectedSchool}}/ {{totalSchool}}</p>
-  <button pButton (click)="createInspectionPlan()">Tạo quyết định kiểm tra</button>
-</div>
+<h5 class="mat-headline-5 fw-medium">Trang chủ</h5>
 
-<div>
-  <p>Kế hoạch thực hiện cần duyệt:{{numberOfIniPlanWait}}</p>
-  <button pButton (click)="viewInitiationPlanList()">Xem chi tiết</button>
-</div>
+<ng-container *ngIf="isDirector">
+  <div>
+    <p>Số trường chưa kiểm tra: {{numberOfInspectedSchool}}/ {{totalSchool}}</p>
+    <button pButton (click)="createInspectionPlan()">Tạo quyết định kiểm tra</button>
+  </div>
 
-<div>
-  <p>Số trường đã nộp hồ sơ:{{numberOfSchoolCompletedAssignment}}</p>
-  <button pButton (click)="viewCompletedSchoolAssignmentList()">Xem chi tiết</button>
+  <div>
+    <p>Kế hoạch thực hiện cần duyệt:{{numberOfIniPlanWait}}</p>
+    <button pButton (click)="viewInitiationPlanList()">Xem chi tiết</button>
+  </div>
+
+  <div>
+    <p>Số trường đã nộp hồ sơ:{{numberOfSchoolCompletedAssignment}}</p>
+    <button pButton (click)="viewCompletedSchoolAssignmentList()">Xem chi tiết</button>
+  </div>
+
+  <div>
+    <p>Lối tắt</p>
+    <button pButton (click)="createGuidanceDocument()">Tạo văn bản bổ sung</button>
+    <button pButton (click)="viewMyInspection()">Cuộc thanh tra của tôi</button>
+    <button pButton (click)="viewTreeList()">Xem văn bản các trường</button>
+    <button pButton (click)="viewTemplate()">Xem mẫu hồ sơ</button>
+  </div>
+
+  <div class="card flex justify-content-center w-25">
+    <p>Thống kê thực trạng kế hoạch thực hiện</p>
+    <p-chart type="pie" [data]="initiationPlanDataChart" [options]="initiationPlanOptionsChart"></p-chart>
+  </div>
+  <div class="card flex justify-content-center w-25">
+    <p>Thống kê thực trạng kế hoạch thanh tra</p>
+    <p-chart type="pie" [data]="inspectionPlanDataChart" [options]="inspectionPlanOptionsChart"></p-chart>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isSpecialist">
+  <div class="col-md-4">
+    <label class="fw-medium">Trạng thái</label>
+    <p-dropdown
+      placeholder="Chọn 1 trạng thái"
+      [options]="inspectionPlanStatuses"
+      [(ngModel)]="inspectionPlanSelectedStatus"
+      [showClear]="true"
+      (onChange)="loadInspectionPlan()"
+      dataKey="value"
+      optionValue="value"
+    >
+      <ng-template let-status pTemplate="item">
+        <p-tag
+          [severity]="getStatusSeverity(status.value)"
+          [value]="status.label"
+        ></p-tag>
+      </ng-template>
+    </p-dropdown>
+  </div>
+  <table class="table table-striped">
+    <tr>
+      <th>Phiên thanh tra</th>
+      <th>Tổng số: {{totalNumberOfInspectionPlan}}</th>
+    </tr>
+    <tbody *ngIf="inspectionPlans && inspectionPlans.length > 0">
+    <tr
+      *ngFor="
+            let plan of inspectionPlans
+            let i = index
+          "
+    >
+      <td>{{plan.inspectionPlanName}}</td>
+      <td>
+        <p-tag
+          [severity]="getStatusSeverity(plan?.status?.statusId)"
+          [value]="plan.statusName"
+        ></p-tag>
+      </td>
+
+      <td>
+        <button pButton (click)="viewInspectionDetail(plan.inspectionPlanId)">Xem chi tiết</button>
+      </td>
+
+    </tr>
+
+    </tbody>
+  </table>
+  <button pButton (click)="viewMyInspection()">Xem thêm</button>
+
+  <div>
+    <button pButton (click)="viewIssueDetail()">Xem kế hoạch kiểm tra năm</button>
+    <button pButton (click)="viewTemplate()">Xem mẫu hồ sơ</button>
+
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isPrincipal">
+  <div class="col-md-4">
+    <label class="fw-medium">Trạng thái</label>
+    <p-dropdown
+      placeholder="Chọn 1 trạng thái"
+      [options]="inspectionPlanStatuses"
+      [(ngModel)]="inspectionPlanSelectedStatus"
+      [showClear]="true"
+      (onChange)="loadInspectionPlan()"
+      dataKey="value"
+      optionValue="value"
+    >
+      <ng-template let-status pTemplate="item">
+        <p-tag
+          [severity]="getStatusSeverity(status.value)"
+          [value]="status.label"
+        ></p-tag>
+      </ng-template>
+    </p-dropdown>
+  </div>
+  <table class="table table-striped">
+    <tr>
+      <th>Phiên thanh tra</th>
+      <th>Tổng số: {{totalNumberOfInspectionPlan}}</th>
+    </tr>
+    <tbody *ngIf="inspectionPlans && inspectionPlans.length > 0">
+    <tr
+      *ngFor="
+            let plan of inspectionPlans
+            let i = index
+          "
+    >
+      <td>{{plan.inspectionPlanName}}</td>
+      <td>
+        <p-tag
+          [severity]="getStatusSeverity(plan?.status?.statusId)"
+          [value]="plan.statusName"
+        ></p-tag>
+      </td>
+
+      <td>
+        <button pButton (click)="viewInspectionDetail(plan.inspectionPlanId)">Xem chi tiết</button>
+      </td>
+
+    </tr>
+
+    </tbody>
+  </table>
+  <button pButton (click)="viewMyInspection()">Xem thêm</button>
+<div class="col-md-4">
+  <label class="fw-medium">Trạng thái</label>
+  <p-dropdown
+          placeholder="Chọn 1 trạng thái"
+          [options]="statuses"
+          [(ngModel)]="selectedStatus"
+          [showClear]="true"
+          (onChange)="loadAsm()"
+          dataKey="value"
+          optionValue="value"
+  >
+    <ng-template let-status pTemplate="item">
+      <p-tag
+              [rounded]="true"
+              [severity]="getStatusSeverity(status.value)"
+              [value]="status.label"
+      ></p-tag>
+    </ng-template>
+  </p-dropdown>
+
+  <table class="table table-striped">
+    <tr>
+      <th>Công việc hiện tại</th>
+      <th>Tổng số: {{totalNumberOfAsm}}</th>
+    </tr>
+    <tbody *ngIf="taskTrees && taskTrees.length > 0">
+    <tr
+            *ngFor="
+            let task of taskTrees
+            let i = index
+          "
+    >
+      <td>{{task.rootAssignmentName}}</td>
+      <td>
+        <p-tag
+                [severity]="getStatusSeverity(task?.rootAssignmentStatus?.statusId)"
+                [value]="task?.rootAssignmentStatus?.statusName"
+        ></p-tag>
+      </td>
+
+      <td>
+        <button pButton (click)="viewAsmDetail(task.rootAssignmentId)">Xem chi tiết</button>
+      </td>
+
+    </tr>
+
+    </tbody>
+  </table>
 </div>
 
 <div>
   <p>Lối tắt</p>
-  <button pButton (click)="createGuidanceDocument()">Tạo văn bản bổ sung</button>
-  <button pButton (click)="viewMyInspection()">Cuộc thanh tra của tôi</button>
-  <button pButton (click)="viewTreeList()">Xem văn bản các trường</button>
-  <button pButton (click)="viewTemplate()">Xem mẫu hồ sơ</button>
+  <button pButton (click)="viewIssueDetail()">Xem kế hoạch kiểm tra năm</button>
+  <button pButton (click)="viewAsmTree()">Xem danh sách công việc</button>
+  <button pButton (click)="viewSchoolInspection()" >Xem thanh tra ở trường bạn</button>
 </div>
+  <div class="col-md-4">
+    <p-chart type="doughnut" [data]="asmChartData" [options]="amsChartOptions" ></p-chart>
 
-<div class="card flex justify-content-center w-25" >
-  <p>Thống kê thực trạng kế hoạch thực hiện</p>
-  <p-chart type="pie" [data]="initiationPlanDataChart" [options]="initiationPlanOptionsChart"></p-chart>
-</div>
-<div class="card flex justify-content-center w-25" >
-  <p>Thống kê thực trạng kế hoạch thanh tra</p>
-  <p-chart type="pie" [data]="inspectionPlanDataChart" [options]="inspectionPlanOptionsChart"></p-chart>
-</div>
+  </div>
+
+  <table class="table table-striped">
+    <tr>
+      <th>Văn bản bổ sung vừa đăng tải</th>
+    </tr>
+    <tbody *ngIf="guidanceDocuments && guidanceDocuments.length > 0">
+    <tr
+      *ngFor="
+            let doc of guidanceDocuments
+            let i = index
+          "
+    >
+      <td>{{doc.guidanceDocumentName}}</td>
+
+
+      <td>
+        <button pButton (click)="viewGuidanceDocumentDetail(doc.guidanceDocumentId)">Xem chi tiết</button>
+      </td>
+
+    </tr>
+
+    </tbody>
+  </table>
+
+
+</ng-container>
+
 <p-toast position="top-right" key="dashboard-toast"></p-toast>

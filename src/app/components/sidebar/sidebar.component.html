@@ -21,7 +21,7 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector || isSchoolNormalEmp"
+          *ngIf="!isAdmin"
         >
           <a class="" [routerLink]="['/issue']">
             <div>
@@ -65,7 +65,7 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="!(isAdmin || isPrincipal || isSchoolNormalEmp)">
           <a class="" [routerLink]="['/create-template']">
             <div>
               <i class="bi bi-folder-plus"></i>

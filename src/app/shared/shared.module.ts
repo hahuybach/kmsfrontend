@@ -28,6 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
 import {TuiInputDateModule, TuiInputDateRangeModule} from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
+import {CheckboxModule} from "primeng/checkbox";
 @NgModule({
   declarations: [
     FileSizePipePipe,
@@ -61,7 +62,9 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
     MatDatepickerModule,
     MatFormFieldModule,
     TuiInputDateModule,
-    TuiInputDateRangeModule
+    TuiInputDateRangeModule,
+    CheckboxModule,
+
   ],
   exports: [
     InputTextModule,
@@ -92,7 +95,8 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
     MatFormFieldModule,
     TuiInputDateModule,
     DataNotExistComponent,
-    TuiInputDateRangeModule
+    TuiInputDateRangeModule,
+    CheckboxModule,
   ],
 })
 export class SharedModule {

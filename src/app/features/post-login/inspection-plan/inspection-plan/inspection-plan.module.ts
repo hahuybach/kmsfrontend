@@ -16,6 +16,7 @@ import {RouterLink} from "@angular/router";
 import {NgxPaginationModule} from "ngx-pagination";
 import {TuiTextfieldControllerModule} from "@taiga-ui/core";
 import {TuiValueChangesModule} from "@taiga-ui/cdk";
+import {CheckboxModule} from "primeng/checkbox";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {TuiValueChangesModule} from "@taiga-ui/cdk";
         NgxPaginationModule,
         TuiTextfieldControllerModule,
         TuiValueChangesModule,
+        CheckboxModule,
     ],
     exports: [
         InspectionPlanInspectorListComponent

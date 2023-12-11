@@ -55,13 +55,18 @@ export class inspectionPlanService {
 
   filterInspectionPlan(pageNo: number = 0, pageSize: number = 5, sortBy: string = 'startDate', sortDirection: string = 'asc',
                        planName: string = '', statusId?: any, issue?: any, school?: any, creationStartDateTime?: any, creationEndDateTime?: any,
-                       deadlineStartDateTime?: any, deadlineEndDateTime?: any) {
+                       deadlineStartDateTime?: any, deadlineEndDateTime?: any, isMine?: any) {
     let headers = new HttpHeaders();
     let params = new HttpParams()
       .set('pageSize', pageSize.toString())
       .set('sortBy', sortBy)
       .set('sortDirection', sortDirection)
       .set('planName', planName)
+
+    if (isMine != null){
+      params = params.set('isMine', isMine)
+
+    }
     if (pageNo != null && pageNo > 0) {
       pageNo = pageNo - 1;
       params = params.set('pageNo', pageNo)
