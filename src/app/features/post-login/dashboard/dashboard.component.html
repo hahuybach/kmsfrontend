@@ -106,7 +106,7 @@
             <div class="col-md-7">
               <tui-ring-chart
                 size="xl"
-                [value]="inspectionPlanDataChart.data"
+                [value]="inspectionPlanDataChart?.data"
                 [(activeItemIndex)]="index_inspection"
               >
                 {{ sum(inspectionPlanDataChart, index_inspection) }}
@@ -118,7 +118,7 @@
             <div class="row col-md-5">
               <div
                 *ngFor="
-                  let item of inspectionPlanDataChart.labels;
+                  let item of inspectionPlanDataChart?.labels;
                   let i = index
                 "
               >
