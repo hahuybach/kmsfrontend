@@ -1,15 +1,19 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Router} from "@angular/router";
-import {NotificationService} from "../../services/notification.service";
+import {Component, OnInit} from '@angular/core';
+import {switchMap} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {StompService} from "../../features/post-login/push-notification/stomp.service";
+import {ActivatedRoute} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-notification-list',
   templateUrl: './notification-list.component.html',
   styleUrls: ['./notification-list.component.scss']
 })
-export class NotificationListComponent implements OnChanges {
+export class NotificationListComponent implements OnInit {
   badgeValue: string = "0";
-  @Input() notificationItems: {
+  user: string | null;
+  notificationItems: {
     notificationListDtos: {
       createdOn: Date,
       isSeen: boolean,
@@ -21,7 +25,7 @@ export class NotificationListComponent implements OnChanges {
     unseen: number
   };
 
-  @Input() unseenNotificationDtos: {
+  unseenNotificationDtos: {
     createdOn: Date,
     isSeen: boolean,
     link: string,
@@ -32,24 +36,88 @@ export class NotificationListComponent implements OnChanges {
 
   showAllNotification: boolean = true;
 
-  onClickAllNotification(){
+  constructor(
+    private http: HttpClient,
+    private stompService: StompService,
+    private route: ActivatedRoute,
+    private readonly authService: AuthService
+  ) {
+  }
+
+  onClickAllNotification() {
+    this.resetScroll();
     this.showAllNotification = true;
   }
 
-  onClickUnseenNotification(){
+  onClickUnseenNotification() {
+    this.resetScroll();
     this.showAllNotification = false;
   }
 
-  clearBadge() {
-    this.badgeValue = "0";
+  resetScroll(){
+    const notificationListElement = document.querySelector('.notification-item-list');
+    if (notificationListElement) {
+      notificationListElement.scrollTop = 0;
+    }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.notificationItems?.unseen != 0) {
+  ngOnInit(): void {
+    this.getNotification();
+    this.getUnseenNotification();
+    this.user = this.authService.getSubFromCookie();
+    this.stompService.subscribe('/notify/' + this.user, (): any => {
+      this.getNotification();
+    })
+  }
 
-      this.badgeValue = this.notificationItems?.unseen < 99 ? this.notificationItems?.unseen.toString() : "99+";
-    } else {
-      this.badgeValue = "0";
+  private getNotification(): void {
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          return this.stompService.getAllNotification();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.notificationItems = data;
+          if (this.notificationItems?.unseen != 0) {
+            this.badgeValue = this.notificationItems?.unseen < 99 ? this.notificationItems?.unseen.toString() : "99+";
+          } else {
+            this.badgeValue = "0";
+          }
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      });
+  }
+
+  private getUnseenNotification(): void {
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          return this.stompService.getAllUnseenNotification();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.unseenNotificationDtos = data.notificationListDtos;
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      });
+  }
+
+
+  onNotificationListScroll(e: any){
+    const element = e.target as HTMLElement;
+    if ((element.offsetHeight + element.scrollTop + 1) >= element.scrollHeight) {
+      if (this.showAllNotification){
+        console.log('end of notification all');
+      }else{
+        console.log('end of notification unseen');
+      }
     }
   }
 }
