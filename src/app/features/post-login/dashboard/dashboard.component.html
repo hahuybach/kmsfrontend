@@ -105,11 +105,11 @@
           kế hoạch thanh tra
         </p>
         <div class="card p-3" *ngIf="inspectionPlanDataChart">
-          <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thanh tra</h6>
+          <h6 class="mat-headline-6">Thực trạng kế hoạch thanh tra</h6>
           <div class="row">
             <div class="col-md-7">
               <tui-ring-chart
-                size="xl"
+                size="l"
                 [value]="inspectionPlanDataChart?.data"
                 [(activeItemIndex)]="index_inspection"
               >
@@ -151,11 +151,11 @@
       </p>
       <div class="col-md-4" *ngIf="initiationPlanDataChart">
         <div class="card p-3">
-          <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thực hiện</h6>
+          <h6 class="mat-headline-6">Thực trạng kế hoạch thực hiện</h6>
           <div class="row">
             <div class="col-md-7">
               <tui-ring-chart
-                size="xl"
+                size="l"
                 [value]="initiationPlanDataChart?.data"
                 [(activeItemIndex)]="index_init"
               >
