@@ -21,8 +21,6 @@ export class NotificationListComponent implements OnInit {
     notificationId: number,
     notificationType: string
   }[]
-  unseen: number
-
   unseenNotificationDtos: {
     createdOn: Date,
     isSeen: boolean,
@@ -31,11 +29,15 @@ export class NotificationListComponent implements OnInit {
     notificationId: number,
     notificationType: string
   }[];
-
+  unseen: number;
+  all: number;
   showAllNotification: boolean = true;
   notificationPageSize: number = 10;
   notificationAllPageNumber: number = 1;
+  notificationAllIsLoaded: boolean = false;
   notificationUnSeenPageNumber: number = 1;
+  notificationUnSeenIsLoaded: boolean = false;
+
   constructor(
     private http: HttpClient,
     private stompService: StompService,
@@ -48,6 +50,7 @@ export class NotificationListComponent implements OnInit {
     this.resetScroll();
     this.showAllNotification = true;
   }
+
 
   onClickUnseenNotification() {
     this.resetScroll();
@@ -78,8 +81,8 @@ export class NotificationListComponent implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          console.log(data);
           this.notificationListDtos = data.notificationListDtos;
+          this.all = data.all;
           this.unseen = data.unseen;
           this.unseenNotificationDtos = data.unseenNotificationListDtos;
           if (data.unseen != 0) {
@@ -94,28 +97,44 @@ export class NotificationListComponent implements OnInit {
       });
   }
 
+  onNotificationClose(e: any) {
+    if (!e) {
+      this.resetNotificationList();
+      this.getNotification();
+    }
+  }
+
+  resetNotificationList() {
+    this.notificationAllIsLoaded = false;
+    this.notificationUnSeenIsLoaded = false;
+    this.notificationAllPageNumber = 1;
+    this.notificationUnSeenPageNumber = 1;
+    this.notificationListDtos = [];
+    this.unseenNotificationDtos = [];
+  }
 
   onNotificationListScroll(e: any) {
     const element = e.target as HTMLElement;
-    console.log(element.offsetHeight);
-    console.log(element.scrollTop);
-    console.log(element.scrollHeight);
+    console.log(element.scrollTop)
     if ((element.offsetHeight + element.scrollTop + 1) >= element.scrollHeight) {
-      if (this.showAllNotification) {
-        this.stompService.getNextNotification(this.notificationAllPageNumber ,true).subscribe({
+      if (this.showAllNotification && this.all >= this.notificationPageSize) {
+        this.stompService.getNextNotification(this.notificationAllPageNumber, true).subscribe({
           next: (data) => {
-            console.log(data)
             this.notificationListDtos.push(...data.notificationListDtos);
-            console.log(this.notificationListDtos);
             this.notificationAllPageNumber++;
+            if (this.notificationListDtos.length === this.all) {
+              this.notificationAllIsLoaded = true;
+            }
           }
         })
-      } else {
-        this.stompService.getNextNotification(this.notificationUnSeenPageNumber ,false).subscribe({
+      } else if (this.unseen >= this.notificationPageSize) {
+        this.stompService.getNextNotification(this.notificationUnSeenPageNumber, false).subscribe({
           next: (data) => {
-            console.log(data)
             this.unseenNotificationDtos.push(...data.notificationListDtos);
             this.notificationUnSeenPageNumber++;
+            if (this.unseenNotificationDtos.length == this.unseen) {
+              this.notificationUnSeenIsLoaded = true;
+            }
           }
         })
       }

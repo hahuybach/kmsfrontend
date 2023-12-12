@@ -1,13 +1,14 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Router} from "@angular/router";
 import {NotificationService} from "../../../services/notification.service";
+import _default from "chart.js/dist/core/core.interaction";
 
 @Component({
   selector: 'app-notification-list-unseen',
   templateUrl: './notification-list-unseen.component.html',
   styleUrls: ['./notification-list-unseen.component.scss']
 })
-export class NotificationListUnseenComponent {
+export class NotificationListUnseenComponent implements OnChanges{
   constructor(
     private readonly router: Router,
     private readonly notificationService: NotificationService
@@ -34,5 +35,9 @@ export class NotificationListUnseenComponent {
     });
     let link: string = this.unseenNotificationDtos[index].link;
     this.router.navigateByUrl(link.toString());
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.allNotificationLoaded);
   }
 }

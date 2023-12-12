@@ -28,6 +28,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
 import {TuiInputDateModule, TuiInputDateRangeModule, TuiBreadcrumbsModule, TuiAvatarModule} from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
+import {TuiDropdownModule, TuiDataListModule} from '@taiga-ui/core';
+
+// ...
+
+@NgModule({
+  imports: [
+    // ...
+  ],
+  // ...
+})
+export class MyModule {}
 
 @NgModule({
   declarations: [
@@ -64,7 +75,9 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
     TuiInputDateModule,
     TuiInputDateRangeModule,
     TuiBreadcrumbsModule,
-    TuiAvatarModule
+    TuiAvatarModule,
+    TuiDropdownModule,
+    TuiDataListModule
   ],
   exports: [
     InputTextModule,
@@ -97,7 +110,9 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
     DataNotExistComponent,
     TuiInputDateRangeModule,
     TuiBreadcrumbsModule,
-    TuiAvatarModule
+    TuiAvatarModule,
+    TuiDropdownModule,
+    TuiDataListModule
   ],
 })
 export class SharedModule {

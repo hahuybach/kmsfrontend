@@ -1,4 +1,4 @@
-<div ngbDropdown class="d-inline-block notification" placement="bottom-right">
+<div ngbDropdown (openChange)="onNotificationClose($event)" class="d-inline-block notification" placement="bottom-right">
   <button type="button" id="dropdownBasic1" ngbDropdownToggle>
     <i class="bi bi-bell" pBadge [value]="badgeValue" severity="danger"></i>
   </button>
@@ -15,10 +15,12 @@
     <div class="dropdown-divider mb-0"></div>
     <div class="notification-item-list" (scroll)="onNotificationListScroll($event)">
       <app-notification-list-all
+        [allNotificationLoaded]="notificationAllIsLoaded"
         *ngIf="showAllNotification"
         [notificationListDtos]="notificationListDtos">
       </app-notification-list-all>
       <app-notification-list-unseen
+        [allNotificationLoaded]="notificationUnSeenIsLoaded"
         *ngIf="!showAllNotification"
         [unseenNotificationDtos]="unseenNotificationDtos">
       </app-notification-list-unseen>
