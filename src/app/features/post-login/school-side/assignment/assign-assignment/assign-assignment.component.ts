@@ -397,7 +397,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
             'Không tìm thấy công việc',
             error.error.message
           );
-          this.router.navigate(['/assignassignment/' + this.issueId], {
+          this.router.navigate(['/assign-assignment/' + this.issueId], {
             queryParams: {},
           });
         },
@@ -485,7 +485,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     this.stompService.unsubscribe(this.selectedAssignment.assignmentId);
     this.assignmentForm.get('isTask')?.setValue(false);
     this.activeTab = this.tabs[0];
-    this.router.navigate(['/assignassignment/' + this.issueId], {
+    this.router.navigate(['/assign-assignment/' + this.issueId], {
       queryParams: {},
     });
   }
@@ -955,7 +955,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     this.pdfLoaded = false;
   }
   navigateChildren(assignmentId: number) {
-    this.router.navigate(['/assignassignment', this.issueId], {
+    this.router.navigate(['/assign-assignment', this.issueId], {
       queryParams: { id: assignmentId },
     });
   }
