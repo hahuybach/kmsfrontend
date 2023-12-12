@@ -20,7 +20,7 @@
       [filterDelay]="0"
       [globalFilterFields]="[
         'user.fullName',
-        'roles[0].roleName',
+        'roleName',
         'school.schoolName'
       ]"
     >
@@ -74,7 +74,7 @@
           <th>
             <p-columnFilter
               type="text"
-              field="roles[0].roleName"
+              field="roleName"
               pTooltip="(VD): Hiệu trưởng"
               tooltipPosition="top"
               placeholder="Chức vụ"
@@ -89,7 +89,11 @@
               placeholder="Đơn vị"
             ></p-columnFilter>
           </th>
+
+
         </tr>
+
+
         <tr>
           <th style="width: 4rem">
             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>

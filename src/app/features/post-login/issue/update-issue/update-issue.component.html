@@ -46,7 +46,7 @@
           [paginator]="true"
           currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
           [filterDelay]="0"
-          [globalFilterFields]="['user.fullName ', 'role', 'school.schoolName']"
+          [globalFilterFields]="['user.fullName ', 'roleName', 'school.schoolName']"
         >
           <ng-template pTemplate="caption">
             <div
@@ -97,7 +97,7 @@
               <th>
                 <p-columnFilter
                   type="text"
-                  field="roles[0].roleName"
+                  field="roleName"
                   pTooltip="(VD): Hiệu trưởng"
                   tooltipPosition="top"
                   placeholder="Chức vụ"
