@@ -300,7 +300,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
     this.createDateRange = null;
     this.deadlineDateRange = null;
     this.isMine = null;
-    if (!(this.isPrincipal || this.isDirector)){
+    if ((this.isPrincipal || this.isDirector)){
       this.isMine = true
     }
     this.loadDocuments();

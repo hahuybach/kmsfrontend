@@ -45,6 +45,7 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
       )
       .subscribe((data) => {
         this.issue = data.issue;
+        console.log(data);
         console.log(this.issue);
       });
     this.sub.push(sub);

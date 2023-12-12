@@ -114,7 +114,7 @@
             </ng-template>
           </p-dropdown>
         </div>
-        <div class="col-md-4" *ngIf="!(this.isPrincipal || this.isDirector)">
+        <div class="col-md-4" *ngIf="(this.isPrincipal || this.isDirector)">
           <label class="fw-medium">Phiên thanh tra bao gồm</label>
           <p-dropdown placeholder="Chọn 1 trạng thái"
                       [options]="isMineSelection"
