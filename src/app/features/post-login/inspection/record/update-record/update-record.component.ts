@@ -120,6 +120,9 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['recordId'] && changes['recordId'].isFirstChange()) {
+      return;
+    }
     const getRecordData = this.recordService.getRecordById(this.recordId).subscribe({
       next: (data) => {
         this.task = data.taskDetailDto;

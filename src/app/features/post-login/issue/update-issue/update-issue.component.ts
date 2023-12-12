@@ -23,6 +23,7 @@ import {FileService} from 'src/app/services/file.service';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {ToastService} from 'src/app/shared/toast/toast.service';
 import {Dialog} from 'primeng/dialog';
+import {getFirstAndLastName} from "../../../../shared/util/util";
 
 interface DocumentIssue {
   documentName: string;
@@ -497,5 +498,9 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       (this.issueForm.controls?.['documentName']?.touched ||
         this.issueForm.controls?.['documentName']?.dirty)
     );
+  }
+
+  getAvatar(fullName: string):string{
+    return getFirstAndLastName(fullName);
   }
 }

@@ -11,10 +11,10 @@
   [visible]="formSubmitted"
   [completed]="formCompleted"
   [failed]="formFailed"
-  [header]="'Tạo mới kế hoạch triển khai'"
-  [progress]="'Đang tạo kế hoạch triển khai'"
-  [complete]="'Tạo kế hoạch triển khai thành công'"
-  [fail]="'Tạo kế hoạch triển khai không thành công'"
+  [header]="'Tạo mới kế hoạch kiểm tra'"
+  [progress]="'Đang tạo kế hoạch kiểm tra'"
+  [complete]="'Tạo kế hoạch kiểm tra thành công'"
+  [fail]="'Tạo kế hoạch kiểm tra không thành công'"
 >
 </app-loading-complete-dialog>
 <div class="container-fluid">
@@ -31,16 +31,16 @@
       </a>
     </ng-container>
   </tui-breadcrumbs>
-  <h5 class="mat-headline-5 mb-2">Tạo mới kế hoạch triển khai</h5>
+  <h5 class="mat-headline-5 mb-2">Tạo mới kế hoạch kiểm tra</h5>
   <div class="row create-issue">
     <form class="row" [formGroup]="issueForm" (ngSubmit)="onSubmit()">
       <div class="form-content col-md-8">
         <div class="issue-name mb-2">
-          <label class="fw-medium mb-1">Tên kế hoạch triển khai<span class="p-error">*</span></label>
+          <label class="fw-medium mb-1">Tên kế hoạch kiểm tra<span class="p-error">*</span></label>
           <input
             type="text"
             pInputText
-            placeholder="Tên kế hoạch triển khai"
+            placeholder="Tên kế hoạch kiểm tra"
             class="w-100"
             formControlName="issueName"
           />
@@ -51,13 +51,13 @@
               *ngIf="issueForm.controls?.['issueName']?.errors?.['whitespace'] || issueForm.controls?.['issueName']?.errors?.['required']"
               class="p-error"
             >
-              Vui lòng điền tên kế hoạch triển khai
+              Vui lòng điền tên kế hoạch kiểm tra
             </span>
             <span
               *ngIf="issueForm.controls?.['issueName']?.errors?.['maxlength']"
               class="p-error"
             >
-              Tên kế hoạch triển khai quá dài
+              Tên kế hoạch kiểm tra quá dài
             </span>
           </div>
         </div>
@@ -66,7 +66,7 @@
           <textarea
             type="text"
             pInputTextarea
-            placeholder="Chi tiết kế hoạch triển khai"
+            placeholder="Chi tiết kế hoạch kiểm tra"
             rows="5"
             class="w-100"
             formControlName="issueDetail"
@@ -78,13 +78,13 @@
               *ngIf="issueForm.controls?.['issueDetail']?.errors?.['whitespace'] || issueForm.controls?.['issueDetail']?.errors?.['required']"
               class="p-error"
             >
-              Vui lòng điền tên kế hoạch triển khai
+              Vui lòng điền tên kế hoạch kiểm tra
             </span>
             <span
               *ngIf="issueForm.controls?.['issueDetail']?.errors?.['maxlength']"
               class="p-error"
             >
-              Tên kế hoạch triển khai quá dài
+              Tên kế hoạch kiểm tra quá dài
             </span>
           </div>
         </div>
@@ -155,6 +155,7 @@
                   pInputText
                   placeholder="Điền mã tài liệu"
                   formControlName="documentCode"
+                  (keyup)="checkDuplicateDocumentCode()"
                 />
                 <div
                   *ngIf="
@@ -167,6 +168,12 @@
                   class="p-error"
                 >
                   Vui lòng điền mã
+                </span>
+                  <span
+                    *ngIf="documentFirstCodeControls?.errors?.['duplicate']"
+                    class="p-error"
+                  >
+                  Mã tài liệu trùng
                 </span>
                   <span
                     *ngIf="documentFirstCodeControls?.errors?.['maxlength']"
@@ -266,6 +273,7 @@
                   pInputText
                   placeholder="Điền mã tài liệu"
                   formControlName="documentCode"
+                  (keyup)="checkDuplicateDocumentCode()"
                 />
                 <div
                   *ngIf="
@@ -278,6 +286,12 @@
                   class="p-error"
                 >
                   Vui lòng điền mã
+                </span>
+                  <span
+                    *ngIf="documentSecondCodeControls?.errors?.['duplicate']"
+                    class="p-error"
+                  >
+                  Mã tài liệu trùng
                 </span>
                   <span
                     *ngIf="documentSecondCodeControls?.errors?.['maxlength']"
@@ -377,6 +391,7 @@
                   pInputText
                   placeholder="Điền mã tài liệu"
                   formControlName="documentCode"
+                  (keyup)="checkDuplicateDocumentCode()"
                 />
                 <div
                   *ngIf="
@@ -389,6 +404,12 @@
                   class="p-error"
                 >
                   Vui lòng điền mã
+                </span>
+                  <span
+                    *ngIf="documentThirdCodeControls?.errors?.['duplicate']"
+                    class="p-error"
+                  >
+                  Mã tài liệu trùng
                 </span>
                   <span
                     *ngIf="documentThirdCodeControls?.errors?.['maxlength']"
