@@ -159,7 +159,7 @@
               </td>
               <td>
                 <span class="p-column-title">Chức vụ</span>
-                {{ inspector.roles[0].roleName }}
+                {{ inspector?.roles[0]?.roleName }}
               </td>
               <td>
                 <span class="p-column-title">Đơn vị</span>
@@ -194,7 +194,7 @@
     >
       <ng-container *ngFor="let document of issue.documentDtos">
         <div
-          *ngIf="document.status.statusId == 1"
+          *ngIf="document.status.statusId == 2"
           class="file-item py-1 d-flex mt-2"
           (click)="openNewTab(document.documentLink)"
         >

@@ -461,13 +461,17 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
         //   'Cập nhật thành công',
         //   'Cập nhật kế hoạch kiểm tra thành công'
         // );
+        this.router.navigate(['issue/' + this.issueId])
       },
       error: (error) => {
+        this.isLoading = false;
+
         this.toastService.showError(
           'toastUpdateIssue',
           'Cập nhật thất bại',
           error.error.message
         );
+        this.ngOnInit()
       },
     });
   }

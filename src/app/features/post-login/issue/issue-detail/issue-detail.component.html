@@ -94,22 +94,35 @@
         <br />
         <p class="fw-medium p-content-fs">{{ issue.issueName }}</p>
       </div>
-      <div class="col-6 mb-2">
+      <div class="col-3 mb-2">
         <span class="span-heading-color">Người tạo</span>
         <br />
         <p class="fw-medium p-content-fs">{{ issue.account.user.fullName }}</p>
       </div>
+      <div class="col-3 mb-2">
+        <span class="span-heading-color">Trạng thái</span>
+        <br />
+        <p class="fw-medium p-content-fs">{{ issue.status.statusName }}</p>
+      </div>
+
       <div class="col-6 mb-2">
         <span class="span-heading-color">Chi tiết</span>
         <br />
         <p class="fw-medium p-content-fs">{{ issue.description }}</p>
       </div>
-      <div class="col-6 mb-2">
+      <div class="col-3 mb-2">
         <span class="span-heading-color">Ngày tạo</span>
         <br />
         <p class="fw-medium p-content-fs">
           {{ issue.createdDate | date : "MM/dd/yyyy" }}
         </p>
+      </div>
+      <div class="col-3 mb-2">
+        <span class="span-heading-color">Ngày kết thúc</span>
+        <br />
+        <p class="fw-medium p-content-fs" *ngIf="issue.endDate">{{issue.endDate | date : "MM/dd/yyyy"}}</p>
+        <p class="fw-medium p-content-fs" *ngIf="!issue.endDate">Chưa kết thúc</p>
+
       </div>
       <div>
         <h6 class="mat-headline-6">Tài liệu công văn</h6>
@@ -221,7 +234,17 @@
     <div
       class="col-md-12 d-flex justify-content-center align-items-center mt-2"
     >
-      <button pButton (click)="(true)">Hoàn thành</button>
+      <button pButton
+              [disabled]="!canFinish"
+              (click)="finishIssue()">Hoàn thành</button>
     </div>
   </div>
 </div>
+<app-loading-complete-dialog
+  [visible]="isLoading"
+  [completed]="submitCompleted"
+  [header]="'Tạo mới người dùng'"
+  [progress]="'Đang tạo mới người dùng'"
+  [complete]="'Tạo mới người dùng thành công'"
+></app-loading-complete-dialog>
+<p-toast key="issue-detail" position="top-right"></p-toast>
