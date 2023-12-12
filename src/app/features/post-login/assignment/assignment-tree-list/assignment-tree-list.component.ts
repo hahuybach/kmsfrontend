@@ -1,17 +1,17 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TaskTreeResponse} from '../../../../models/task-tree-response';
-import {IssueDropDownResponse} from '../../../../models/issue-drop-down-response';
-import {SchoolResponse} from '../../../../models/school-response';
-import {InitiationplanService} from '../../../../services/initiationplan.service';
-import {SchoolService} from '../../../../services/school.service';
-import {IssueService} from '../../../../services/issue.service';
-import {ToastService} from '../../../../shared/toast/toast.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthService} from '../../../../services/auth.service';
-import {AssignmentService} from '../../../../services/assignment.service';
-import {Role} from '../../../../shared/enum/role';
-import {DocumentService} from '../../../../services/document.service';
-import {unSub} from "../../../../shared/util/util";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TaskTreeResponse } from '../../../../models/task-tree-response';
+import { IssueDropDownResponse } from '../../../../models/issue-drop-down-response';
+import { SchoolResponse } from '../../../../models/school-response';
+import { InitiationplanService } from '../../../../services/initiationplan.service';
+import { SchoolService } from '../../../../services/school.service';
+import { IssueService } from '../../../../services/issue.service';
+import { ToastService } from '../../../../shared/toast/toast.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../../services/auth.service';
+import { AssignmentService } from '../../../../services/assignment.service';
+import { Role } from '../../../../shared/enum/role';
+import { DocumentService } from '../../../../services/document.service';
+import { unSub } from '../../../../shared/util/util';
 
 @Component({
   selector: 'app-assignment-tree-list',
@@ -28,9 +28,9 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
   schools: SchoolResponse[];
   selectedSchool: any;
   statuses = [
-    {label: 'Chưa bắt đầu', value: 13},
-    {label: 'Chưa hoàn thành', value: 14},
-    {label: 'Hoàn thành', value: 15},
+    { label: 'Chưa bắt đầu', value: 13 },
+    { label: 'Chưa hoàn thành', value: 14 },
+    { label: 'Hoàn thành', value: 15 },
   ];
   selectedStatus: any;
   pageNo: number = 1;
@@ -41,7 +41,7 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
   maxPage: any;
   recordPerPageOption: number[] = [5, 15, 25];
   isPrincipal: boolean;
-  subs: any[] = []
+  subs: any[] = [];
 
   constructor(
     private asmService: AssignmentService,
@@ -52,8 +52,7 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private activateRouter: ActivatedRoute,
     private documentService: DocumentService
-  ) {
-  }
+  ) {}
 
   getStatusSeverity(statusId: any): string {
     const statusSeverityMap: { [key: number]: string } = {
@@ -93,14 +92,13 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
               currentIssueSelected: this.currentIssueSelected,
               advanceSearch: this.advanceSearch,
               status: this.selectedStatus,
-              schoolId: this.selectedSchool
+              schoolId: this.selectedSchool,
             },
             queryParamsHandling: 'merge',
           });
         },
       });
     this.subs.push(sub);
-
   }
 
   onAdvanceSearch() {
@@ -198,7 +196,6 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
 
       if (value['schoolId'] && value['schoolId'] !== undefined) {
         this.selectedSchool = Number(value['schoolId']);
-
       }
       if (value['advanceSearch']) {
         this.advanceSearch = value['advanceSearch'] == 'true';
@@ -244,7 +241,7 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
   ) {
     {
       if (this.isPrincipal) {
-        this.router.navigate(['assignassignment/' + issueId]);
+        this.router.navigate(['assign-assignment/' + issueId]);
       } else {
         if (statusId != 15) {
           this.toastService.showError(
@@ -253,11 +250,10 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
             'Hồ sơ của trường chưa hoàn thành\nVui lòng không thực hiện thao tác này'
           );
         } else {
-          this.router.navigate(['detailAssignment'], {
-            queryParams: {issueId: issueId, schoolId: schoolId},
+          this.router.navigate(['detail-assignment'], {
+            queryParams: { issueId: issueId, schoolId: schoolId },
           });
         }
-
       }
     }
   }
