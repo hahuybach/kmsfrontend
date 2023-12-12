@@ -101,6 +101,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   index = NaN;
   index_inspection = NaN;
   index_init = NaN;
+  index_asm = NaN;
   private readonly labelsExample = [
     'Food',
     'Cafe',
@@ -111,11 +112,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   readonly valueExample = [13769, 12367, 10172, 3018, 2592];
   readonly total = tuiSum(...this.valueExample);
   sum(chart: any, index: number): number {
-    return Number.isNaN(index) ? tuiSum(...chart.data) : chart.data[index];
+    return Number.isNaN(index) ? tuiSum(...chart?.data) : chart?.data[index];
   }
 
   label(chart: any, index: number): string {
-    return Number.isNaN(index) ? 'Tổng số' : chart.labels[index];
+    return Number.isNaN(index) ? 'Tổng số' : chart?.labels[index];
   }
 
   setAuth() {
@@ -206,15 +207,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   setAsmChartData() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    this.value = [
-      this.numberOfNotCompletedAsm,
-      this.numberOfCompletedAsm,
-      this.numberWaitingForApprovalAsm,
-      this.numberApprovedAsm,
-      this.numberDisApprovedAsm,
-    ];
     this.asmChartData = {
       labels: [
         'Chưa hoàn thành',
@@ -223,44 +215,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         'Phê duyệt',
         'Không phê duyệt',
       ],
-      datasets: [
-        {
-          data: [
-            this.numberOfNotCompletedAsm,
-            this.numberOfCompletedAsm,
-            this.numberWaitingForApprovalAsm,
-            this.numberApprovedAsm,
-            this.numberDisApprovedAsm,
-          ],
-          backgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--red-500'),
-            documentStyle.getPropertyValue('--black-500'),
-          ],
-
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--red-500'),
-            documentStyle.getPropertyValue('--black-500'),
-          ],
-        },
+      data: [
+        this.numberOfNotCompletedAsm,
+        this.numberOfCompletedAsm,
+        this.numberWaitingForApprovalAsm,
+        this.numberApprovedAsm,
+        this.numberDisApprovedAsm,
       ],
     };
-
-    this.amsChartOptions = {
-      cutout: '60%',
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor,
-          },
-        },
-      },
-    };
+    console.log(this.asmChartData);
   }
 
   setInitDataForDirector() {
