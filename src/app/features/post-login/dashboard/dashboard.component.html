@@ -220,7 +220,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Xem văn bản các trường</span>
+                  <span>Xem văn bản các trường</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -247,60 +247,106 @@
   </ng-container>
   <!-- SPECIALIST -->
   <ng-container *ngIf="isSpecialist">
-    <div class="col-md-4">
-      <label class="fw-medium">Trạng thái</label>
-      <p-dropdown
-        placeholder="Chọn 1 trạng thái"
-        [options]="inspectionPlanStatuses"
-        [(ngModel)]="inspectionPlanSelectedStatus"
-        [showClear]="true"
-        (onChange)="loadInspectionPlan()"
-        dataKey="value"
-        optionValue="value"
-      >
-        <ng-template let-status pTemplate="item">
-          <p-tag
-            [rounded]="true"
-            [severity]="getStatusSeverity(status.value)"
-            [value]="status.label"
-          ></p-tag>
-        </ng-template>
-      </p-dropdown>
-    </div>
-    <table class="table table-striped">
-      <tr>
-        <th>Phiên thanh tra</th>
-        <th>Tổng số: {{ totalNumberOfInspectionPlan }}</th>
-      </tr>
-      <tbody *ngIf="inspectionPlans && inspectionPlans.length > 0">
-        <tr *ngFor="let plan of inspectionPlans; let i = index">
-          <td>{{ plan.inspectionPlanName }}</td>
-          <td>
-            <p-tag
-              [rounded]="true"
-              [severity]="getStatusSeverity(plan?.status?.statusId)"
-              [value]="plan.statusName"
-            ></p-tag>
-          </td>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card p-3 h-100">
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <label class="fw-medium fs-18">Phiên thanh tra của bạn</label>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="fw-medium">Trạng thái</label>
+              <p-dropdown
+                placeholder="Chọn 1 trạng thái"
+                [options]="inspectionPlanStatuses"
+                [(ngModel)]="inspectionPlanSelectedStatus"
+                [showClear]="true"
+                (onChange)="loadInspectionPlan()"
+                dataKey="value"
+                optionValue="value"
+              >
+                <ng-template let-status pTemplate="item">
+                  <p-tag
+                    [rounded]="true"
+                    [severity]="getStatusSeverity(status.value)"
+                    [value]="status.label"
+                  ></p-tag>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div class="col-md-6">
+              <label class="fw-medium">Tên</label>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+              <!-- <label class="fw-medium"
+                >Tổng số: {{ totalNumberOfInspectionPlan }}</label
+              > -->
+              <span class="redirect-link" (click)="viewMyInspection()"
+                >Xem thêm</span
+              >
+            </div>
+            <div class="row">
+              <ng-container
+                *ngIf="
+                  inspectionPlans && inspectionPlans.length > 0;
+                  else noInspecPlan
+                "
+              >
+                <ng-container
+                  *ngFor="let plan of inspectionPlans; let i = index"
+                >
+                  <div class="col-md-6 td-content">
+                    <span>{{ plan.inspectionPlanName }}</span>
+                  </div>
+                  <div class="col-md-4">
+                    <p-tag
+                      [rounded]="true"
+                      [severity]="getStatusSeverity(plan?.status?.statusId)"
+                      [value]="plan.statusName"
+                    ></p-tag>
+                  </div>
+                  <div class="col-md-2">
+                    <button
+                      pButton
+                      (click)="viewInspectionDetail(plan.inspectionPlanId)"
+                    >
+                      Xem chi tiết
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
 
-          <td>
-            <button
-              pButton
-              (click)="viewInspectionDetail(plan.inspectionPlanId)"
-            >
-              Xem chi tiết
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button pButton (click)="viewMyInspection()">Xem thêm</button>
-
-    <div>
-      <button pButton (click)="viewIssueDetail()">
-        Xem kế hoạch kiểm tra năm
-      </button>
-      <button pButton (click)="viewTemplate()">Xem mẫu hồ sơ</button>
+              <ng-template #noInspecPlan>
+                <div class="col-md-12 mt-2">
+                  <label class="fw-medium color-gray"
+                    >Không có phiên thanh tra
+                  </label>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end"></div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3 h-100">
+          <label class="fw-medium fs-18 mb-3">Truy cập nhanh</label>
+          <div>
+            <div class="card mb-2 shortcut-item" (click)="viewIssueDetail()">
+              <div
+                class="p-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <span>Xem kế hoạch kiểm tra năm</span>
+                </div>
+                <div class="shortcut-icon">
+                  <i class="bi bi-caret-right-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </ng-container>
   <!-- PRINCIPAL -->
