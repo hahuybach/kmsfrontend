@@ -171,5 +171,15 @@ export class AssignmentService {
     return this.http.get<any>(url, { headers });
   }
 
+  public getNumberOfCompletedAssignment(issueId: any){
+    const url = this.assignmentApiUrl + "getNumberOfCompletedAssignment?issueId=" + issueId;
+    return this.http.get<any>(url);
+  }
+
+  public getAssignmentDashboardResponse(issueId: any){
+    const url = this.assignmentApiUrl + "getAssignmentDashboardResponse?issueId=" + issueId;
+    return this.http.get<any>(url);
+  }
+
 
 }

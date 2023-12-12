@@ -1,5 +1,17 @@
 <div class="container-fluid">
-  <span>breadcrumb</span>
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium mb-4">
     Kế hoạch thực hiện nhiệm vụ năm học
   </h5>
@@ -468,7 +480,7 @@
           >
             <img src="assets/img/pdf_logo.svg" alt="" />
           </div>
-          <div class="row col-md-10 d-flex align-items-end mb-3">
+          <div class="row col-md-10 d-flex align-items-center mb-3">
             <div class="col-md-8">
               <p class="mb-0">
                 <span class="fw-medium"
@@ -594,7 +606,7 @@
               >
                 <img src="assets/img/pdf_logo.svg" alt="" />
               </div>
-              <div class="row col-md-10 d-flex align-items-end mb-3">
+              <div class="row col-md-10 d-flex align-items-center mb-3">
                 <div class="col-md-8">
                   <p class="mb-0">
                     <span class="fw-medium"

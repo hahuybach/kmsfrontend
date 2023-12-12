@@ -129,10 +129,13 @@
                   ></p-columnFilter>
                 </th>
                 <th>
-                  <!-- <p-columnFilter
-                type="date"
-
-                ></p-columnFilter> -->
+                  <!-- custom p-column filter using input type = date-->
+                  <p-columnFilter
+                    field="deadline"
+                    matchMode="equals"
+                    [showMenu]="true"
+                  >
+                  </p-columnFilter>
                 </th>
                 <th *ngIf="inspectionDocument.isChief" class="th-small"></th>
               </tr>
@@ -238,6 +241,16 @@
     </div>
   </div>
   <div class="w-100 d-flex justify-content-center align-items-center mt-3">
-    <button type="button" class="mb-1 complete-button" pButton *ngIf="!inspectionDocument.isChief" [class.disabled-action-button]="inspectionDocument.isChief && !inspectionDocument.canFinish">Hoàn thành</button>
+    <button
+      type="button"
+      class="mb-1 complete-button"
+      pButton
+      *ngIf="inspectionDocument && !inspectionDocument.isChief"
+      [class.disabled-action-button]="
+        inspectionDocument.isChief && !inspectionDocument.canFinish
+      "
+    >
+      Hoàn thành
+    </button>
   </div>
 </div>

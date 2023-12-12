@@ -1,23 +1,22 @@
-<link
-  rel="stylesheet"
-  href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css"
-/>
-<h5 class="mat-headline-5 fw-medium">Tra cứu văn bản bổ sung</h5>
+<h5 class="mat-headline-5 fw-medium">Danh sách văn bản bổ sung</h5>
 <div class="table-container">
   <div
     class="my-4 row advance-search px-3 d-flex flex-row justify-content-between"
   >
     <div class="form-group col-md-6" *ngIf="!advanceSearch">
-      <input
-        type="text"
-        name="globalSearch"
-        id="globalSearch"
-        class="form-control small-input fontAwesome mb-3"
-        [(ngModel)]="globalSearch"
-        (keyup)="loadGuidanceDocuments()"
-        pInputText
-        placeholder="&#xF002; Tra cứu nhanh theo tiêu đề hoặc người tạo"
-      />
+      <span class="p-input-icon-left search-with-icon w-100">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          name="globalSearch"
+          id="globalSearch"
+          class="w-100 fw-medium"
+          [(ngModel)]="globalSearch"
+          (keyup)="loadGuidanceDocuments()"
+          pInputText
+          placeholder="Tra cứu nhanh theo tiêu đề hoặc người tạo"
+        />
+      </span>
     </div>
     <div *ngIf="advanceSearch" class="col-md-10">
       <div class="row">
@@ -35,30 +34,12 @@
         </div>
         <div class="col-md-6">
           <label class="fw-medium">Kế hoạch</label>
-          <p-dropdown
-            class="w-100"
-            [options]="issueDropDowns"
-            [(ngModel)]="currentIssueSelected"
-            optionLabel="issueName"
-            [filter]="true"
-            filterBy="issueName"
-            [showClear]="true"
-            placeholder="Chọn 1 kế hoạch kiểm tra"
-            (onChange)="loadGuidanceDocuments()"
+          <p-dropdown class="full-width-dropdown" [options]="issueDropDowns" dataKey="issueId"
+                      [(ngModel)]="currentIssueSelected"    optionLabel="issueName"
+                      [filter]="true" filterBy="issueName" optionValue="issueId" [showClear]="true"
+                      (onChange)="loadGuidanceDocuments()"
+                      placeholder="Chọn 1 kế hoạch thanh tra"
           >
-            <ng-template pTemplate="selectedItem">
-              <div
-                class="flex align-items-center gap-2"
-                *ngIf="currentIssueSelected"
-              >
-                <div>{{ currentIssueSelected.issueName }}</div>
-              </div>
-            </ng-template>
-            <ng-template let-issue pTemplate="item">
-              <div class="flex align-items-center gap-2">
-                <div>{{ issue.issueName }}</div>
-              </div>
-            </ng-template>
           </p-dropdown>
         </div>
       </div>
@@ -77,27 +58,15 @@
     <div *ngIf="advanceSearch" class="col-md-10 mt-2">
       <div class="row">
         <div class="col-md-6">
-          <mat-form-field class="w-100">
-            <mat-label>Khoảng thời gian tạo</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input
-                matStartDate
-                [(ngModel)]="startDateTime"
-                placeholder="Ngày tạo bắt đầu"
-              />
-              <input
-                matEndDate
-                [(ngModel)]="endDateTime"
-                placeholder="Ngày tạo kết thúc"
-                (dateChange)="loadGuidanceDocuments()"
-              />
-            </mat-date-range-input>
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-          </mat-form-field>
+          <label class="fw-medium">Khoảng thời gian tạo</label>
+          <tui-input-date-range
+            class="tui-date"
+            tuiTextfieldSize="m"
+            [(ngModel)]="createDateRange"
+            (ngModelChange)="changeStartDate()"
+
+          >
+          </tui-input-date-range>
         </div>
         <div class="col-md-6">
           <label class="fw-medium">Người tạo</label>
@@ -117,7 +86,7 @@
       *ngIf="advanceSearch"
       class="d-flex justify-content-end align-items-center col-md-2"
     >
-      <button pButton class="reset-button" (click)="reset()">Reset</button>
+      <button pButton class="reset-button" (click)="reset()">Đặt lại</button>
     </div>
     <div
       class="col-md-12 d-flex flex-row justify-content-end align-items-center"

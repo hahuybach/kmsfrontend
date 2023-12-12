@@ -41,6 +41,7 @@ export class IssueListComponent implements OnInit, OnDestroy {
   sub: any[] = [];
   @ViewChild('dt') dt: Table;
   filterVisible: Boolean = false;
+  statuses: any;
   constructor(
     private issueService: IssueService,
     private router: Router,
@@ -51,6 +52,10 @@ export class IssueListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setAuth();
+    this.statuses = [
+      { label: 'Đang tiến hành', value: true },
+      { label: 'Kết thúc', value: false },
+    ];
     const sub = this.issueService.getIssues().subscribe({
       next: (data) => {
         this.data = data;
@@ -124,5 +129,10 @@ export class IssueListComponent implements OnInit, OnDestroy {
       // Reset all column filters
       this.dt.reset();
     }
+  }
+
+
+  validateInput(value: any) {
+
   }
 }

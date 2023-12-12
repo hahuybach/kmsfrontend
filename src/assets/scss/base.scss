@@ -13,3 +13,21 @@ table.table-fit tfoot th,
 table.table-fit tfoot td {
   width: auto !important;
 }
+
+:host ::ng-deep .tui-date{
+  border-radius: 8px;
+  .tui-autofill{
+    box-shadow: none;
+  }
+  input{
+    font-size: 16px !important;
+    padding-top: 0 !important;
+  }
+}
+
+tui-breadcrumbs{
+  a{
+    text-decoration: none;
+    color: $primary;
+  }
+}

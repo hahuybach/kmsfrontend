@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {map, Observable} from "rxjs";
 import {SchoolService} from "../../../../services/school.service";
 import {AccountService} from "../../../../services/account.service";
 import {ToastService} from "../../../../shared/toast/toast.service";
@@ -8,20 +7,36 @@ import {Router} from "@angular/router";
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
 import {validateDateNotGreaterThanToday} from "../../../../shared/validators/date-not-greater-than-today";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import {unSub} from "../../../../shared/util/util";
+
 
 @Component({
   selector: 'app-school-create',
   templateUrl: './school-create.component.html',
   styleUrls: ['./school-create.component.scss']
 })
-export class SchoolCreateComponent implements OnInit {
+export class SchoolCreateComponent implements OnInit, OnDestroy {
   saveSchoolForm: FormGroup;
   isSubmitted: boolean
   isLoading: boolean = false;
   genders: any[] = [{label: 'Nam', value: 'MALE'},
     {label: 'Nữ', value: 'FEMALE'}]
   submitCompleted = false;
+  subs: any[] = []
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách các trường',
+      routerLink: '/school/list',
+    },
+    {
+      caption: 'Tạo mới trường'
+    },
+  ];
 
   constructor(private formBuilder: FormBuilder,
               private accountService: AccountService,
@@ -34,11 +49,11 @@ export class SchoolCreateComponent implements OnInit {
 
   ngOnInit(): void {
     this.saveSchoolForm = this.formBuilder.group({
-      schoolName: ['', Validators.required, [this.validateSchoolNameUnique.bind(this)]],
-      exactAddress: ['', Validators.required],
+      schoolName: ['', [Validators.required, Validators.maxLength(254)], [this.validateSchoolNameUnique.bind(this)]],
+      exactAddress: ['', [Validators.required, Validators.maxLength(254)]],
       isActive: [true, Validators.required],
       email: ['', [Validators.required, Validators.email], [this.validateEmailUnique.bind(this)]],
-      fullName: ['', [NoWhitespaceValidator(), Validators.required]],
+      fullName: ['', [NoWhitespaceValidator(), Validators.required, Validators.maxLength(254)]],
       gender: ['MALE'],
       phoneNumber: [null, [Validators.pattern("^[0-9]{10}$")]],
       dob: [null, validateDateNotGreaterThanToday.bind(this)],
@@ -67,7 +82,7 @@ export class SchoolCreateComponent implements OnInit {
     };
     if (!this.saveSchoolForm.invalid) {
       this.isLoading = true;
-      this.schoolService.saveSchool(saveSchoolRequest)
+      const sub = this.schoolService.saveSchool(saveSchoolRequest)
         .subscribe({
           next: (result) => {
             this.submitCompleted = true;
@@ -81,6 +96,7 @@ export class SchoolCreateComponent implements OnInit {
             console.log(error);
           }
         })
+      this.subs.push(sub)
     }
 
     console.log(saveSchoolRequest);
@@ -94,6 +110,7 @@ export class SchoolCreateComponent implements OnInit {
         (this.saveSchoolForm.get(field)?.touched ?? false) || this.isSubmitted)
     );
   }
+
   checkError(field: string, errorCode: string): boolean | undefined {
     return (
       this.saveSchoolForm.get(field)?.hasError(errorCode) &&
@@ -106,7 +123,7 @@ export class SchoolCreateComponent implements OnInit {
 
     const email = control.value;
     return new Promise<ValidationErrors | null>((resolve, reject) => {
-      this.accountService.isUnique(email).subscribe({
+      const sub = this.accountService.isUnique(email).subscribe({
         next: (result) => {
           console.log(result);
           if (result.isUnique) {
@@ -129,6 +146,7 @@ export class SchoolCreateComponent implements OnInit {
         complete: () => {
         },
       });
+      this.subs.push(sub);
     });
   }
 
@@ -136,7 +154,7 @@ export class SchoolCreateComponent implements OnInit {
 
     const schoolName = control.value;
     return new Promise<ValidationErrors | null>((resolve, reject) => {
-      this.schoolService.isSchoolNameUnique(schoolName).subscribe({
+      const sub = this.schoolService.isSchoolNameUnique(schoolName).subscribe({
         next: (result) => {
           console.log(result);
           if (result.isUnique) {
@@ -159,30 +177,26 @@ export class SchoolCreateComponent implements OnInit {
         complete: () => {
         },
       });
+      this.subs.push(sub);
     });
   }
+
   confirm() {
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận muốn tạo trường này không?',
       header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
-      rejectLabel:'Không',
+      rejectLabel: 'Không',
       accept: () => {
         this.onSubmit()
 
-      },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toastService.showError('toastSchoolCreate', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('toastSchoolCreate', 'Hủy bỏ', 'Bạn đã hủy việc tạo trường');
-            break;
-        }
-      },key: 'updateConfirm'
+      }, key: 'updateConfirm'
     });
+  }
+
+  ngOnDestroy(): void {
+    unSub(this.subs);
   }
 
 }

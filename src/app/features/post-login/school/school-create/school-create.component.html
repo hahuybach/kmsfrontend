@@ -1,4 +1,17 @@
 <div class="container-fluid">
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium">Tạo trường</h5>
   <form [formGroup]="saveSchoolForm" class="row">
     <div class="col-md-6">
@@ -22,6 +35,11 @@
             class="p-error"
             >Tên trường này đã tồn tại</span
           >
+          <span
+                  *ngIf="saveSchoolForm.get('schoolName')?.hasError('maxlength')"
+                  class="p-error"
+          >Tên trường không được vượt quá 254 ký tự</span
+          >
         </div>
       </div>
       <div class="col-md-10">
@@ -38,6 +56,10 @@
           <span *ngIf="isBlank('exactAddress')" class="p-error"
             >Không được để trống mục này</span
           >
+          <span
+                  *ngIf="saveSchoolForm.get('exactAddress')?.hasError('maxlength')"
+                  class="p-error"
+          >Địa chỉ trường không được vượt quá 254 ký tự</span>
         </div>
       </div>
     </div>
@@ -66,7 +88,7 @@
             class="p-error"
             *ngIf="saveSchoolForm.get('email')?.hasError('notUnique')"
           >
-            Email này đã tồn tại vui lòng chọn email khác
+            Email này đã tồn tại, vui lòng chọn email khác
           </span>
         </div>
       </div>
@@ -84,6 +106,11 @@
           />
           <span class="p-error" *ngIf="checkError('fullName', 'whitespace')">
             Không được để trống mục này</span
+          >
+          <span
+                  *ngIf="saveSchoolForm.get('fullName')?.hasError('maxlength')"
+                  class="p-error"
+          >Tên không được vượt quá 254 ký tự</span
           >
         </div>
       </div>

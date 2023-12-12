@@ -1,5 +1,6 @@
-<div *ngIf="unseenNotificationDtos.length > 0; else notificationEmpty">
-  <a class="notification-item p-3 mx-1" *ngFor="let unseenNotification of unseenNotificationDtos; let i = index"
+<div *ngIf="unseenNotificationDtos && unseenNotificationDtos.length > 0; else notificationEmpty">
+  <a class="notification-item p-3 mx-1 my-1"
+     *ngFor="let unseenNotification of unseenNotificationDtos; let i = index"
      (click)="handleCLickNotificationItem(i)">
     <div class="notification-info">
       <p class="mb-1 fw-bold">{{unseenNotification.notificationType}}</p>
@@ -7,6 +8,16 @@
       <p class="mb-1">{{unseenNotification.createdOn  | date : "dd/MM/yyyy | hh:mm"}}</p>
     </div>
     <div class="" *ngIf="!unseenNotification.isSeen">
+      <i class="bi bi-circle-fill"></i>
+    </div>
+  </a>
+  <a class="notification-item p-3 mx-1 my-1" *ngIf="!allNotificationLoaded">
+    <div class="notification-info">
+      <p class="mb-1 tui-skeleton w-75">Quyết định kiểm tra</p>
+      <p class="mb-1 tui-skeleton">Có quyết định kiểm tra mới vừa được tạo</p>
+      <p class="mb-1 tui-skeleton w-50">2023/12/12 | 03:21</p>
+    </div>
+    <div class="skeleton-icon">
       <i class="bi bi-circle-fill"></i>
     </div>
   </a>

@@ -1,6 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { error } from '@angular/compiler-cli/src/transformers/util';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   ConfirmEventType,
@@ -13,6 +19,7 @@ import { Issue } from 'src/app/models/issue.model';
 import { AssignmentService } from 'src/app/services/assignment.service';
 import { IssueService } from 'src/app/services/issue.service';
 import { ToastService } from 'src/app/shared/toast/toast.service';
+import { unSub } from 'src/app/shared/util/util';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 interface TreeNode {
   assignmentId: number;
@@ -33,7 +40,7 @@ interface TreeNode {
   templateUrl: './create-assignment.component.html',
   styleUrls: ['./create-assignment.component.scss'],
 })
-export class CreateAssignmentComponent {
+export class CreateAssignmentComponent implements OnInit, OnDestroy {
   assignments: any[] = [];
   items!: MenuItem[];
   selectedAssignment: any;
@@ -43,6 +50,7 @@ export class CreateAssignmentComponent {
   action: string | undefined;
   issueId: number;
   data: any;
+  sub: any[];
   constructor(
     private toastService: ToastService,
     private fb: FormBuilder,
@@ -64,15 +72,22 @@ export class CreateAssignmentComponent {
         NoWhitespaceValidator(),
       ]),
     ],
-    description: ['', Validators.required],
-    deadline: ['', Validators.required],
-    parentId: ['', Validators.required],
+    description: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
+    deadline: [''],
+    parentId: [''],
   });
   ngOnInit() {
     this.initData();
   }
   initData() {
-    this.assignmentService.getDeptAssignments().subscribe({
+    const method = this.assignmentService.getDeptAssignments().subscribe({
       next: (data) => {
         console.log(data);
         this.data = data;
@@ -87,6 +102,7 @@ export class CreateAssignmentComponent {
         });
       },
     });
+    // this.sub.push(method);
   }
   openDetail(assignment?: any, action?: string) {
     this.assignmentVisible = true;
@@ -124,6 +140,10 @@ export class CreateAssignmentComponent {
     }
   }
   add() {
+    if (this.assignmentForm.invalid) {
+      this.assignmentForm.markAllAsTouched();
+      return;
+    }
     let addedAssignment;
     if (this.action == 'addroot') {
       addedAssignment = {
@@ -146,28 +166,35 @@ export class CreateAssignmentComponent {
       };
     }
     console.log(addedAssignment);
-    this.assignmentService.addDeptAssignment(addedAssignment).subscribe({
-      next: (response) => {
-        this.initData();
-        this.assignmentVisible = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Tạo thành công',
-          detail: 'Tạo thành công',
-        });
-      },
-      error: (error) => {
-        console.log(error);
-        this.assignmentVisible = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Tạo thất bại',
-          detail: error.error.message,
-        });
-      },
-    });
+    const method = this.assignmentService
+      .addDeptAssignment(addedAssignment)
+      .subscribe({
+        next: (response) => {
+          this.initData();
+          this.assignmentVisible = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Tạo thành công',
+            detail: 'Tạo thành công',
+          });
+        },
+        error: (error) => {
+          console.log(error);
+          this.assignmentVisible = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Tạo thất bại',
+            detail: error.error.message,
+          });
+        },
+      });
+    this.sub.push(method);
   }
   update() {
+    if (this.assignmentForm.invalid) {
+      this.assignmentForm.markAllAsTouched();
+      return;
+    }
     const updateAssignment = {
       assignmentId: this.selectedAssignment.assignmentId,
       assignmentName: this.assignmentForm.get('assignmentName')?.value,
@@ -208,7 +235,7 @@ export class CreateAssignmentComponent {
           id: assignment.assignmentId,
         };
         console.log(deleteAssignment);
-        this.assignmentService
+        const method = this.assignmentService
           .deleteDeptAssignment(deleteAssignment)
           .subscribe({
             next: (response) => {
@@ -229,6 +256,7 @@ export class CreateAssignmentComponent {
               });
             },
           });
+        this.sub.push(method);
       },
       reject: (type: any) => {},
     });
@@ -268,25 +296,31 @@ export class CreateAssignmentComponent {
         icon: 'bi bi-exclamation-triangle-fill',
         key: 'confirm',
         accept: () => {
-          this.assignmentService.sendAssignmentsToSchool().subscribe({
-            next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Gửi thành công',
-                detail: 'Gửi template thành công',
-              });
-            },
-            error: (error) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Gửi thất bại',
-                detail: error.error.message,
-              });
-            },
-          });
+          const method = this.assignmentService
+            .sendAssignmentsToSchool()
+            .subscribe({
+              next: () => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Gửi thành công',
+                  detail: 'Gửi template thành công',
+                });
+              },
+              error: (error) => {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Gửi thất bại',
+                  detail: error.error.message,
+                });
+              },
+            });
+          this.sub.push(method);
         },
         reject: (type: any) => {},
       });
     }
+  }
+  ngOnDestroy(): void {
+    unSub(this.sub);
   }
 }

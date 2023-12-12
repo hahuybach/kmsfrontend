@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TaskTreeResponse } from '../../../../models/task-tree-response';
 import { IssueDropDownResponse } from '../../../../models/issue-drop-down-response';
 import { SchoolResponse } from '../../../../models/school-response';
@@ -11,13 +11,14 @@ import { AuthService } from '../../../../services/auth.service';
 import { AssignmentService } from '../../../../services/assignment.service';
 import { Role } from '../../../../shared/enum/role';
 import { DocumentService } from '../../../../services/document.service';
+import { unSub } from '../../../../shared/util/util';
 
 @Component({
   selector: 'app-assignment-tree-list',
   templateUrl: './assignment-tree-list.component.html',
   styleUrls: ['./assignment-tree-list.component.scss'],
 })
-export class AssignmentTreeListComponent implements OnInit {
+export class AssignmentTreeListComponent implements OnInit, OnDestroy {
   taskTrees: TaskTreeResponse[];
   assignmentName: string;
   advanceSearch: boolean = false;
@@ -40,6 +41,7 @@ export class AssignmentTreeListComponent implements OnInit {
   maxPage: any;
   recordPerPageOption: number[] = [5, 15, 25];
   isPrincipal: boolean;
+  subs: any[] = [];
 
   constructor(
     private asmService: AssignmentService,
@@ -62,7 +64,7 @@ export class AssignmentTreeListComponent implements OnInit {
   }
 
   loadDocuments() {
-    this.documentService
+    const sub = this.documentService
       .filterTreeTask(
         this.pageNo,
         this.pageSize,
@@ -87,15 +89,16 @@ export class AssignmentTreeListComponent implements OnInit {
               sortBy: this.sortBy,
               sortDirection: this.sortDirection,
               assignmentName: this.assignmentName,
-              currentIssueSelected: this.currentIssueSelected?.issueId,
+              currentIssueSelected: this.currentIssueSelected,
               advanceSearch: this.advanceSearch,
-              selectedSchool: this.selectedSchool?.schoolId,
               status: this.selectedStatus,
+              schoolId: this.selectedSchool,
             },
             queryParamsHandling: 'merge',
           });
         },
       });
+    this.subs.push(sub);
   }
 
   onAdvanceSearch() {
@@ -125,11 +128,11 @@ export class AssignmentTreeListComponent implements OnInit {
     for (const role of this.auth.getRoleFromJwt()) {
       if (role.authority === Role.PRINCIPAL) {
         this.isPrincipal = true;
-        this.selectedSchool = this.auth.getSchoolFromJwt();
+        this.selectedSchool = this.auth.getSchoolFromJwt().schoolId;
       }
     }
     if (!this.isPrincipal) {
-      this.schoolService.findAllSchools().subscribe({
+      const sub = this.schoolService.findAllSchools().subscribe({
         next: (data) => {
           this.schools = data;
         },
@@ -137,12 +140,12 @@ export class AssignmentTreeListComponent implements OnInit {
           this.toastService.showError('error', 'Lỗi', error.error.message);
         },
       });
+      this.subs.push(sub);
     }
 
-    this.issueService.getIssueDropDownResponse().subscribe({
+    const sub = this.issueService.getIssueDropDownResponse().subscribe({
       next: (result) => {
         this.issueDropDowns = result.issueDropDownBoxDtos;
-        this.currentIssueSelected = this.issueDropDowns.at(0);
         this.initQuery();
         this.loadDocuments();
       },
@@ -150,7 +153,9 @@ export class AssignmentTreeListComponent implements OnInit {
         this.toastService.showError('error', 'Lỗi', error.error.message);
       },
     });
+    this.subs.push(sub);
   }
+
   onSort(sortBy: string) {
     if (this.sortBy === sortBy) {
       // If it is the same column, toggle the sort direction
@@ -166,7 +171,7 @@ export class AssignmentTreeListComponent implements OnInit {
   }
 
   initQuery() {
-    this.activateRouter.queryParams.subscribe((value) => {
+    const sub = this.activateRouter.queryParams.subscribe((value) => {
       if (value['pageNo']) {
         this.pageNo = value['pageNo'];
       }
@@ -186,11 +191,11 @@ export class AssignmentTreeListComponent implements OnInit {
         value['currentIssueSelected'] &&
         value['currentIssueSelected'] !== undefined
       ) {
-        this.currentIssueSelected.issueId = value['currentIssueSelected'];
+        this.currentIssueSelected = Number(value['currentIssueSelected']);
       }
 
-      if (value['selectedSchool'] && value['selectedSchool'] !== undefined) {
-        this.selectedSchool.schoolId = value['selectedSchool'];
+      if (value['schoolId'] && value['schoolId'] !== undefined) {
+        this.selectedSchool = Number(value['schoolId']);
       }
       if (value['advanceSearch']) {
         this.advanceSearch = value['advanceSearch'] == 'true';
@@ -200,11 +205,13 @@ export class AssignmentTreeListComponent implements OnInit {
           this.advanceSearchButtonText = 'Hiện tra cứu nâng cao';
         }
       }
-      if (value['status']) {
-        this.selectedStatus.value = value['status'];
+      if (value['status'] && value['status'] !== undefined) {
+        this.selectedStatus = Number(value['status']);
       }
     });
+    this.subs.push(sub);
   }
+
   maxPageOnKeyUp() {
     if (this.pageNo > this.maxPage) {
       this.pageNo = this.maxPage;
@@ -232,9 +239,9 @@ export class AssignmentTreeListComponent implements OnInit {
     issueId: number | undefined,
     statusId: number | undefined
   ) {
-     {
+    {
       if (this.isPrincipal) {
-        this.router.navigate(['assignassignment/' + issueId]);
+        this.router.navigate(['assign-assignment/' + issueId]);
       } else {
         if (statusId != 15) {
           this.toastService.showError(
@@ -242,12 +249,11 @@ export class AssignmentTreeListComponent implements OnInit {
             'Lỗi',
             'Hồ sơ của trường chưa hoàn thành\nVui lòng không thực hiện thao tác này'
           );
-        }else {
-          this.router.navigate(['detailAssignment'], {
+        } else {
+          this.router.navigate(['detail-assignment'], {
             queryParams: { issueId: issueId, schoolId: schoolId },
           });
         }
-
       }
     }
   }
@@ -255,5 +261,9 @@ export class AssignmentTreeListComponent implements OnInit {
   onTableDataChange($event: number) {
     this.pageNo = $event;
     this.loadDocuments();
+  }
+
+  ngOnDestroy(): void {
+    unSub(this.subs);
   }
 }

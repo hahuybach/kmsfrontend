@@ -1,11 +1,11 @@
 <div class="container-fluid">
   <!-- confirm and message -->
-  <p-toast></p-toast>
+  <p-toast key="toastAssignAssignment"></p-toast>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
     acceptLabel="Đồng ý"
     rejectLabel="Hủy"
-    key="confirmAssignment"
+    key="confirmAssignAssignment"
   ></p-confirmDialog>
   <app-file-loading
     [visible]="isFileLoading"
@@ -13,21 +13,23 @@
   ></app-file-loading>
   <!-- file preview -->
   <p-dialog
-    [(visible)]="pdfLoaded"
-    [style]="{ width: '80vw' }"
+    #pdfDialog
+    header="Xem tài liệu"
+    [(visible)]="pdfPreviewVisibility"
+    [style]="{ width: '90vw', height: '100vh' }"
     [draggable]="false"
     [resizable]="false"
+    [maximizable]="true"
+    [modal]="true"
+    (onHide)="onHideFilePreviewEvent()"
   >
-    <ngx-doc-viewer [url]="fileUrl"></ngx-doc-viewer>
-    <div *ngIf="documentContent">
-      <div [innerHTML]="documentContent"></div>
+    <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+      <div class="spinner-border text-center" role="status"></div>
+      <p>Đang tải...</p>
     </div>
-    <!-- app.component.html -->
-    <!-- <app-document-viewer></app-document-viewer> -->
-
-    <!-- <div *ngIf="pdfLoaded">
-    <iframe [src]="safePdfUrl" width="100%" height="500px"></iframe>
-  </div> -->
+    <ng-template #pdfIsLoaded>
+      <iframe [src]="safePdfUrl" width="100%" height="99%"></iframe>
+    </ng-template>
   </p-dialog>
   <!-- menu -->
   <p-menu
@@ -45,6 +47,7 @@
     [draggable]="false"
     [resizable]="false"
     [modal]="true"
+    (onHide)="uploadFilePopupHideEvent()"
   >
     <form [formGroup]="fileInputForm">
       <div class="row">
@@ -85,22 +88,6 @@
             placeholder="Điền mã tài liệu"
           />
           <br />
-          <div
-            *ngIf="fileInputForm.controls?.['documentCode']?.invalid && (fileInputForm.controls?.['documentCode']?.touched || fileInputForm.controls?.['documentCode']?.dirty)"
-          >
-            <span
-              *ngIf="fileInputForm.controls?.['documentCode']?.errors?.['required'] || fileInputForm.controls?.['documentCode']?.errors?.['whitespace']"
-              class="p-error"
-            >
-              Vui lòng điền mã tài liệu
-            </span>
-            <span
-              *ngIf="fileInputForm.controls?.['documentCode']?.errors?.['maxlength']"
-              class="p-error"
-            >
-              Mã tài liệu quá dài
-            </span>
-          </div>
         </div>
 
         <div class="file-input">
@@ -131,6 +118,17 @@
             (click)="fileInput.click()"
           ></button>
         </div>
+        <div
+          class="padding-none"
+          *ngIf="fileInputForm.controls?.['file']?.invalid && (fileInputForm.controls?.['file']?.touched || fileInputForm.controls?.['file']?.dirty)"
+        >
+          <span
+            *ngIf="fileInputForm.controls?.['file']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng chọn tài liệu
+          </span>
+        </div>
         <div class="mt-3 d-flex justify-content-center align-items-center">
           <button pButton (click)="uploadFiles()">Nộp tài liệu</button>
         </div>
@@ -140,11 +138,12 @@
   <form [formGroup]="assignmentForm">
     <!-- Popup detail/update -->
     <p-dialog
+      #updateDialog
       [header]="
         action === 'update' ? 'Cập nhật công việc' : 'Chi tiết công việc'
       "
       [(visible)]="detailVisible"
-      [style]="{ width: '70vw', height: '1080px' }"
+      [style]="{ width: '70vw' }"
       [draggable]="false"
       [resizable]="false"
       (onHide)="assignmentPopuptHideEvent()"
@@ -173,11 +172,43 @@
                 type="text"
                 formControlName="assignmentName"
               />
+              <div
+                *ngIf="assignmentForm.controls?.['assignmentName']?.invalid && (assignmentForm.controls?.['assignmentName']?.touched || assignmentForm.controls?.['assignmentName']?.dirty)"
+              >
+                <span
+                  *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['required'] || assignmentForm.controls?.['assignmentName']?.errors?.['whitespace']"
+                  class="p-error"
+                >
+                  Vui lòng điền tên công việc
+                </span>
+                <span
+                  *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
+                  class="p-error"
+                >
+                  Mã tài liệu quá dài
+                </span>
+              </div>
             </div>
             <div class="height-100">
               <label class="span-heading-color mb-1">Chi tiết công việc</label>
               <br />
               <textarea pInputTextarea formControlName="description"></textarea>
+              <div
+                *ngIf="assignmentForm.controls?.['description']?.invalid && (assignmentForm.controls?.['description']?.touched || assignmentForm.controls?.['description']?.dirty)"
+              >
+                <span
+                  *ngIf="assignmentForm.controls?.['description']?.errors?.['required'] || assignmentForm.controls?.['description']?.errors?.['whitespace']"
+                  class="p-error"
+                >
+                  Vui lòng điền chi tiết công việc
+                </span>
+                <span
+                  *ngIf="assignmentForm.controls?.['description']?.errors?.['maxlength']"
+                  class="p-error"
+                >
+                  Chi tiết công việc quá dài
+                </span>
+              </div>
             </div>
           </ng-container>
           <ng-template #cannotEdit>
@@ -213,7 +244,20 @@
                   : "Chưa có hạn nộp"
               }}</span
             >
-            <input
+            <tui-input-date
+              *ngIf="
+                action === 'update' &&
+                hasAuthority('canModifyFolderAsmMetaData')
+              "
+              [min]="minDate"
+              [max]="maxDate"
+              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="deadline"
+            >
+            </tui-input-date>
+            <!-- <input
               pInputText
               *ngIf="
                 action === 'update' &&
@@ -221,7 +265,7 @@
               "
               type="date"
               formControlName="deadline"
-            />
+            /> -->
           </div>
           <div
             *ngIf="
@@ -248,7 +292,7 @@
               <div>
                 <div class="d-flex justify-content-between">
                   <div>
-                    <label class="fw-medium mb-1">Tài liệu</label>
+                    <h6 class="mat-headline-6 mb-1">Tài liệu</h6>
                   </div>
                   <div
                     class="add-file-item d-flex align-items-center justify-content-center"
@@ -256,6 +300,11 @@
                   >
                     <i class="bi bi-plus-circle-fill"></i>
                   </div>
+                </div>
+                <div *ngIf="selectedAssignment.documents.length == 0">
+                  <span class="span-heading-color"
+                    >Hiện tại chưa có tài liệu</span
+                  >
                 </div>
                 <ng-container *ngIf="hasAuthority('canSubmit')">
                   <ng-container
@@ -265,45 +314,55 @@
                     "
                   >
                     <div class="row mb-3">
-                      <div class="col-md-11">
-                        <!-- <div (click)="openNewTab(item.documentLink)"> -->
+                      <div
+                        class="file-item col-md-11 py-1 d-flex"
+                        (click)="
+                          openNewTab(item.documentLink, item.fileExtension)
+                        "
+                        pTooltip="{{ item.documentName }}..{{
+                          getFileExtension(item.fileExtension)
+                        }}"
+                        tooltipPosition="top"
+                      >
                         <div
-                          (click)="
-                            previewFile(item.documentLink, item.fileExtension)
-                          "
+                          class="file-item-icon d-flex justify-content-center align-items-center"
                         >
-                          <div class="file-item px-3 py-1 row">
-                            <div
-                              class="col-md-2 file-item-icon ml-5 d-flex justify-content-center align-items-center"
-                            >
-                              <img
-                                [src]="getIconFileType(item.fileExtension)"
-                                alt=""
-                              />
-                            </div>
-                            <div class="col-md-10 file-item-content">
-                              <div class="row ms-2">
-                                <div class="col-md-9">
-                                  <span class="font-weight-bold font-size-18">{{
-                                    item.documentName
-                                  }}</span>
-                                  <br />
-                                  <span
-                                    ><span class="font-weight-bold">Mã:</span>
-                                    {{ item.documentCode }}</span
-                                  >
-                                </div>
-                                <div class="col-md-3">
-                                  <span class="text-black-50">{{
-                                    item.sizeFormat || item.file.size
-                                  }}</span>
-                                  <br />
-                                  <span class="text-black-50">{{
-                                    item.uploadedDate | date : "MM/dd/yyyy"
-                                  }}</span>
-                                </div>
-                              </div>
-                            </div>
+                          <img
+                            [src]="getIconFileType(item.fileExtension)"
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          class="row col-md-10 d-flex align-items-center mb-3"
+                        >
+                          <div class="col-md-8">
+                            <p class="mb-0">
+                              <span class="fw-medium"
+                                >{{ item.documentName }}.{{
+                                  getFileExtension(item.fileExtension)
+                                }}</span
+                              ><span></span>
+                            </p>
+                            <p class="mb-0" *ngIf="item.documentCode">
+                              <span>Mã tài liệu: </span>
+                              <span class="fw-medium">{{
+                                item.documentCode
+                              }}</span>
+                            </p>
+                          </div>
+                          <div class="col-md-4 text-end">
+                            <p class="mb-0">
+                              <!-- <span>Kích thước: </span> -->
+                              <span class="fw-medium">{{
+                                item.sizeFormat || item.file.size
+                              }}</span>
+                            </p>
+                            <p class="mb-0">
+                              <!-- <span>Ngày tạo: </span> -->
+                              <span class="fw-medium">{{
+                                item.uploadedDate | date : "dd/MM/yyyy"
+                              }}</span>
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -311,7 +370,7 @@
                         class="col-md-1 d-flex justify-content-center align-items-center delete-file-item"
                         (click)="removeDoc(i, item.documentId)"
                       >
-                        <i class="bi bi-x-lg"></i>
+                        <i class="bi bi-trash"></i>
                       </div>
                     </div>
                   </ng-container>
@@ -321,7 +380,11 @@
                       hasAuthority('canSubmit')
                     "
                   >
-                    <button pButton (click)="submit()">Xác nhận nộp</button>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <button pButton (click)="submit()">Xác nhận nộp</button>
+                    </div>
                   </ng-container>
                 </ng-container>
               </div>
@@ -330,12 +393,12 @@
               <div>
                 <div class="d-flex justify-content-between">
                   <div class="mb-1">
-                    <span class="text-black-50">Tài liệu</span>
+                    <h6 class="mat-headline-6">Tài liệu</h6>
                   </div>
                 </div>
                 <!-- <br /> -->
                 <div *ngIf="selectedAssignment.documents.length == 0">
-                  <span class="font-weight-bold"
+                  <span class="span-heading-color"
                     >Hiện tại chưa có tài liệu</span
                   >
                 </div>
@@ -348,43 +411,54 @@
                   >
                     <div class="row mb-3">
                       <div
+                        class="file-item py-1 d-flex"
                         (click)="
-                          previewFile(item.documentLink, item.fileExtension)
+                          openNewTab(item.documentLink, item.fileExtension)
                         "
+                        pTooltip="{{ item.documentName }}..{{
+                          getFileExtension(item.fileExtension)
+                        }}"
+                        tooltipPosition="top"
                       >
-                        <div class="file-item px-3 py-1 row">
-                          <div
-                            class="col-md-1 file-item-icon ml-5 d-flex justify-content-center align-items-center"
-                          >
-                            <img
-                              [src]="getIconFileType(item.fileExtension)"
-                              alt=""
-                            />
+                        <div
+                          class="file-item-icon d-flex justify-content-center align-items-center"
+                        >
+                          <img
+                            [src]="getIconFileType(item.fileExtension)"
+                            alt=""
+                          />
+                        </div>
+                        <div
+                          class="row col-md-10 d-flex align-items-center mb-3"
+                        >
+                          <div class="col-md-8">
+                            <p class="mb-0">
+                              <span class="fw-medium"
+                                >{{ item.documentName }}.{{
+                                  getFileExtension(item.fileExtension)
+                                }}</span
+                              ><span></span>
+                            </p>
+                            <p class="mb-0" *ngIf="item.documentCode">
+                              <span>Mã tài liệu: </span>
+                              <span class="fw-medium">{{
+                                item.documentCode
+                              }}</span>
+                            </p>
                           </div>
-                          <div class="col-md-11 file-item-content">
-                            <div class="row ms-2">
-                              <div class="col-md-8">
-                                <span class="font-weight-bold font-size-18"
-                                  >{{ item.documentName }}.{{
-                                    getFileExtension(item.fileExtension)
-                                  }}</span
-                                >
-                                <br />
-                                <span
-                                  ><span class="font-weight-bold">Mã:</span>
-                                  {{ item.documentCode }}</span
-                                >
-                              </div>
-                              <div class="col-md-4">
-                                <span class="text-black-50">{{
-                                  item.sizeFormat || item.file.size
-                                }}</span>
-                                <br />
-                                <span class="text-black-50">{{
-                                  item.uploadedDate | date : "MM/dd/yyyy"
-                                }}</span>
-                              </div>
-                            </div>
+                          <div class="col-md-4 text-end">
+                            <p class="mb-0">
+                              <!-- <span>Kích thước: </span> -->
+                              <span class="fw-medium">{{
+                                item.sizeFormat || item.file.size
+                              }}</span>
+                            </p>
+                            <p class="mb-0">
+                              <!-- <span>Ngày tạo: </span> -->
+                              <span class="fw-medium">{{
+                                item.uploadedDate | date : "dd/MM/yyyy"
+                              }}</span>
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -398,7 +472,9 @@
                     action === 'info'
                   "
                 >
-                  <button pButton (click)="cancel()">Hủy</button>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <button pButton (click)="cancel()">Hủy nộp</button>
+                  </div>
                 </ng-container>
               </div>
             </ng-template>
@@ -411,12 +487,15 @@
               action === 'info'
             "
           >
-            <label class="fw-medium">Danh sách công việc con</label>
-            <ul class="mt-1" *ngFor="let item of selectedAssignment.children">
+            <label class="fw-medium mb-1">Danh sách công việc con</label>
+            <ng-container *ngFor="let item of selectedAssignment.children">
               <div
-                class="row children d-flex justify-content-center align-items-center"
+                class="mb-1 row children d-flex justify-content-center align-items-center"
+                (click)="navigateChildren(item.assignmentId)"
               >
-                <div class="col-md-1">
+                <div
+                  class="col-md-1 d-flex justify-content-center align-items-center"
+                >
                   <ng-container *ngIf="item.task">
                     <i class="bi bi-file-earmark-check-fill file-icon"></i>
                   </ng-container>
@@ -436,7 +515,7 @@
                   </p-tag>
                 </div>
               </div>
-            </ul>
+            </ng-container>
           </div>
 
           <!-- comment and history -->
@@ -487,10 +566,12 @@
                   <div
                     class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(item.creator.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="comment-item-content col-md-10">
                     <span class="font-weight-bold font-size-18"
@@ -521,10 +602,12 @@
                   <div
                     class="history-item-ava col-md-1 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(item.actionCreator.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-11 history-item-content">
                     <span>
@@ -549,7 +632,14 @@
               <div
                 class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
               >
-                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+                <tui-avatar
+                  text="{{
+                    getAvatar(selectedAssignment.assigner?.user.fullName)
+                  }}"
+                  [rounded]="true"
+                  [autoColor]="true"
+                >
+                </tui-avatar>
               </div>
               <div class="col-md-10 d-flex align-items-center">
                 <span class="font-weight-bold">{{
@@ -576,10 +666,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(selectedAssignee?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -596,10 +688,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(option?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -623,10 +717,14 @@
                 <div
                   class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                 >
-                  <img
-                    src="../../../../../../assets/img/user_icon.svg"
-                    alt=""
-                  />
+                  <tui-avatar
+                    text="{{
+                      getAvatar(selectedAssignment.assignee?.user.fullName)
+                    }}"
+                    [rounded]="true"
+                    [autoColor]="true"
+                  >
+                  </tui-avatar>
                 </div>
                 <div class="col-md-10 d-flex align-items-center">
                   <span class="font-weight-bold">{{
@@ -653,27 +751,39 @@
             <!-- </form> -->
           </div>
           <div class="height-100">
-            <span class="text-black-50">Ngày tạo</span>
+            <span class="span-heading-color">Ngày tạo</span>
             <br />
-            <span class="font-weight-bold mt-1">{{
+            <span class="fw-medium mt-1">{{
               selectedAssignment.createdDate | date : "dd/MM/yyyy"
             }}</span>
           </div>
           <div
             *ngIf="action === 'info' && hasAuthority('canCompleteConfirm')"
-            class="height-100"
+            class="approvement"
           >
-            <span class="font-weight-bold">Xác nhận hoàn thành</span>
-            <br />
-            <button pButton (click)="completeOrCancelCF(true)">Xác nhận</button>
+            <div
+              class="approvement-heading p-3 d-flex justify-content-center align-items-center"
+            >
+              <h6 class="mat-headline-6">Xác nhận hoàn thành</h6>
+            </div>
+            <div class="p-3 d-flex justify-content-center align-items-center">
+              <button pButton (click)="completeOrCancelCF(true)">
+                Xác nhận
+              </button>
+            </div>
           </div>
           <div
             *ngIf="action === 'info' && hasAuthority('canCancelConfirm')"
-            class="height-100"
+            class="approvement"
           >
-            <span class="font-weight-bold">Hủy xác nhận hoàn thành</span>
-            <br />
-            <button pButton (click)="completeOrCancelCF(false)">Hủy</button>
+            <div
+              class="approvement-heading p-3 d-flex justify-content-center align-items-center"
+            >
+              <h6 class="mat-headline-6">Hủy xác nhận hoàn thành</h6>
+            </div>
+            <div class="p-3 d-flex justify-content-center align-items-center">
+              <button pButton (click)="completeOrCancelCF(false)">Hủy</button>
+            </div>
           </div>
           <div
             *ngIf="
@@ -681,17 +791,29 @@
               hasAuthority('canEvaluate') &&
               action === 'info'
             "
-            class="height-100 approvement"
+            class="approvement"
           >
-            <h6 class="mat-headline-6">Đánh giá</h6>
-            <div class="d-flex justify-content-between">
+            <div
+              class="approvement-heading p-3 d-flex justify-content-center align-items-center"
+            >
+              <h6 class="mat-headline-6">Đánh giá</h6>
+            </div>
+            <div
+              class="p-3 d-flex"
+              [ngClass]="
+                selectedAssignment.status.statusId == 16
+                  ? 'justify-content-between'
+                  : 'justify-content-center'
+              "
+            >
               <div
                 *ngIf="
                   selectedAssignment.status.statusId == 16 ||
                   selectedAssignment.status.statusId == 17
                 "
               >
-                <button pButton (click)="evaluate(false)">
+                <button class="reject-btn" pButton (click)="evaluate(false)">
+                  <!-- <i class="bi bi-x"></i>  -->
                   Không phê duyệt
                 </button>
               </div>
@@ -701,7 +823,8 @@
                   selectedAssignment.status.statusId == 18
                 "
               >
-                <button class="approve" (click)="evaluate(true)" pButton>
+                <button class="approve-btn" (click)="evaluate(true)" pButton>
+                  <!-- <i class="bi bi-check2"></i>  -->
                   Phê duyệt
                 </button>
               </div>
@@ -731,22 +854,65 @@
               pInputText
               type="text"
               formControlName="assignmentName"
+              placeholder="Điền chi tiết tên công việc"
             />
+            <div
+              *ngIf="assignmentForm.controls?.['assignmentName']?.invalid && (assignmentForm.controls?.['assignmentName']?.touched || assignmentForm.controls?.['assignmentName']?.dirty)"
+            >
+              <span
+                *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['required'] || assignmentForm.controls?.['assignmentName']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền tên công việc
+              </span>
+              <span
+                *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Tên công việc quá dài
+              </span>
+            </div>
           </div>
-          <div class="height-100">
-            <label class="mb-1 fw-medium">Mô tả chi tiết</label>
+          <div class="height-120">
+            <label class="mb-1 fw-medium"
+              >Chi tiết công việc<span class="p-error">*</span></label
+            >
             <br />
             <textarea
               class="mb-1"
               pInputTextarea
               formControlName="description"
+              placeholder="Điền chi tiết công việc"
             ></textarea>
+            <div
+              *ngIf="assignmentForm.controls?.['description']?.invalid && (assignmentForm.controls?.['description']?.touched || assignmentForm.controls?.['description']?.dirty)"
+            >
+              <span
+                *ngIf="assignmentForm.controls?.['description']?.errors?.['required'] || assignmentForm.controls?.['description']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền chi tiết công việc
+              </span>
+              <span
+                *ngIf="assignmentForm.controls?.['description']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Chi tiết công việc quá dài
+              </span>
+            </div>
           </div>
           <div class="height-100">
             <label class="mb-1 fw-medium"
               >Hạn nộp<span class="p-error">*</span></label
             ><br />
-            <input pInputText type="date" formControlName="deadline" />
+            <tui-input-date
+              [min]="minDate"
+              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
+              class="tui-date"
+              tuiTextfieldSize="m"
+              formControlName="deadline"
+            >
+            </tui-input-date>
           </div>
         </div>
 
@@ -754,11 +920,11 @@
           <div class="height-100">
             <label class="mb-1 fw-medium">Thuộc</label>
             <br />
-            <span class="text-black-50">{{
+            <span class="span-heading-color">{{
               selectedAssignment.assignmentName
             }}</span>
           </div>
-          <div class="height-100">
+          <div class="height-120">
             <label class="mb-1 fw-medium"
               >Người làm<span class="p-error">*</span></label
             >
@@ -777,10 +943,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(option?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -794,10 +962,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(option?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -825,31 +995,12 @@
         </div>
       </div>
       <ng-template pTemplate="footer">
-        <button
-          *ngIf="action == 'addchild'"
-          pButton
-          (click)="add()"
-          [disabled]="assignmentForm.controls.assignmentName.errors?.['whitespace'] || 
-        assignmentForm.controls.assigneeId.errors?.['required'] || 
-        assignmentForm.controls.deadline.errors?.['required']  
-        "
-        >
+        <button *ngIf="action == 'addchild'" pButton (click)="add()">
           Tạo mới
         </button>
       </ng-template>
     </p-dialog>
   </form>
-  <!-- Popup file preview -->
-  <p-dialog
-    [(visible)]="pdfLoaded"
-    [style]="{ width: '90vw', height: '1080px' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
-    <div *ngIf="pdfLoaded">
-      <iframe [src]="safePdfUrl" width="100%" height="650px"></iframe>
-    </div>
-  </p-dialog>
 
   <h5 class="mat-headline-5 fw-medium">Danh sách công việc</h5>
   <div class="card">
@@ -860,6 +1011,8 @@
       [style]="{ 'min-width': '50rem' }"
       scrollHeight="600px"
       class="tree-table"
+      (onNodeExpand)="onNodeExpand($event)"
+      (onNodeCollapse)="onNodeCollapse($event)"
     >
       <ng-template pTemplate="caption">
         <div class="d-flex justify-content-between align-items-center">
@@ -875,7 +1028,7 @@
           <th>Người làm</th>
           <th>Hạn nộp</th>
           <th>Trạng thái</th>
-          <th></th>
+          <th class="width-200"></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-rowNode>
@@ -901,7 +1054,12 @@
               <div
                 class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
               >
-                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+                <tui-avatar
+                  text="{{ getAvatar(rowData.node.assignee?.user.fullName) }}"
+                  [rounded]="true"
+                  [autoColor]="true"
+                >
+                </tui-avatar>
               </div>
               <div class="col-md-10 d-flex align-items-center">
                 <span class="font-weight-bold">{{
@@ -929,7 +1087,9 @@
               {{ rowData.node?.status.statusName }}
             </p-tag>
           </td>
-          <td class="d-flex">
+          <td
+            class="d-flex justify-content-around align-items-center width-200"
+          >
             <div
               pTooltip="Chi tiết"
               tooltipPosition="top"

@@ -14,7 +14,7 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
-        "proxyConfig": "src/proxy.conf.json",
+
 
         "build": {
           "builder": "@angular-devkit/build-angular:browser",

@@ -21,7 +21,7 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector || isSchoolNormalEmp"
+          *ngIf="!isAdmin"
         >
           <a class="" [routerLink]="['/issue']">
             <div>
@@ -45,9 +45,8 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isPrincipal || isDirector"
         >
-          <a class="" [routerLink]="['/inspection-plan']">
+          <a class="" [routerLink]="['/inspection-plan']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-file-earmark-person"></i>
               &nbsp; Thanh tra
@@ -66,7 +65,7 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isDirector">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="!(isAdmin || isPrincipal || isSchoolNormalEmp)">
           <a class="" [routerLink]="['/create-template']">
             <div>
               <i class="bi bi-folder-plus"></i>
@@ -79,7 +78,7 @@
           routerLinkActive="active"
           *ngIf="isPrincipal || isSchoolNormalEmp"
         >
-          <a class="" [routerLink]="['/assignassignment/' + issueId]">
+          <a class="" [routerLink]="['/assign-assignment/' + issueId]">
             <div>
               <i class="bi bi-list-check"></i>
               &nbsp; Danh sách công việc
@@ -91,7 +90,7 @@
           routerLinkActive="active"
           *ngIf="isDirector || isPrincipal || isSchoolNormalEmp"
         >
-          <a class="" [routerLink]="['/listAssignment']">
+          <a class="" [routerLink]="['/list-assignment']">
             <div>
               <i class="bi bi-list-check"></i>
               &nbsp; Hồ sơ các năm

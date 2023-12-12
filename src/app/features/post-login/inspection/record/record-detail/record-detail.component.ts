@@ -5,6 +5,7 @@ import {RecordService} from "../../../../../services/record.service";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
 import {ToastService} from "../../../../../shared/toast/toast.service";
 import {Subscription} from "rxjs";
+import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-record-detail',
@@ -22,6 +23,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   documentForm: FormGroup;
   updateDocumentSubmitted: boolean = false;
   updateDocumentCompleted: boolean = false;
+  updateDocumentFailed: boolean = false;
   deleteDocumentSubmitted: boolean = false;
   deleteDocumentCompleted: boolean = false;
   private subscriptions: Subscription[] = [];
@@ -103,7 +105,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
+    if (changes['recordId'] && changes['recordId'].isFirstChange()) {
       return;
     }
     this.initRecordData();
@@ -139,6 +141,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         }, 1000);
       },
       error: (error) => {
+        this.updateDocumentFailed = true;
         this.toastService.showError('deleteInComplete', "Cập nhật tài liệu không thành công", error.error.message);
       }
     })
@@ -147,8 +150,8 @@ export class RecordDetailComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     this.documentForm = this.fb.group({
-      documentName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      documentCode: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
+      documentName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+      documentCode: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
       documentFile: [null, Validators.compose([Validators.required])]
     })
   }

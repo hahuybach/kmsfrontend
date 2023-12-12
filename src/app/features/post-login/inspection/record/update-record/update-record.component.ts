@@ -8,6 +8,9 @@ import {TaskListDto} from "../../../../../models/inspection";
 import {TaskDetailDto} from "../../../../../models/task";
 import {Subscription} from "rxjs";
 import {ToastService} from "../../../../../shared/toast/toast.service";
+import {TuiDay} from "@taiga-ui/cdk";
+import {dateToTuiDay, tuiDayToDate} from "../../../../../shared/util/util";
+import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-update-record',
@@ -20,11 +23,11 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   @Input() updateRecordPopupVisible: boolean;
   @Output() updateRecordPopupVisibleChange = new EventEmitter<boolean>();
   recordForm: FormGroup;
-  startDate: string;
-  endDate: string;
-  defaultDeadline: string;
+  startDate: TuiDay;
+  endDate: TuiDay;
   formSubmitted: boolean = false;
   formCompleted: boolean = false;
+  formFailed: boolean = false;
   task: TaskDetailDto;
   taskId: number;
   inspectionPlan: {
@@ -42,6 +45,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   }
 
   resetUpdateRecordPopupVisible() {
+    this.resetForm();
     this.updateRecordPopupVisibleChange.emit(this.updateRecordPopupVisible);
   }
 
@@ -49,8 +53,8 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     const initInspectionPlan = this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
-        this.startDate = data.inspectionPlan.startDate.slice(0, 10);
-        this.endDate = data.inspectionPlan.endDate.slice(0, 10);
+        this.startDate = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+        this.endDate = dateToTuiDay(new Date(data.inspectionPlan.endDate));
       },
       error: (error) => {
         this.toastService.showError('updateRecordFail', "Không tìm thấy dữ liệu", error.error.message);
@@ -67,14 +71,15 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
 
 
   ngOnInit(): void {
+    this.initInspectionPlan();
+
     this.recordForm = this.fb.group({
-      recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      recordDescription: [null, Validators.compose([Validators.required])],
+      recordName: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required, Validators.maxLength(256)])],
+      recordDescription: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
       assigneeId: [null, Validators.compose([Validators.required])]
     })
 
-    this.initInspectionPlan();
   }
 
   onSubmit() {
@@ -82,11 +87,14 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
       this.recordForm.markAllAsTouched();
       return;
     }
+    const deadline = tuiDayToDate(this.recordForm.get('deadline')?.value);
+    deadline.setUTCHours(0);
+
     const record = {
       taskId: this.taskId,
       taskName: this.recordForm.get('recordName')?.value,
       description: this.recordForm.get('recordDescription')?.value,
-      deadline: new Date(this.recordForm.get('deadline')?.value).toISOString(),
+      deadline: deadline.toISOString(),
       assigneeId: this.recordForm.get('assigneeId')?.value,
     }
 
@@ -98,7 +106,6 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
           this.updateRecordPopupVisible = false;
           this.formCompleted = false;
           this.formSubmitted = false;
-          this.initInspectionPlan();
         },1000)
       },
       error: (error) => {
@@ -113,7 +120,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['recordId'] || changes['recordId'].currentValue === undefined) {
+    if (changes['recordId'] && changes['recordId'].isFirstChange()) {
       return;
     }
     const getRecordData = this.recordService.getRecordById(this.recordId).subscribe({
@@ -123,11 +130,12 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
         this.recordForm.patchValue({
           recordName: this.task.taskName,
           recordDescription: this.task.description,
-          deadline: this.task.deadline.split('T')[0],
+          deadline: dateToTuiDay(new Date(this.task.deadline)),
           assigneeId: this.task.assignee?.accountId
         })
       },
       error: (error) => {
+        this.formFailed = true;
         this.toastService.showError('updateRecordFail', "Không tìm thấy dữ liệu mục kiểm tra", error.error.message);
       }
     })

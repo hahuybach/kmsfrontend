@@ -224,3 +224,13 @@ p-columnFilter[type="numeric"] {
         color: #fff !important;
     }
 }
+
+.search-with-icon{
+  i{
+    color: gray;
+  }
+  input{
+    border-radius: 8px;
+    border: 0.8px solid #CED4DA;
+  }
+}

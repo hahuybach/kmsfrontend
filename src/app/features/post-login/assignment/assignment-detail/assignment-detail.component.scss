@@ -4,6 +4,7 @@
 }
 :host ::ng-deep {
     .folder-icon {
+        font-size: 20px;
         color: rgb(255, 196, 0);
     }
     .file-icon {
@@ -12,12 +13,13 @@
 }
 
 .action-item {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     background-color: $primary;
     border-color: $primary;
     border-radius: 50%;
     font-size: 16px;
+    cursor: pointer;
     &:hover {
         background-color: $primary-hover;
         border-color: $primary-hover;
@@ -29,4 +31,49 @@
 }
 .font-weight-bold {
     font-weight: 500;
+}
+.children {
+    height: 52px;
+    transition: all 0.5s ease;
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(244, 244, 244);
+    }
+}
+.file-item {
+    background-color: #f9fafb;
+    border-radius: 10px;
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    // height: 80px;
+    .file-item-icon {
+        img {
+            width: 100%;
+            height: 100px;
+        }
+    }
+
+    .file-item-content {
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(244, 244, 244);
+    }
+}
+.spinner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .spinner-border {
+        width: 5rem;
+        height: 5rem;
+        color: $primary;
+    }
+    p {
+        color: $primary;
+    }
 }

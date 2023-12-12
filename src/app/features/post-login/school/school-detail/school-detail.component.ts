@@ -30,6 +30,20 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
     Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY];
     sub: any[] = []
 
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách các trường',
+      routerLink: '/school/list',
+    },
+    {
+      caption: 'Chi tiết trường'
+    },
+  ];
+
     constructor(private route: ActivatedRoute,
                 private schoolService: SchoolService,
                 private routeLink: Router,

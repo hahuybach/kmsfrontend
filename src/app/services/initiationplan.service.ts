@@ -3,6 +3,7 @@ import { LoggerService } from './LoggerService';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {DomainName} from "../shared/enum/domain-name";
+import {toIsoString} from "../shared/util/util";
 @Injectable()
 export class InitiationplanService {
   private initiationplanApiUrl =
@@ -41,6 +42,7 @@ export class InitiationplanService {
   filterInitiationPlan(pageNo: number = 0, pageSize: number = 5, sortBy: string = 'createdDate', sortDirection: string = 'asc',
                        planName: string = '', statusId?: any,issue? : any,school? :any,creationStartDateTime? : any,creationEndDateTime?: any,
                        deadlineStartDateTime?: any, deadlineEndDateTime? : any) {
+    console.log("status after service " + statusId);
     let headers = new HttpHeaders();
     let params = new HttpParams()
       .set('pageSize', pageSize.toString())
@@ -52,30 +54,41 @@ export class InitiationplanService {
       params = params.set('pageNo', pageNo)
     }
     if (issue) {
-      params = params.set('issueId', issue.issueId)
+      params = params.set('issueId', issue)
     }
     if (statusId) {
       params = params.set('statusId', statusId)
     }
     if (school) {
-      params = params.set('schoolId', school.schoolId)
+      params = params.set('schoolId', school)
     }
     if (creationStartDateTime) {
-      params = params.set('creationStartDateTime', new Date(creationStartDateTime.toString()).toISOString());
+      params = params.set('creationStartDateTime', toIsoString(creationStartDateTime));
     }
 
     if (creationEndDateTime) {
-      params = params.set('creationEndDateTime', new Date(creationEndDateTime).toISOString());
+      params = params.set('creationEndDateTime', toIsoString(creationEndDateTime));
     }
     if (deadlineStartDateTime) {
-      params = params.set('deadlineStartDateTime', new Date(deadlineStartDateTime).toISOString());
+      params = params.set('deadlineStartDateTime', toIsoString(deadlineStartDateTime));
     }
     if (deadlineEndDateTime) {
-      params = params.set('deadlineEndDateTime', new Date(deadlineEndDateTime).toISOString());
+      params = params.set('deadlineEndDateTime', toIsoString(deadlineEndDateTime));
     }
     console.log(params);
 
     // Make the GET request
     return this.http.get<any>(this.initiationplanApiUrl + 'list', {params, headers});
+  }
+  public deleteDocument(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
+
+    const url = `${this.initiationplanApiUrl}delete_school_document`;
+    return this.http.delete(url, { headers: headers, body: data });
+  }
+  getDashBoardInitiationPlanResponse(issueId: any){
+    return this.http.get<any>(this.initiationplanApiUrl + 'getDashBoardInitiationPlanResponse?issueId=' + issueId);
+
   }
 }

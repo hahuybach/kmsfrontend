@@ -5,14 +5,15 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { IssueService } from '../../../../services/issue.service';
-import { switchMap } from 'rxjs';
-import { FileService } from 'src/app/services/file.service';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { unSub } from 'src/app/shared/util/util';
-import { Dialog } from 'primeng/dialog';
-import { TuiPdfViewerOptions, TuiPdfViewerService } from '@taiga-ui/kit';
+import {ActivatedRoute} from '@angular/router';
+import {IssueService} from '../../../../services/issue.service';
+import {switchMap} from 'rxjs';
+import {FileService} from 'src/app/services/file.service';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {getFirstAndLastName, unSub} from 'src/app/shared/util/util';
+import {Dialog} from 'primeng/dialog';
+import {TuiPdfViewerOptions, TuiPdfViewerService} from '@taiga-ui/kit';
+import {ToastService} from "../../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-issue-detail',
@@ -30,13 +31,34 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
   sub: any[] = [];
   pdfPreviewVisibility: boolean = false;
   @ViewChild('pdfDialog') yourDialog!: Dialog;
+
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch kiểm tra',
+      routerLink: '/issue/list',
+    },
+    {
+      caption: 'Chi tiết kế hoạch kiểm tra'
+    },
+  ];
+  isLoading: boolean = false;
+  submitCompleted: boolean = false;
+  canFinish: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
     private fileService: FileService,
     private sanitizer: DomSanitizer,
-    private readonly pdfService: TuiPdfViewerService
-  ) {}
+    private readonly pdfService: TuiPdfViewerService,
+    private toastService: ToastService
+  ) {
+  }
+
   ngOnInit(): void {
     const sub = this.route.params
       .pipe(
@@ -47,13 +69,17 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
       )
       .subscribe((data) => {
         this.issue = data.issue;
+        this.canFinish = data.issue.canFinish;
+        console.log(data);
         console.log(this.issue);
       });
     this.sub.push(sub);
   }
+
   ngOnDestroy(): void {
     unSub(this.sub);
   }
+
   openNewTab(documentLink: string) {
     this.pdfPreviewVisibility = true;
     console.log(documentLink);
@@ -68,11 +94,13 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
       });
     this.sub.push(sub);
   }
+
   maximizeDialogIfVisible() {
     if (this.pdfPreviewVisibility && this.yourDialog) {
       this.yourDialog.maximize();
     }
   }
+
   togglePopupInvalidDoc() {
     this.invalidDoc = this.issue.documentDtos.filter(
       (document: any) => document.status.statusId === 2
@@ -80,9 +108,30 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
 
     this.popupInvalidDocVisible = true;
   }
+
   onHideFilePreviewEvent() {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+  }
+
+  getAvatar(fullName: string): string {
+    return getFirstAndLastName(fullName);
+  }
+
+  finishIssue() {
+    if (this.canFinish){
+      this.isLoading = true;
+      this.issueService.finishIssue(this.issueId).subscribe({
+        next: (data) => {
+          this.submitCompleted = true;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.toastService.showError('issue-detail', 'Lỗi', error.error.message)
+        }
+      })
+    }
+
   }
 }

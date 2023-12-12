@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { InitiationplanService } from 'src/app/services/initiationplan.service';
-import { IssueDropDownResponse } from '../../../../models/issue-drop-down-response';
-import { SchoolResponse } from '../../../../models/school-response';
-import { SchoolService } from '../../../../services/school.service';
-import { IssueService } from '../../../../services/issue.service';
-import { ToastService } from '../../../../shared/toast/toast.service';
-import { InitiationPlanResponse } from '../../../../models/initiation-plan-response';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../../services/auth.service';
-import { Role } from '../../../../shared/enum/role';
+import {Component, OnInit} from '@angular/core';
+import {InitiationplanService} from 'src/app/services/initiationplan.service';
+import {IssueDropDownResponse} from '../../../../models/issue-drop-down-response';
+import {SchoolResponse} from '../../../../models/school-response';
+import {SchoolService} from '../../../../services/school.service';
+import {IssueService} from '../../../../services/issue.service';
+import {ToastService} from '../../../../shared/toast/toast.service';
+import {InitiationPlanResponse} from '../../../../models/initiation-plan-response';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthService} from '../../../../services/auth.service';
+import {Role} from '../../../../shared/enum/role';
+import {dateToTuiDay, toIsoStringUrl, tuiDayToDate} from "../../../../shared/util/util";
+import {TuiDayRange} from "@taiga-ui/cdk";
 
 @Component({
   selector: 'app-school-initiation-plan-list',
@@ -23,21 +25,23 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   currentIssueSelected: any;
   creationStartDateTime: any;
   creationEndDateTime: any;
-  creationDateError: boolean = false;
   deadlineStartDateTime: any;
   deadlineEndDateTime: any;
-  deadlineDateError: any;
+  createDateRange :any;
+  deadlineDateRange :any;
+
 
   advanceSearchButtonText = 'Hiện tra cứu nâng cao';
   schools: SchoolResponse[];
   selectedSchool: any;
   statuses = [
-    { label: 'Đang thực thi', value: 6 },
-    { label: 'Chờ phê duyệt', value: 7 },
-    { label: 'Phê duyệt', value: 8 },
-    { label: 'Không được phê duyệt', value: 9 },
+    {label: 'Đang thực thi', value: 6},
+    {label: 'Chờ phê duyệt', value: 7},
+    {label: 'Phê duyệt', value: 8},
+    {label: 'Không được phê duyệt', value: 9},
   ];
   selectedStatus: any;
+
   pageNo: number = 1;
   pageSize: number = 5;
   sortBy: string = 'createdDate';
@@ -55,7 +59,8 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     private router: Router,
     private auth: AuthService,
     private activateRouter: ActivatedRoute
-  ) {}
+  ) {
+  }
 
   initQuery() {
     this.activateRouter.queryParams.subscribe((value) => {
@@ -78,22 +83,39 @@ export class SchoolInitiationPlanListComponent implements OnInit {
         value['currentIssueSelected'] &&
         value['currentIssueSelected'] !== undefined
       ) {
-        this.currentIssueSelected.issueId = value['currentIssueSelected'];
+        this.currentIssueSelected = Number(value['currentIssueSelected']);
       }
       if (value['creationStartDateTime']) {
         this.creationStartDateTime = value['creationStartDateTime'];
+        this.createDateRange = new TuiDayRange(
+          dateToTuiDay(new Date(value['creationStartDateTime']))
+          , dateToTuiDay(new Date())
+        )
       }
       if (value['creationEndDateTime']) {
         this.creationEndDateTime = value['creationEndDateTime'];
+        this.createDateRange.to = dateToTuiDay(new Date(value['creationEndDateTime']))
       }
+
       if (value['deadlineStartDateTime']) {
         this.deadlineStartDateTime = value['deadlineStartDateTime'];
+        this.deadlineDateRange = new TuiDayRange(
+          dateToTuiDay(new Date(value['deadlineStartDateTime']))
+          , dateToTuiDay(new Date())
+        )
       }
       if (value['deadlineEndDateTime']) {
         this.deadlineEndDateTime = value['deadlineEndDateTime'];
+        this.deadlineDateRange.to = dateToTuiDay(new Date(value['deadlineEndDateTime']))
+
       }
-      if (value['selectedSchool'] && value['selectedSchool'] !== undefined) {
-        this.selectedSchool.schoolId = value['selectedSchool'];
+
+      if (value['status'] && value['status'] !== undefined) {
+        this.selectedStatus = Number(value['status']) ;
+      }
+      if (value['schoolId'] && value['schoolId'] !== undefined) {
+        this.selectedSchool = Number(value['schoolId']) ;
+
       }
       if (value['advanceSearch']) {
         this.advanceSearch = value['advanceSearch'] == 'true';
@@ -120,7 +142,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     for (const role of this.auth.getRoleFromJwt()) {
       if (role.authority === Role.PRINCIPAL) {
         this.isPrincipal = true;
-        this.selectedSchool = this.auth.getSchoolFromJwt();
+        this.selectedSchool = this.auth.getSchoolFromJwt().schoolId;
       }
     }
     if (!this.isPrincipal) {
@@ -137,7 +159,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     this.issueService.getIssueDropDownResponse().subscribe({
       next: (result) => {
         this.issueDropDowns = result.issueDropDownBoxDtos;
-        this.currentIssueSelected = this.issueDropDowns.at(0);
         this.initQuery();
         this.loadDocuments();
       },
@@ -145,25 +166,12 @@ export class SchoolInitiationPlanListComponent implements OnInit {
         this.toastService.showError('error', 'Lỗi', error.error.message);
       },
     });
+
+
+
   }
 
   loadDocuments() {
-    if (
-      this.creationStartDateTime != null &&
-      this.creationEndDateTime != null &&
-      new Date(this.creationStartDateTime) > new Date(this.creationEndDateTime)
-    ) {
-      this.creationDateError = true;
-      return;
-    }
-    if (
-      this.deadlineStartDateTime != null &&
-      this.deadlineEndDateTime != null &&
-      new Date(this.deadlineStartDateTime) > new Date(this.deadlineEndDateTime)
-    ) {
-      this.deadlineDateError = true;
-      return;
-    }
     this.initiationplanService
       .filterInitiationPlan(
         this.pageNo,
@@ -184,7 +192,6 @@ export class SchoolInitiationPlanListComponent implements OnInit {
           this.schoolInitPlans = data.initiationPlanDtoPage.content;
           this.maxPage = data.initiationPlanDtoPage.totalPages;
           this.totalElements = data.initiationPlanDtoPage.totalElements;
-          console.log(data);
           this.changePageSize();
           this.router.navigate([], {
             relativeTo: this.activateRouter,
@@ -194,21 +201,20 @@ export class SchoolInitiationPlanListComponent implements OnInit {
               sortBy: this.sortBy,
               sortDirection: this.sortDirection,
               planName: this.planName,
-              currentIssueSelected: this.currentIssueSelected?.issueId,
-              creationStartDateTime: this.creationStartDateTime?.toISOString(),
-              creationEndDateTime: this.creationEndDateTime?.toISOString(),
-              deadlineStartDateTime: this.deadlineStartDateTime?.toISOString(),
-              deadlineEndDateTime: this.deadlineEndDateTime?.toISOString(),
+              currentIssueSelected: this.currentIssueSelected,
+              deadlineStartDateTime: toIsoStringUrl(this.deadlineStartDateTime),
+              deadlineEndDateTime: toIsoStringUrl(this.deadlineEndDateTime),
+              creationStartDateTime: toIsoStringUrl(this.creationStartDateTime),
+              creationEndDateTime: toIsoStringUrl(this.creationEndDateTime),
+              schoolId: this.selectedSchool,
               advanceSearch: this.advanceSearch,
-              selectedSchool: this.selectedSchool?.schoolId,
+              status: this.selectedStatus
               // Add other query parameters as needed
             },
             queryParamsHandling: 'merge',
           });
         },
       });
-    this.creationDateError = false;
-    this.deadlineDateError = false;
   }
 
   onAdvanceSearch() {
@@ -235,6 +241,8 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     this.creationEndDateTime = null;
     this.deadlineStartDateTime = null;
     this.deadlineEndDateTime = null;
+    this.createDateRange = null;
+    this.deadlineDateRange = null;
     this.loadDocuments();
   }
 
@@ -285,5 +293,22 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   onTableDataChange($event: number) {
     this.pageNo = $event;
     this.loadDocuments();
+  }
+
+  changeStartDate() {
+    console.log(this.createDateRange.from)
+    console.log(this.createDateRange.to)
+    this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
+    this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
+    this.loadDocuments();
+  }
+
+  changeDeadlineDate() {
+    if (this.deadlineDateRange){
+      this.deadlineStartDateTime = tuiDayToDate(this.deadlineDateRange.from);
+      this.deadlineEndDateTime = tuiDayToDate(this.deadlineDateRange.to);
+      this.loadDocuments();
+    }
+
   }
 }

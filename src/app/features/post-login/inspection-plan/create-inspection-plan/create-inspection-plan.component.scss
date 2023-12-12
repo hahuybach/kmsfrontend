@@ -98,3 +98,13 @@
   }
 }
 
+:host ::ng-deep .p-dialog-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .p-button {
+    margin-left: 30px;
+    width: 150px;
+  }
+}

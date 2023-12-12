@@ -3,7 +3,7 @@ import {
   TuiRootModule,
   TuiDialogModule,
   TuiAlertModule,
-  TUI_SANITIZER,
+  TUI_SANITIZER, TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import { UpdateIssueComponent } from './features/post-login/issue/update-issue/update-issue.component';
 import { InspectorService } from './services/inspector.service';
@@ -42,8 +42,6 @@ import { AuthInterceptor } from './shared/interceptor/auth_interceptor/auth.inte
 import { FormDataService } from './services/formdata.service';
 import { ConfirmationService } from 'primeng/api';
 import { AuthGuard } from './shared/guards/AuthGuard/auth.guard';
-import { IssueListPopUpComponent } from './features/post-login/issue/component/issue-list-pop-up/issue-list-pop-up.component';
-import { IssueListRightSideComponent } from './features/post-login/issue/component/issue-list-right-side/issue-list-right-side.component';
 import { SortByIdPipe } from './shared/pipes/sortByDocumentTypeIdPipe.pipe';
 import { InspectionPlanModule } from './features/post-login/inspection-plan/inspection-plan/inspection-plan.module';
 import { SharedModule } from './shared/shared.module';
@@ -59,10 +57,6 @@ import { ToastModule } from 'primeng/toast';
 import { GuidanceDocumentCreateComponent } from './features/post-login/guidance-document/guidance-document-create/guidance-document-create.component';
 import { AssignmentModule } from './features/post-login/assignment/assignment.module';
 import { SchoolAssignmentModule } from './features/post-login/school-side/assignment/school-assignment.module';
-import { SchoolListComponent } from './features/post-login/school/school-list/school-list.component';
-import { SchoolDetailComponent } from './features/post-login/school/school-detail/school-detail.component';
-import { SchoolCreateComponent } from './features/post-login/school/school-create/school-create.component';
-import { SchoolUpdateComponent } from './features/post-login/school/school-update/school-update.component';
 import { UserListComponent } from './features/post-login/user/user-list/user-list.component';
 import { UserDetailComponent } from './features/post-login/user/user-detail/user-detail.component';
 import { UserCreateComponent } from './features/post-login/user/user-create/user-create.component';
@@ -83,6 +77,9 @@ import { GuidanceDocumentBaseComponent } from './features/post-login/guidance-do
 import { UserBaseComponent } from './features/post-login/user/user-base/user-base.component';
 import { TUI_LANGUAGE, TUI_VIETNAMESE_LANGUAGE } from '@taiga-ui/i18n';
 import { of } from 'rxjs';
+import {TuiUnfinishedValidatorModule} from "@taiga-ui/kit";
+import { IssueInspectorPopupComponent } from './features/post-login/issue/component/issue-inspector-popup/issue-inspector-popup.component';
+import { IssueInspectorListComponent } from './features/post-login/issue/component/issue-inspector-list/issue-inspector-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -98,8 +95,6 @@ import { of } from 'rxjs';
     LoginBaseComponent,
     UpdateIssueComponent,
     PagenotfoundComponent,
-    IssueListPopUpComponent,
-    IssueListRightSideComponent,
     SortByIdPipe,
     GuidanceDocumentListComponent,
     GuidanceDocumentDetailComponent,
@@ -118,6 +113,8 @@ import { of } from 'rxjs';
     InspectionPlanBaseComponent,
     GuidanceDocumentBaseComponent,
     UserBaseComponent,
+    IssueInspectorPopupComponent,
+    IssueInspectorListComponent,
   ],
   imports: [
     BrowserModule,
@@ -145,6 +142,8 @@ import { of } from 'rxjs';
     TuiRootModule,
     TuiDialogModule,
     TuiAlertModule,
+    TuiTextfieldControllerModule,
+    TuiUnfinishedValidatorModule,
   ],
   providers: [
     MessageService,
@@ -167,9 +166,9 @@ import { of } from 'rxjs';
       multi: true,
     },
     provideAnimations(),
-    { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' },
-    { provide: TUI_LANGUAGE, useValue: of(TUI_VIETNAMESE_LANGUAGE) },
-    { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
+    {provide: MAT_DATE_LOCALE, useValue: 'vi-VN'},
+    {provide: TUI_LANGUAGE, useValue: of(TUI_VIETNAMESE_LANGUAGE)},
+    {provide: TUI_SANITIZER, useClass: NgDompurifySanitizer},
   ],
   bootstrap: [AppComponent],
 })

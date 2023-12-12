@@ -80,6 +80,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     const method = this.issueService.getCurrentActiveIssue().subscribe({
       next: (data) => {
+        console.log("current issue" + data);
         this.issueId = data.issueDto.issueId;
       },
       error: (error) => {
