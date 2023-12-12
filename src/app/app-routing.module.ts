@@ -234,12 +234,15 @@ const routes: Routes = [
         ],
       },
       {
-        path: 'assignassignment/:issueId',
+        path: 'assign-assignment/:issueId',
         component: AssignAssignmentComponent,
       },
       {
-        path: 'listAssignment',
+        path: 'list-assignment',
         component: AssignmentTreeListComponent,
+        children: [
+
+        ]
       },
       {
         path: 'detailAssignment',
