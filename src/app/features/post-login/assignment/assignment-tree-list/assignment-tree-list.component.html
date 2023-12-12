@@ -1,7 +1,3 @@
-<link
-  rel="stylesheet"
-  href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css"
-/>
 <p-toast key="error" position="top-right"></p-toast>
 <h5 class="mat-headline-5 fw-medium">Danh sách tài liệu các trường</h5>
 <div class="table-container">
@@ -9,16 +5,19 @@
     class="my-4 row advance-search px-3 d-flex flex-row justify-content-between"
   >
     <div class="form-group col-md-6" *ngIf="!advanceSearch">
-      <input
-        type="text"
-        name="globalSearch"
-        id="globalSearch"
-        class="form-control small-input fontAwesome mb-3"
-        [(ngModel)]="assignmentName"
-        (keyup)="loadDocuments()"
-        pInputText
-        placeholder="&#xF002; Tra cứu nhanh theo tên công việc"
-      />
+      <span class="p-input-icon-left search-with-icon w-100">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          name="globalSearch"
+          id="globalSearch"
+          class="w-100 fw-medium"
+          [(ngModel)]="assignmentName"
+          (keyup)="loadDocuments()"
+          pInputText
+          placeholder="Tra cứu nhanh theo tên công việc"
+        />
+      </span>
     </div>
     <div *ngIf="advanceSearch" class="col-md-10">
       <div class="row">
@@ -37,7 +36,7 @@
         <div class="col-md-6">
           <label class="fw-medium">Kế hoạch</label>
           <p-dropdown class="full-width-dropdown" [options]="issueDropDowns" dataKey="issueId"
-                      [(ngModel)]="currentIssueSelected"    optionLabel="issueName"
+                      [(ngModel)]="currentIssueSelected" optionLabel="issueName"
                       [filter]="true" filterBy="issueName" optionValue="issueId" [showClear]="true"
                       (onChange)="loadDocuments()"
                       placeholder="Chọn 1 kế hoạch thanh tra"
@@ -62,7 +61,7 @@
         <div class="col-md-6">
           <label class="fw-medium">Tên trường</label>
           <p-dropdown class="full-width-dropdown" [options]="schools" dataKey="schoolId"
-                      [(ngModel)]="selectedSchool"    optionLabel="schoolName"
+                      [(ngModel)]="selectedSchool" optionLabel="schoolName"
                       [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
                       (onChange)="loadDocuments()"
                       placeholder="Chọn 1 trường"
@@ -101,77 +100,77 @@
   <div class="table-content">
     <table class="table p-2 table-hover align-middle">
       <thead>
-        <tr>
-          <th (click)="onSort('assignmentName')">
-            <div class="header-container">
-              <span class="icon-text">Tên công việc tổng</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'assignmentName' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="sortBy === 'assignmentName' && sortDirection === 'desc'"
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('issue.createdDate')">
-            <div class="header-container">
-              <span class="icon-text">Kế hoạch kiểm tra</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
+      <tr>
+        <th (click)="onSort('assignmentName')">
+          <div class="header-container">
+            <span class="icon-text">Tên công việc tổng</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="sortBy === 'assignmentName' && sortDirection === 'asc'"
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="sortBy === 'assignmentName' && sortDirection === 'desc'"
+            ></i>
+          </div>
+        </th>
+        <th (click)="onSort('issue.createdDate')">
+          <div class="header-container">
+            <span class="icon-text">Kế hoạch kiểm tra</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="
                   sortBy === 'issue.createdDate' && sortDirection === 'asc'
                 "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="
                   sortBy === 'issue.createdDate' && sortDirection === 'desc'
                 "
-              ></i>
-            </div>
-          </th>
+            ></i>
+          </div>
+        </th>
 
-          <th (click)="onSort('school.schoolName')">
-            <div class="header-container">
-              <span class="icon-text">Trường</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
+        <th (click)="onSort('school.schoolName')">
+          <div class="header-container">
+            <span class="icon-text">Trường</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="
                   sortBy === 'school.schoolName' && sortDirection === 'asc'
                 "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="
                   sortBy === 'school.schoolName' && sortDirection === 'desc'
                 "
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('status')">
-            <div class="header-container">
-              <span class="icon-text">Trạng thái</span>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'status' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="sortBy === 'status' && sortDirection === 'desc'"
-              ></i>
-            </div>
-          </th>
-          <th></th>
-        </tr>
-        <span *ngIf="totalElements == 0"
-          >Không tìm thấy bản ghi nào phù hợp</span
-        >
+            ></i>
+          </div>
+        </th>
+        <th (click)="onSort('status')">
+          <div class="header-container">
+            <span class="icon-text">Trạng thái</span>
+            <i
+              class="bi bi-sort-up"
+              *ngIf="sortBy === 'status' && sortDirection === 'asc'"
+            ></i>
+            <i
+              class="bi bi-sort-down"
+              *ngIf="sortBy === 'status' && sortDirection === 'desc'"
+            ></i>
+          </div>
+        </th>
+        <th></th>
+      </tr>
+      <span *ngIf="totalElements == 0"
+      >Không tìm thấy bản ghi nào phù hợp</span
+      >
       </thead>
       <tbody *ngIf="taskTrees && taskTrees.length > 0">
-        <tr
-          *ngFor="
+      <tr
+        *ngFor="
             let task of taskTrees
               | paginate
                 : {
@@ -181,52 +180,52 @@
                   };
             let i = index
           "
+      >
+        <td
+          class="py-4 px-2"
+          pTooltip="{{ task.rootAssignmentName }}"
+          tooltipPosition="top"
         >
-          <td
-            class="py-4 px-2"
-            pTooltip="{{ task.rootAssignmentName }}"
-            tooltipPosition="top"
-          >
-            {{ task.rootAssignmentName }}
-          </td>
-          <td
-            class="py-4 px-2"
-            pTooltip="{{ task.issue?.issueName }}"
-            tooltipPosition="top"
-          >
-            {{ task.issue?.issueName }}
-          </td>
-          <td
-            class="py-4 px-2"
-            pTooltip="{{ task.school?.schoolName }}"
-            tooltipPosition="top"
-          >
-            {{ task.school?.schoolName }}
-          </td>
-          <td class="py-4 px-2">
-            <p-tag
-              [severity]="
+          {{ task.rootAssignmentName }}
+        </td>
+        <td
+          class="py-4 px-2"
+          pTooltip="{{ task.issue?.issueName }}"
+          tooltipPosition="top"
+        >
+          {{ task.issue?.issueName }}
+        </td>
+        <td
+          class="py-4 px-2"
+          pTooltip="{{ task.school?.schoolName }}"
+          tooltipPosition="top"
+        >
+          {{ task.school?.schoolName }}
+        </td>
+        <td class="py-4 px-2">
+          <p-tag
+            [severity]="
                 getStatusSeverity(task.rootAssignmentStatus?.statusId)
               "
-              [value]="task.rootAssignmentStatus?.statusName"
-            ></p-tag>
-          </td>
-          <td class="py-4 px-2">
-            <button
-              class="action-button"
-              type="button"
-              (click)="
+            [value]="task.rootAssignmentStatus?.statusName"
+          ></p-tag>
+        </td>
+        <td class="py-4 px-2">
+          <button
+            class="action-button"
+            type="button"
+            (click)="
                 onDetail(
                   task.school?.schoolId,
                   task.issue?.issueId,
                   task.rootAssignmentStatus?.statusId
                 )
               "
-            >
-              <i class="bi bi-info-circle-fill"></i>
-            </button>
-          </td>
-        </tr>
+          >
+            <i class="bi bi-info-circle-fill"></i>
+          </button>
+        </td>
+      </tr>
       </tbody>
     </table>
     <div class="d-flex justify-content-center table-footer">

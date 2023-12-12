@@ -15,4 +15,8 @@ export class InspectorService {
     const url = `${this.issueApiUrl}nonInspectors`;
     return this.http.get<any[]>(url);
   }
+  public getInspectorsForIssue(): Observable<any[]> {
+    const url = `${this.issueApiUrl}getInspectorsForIssue`;
+    return this.http.get<any[]>(url);
+  }
 }

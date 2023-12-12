@@ -110,12 +110,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ];
   readonly valueExample = [13769, 12367, 10172, 3018, 2592];
   readonly total = tuiSum(...this.valueExample);
+
+  issueNotFound = false;
   sum(chart: any, index: number): number {
-    return Number.isNaN(index) ? tuiSum(...chart.data) : chart.data[index];
+    if (Number.isNaN(index)) {
+      if (chart && Array.isArray(chart.data)) {
+        return tuiSum(...chart.data);
+      }
+    } else {
+      if (chart && Array.isArray(chart.data) && chart.labels[index]) {
+        return chart.data[index];
+      }
+    }
+    return 0; // Or any other default value if the conditions are not met
   }
 
   label(chart: any, index: number): string {
-    return Number.isNaN(index) ? 'Tổng số' : chart.labels[index];
+    if (Number.isNaN(index)) {
+      return 'Tổng số';
+    } else if (chart && Array.isArray(chart.labels) && chart.labels[index]) {
+      return chart.labels[index];
+    }
+    return ''; // Or any other default value if the conditions are not met
   }
 
   setAuth() {
@@ -289,11 +305,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
               console.log(this.numberOfInspectedSchool);
             },
             error: (error) => {
-              this.toastService.showError(
-                'dashboard-toast',
-                'Lỗi',
-                error.error.message
-              );
+              this.issueNotFound= true;
+
             },
           });
         const sub4 = this.initiationPlanService
@@ -397,6 +410,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               console.log(this.inspectionPlans);
             },
             error: (error) => {
+              this.issueNotFound = true;
               this.toastService.showError(
                 'dashboard-toast',
                 'Lỗi',
@@ -407,11 +421,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.subs.push(sub2);
       },
       error: (error) => {
-        this.toastService.showError(
-          'dashboard-toast',
-          'Lỗi',
-          error.error.message
-        );
+        this.issueNotFound = true;
+
       },
     });
     this.subs.push(sub);
@@ -444,11 +455,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 data.inspectionPlanFilterDtos.totalElements;
             },
             error: (error) => {
-              this.toastService.showError(
-                'dashboard-toast',
-                'Lỗi',
-                error.error.message
-              );
+              this.issueNotFound = true;
+
             },
           });
 

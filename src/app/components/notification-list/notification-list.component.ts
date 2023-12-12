@@ -46,7 +46,8 @@ export class NotificationListComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.notificationItems?.unseen != 0) {
-      this.badgeValue = this.notificationItems?.unseen.toString();
+
+      this.badgeValue = this.notificationItems?.unseen < 99 ? this.notificationItems?.unseen.toString() : "99+";
     } else {
       this.badgeValue = "0";
     }

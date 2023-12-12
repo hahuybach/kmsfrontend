@@ -19,7 +19,7 @@ import { ToastService } from 'src/app/shared/toast/toast.service';
 import { Dialog } from 'primeng/dialog';
 import { TreeTable } from 'primeng/treetable';
 import {
-  dateToTuiDay,
+  dateToTuiDay, getFirstAndLastName,
   toIsoString,
   tuiDayToDate,
   tuiDayToDateNull,
@@ -990,5 +990,9 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     unSub(this.sub);
+  }
+
+  getAvatar(fullName: string):string{
+    return getFirstAndLastName(fullName);
   }
 }

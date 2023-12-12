@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {UserResponseForUserList} from "../../../../models/user-response-for-user-list";
 import {Role} from "../../../../shared/enum/role";
 import {AuthService} from "../../../../services/auth.service";
+import {getFirstAndLastName} from "../../../../shared/util/util";
 
 @Component({
   selector: 'app-user-detail',
@@ -14,7 +15,8 @@ export class UserDetailComponent implements OnInit {
   user: UserResponseForUserList;
   isPrincipal: boolean;
   isAdmin: boolean;
-  isDirector: boolean
+  isDirector: boolean;
+  avatar: string;
   isActives: any[] = [{label: 'Đang hoạt động', value: 'true'},
     {label: 'Ngưng hoạt động', value: 'false'}]
 
@@ -59,7 +61,7 @@ export class UserDetailComponent implements OnInit {
         {
           next: (data) => {
             this.user = data.userDto;
-            console.log(this.user);
+            this.avatar = getFirstAndLastName(this.user.fullName);
           }
         }
       )

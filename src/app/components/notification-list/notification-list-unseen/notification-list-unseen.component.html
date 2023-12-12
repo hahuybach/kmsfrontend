@@ -1,5 +1,5 @@
 <div *ngIf="unseenNotificationDtos.length > 0; else notificationEmpty">
-  <a class="notification-item p-3 mx-1" *ngFor="let unseenNotification of unseenNotificationDtos; let i = index"
+  <a class="notification-item p-3 mx-1 my-1" *ngFor="let unseenNotification of unseenNotificationDtos; let i = index"
      (click)="handleCLickNotificationItem(i)">
     <div class="notification-info">
       <p class="mb-1 fw-bold">{{unseenNotification.notificationType}}</p>

@@ -1,32 +1,25 @@
 <p-dialog header="Thông tin cá nhân"
           [(visible)]="visible"
-          [style]="{width: '40vw', height: '32vw'}"
+          [style]="{width: '55vw', height: '50vh'}"
           (onHide)="resetVisible()"
           [modal]="true"
           [draggable]="false"
 >
   <div class="row" *ngIf="!isUpdate && this.currentUser">
-    <div class="col-md-6">
-      <div>
-        <div class="mb-3">
-          <label class="span-heading-color mb-2">Tên</label>
-          <p class="fw-medium">{{this.currentUser.fullName}}</p>
-        </div>
-        <div class="mb-3">
-          <label class="span-heading-color mb-2">Số điện thoại</label>
-          <p class="fw-medium">{{this.currentUser.phoneNumber}}</p>
-        </div>
-        <div class="mb-3">
-          <label class="span-heading-color mb-2">Giới tính</label>
-          <p class="fw-medium">{{this.currentUser.gender == "MALE" ? "Nam" : "Nữ"}}</p>
-        </div>
-        <div class="mb-3">
-          <label class="span-heading-color mb-2">Năm sinh</label>
-          <p class="fw-medium">{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
-        </div>
+    <div class="col-md-5 d-flex flex-column justify-content-between">
+      <div class="col-md-12 d-flex justify-content-center">
+        <tui-avatar
+          text="{{this.avatar}}"
+          [rounded]="true"
+          [autoColor]="true"
+          [size]="'xxl'"
+        ></tui-avatar>
+      </div>
+      <div class="col-md-12 text-center">
+        <p class="fw-medium user-name mt-4 mb-0">{{this.currentUser.fullName}}</p>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4 d-flex justify-content-between flex-column">
       <div class="mb-3">
         <label class="span-heading-color mb-2">Email</label>
         <p class="fw-medium">{{this.currentUser.email}}</p>
@@ -35,70 +28,73 @@
         <label class="span-heading-color mb-2">Đơn vị</label>
         <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
       </div>
-      <div class="mb-3">
+      <div class="">
         <label class="span-heading-color mb-2">Chức vụ</label>
-        <p class="fw-medium">
+        <p class="fw-medium mb-0">
           <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
             {{ role.role?.roleName }}{{ last ? '' : ';' }}
           </ng-container>
         </p>
+      </div>
+    </div>
+    <div class="col-md-3 d-flex justify-content-between flex-column">
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Số điện thoại</label>
+        <p class="fw-medium">{{this.currentUser.phoneNumber}}</p>
+      </div>
+      <div class="mb-3">
+        <label class="span-heading-color mb-2">Giới tính</label>
+        <p class="fw-medium">{{this.currentUser.gender == "MALE" ? "Nam" : "Nữ"}}</p>
+      </div>
+      <div class="">
+        <label class="span-heading-color mb-2">Năm sinh</label>
+        <p class="fw-medium mb-0">{{this.currentUser.dob  | date : "dd/MM/yyyy"}}</p>
       </div>
     </div>
   </div>
   <div class="row" *ngIf="isUpdate && this.currentUser" [formGroup]="form">
-    <div class="col-md-6">
-      <div class="mb-2">
-        <label class="fw-medium mb-1">Tên</label>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="fw-medium mb-2">Tên</label>
         <input type="text" pInputText formControlName='fullName' class="form-control">
         <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
-        <span class="p-error" *ngIf="this.form.get('fullName')?.hasError('maxlength')">Tên không được quá 254 ký tự</span>
+        <span class="p-error"
+              *ngIf="this.form.get('fullName')?.hasError('maxlength')">Tên không được quá 254 ký tự</span>
       </div>
-      <div class="mb-2">
-        <label class="fw-medium mb-1">Số điện thoại</label>
+      <div class="col-md-6">
+        <label class="fw-medium mb-2">Số điện thoại</label>
         <input pInputText type="text" formControlName='phoneNumber' class="form-control">
         <span class="p-error" *ngIf="isError('phoneNumber', 'pattern')">Sai định dạng số điện thoại</span>
         <span class="p-error" *ngIf="isBlank('phoneNumber')">Mục này không được trống</span>
       </div>
-      <div class="mb-2">
-        <label class="fw-medium mb-1">Giới tính</label>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="fw-medium mb-2">Giới tính</label>
         <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
       </div>
-      <div class="mb-2">
-        <label class="fw-medium mb-1">Năm sinh</label>
+      <div class="col-md-6">
+        <label class="fw-medium mb-2">Năm sinh</label>
         <input pInputText type="date" formControlName='dob' class="form-control">
         <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <label class="span-heading-color mb-2">Email</label>
-        <p class="fw-medium">{{this.currentUser.email}}</p>
-      </div>
-      <div class="mb-3">
-        <label class="span-heading-color mb-2">Đơn vị</label>
-        <p class="fw-medium">{{this.currentUser.school?.schoolName}}</p>
-      </div>
-      <div class="mb-3">
-        <label class="span-heading-color mb-2">Chức vụ</label>
-        <p class="fw-medium">
-          <ng-container *ngFor="let role of this.currentUser.accountRoles; let last = last">
-            {{ role.role?.roleName }}{{ last ? '' : ';' }}
-          </ng-container>
-        </p>
-      </div>
-    </div>
   </div>
-  <div class="row d-flex justify-content-center mt-3">
-    <div class="col-md-6 action-button" *ngIf="!isUpdate">
-      <button pButton class="mb-3 justify-content-center py-2" (click)="onUpdate()">Cập nhật thông tin</button>
-      <button pButton class="justify-content-center py-2" (click)="onClickChangePassword()">Đổi mật khẩu</button>
-    </div>
-    <div class="col-md-8 d-flex flex-row confirm-button" *ngIf="isUpdate">
-      <div class="col-md-6">
-        <button class="py-2" pButton (click)="confirm()">Cập nhật</button>
+  <div class="row mt-3">
+    <div class="col-md-12 action-button d-flex flex-row justify-content-between mt-1" *ngIf="!isUpdate">
+      <div class="col-md-6 text-center">
+        <button pButton class="justify-content-center py-2 w-75" (click)="onUpdate()">Cập nhật thông tin</button>
       </div>
-      <div class="col-md-6 text-end">
-        <button class="reset-button py-2" pButton (click)="onUpdate()">Hủy cập nhập</button>
+      <div class="col-md-6 text-center">
+        <button pButton class="justify-content-center py-2 w-75" (click)="onClickChangePassword()">Đổi mật khẩu</button>
+      </div>
+    </div>
+    <div class="col-md-12 action-button d-flex flex-row justify-content-between mt-2" *ngIf="isUpdate">
+      <div class="col-md-6 text-center">
+        <button class="justify-content-center py-2 w-75" pButton (click)="confirm()">Cập nhật</button>
+      </div>
+      <div class="col-md-6 text-center">
+        <button class="reset-button justify-content-center py-2 w-75" pButton (click)="onUpdate()">Hủy cập nhập</button>
       </div>
     </div>
   </div>

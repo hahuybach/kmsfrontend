@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {InspectionplanInspectorlistService} from "../../../../../services/inspectionplan-inspectorlist.service";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import {getFirstAndLastName} from "../../../../../shared/util/util";
 
 @Component({
   selector: 'app-issue-inspector-list',
@@ -30,7 +31,7 @@ export class IssueInspectorListComponent {
 
   confirmDeleteRemainingInspector(index: number) {
     this.confirmationService.confirm({
-      message: 'Xóa thanh tra này sẽ khiến danh sách danh tra bị xóa do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
+      message: 'Xóa thanh tra này sẽ xóa danh sách do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
       header: 'Xác nhận xóa thanh tra',
       key: 'confirmDeleteRemainingInspector',
       icon: 'bi bi-exclamation-triangle',
@@ -89,15 +90,14 @@ export class IssueInspectorListComponent {
   onDeleteInspector(index: number) {
     let tempSelectedInspectors = this.selectedInspectors.slice();
     tempSelectedInspectors.splice(index, 1);
-    if (!this.isEligibleInspectorExist(tempSelectedInspectors)) {
-      this.confirmDeleteRemainingInspector(index);
-    } else {
-      this.confirmDeleteInspector(index);
-    }
   }
 
   deleteInspector(index: number) {
     this.inspectionplanInspectorService.deleteFromInspectorList(this.selectedInspectors[index]);
+  }
+
+  getAvatar(fullName: string){
+    return getFirstAndLastName(fullName);
   }
 
   onReset() {

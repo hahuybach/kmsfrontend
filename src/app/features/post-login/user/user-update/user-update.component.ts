@@ -9,7 +9,7 @@ import {ToastService} from "../../../../shared/toast/toast.service";
 import {AuthService} from "../../../../services/auth.service";
 import {RoleService} from "../../../../services/role.service";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
-import {unSub} from "../../../../shared/util/util";
+import {getFirstAndLastName, unSub} from "../../../../shared/util/util";
 
 @Component({
   selector: 'app-user-update',
@@ -23,6 +23,7 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
   roles: RoleResponse[];
   selectedRole: RoleResponse;
   isSubmitted: boolean = false
+  avatar: string;
   updateForm = this.fb.group({
     userId: [-1, Validators.required],
     isActive: [true, Validators.required],
@@ -68,6 +69,7 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
         {
           next: (data) => {
             this.user = data.userDto;
+            this.avatar = getFirstAndLastName(this.user.fullName);
             this.setRoles()
 
             console.log(this.user);

@@ -14,13 +14,35 @@ export function dateToTuiDay(date: Date): TuiDay {
   const year = date.getFullYear();
   return new TuiDay(year, month, day);
 }
-export function tuiDayToDate(date: TuiDay): Date{
+
+export function dateToTuiDayU(date: Date | undefined): TuiDay {
+  const validDate = date ?? new Date();
+
+  const day = validDate.getDate();
+  const month = validDate.getMonth();
+  const year = validDate.getFullYear();
+
+  return new TuiDay(year, month, day);
+}
+
+
+export function tuiDayToDate(date: TuiDay): Date {
   const day = date.day + 1;
   const month = date.month;
   const year = date.year;
   return new Date(year, month, day);
 }
 
+export function getFirstAndLastName(fullName: any): string {
+  const nameArray: string[] = fullName.split(" ");
+  if (nameArray.length <= 1){
+    return nameArray[0];
+  }
+  const firstName = nameArray[0];
+  const lastName = nameArray[nameArray.length - 1];
+
+  return firstName.concat(" ", lastName);
+}
 export function toIsoString(string: any) {
   let date = new Date(string);
   date.setDate(date.getDate() + 1)
