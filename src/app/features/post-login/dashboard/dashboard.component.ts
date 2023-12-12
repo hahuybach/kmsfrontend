@@ -101,6 +101,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   index = NaN;
   index_inspection = NaN;
   index_init = NaN;
+  index_asm = NaN;
   private readonly labelsExample = [
     'Food',
     'Cafe',
@@ -108,14 +109,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     'Taxi',
     'other',
   ];
-  readonly valueExample = [13769, 12367, 10172, 3018, 2592];
-  readonly total = tuiSum(...this.valueExample);
 
   issueNotFound = false;
   sum(chart: any, index: number): number {
     if (Number.isNaN(index)) {
       if (chart && Array.isArray(chart.data)) {
-        return tuiSum(...chart.data);
+        return this.sumArray(chart.data);
       }
     } else {
       if (chart && Array.isArray(chart.data) && chart.labels[index]) {
@@ -222,61 +221,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   setAsmChartData() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    this.value = [
-      this.numberOfNotCompletedAsm,
-      this.numberOfCompletedAsm,
-      this.numberWaitingForApprovalAsm,
-      this.numberApprovedAsm,
-      this.numberDisApprovedAsm,
-    ];
     this.asmChartData = {
       labels: [
         'Chưa hoàn thành',
+        'Chờ phê duyệt',
         'Hoàn thành',
-        'Đang chờ phê duyệt',
-        'Phê duyệt',
         'Không phê duyệt',
+        // 'Phê duyệt',
       ],
-      datasets: [
-        {
-          data: [
-            this.numberOfNotCompletedAsm,
-            this.numberOfCompletedAsm,
-            this.numberWaitingForApprovalAsm,
-            this.numberApprovedAsm,
-            this.numberDisApprovedAsm,
-          ],
-          backgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--red-500'),
-            documentStyle.getPropertyValue('--black-500'),
-          ],
-
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue('--blue-500'),
-            documentStyle.getPropertyValue('--yellow-500'),
-            documentStyle.getPropertyValue('--green-500'),
-            documentStyle.getPropertyValue('--red-500'),
-            documentStyle.getPropertyValue('--black-500'),
-          ],
-        },
+      data: [
+        this.numberOfNotCompletedAsm,
+        this.numberWaitingForApprovalAsm,
+        this.numberOfCompletedAsm + this.numberApprovedAsm,
+        this.numberDisApprovedAsm,
       ],
     };
-
-    this.amsChartOptions = {
-      cutout: '60%',
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor,
-          },
-        },
-      },
-    };
+    console.log(this.asmChartData);
   }
 
   setInitDataForDirector() {
@@ -305,8 +265,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               console.log(this.numberOfInspectedSchool);
             },
             error: (error) => {
-              this.issueNotFound= true;
-
+              this.issueNotFound = true;
             },
           });
         const sub4 = this.initiationPlanService
@@ -422,7 +381,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.issueNotFound = true;
-
       },
     });
     this.subs.push(sub);
@@ -456,7 +414,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
               this.issueNotFound = true;
-
             },
           });
 
@@ -680,5 +637,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   viewGuidanceDocumentDetail(guidanceDocumentId: any) {
     this.router.navigate(['guidance-document/' + guidanceDocumentId]);
+  }
+  sumArray<T>(array: T[]): number {
+    if (array.length === 0) {
+      return 0; // Return 0 for an empty array or an appropriate value for your use case
+    }
+
+    // Use the reduce function to calculate the sum
+    return array.reduce((acc, value) => {
+      if (typeof value === 'number') {
+        return acc + value;
+      } else {
+        // Handle non-numeric values (e.g., strings)
+        return acc;
+      }
+    }, 0);
   }
 }

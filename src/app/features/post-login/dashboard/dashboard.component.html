@@ -100,7 +100,10 @@
     </div>
     <div class="row mt-4">
       <div class="col-md-4">
-        <p *ngIf="issueNotFound">Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng kế hoạch thanh tra</p>
+        <p *ngIf="issueNotFound">
+          Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng
+          kế hoạch thanh tra
+        </p>
         <div class="card p-3" *ngIf="inspectionPlanDataChart">
           <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thanh tra</h6>
           <div class="row">
@@ -142,7 +145,10 @@
           ></p-chart> -->
         </div>
       </div>
-      <p *ngIf="issueNotFound">Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng kế hoạch thực hiện nhiệm vụ</p>
+      <p *ngIf="issueNotFound">
+        Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng
+        kế hoạch thực hiện nhiệm vụ
+      </p>
       <div class="col-md-4" *ngIf="initiationPlanDataChart">
         <div class="card p-3">
           <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thực hiện</h6>
@@ -190,7 +196,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Tạo văn bản bổ sung</span>
+                  <span>Tạo văn bản bổ sung</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -202,7 +208,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Cuộc thanh tra của tôi</span>
+                  <span>Cuộc thanh tra của tôi</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -214,7 +220,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Xem văn bản các trường</span>
+                  <span>Xem văn bản các trường</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -226,7 +232,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Xem mẫu hồ sơ</span>
+                  <span>Xem mẫu hồ sơ</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -241,67 +247,9 @@
   </ng-container>
   <!-- SPECIALIST -->
   <ng-container *ngIf="isSpecialist">
-    <div class="col-md-4">
-      <label class="fw-medium">Trạng thái</label>
-      <p-dropdown
-        placeholder="Chọn 1 trạng thái"
-        [options]="inspectionPlanStatuses"
-        [(ngModel)]="inspectionPlanSelectedStatus"
-        [showClear]="true"
-        (onChange)="loadInspectionPlan()"
-        dataKey="value"
-        optionValue="value"
-      >
-        <ng-template let-status pTemplate="item">
-          <p-tag
-            [rounded]="true"
-            [severity]="getStatusSeverity(status.value)"
-            [value]="status.label"
-          ></p-tag>
-        </ng-template>
-      </p-dropdown>
-    </div>
-    <table class="table table-striped">
-      <tr>
-        <th>Phiên thanh tra</th>
-        <th>Tổng số: {{ totalNumberOfInspectionPlan }}</th>
-      </tr>
-      <tbody *ngIf="inspectionPlans && inspectionPlans.length > 0">
-        <tr *ngFor="let plan of inspectionPlans; let i = index">
-          <td>{{ plan.inspectionPlanName }}</td>
-          <td>
-            <p-tag
-              [rounded]="true"
-              [severity]="getStatusSeverity(plan?.status?.statusId)"
-              [value]="plan.statusName"
-            ></p-tag>
-          </td>
-
-          <td>
-            <button
-              pButton
-              (click)="viewInspectionDetail(plan.inspectionPlanId)"
-            >
-              Xem chi tiết
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button pButton (click)="viewMyInspection()">Xem thêm</button>
-
-    <div>
-      <button pButton (click)="viewIssueDetail()">
-        Xem kế hoạch kiểm tra năm
-      </button>
-      <button pButton (click)="viewTemplate()">Xem mẫu hồ sơ</button>
-    </div>
-  </ng-container>
-  <!-- PRINCIPAL -->
-  <ng-container *ngIf="isPrincipal">
     <div class="row">
       <div class="col-md-4">
-        <div class="card p-3">
+        <div class="card p-3 h-100">
           <div class="row">
             <div class="col-md-6 mb-2">
               <label class="fw-medium fs-18">Phiên thanh tra của bạn</label>
@@ -329,9 +277,12 @@
             <div class="col-md-6">
               <label class="fw-medium">Tên</label>
             </div>
-            <div class="col-md-6">
-              <label class="fw-medium"
+            <div class="col-md-6 d-flex justify-content-end">
+              <!-- <label class="fw-medium"
                 >Tổng số: {{ totalNumberOfInspectionPlan }}</label
+              > -->
+              <span class="redirect-link" (click)="viewMyInspection()"
+                >Xem thêm</span
               >
             </div>
             <div class="row">
@@ -366,7 +317,7 @@
               </ng-container>
 
               <ng-template #noInspecPlan>
-                <div class="col-md-12">
+                <div class="col-md-12 mt-2">
                   <label class="fw-medium color-gray"
                     >Không có phiên thanh tra
                   </label>
@@ -374,113 +325,309 @@
               </ng-template>
             </div>
           </div>
+          <div class="d-flex justify-content-end"></div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card p-3">
-          <div class="row">
-            <div class="col-md-6">
-              <label class="fw-medium fs-18">Công việc hiện tại</label>
-            </div>
-            <div class="col-md-6">
-              <label class="fw-medium">Trạng thái</label>
+        <div class="card p-3 h-100">
+          <label class="fw-medium fs-18 mb-3">Truy cập nhanh</label>
+          <div>
+            <div class="card mb-2 shortcut-item" (click)="viewIssueDetail()">
+              <div
+                class="p-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <span>Xem kế hoạch kiểm tra năm</span>
+                </div>
+                <div class="shortcut-icon">
+                  <i class="bi bi-caret-right-fill"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-4"></div>
     </div>
-    <div class="col-md-4">
-      <label class="fw-medium">Trạng thái</label>
-      <p-dropdown
-        placeholder="Chọn 1 trạng thái"
-        [options]="statuses"
-        [(ngModel)]="selectedStatus"
-        [showClear]="true"
-        (onChange)="loadAsm()"
-        dataKey="value"
-        optionValue="value"
-      >
-        <ng-template let-status pTemplate="item">
-          <p-tag
-            [rounded]="true"
-            [severity]="getStatusSeverity(status.value)"
-            [value]="status.label"
-          ></p-tag>
-        </ng-template>
-      </p-dropdown>
-
-      <table class="table table-striped">
-        <tr>
-          <th>Công việc hiện tại</th>
-          <th>Tổng số: {{ totalNumberOfAsm }}</th>
-        </tr>
-        <tbody *ngIf="taskTrees && taskTrees.length > 0">
-          <tr *ngFor="let task of taskTrees; let i = index">
-            <td>{{ task.rootAssignmentName }}</td>
-            <td>
-              <p-tag
-                [severity]="
-                  getStatusSeverity(task?.rootAssignmentStatus?.statusId)
+  </ng-container>
+  <!-- PRINCIPAL -->
+  <ng-container *ngIf="isPrincipal">
+    <div class="row height-row-principal">
+      <div class="col-md-4">
+        <div class="card p-3 h-100">
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <label class="fw-medium fs-18">Phiên thanh tra của bạn</label>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="fw-medium">Trạng thái</label>
+              <p-dropdown
+                placeholder="Chọn 1 trạng thái"
+                [options]="inspectionPlanStatuses"
+                [(ngModel)]="inspectionPlanSelectedStatus"
+                [showClear]="true"
+                (onChange)="loadInspectionPlan()"
+                dataKey="value"
+                optionValue="value"
+              >
+                <ng-template let-status pTemplate="item">
+                  <p-tag
+                    [rounded]="true"
+                    [severity]="getStatusSeverity(status.value)"
+                    [value]="status.label"
+                  ></p-tag>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div class="col-md-6">
+              <label class="fw-medium">Tên</label>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+              <!-- <label class="fw-medium"
+                >Tổng số: {{ totalNumberOfInspectionPlan }}</label
+              > -->
+              <span class="redirect-link" (click)="viewMyInspection()"
+                >Xem thêm</span
+              >
+            </div>
+            <div class="row">
+              <ng-container
+                *ngIf="
+                  inspectionPlans && inspectionPlans.length > 0;
+                  else noInspecPlan
                 "
-                [value]="task?.rootAssignmentStatus?.statusName"
-              ></p-tag>
-            </td>
+              >
+                <ng-container
+                  *ngFor="let plan of inspectionPlans; let i = index"
+                >
+                  <div class="col-md-6 td-content">
+                    <span>{{ plan.inspectionPlanName }}</span>
+                  </div>
+                  <div class="col-md-4">
+                    <p-tag
+                      [rounded]="true"
+                      [severity]="getStatusSeverity(plan?.status?.statusId)"
+                      [value]="plan.statusName"
+                    ></p-tag>
+                  </div>
+                  <div class="col-md-2">
+                    <button
+                      pButton
+                      (click)="viewInspectionDetail(plan.inspectionPlanId)"
+                    >
+                      Xem chi tiết
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
 
-            <td>
-              <button pButton (click)="viewAsmDetail(task.rootAssignmentId)">
-                Xem chi tiết
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <ng-template #noInspecPlan>
+                <div class="col-md-12 mt-2">
+                  <label class="fw-medium color-gray"
+                    >Không có phiên thanh tra
+                  </label>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end"></div>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="card p-3 h-100">
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <label class="fw-medium fs-18">Công việc hiện tại</label>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="fw-medium">Trạng thái</label>
+              <p-dropdown
+                placeholder="Chọn 1 trạng thái"
+                [options]="statuses"
+                [(ngModel)]="selectedStatus"
+                [showClear]="true"
+                (onChange)="loadAsm()"
+                dataKey="value"
+                optionValue="value"
+              >
+                <ng-template let-status pTemplate="item">
+                  <p-tag
+                    [rounded]="true"
+                    [severity]="getStatusSeverity(status.value)"
+                    [value]="status.label"
+                  ></p-tag>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="fw-medium">Tên</label>
+            </div>
+            <div class="col-md-6 mb-2 d-flex justify-content-end">
+              <!-- <label class="fw-medium">Trạng thái</label> -->
+              <span class="redirect-link" (click)="viewMyInspection()"
+                >Xem thêm</span
+              >
+            </div>
+            <ng-container *ngIf="taskTrees && taskTrees.length > 0">
+              <ng-container *ngFor="let task of taskTrees; let i = index">
+                <div class="row mb-2">
+                  <div
+                    class="col-md-6 td-content"
+                    pTooltip="{{ task.rootAssignmentName }}"
+                    tooltipPosition="top"
+                  >
+                    <span>{{ task.rootAssignmentName }}</span>
+                  </div>
+                  <div class="col-md-4">
+                    <p-tag
+                      [rounded]="true"
+                      [severity]="
+                        getStatusSeverity(task?.rootAssignmentStatus?.statusId)
+                      "
+                      [value]="task?.rootAssignmentStatus?.statusName"
+                    ></p-tag>
+                  </div>
+                  <div class="col-md-2 d-flex justify-content-end">
+                    <button
+                      pButton
+                      class="action-item d-flex justify-content-center align-items-center"
+                      (click)="viewAsmDetail(task.rootAssignmentId)"
+                    >
+                      <i class="bi bi-info-circle-fill"></i>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
 
-    <div>
-      <p>Lối tắt</p>
-      <button pButton (click)="viewIssueDetail()">
-        Xem kế hoạch kiểm tra năm
-      </button>
-      <button pButton (click)="viewAsmTree()">Xem danh sách công việc</button>
-      <button pButton (click)="viewSchoolInspection()">
-        Xem thanh tra ở trường bạn
-      </button>
-    </div>
-
-      <p *ngIf="issueNotFound">Chưa có kế hoạch kiểm tra được khởi tạo</p>
-    <div class="col-md-4" *ngIf="asmChartData && amsChartOptions ">
-      <p-chart
-        type="doughnut"
-        [data]="asmChartData"
-        [options]="amsChartOptions"
-      ></p-chart>
-    </div>
-
-    <table class="table table-striped">
-      <tr>
-        <th>Văn bản bổ sung vừa đăng tải</th>
-      </tr>
-      <tbody *ngIf="guidanceDocuments && guidanceDocuments.length > 0">
-        <tr *ngFor="let doc of guidanceDocuments; let i = index">
-          <td>{{ doc.guidanceDocumentName }}</td>
-
-          <td>
-            <button
-              pButton
-              (click)="viewGuidanceDocumentDetail(doc.guidanceDocumentId)"
+            <ng-template #noInspecPlan>
+              <div class="col-md-12">
+                <label class="fw-medium color-gray"
+                  >Không có công việc nào
+                </label>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card p-3 h-100">
+          <label class="fw-medium fs-18 mb-3">Truy cập nhanh</label>
+          <div>
+            <div class="card mb-2 shortcut-item" (click)="viewIssueDetail()">
+              <div
+                class="p-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <span>Xem kế hoạch kiểm tra năm</span>
+                </div>
+                <div class="shortcut-icon">
+                  <i class="bi bi-caret-right-fill"></i>
+                </div>
+              </div>
+            </div>
+            <div class="card mb-2 shortcut-item" (click)="viewAsmTree()">
+              <div
+                class="p-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <span>Xem danh sách công việc</span>
+                </div>
+                <div class="shortcut-icon">
+                  <i class="bi bi-caret-right-fill"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              class="card mb-2 shortcut-item"
+              (click)="viewSchoolInspection()"
             >
-              Xem chi tiết
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <tui-ring-chart [value]="value" [(activeItemIndex)]="index">
-      <p>{{ sum }}</p>
-      <div>{{ label }}</div>
-    </tui-ring-chart>
+              <div
+                class="p-3 d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <span>Xem thanh tra ở trường bạn</span>
+                </div>
+                <div class="shortcut-icon">
+                  <i class="bi bi-caret-right-fill"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h6 class="mat-headline-6">Thống kê công việc toàn trường</h6>
+          <div class="row" *ngIf="asmChartData">
+            <div class="col-md-7">
+              <tui-ring-chart
+                size="m"
+                [value]="asmChartData.data"
+                [(activeItemIndex)]="index_asm"
+              >
+                {{ sum(asmChartData, index_asm) }}
+                <div>
+                  {{ label(asmChartData, index_asm) }}
+                </div>
+              </tui-ring-chart>
+            </div>
+            <div class="row col-md-5" *ngIf="asmChartData">
+              <div *ngFor="let item of asmChartData?.labels; let i = index">
+                <div class="row">
+                  <div class="col-md-2">
+                    <div class="box-color" [ngClass]="'bg-color-' + i"></div>
+                  </div>
+                  <div class="col-md-10">
+                    <label class="fw-medium">{{ item }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <label class="fw-medium fs-18">Thống kê công việc cá nhân</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <label class="fw-medium fs-18 mb-3"
+            >Văn bản bổ sung vừa đăng tải</label
+          >
+          <ng-container
+            *ngIf="guidanceDocuments && guidanceDocuments.length > 0"
+          >
+            <ng-container *ngFor="let doc of guidanceDocuments; let i = index">
+              <div class="row mb-2">
+                <div class="col-md-1 d-flex align-items-center file-icon">
+                  <i class="bi bi-file-earmark-fill"></i>
+                </div>
+                <div
+                  class="col-md-9 td-content d-flex align-items-center"
+                  pTooltip="{{ doc.guidanceDocumentName }}"
+                  tooltipPosition="top"
+                >
+                  {{ doc.guidanceDocumentName }}
+                </div>
+                <div class="col-md-2 d-flex justify-content-end">
+                  <button
+                    pButton
+                    class="action-item d-flex justify-content-center align-items-center"
+                    (click)="viewGuidanceDocumentDetail(doc.guidanceDocumentId)"
+                  >
+                    <i class="bi bi-info-circle-fill"></i>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
   </ng-container>
 
   <p-toast position="top-right" key="dashboard-toast"></p-toast>

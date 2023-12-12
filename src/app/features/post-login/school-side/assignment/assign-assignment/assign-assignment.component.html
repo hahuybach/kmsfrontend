@@ -567,7 +567,7 @@
                     class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(item.creator.user.fullName)}}"
+                      text="{{ getAvatar(item.creator.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
@@ -603,7 +603,7 @@
                     class="history-item-ava col-md-1 d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(item.actionCreator.user.fullName)}}"
+                      text="{{ getAvatar(item.actionCreator.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
@@ -633,7 +633,9 @@
                 class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
               >
                 <tui-avatar
-                  text="{{getAvatar(selectedAssignment.assigner?.user.fullName)}}"
+                  text="{{
+                    getAvatar(selectedAssignment.assigner?.user.fullName)
+                  }}"
                   [rounded]="true"
                   [autoColor]="true"
                 >
@@ -665,7 +667,7 @@
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(selectedAssignee?.user.fullName)}}"
+                      text="{{ getAvatar(selectedAssignee?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
@@ -687,7 +689,7 @@
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(option?.user.fullName)}}"
+                      text="{{ getAvatar(option?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
@@ -716,7 +718,9 @@
                   class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                 >
                   <tui-avatar
-                    text="{{getAvatar(selectedAssignment.assignee?.user.fullName)}}"
+                    text="{{
+                      getAvatar(selectedAssignment.assignee?.user.fullName)
+                    }}"
                     [rounded]="true"
                     [autoColor]="true"
                   >
@@ -940,7 +944,7 @@
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(option?.user.fullName)}}"
+                      text="{{ getAvatar(option?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
@@ -959,7 +963,7 @@
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(option?.user.fullName)}}"
+                      text="{{ getAvatar(option?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
@@ -1051,7 +1055,7 @@
                 class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
               >
                 <tui-avatar
-                  text="{{getAvatar(rowData.node.assignee?.user.fullName)}}"
+                  text="{{ getAvatar(rowData.node.assignee?.user.fullName) }}"
                   [rounded]="true"
                   [autoColor]="true"
                 >
