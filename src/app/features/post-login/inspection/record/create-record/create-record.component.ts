@@ -6,6 +6,9 @@ import {RecordService} from "../../../../../services/record.service";
 import {Subscription} from "rxjs";
 import {error} from "@angular/compiler-cli/src/transformers/util";
 import {ToastService} from "../../../../../shared/toast/toast.service";
+import {TuiDay} from "@taiga-ui/cdk";
+import {dateToTuiDay, tuiDayToDate} from "../../../../../shared/util/util";
+import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
 
 @Component({
   selector: 'app-create-record',
@@ -18,10 +21,11 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
   @Output() createRecordPopupVisibleChange = new EventEmitter<boolean>();
   formSubmitted:boolean = false;
   formCompleted:boolean = false;
+  formFailed:boolean = false;
   recordForm: FormGroup;
-  startDate: string;
-  endDate: string;
-  defaultDeadline: string;
+  startDate: TuiDay;
+  endDate: TuiDay;
+  defaultDeadline: TuiDay;
   inspectionPlan: {
     inspectors: AccountResponse[];
     endDate: Date;
@@ -53,13 +57,13 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
     const initInspectionPlan = this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
-        this.startDate = data.inspectionPlan.startDate.slice(0, 10);
-        this.endDate = data.inspectionPlan.endDate.slice(0, 10);
-        this.defaultDeadline = data.inspectionPlan.startDate;
-        this.recordForm.get('deadline')?.setValue(this.defaultDeadline.split('T')[0]);
+        this.startDate = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+        this.endDate = dateToTuiDay(new Date(data.inspectionPlan.endDate));
+        this.defaultDeadline = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+        this.recordForm.get('deadline')?.setValue(this.defaultDeadline);
       },
       error: (error) => {
-        this.toastService.showError('createRecordError', "Xóa không thành công", error.error.message);
+        this.toastService.showError('createRecordError', "Không tìm thấy kế hoạch", error.error.message);
       }
     })
     this.subscriptions.push(initInspectionPlan);
@@ -69,11 +73,12 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
     this.initInspectionPlan()
 
     this.recordForm = this.fb.group({
-      recordName: [null, Validators.compose([Validators.required, Validators.maxLength(256)])],
-      recordDescription: [null, Validators.compose([Validators.required])],
+      recordName: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required, Validators.maxLength(256)])],
+      recordDescription: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required])],
       deadline: [null, Validators.compose([Validators.required])],
       assigneeId: [null, Validators.compose([Validators.required])]
     })
+
   }
 
   onSubmit() {
@@ -81,11 +86,13 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
       this.recordForm.markAllAsTouched();
       return;
     }
+    const deadline = tuiDayToDate(this.recordForm.get('deadline')?.value);
+    deadline.setUTCHours(0);
     const record = {
       inspectionPlanId: this.inspectionPlanId,
       taskName: this.recordForm.get('recordName')?.value,
       description: this.recordForm.get('recordDescription')?.value,
-      deadline: new Date(this.recordForm.get('deadline')?.value).toISOString(),
+      deadline: deadline.toISOString(),
       assigneeId: this.recordForm.get('assigneeId')?.value,
     }
     this.formSubmitted = true;
@@ -99,6 +106,7 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
         },1000)
       },
       error: (error) => {
+        this.formFailed = true;
         this.toastService.showError('createRecordError', "Tạo mục kiểm tra không thành công", error.error.message);
       }
     });

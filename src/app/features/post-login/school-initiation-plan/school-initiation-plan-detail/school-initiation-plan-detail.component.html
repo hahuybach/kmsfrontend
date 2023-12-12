@@ -1,5 +1,17 @@
 <div class="container-fluid">
-  <span>breadcrumb</span>
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium mb-4">
     Kế hoạch thực hiện nhiệm vụ năm học
   </h5>
@@ -232,7 +244,7 @@
       header="Đánh giá tài liệu"
       [(visible)]="uploadFileVisible"
       [modal]="true"
-      [style]="{ width: '60vw' }"
+      [style]="{ width: '50vw' }"
       [draggable]="false"
       [resizable]="false"
       (onHide)="hideUploadPopup()"
@@ -251,11 +263,22 @@
               type="text"
               placeholder="Tên tài liệu"
             />
-            <span
-              *ngIf="inputFileForm.get('documentName')?.dirty && inputFileForm.controls.documentName.errors?.['whitespace']"
-              class="p-error"
-              >Vui lòng điền tên tài liệu</span
+            <div
+              *ngIf="inputFileForm.controls?.['documentName']?.invalid && (inputFileForm.controls?.['documentName']?.touched || inputFileForm.controls?.['documentName']?.dirty)"
             >
+              <span
+                *ngIf="inputFileForm.controls?.['documentName']?.errors?.['required'] || inputFileForm.controls?.['documentName']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền tên tài liệu
+              </span>
+              <span
+                *ngIf="inputFileForm.controls?.['documentName']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Tên tài liệu quá dài
+              </span>
+            </div>
           </div>
         </div>
         <div class="col-md-4">
@@ -270,11 +293,22 @@
               type="text"
               placeholder="Mã tài liệu"
             />
-            <span
-              *ngIf="inputFileForm.get('documentCode')?.dirty && inputFileForm.controls.documentCode.errors?.['whitespace']"
-              class="p-error"
-              >Vui lòng điền mã tài liệu</span
+            <div
+              *ngIf="inputFileForm.controls?.['documentCode']?.invalid && (inputFileForm.controls?.['documentCode']?.touched || inputFileForm.controls?.['documentCode']?.dirty)"
             >
+              <span
+                *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['required'] || inputFileForm.controls?.['documentCode']?.errors?.['whitespace']"
+                class="p-error"
+              >
+                Vui lòng điền mã tài liệu
+              </span>
+              <span
+                *ngIf="inputFileForm.controls?.['documentCode']?.errors?.['maxlength']"
+                class="p-error"
+              >
+                Mã tài liệu quá dài
+              </span>
+            </div>
           </div>
         </div>
         <div class="col-md-12">
@@ -310,6 +344,17 @@
                   label="Chọn tệp"
                   (click)="fileInput.click()"
                 ></button>
+              </div>
+              <div
+                class="padding-none"
+                *ngIf="inputFileForm.controls?.['file']?.invalid && (inputFileForm.controls?.['file']?.touched || inputFileForm.controls?.['file']?.dirty)"
+              >
+                <span
+                  *ngIf="inputFileForm.controls?.['file']?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng chọn tài liệu
+                </span>
               </div>
             </div>
           </div>
@@ -435,7 +480,7 @@
           >
             <img src="assets/img/pdf_logo.svg" alt="" />
           </div>
-          <div class="row col-md-10 d-flex align-items-end mb-3">
+          <div class="row col-md-10 d-flex align-items-center mb-3">
             <div class="col-md-8">
               <p class="mb-0">
                 <span class="fw-medium"
@@ -561,7 +606,7 @@
               >
                 <img src="assets/img/pdf_logo.svg" alt="" />
               </div>
-              <div class="row col-md-10 d-flex align-items-end mb-3">
+              <div class="row col-md-10 d-flex align-items-center mb-3">
                 <div class="col-md-8">
                   <p class="mb-0">
                     <span class="fw-medium"

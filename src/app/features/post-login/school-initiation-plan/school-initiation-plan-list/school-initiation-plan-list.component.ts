@@ -262,7 +262,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
 
   onDetail(id: any) {
     if (this.isPrincipal) {
-      this.router.navigate(['initiation-plan/' + id]);
+      this.router.navigate(['school-initiation-plan/school-side/' + id]);
     } else {
       this.router.navigate(['school-initiation-plan/' + id]);
     }
@@ -296,12 +296,11 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   }
 
   changeStartDate() {
-    if (this.createDateRange){
-      this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
-      this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
-      this.loadDocuments();
-    }
-
+    console.log(this.createDateRange.from)
+    console.log(this.createDateRange.to)
+    this.creationStartDateTime = tuiDayToDate(this.createDateRange.from);
+    this.creationEndDateTime = tuiDayToDate(this.createDateRange.to);
+    this.loadDocuments();
   }
 
   changeDeadlineDate() {

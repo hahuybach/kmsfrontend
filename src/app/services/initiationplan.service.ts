@@ -80,7 +80,13 @@ export class InitiationplanService {
     // Make the GET request
     return this.http.get<any>(this.initiationplanApiUrl + 'list', {params, headers});
   }
+  public deleteDocument(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
 
+    const url = `${this.initiationplanApiUrl}delete_school_document`;
+    return this.http.delete(url, { headers: headers, body: data });
+  }
   getDashBoardInitiationPlanResponse(issueId: any){
     return this.http.get<any>(this.initiationplanApiUrl + 'getDashBoardInitiationPlanResponse?issueId=' + issueId);
 

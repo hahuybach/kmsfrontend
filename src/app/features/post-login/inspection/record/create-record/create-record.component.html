@@ -1,6 +1,6 @@
 <p-toast position="top-right" key="createRecordError"></p-toast>
 <p-toast position="top-right" key="createRecordComplete"></p-toast>
-<p-dialog header="Danh sách đoàn kiểm tra"
+<p-dialog header="Tạo mới mục kiểm tra"
           [(visible)]="createRecordPopupVisible"
           [modal]="true"
           [style]="{ width: '60%' }"
@@ -8,83 +8,93 @@
           [resizable]="false"
           (onHide)="resetCreateRecordPopupVisible()"
 >
-  <app-loading-complete-dialog
-    [height]="70"
-    [width]="80"
-    [visible]="formSubmitted"
-    [completed]="formCompleted"
-    [header]="'Tạo mới mục kiểm tra'"
-    [progress]="'Đang tạo mới mục kiểm tra'"
-    [complete]="'Tạo mới mục kiểm tra thành công'"
-  ></app-loading-complete-dialog>
-  <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
-    <div class="row">
-      <div class="record-name col-md-12 mt-1">
-        <label class="fw-medium">Mục kiểm tra<span class="p-error">*</span></label>
-        <input
-          type="text"
-          pInputText
-          placeholder="Mục kiểm tra"
-          class="w-100"
-          formControlName="recordName"
-        />
-        <div
-          *ngIf="recordForm.controls?.['recordName']?.invalid && (recordForm.controls?.['recordName']?.touched ||recordForm.controls?.['recordName']?.dirty)">
+    <app-loading-complete-dialog
+            [height]="70"
+            [width]="80"
+            [visible]="formSubmitted"
+            [completed]="formCompleted"
+            [failed]="formFailed"
+            [header]="'Tạo mới mục kiểm tra'"
+            [progress]="'Đang tạo mới mục kiểm tra'"
+            [complete]="'Tạo mới mục kiểm tra thành công'"
+            [fail]="'Tạo mới mục kiểm tra không thành công'"
+    ></app-loading-complete-dialog>
+    <form class="container-fluid" [formGroup]="recordForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="record-name col-md-12 mb-2">
+                <label class="fw-medium mb-1">Mục kiểm tra<span class="p-error">*</span></label>
+                <input
+                        type="text"
+                        pInputText
+                        placeholder="Mục kiểm tra"
+                        class="w-100"
+                        formControlName="recordName"
+                />
+                <div
+                        *ngIf="recordForm.controls?.['recordName']?.invalid && (recordForm.controls?.['recordName']?.touched ||recordForm.controls?.['recordName']?.dirty)">
                     <span
-                      *ngIf="recordForm.controls?.['recordName']?.errors?.['required']" class="p-error">
+                            *ngIf="recordForm.controls?.['recordName']?.errors?.['whitespace'] || recordForm.controls?.['recordName']?.errors?.['required']" class="p-error">
                       Vui lòng điền tên mục kiểm tra
                     </span>
-          <span *ngIf="recordForm.controls?.['recordName']?.errors?.['maxLength']" class="p-error">
+                    <span *ngIf="recordForm.controls?.['recordName']?.errors?.['maxlength']" class="p-error">
                       Tên mục kiểm tra quá dài
                     </span>
-        </div>
-      </div>
-      <div class="record-description col-md-12 mt-1">
-        <label class="fw-medium">Chi tiết<span class="p-error">*</span></label>
-        <textarea
-          type="text"
-          pInputTextarea
-          placeholder="Chi tiết về về mục kiểm tra"
-          rows="5"
-          class="w-100"
-          formControlName="recordDescription"
-        ></textarea>
-        <div
-          *ngIf="recordForm.controls?.['recordDescription']?.invalid && (recordForm.controls?.['recordDescription']?.touched ||recordForm.controls?.['recordDescription']?.dirty)">
+                </div>
+            </div>
+            <div class="record-description col-md-12 mb-2">
+                <label class="fw-medium mb-1">Chi tiết<span class="p-error">*</span></label>
+                <textarea
+                        type="text"
+                        pInputTextarea
+                        placeholder="Chi tiết về về mục kiểm tra"
+                        rows="5"
+                        class="w-100"
+                        formControlName="recordDescription"
+                ></textarea>
+                <div
+                        *ngIf="recordForm.controls?.['recordDescription']?.invalid && (recordForm.controls?.['recordDescription']?.touched ||recordForm.controls?.['recordDescription']?.dirty)">
                     <span *ngIf="recordForm.controls?.['recordDescription']?.errors?.['required']" class="p-error">
                       Vui lòng điền chi tiết mục kiểm tra
                     </span>
-        </div>
-      </div>
-      <div class="record-deadline col-md-6 mt-1">
-        <label for="deadline" class="fw-medium">Hạn nộp<span class="p-error">*</span></label>
-        <input id="deadline" class="form-control" type="date" formControlName="deadline" [min]="startDate" [max]="endDate"/>
-        <div
-          *ngIf="recordForm.controls?.['deadline']?.invalid && (recordForm.controls?.['deadline']?.touched ||recordForm.controls?.['deadline']?.dirty)">
+                </div>
+            </div>
+            <div class="record-deadline col-md-6 mb-2">
+                <label class="fw-medium mb-1">Hạn nộp<span class="p-error">*</span></label>
+                <tui-input-date
+                        [min]="startDate"
+                        [max]="endDate"
+                        tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
+                        class="tui-date"
+                        tuiTextfieldSize="m"
+                        formControlName="deadline">
+                </tui-input-date>
+                <div
+                        *ngIf="recordForm.controls?.['deadline']?.invalid && (recordForm.controls?.['deadline']?.touched ||recordForm.controls?.['deadline']?.dirty)">
                     <span *ngIf="recordForm.controls?.['deadline']?.errors?.['required']" class="p-error">
                       Vui lòng chọn hạn nộp mục kiểm tra
                     </span>
-        </div>
-      </div>
-      <div class="record-assignee col-md-6 mt-1" *ngIf="inspectionPlan">
-        <label for="deadline" class="fw-medium">Người thực hiện<span class="p-error">*</span></label>
-        <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors" formControlName="assigneeId"
-                    optionLabel="user.fullName"
-                    [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
-                    placeholder="Chọn người thực hiện">
-        </p-dropdown>
-        <div
-          *ngIf="recordForm.controls?.['assigneeId']?.invalid && (recordForm.controls?.['assigneeId']?.touched ||recordForm.controls?.['assigneeId']?.dirty)">
+                </div>
+            </div>
+            <div class="record-assignee col-md-6 mb-2" *ngIf="inspectionPlan">
+                <label for="deadline" class="fw-medium mb-1">Người thực hiện<span class="p-error">*</span></label>
+                <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors"
+                            formControlName="assigneeId"
+                            optionLabel="user.fullName"
+                            [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
+                            placeholder="Chọn người thực hiện">
+                </p-dropdown>
+                <div
+                        *ngIf="recordForm.controls?.['assigneeId']?.invalid && (recordForm.controls?.['assigneeId']?.touched ||recordForm.controls?.['assigneeId']?.dirty)">
                     <span *ngIf="recordForm.controls?.['assigneeId']?.errors?.['required']" class="p-error">
                       Vui lòng chọn người thực hiện mục kiểm tra
                     </span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="mt-5 mb-3 row w-100">
-      <div class="col-12 save-button d-flex w-100 justify-content-center">
-        <button class="btn text-white">Lưu </button>
-      </div>
-    </div>
-  </form>
+        <div class="mt-5 mb-3 row w-100">
+            <div class="col-12 save-button d-flex w-100 justify-content-center">
+                <button class="btn text-white">Lưu</button>
+            </div>
+        </div>
+    </form>
 </p-dialog>

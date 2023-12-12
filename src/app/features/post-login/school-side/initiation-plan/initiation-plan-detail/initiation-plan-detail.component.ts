@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { error } from '@angular/compiler-cli/src/transformers/util';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,12 +34,13 @@ export class InitiationPlanDetailComponent implements OnInit {
   initiationplanId: number;
   lastDocs: any;
   fileInputPlaceholders: string;
-  isDelete = false;
   isLoading = false;
   submitCompleted = false;
   isFileLoading = false;
   pdfPreviewVisibility: boolean = false;
+  @ViewChild('fileInput') fileInput: any;
   ngOnInit(): void {
+    console.log('run here');
     this.route.params
       .pipe(
         switchMap((params) => {
@@ -107,11 +108,25 @@ export class InitiationPlanDetailComponent implements OnInit {
     protected toastService: ToastService
   ) {}
   inputFileForm = this.fb.group({
-    documentName: ['', NoWhitespaceValidator()],
-    documentCode: ['', NoWhitespaceValidator()],
-    documentTypeId: 4,
+    documentName: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
+    documentCode: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
+    // documentTypeId: 4,
     // deadline: [this.today, Validators.required],
-    isPasssed: [false, Validators.required],
+    // isPasssed: [false, Validators.required],
     file: ['', Validators.required],
   });
   initData() {
@@ -141,12 +156,12 @@ export class InitiationPlanDetailComponent implements OnInit {
                 this.schoolinitiationplan.documents.length - 1
               ];
           }
-          if (
-            this.lastDocs.schoolDocument != null &&
-            this.schoolinitiationplan.status.statusId != 9
-          ) {
-            this.fileStatus = true;
-          }
+          // if (
+          //   this.lastDocs.schoolDocument != null &&
+          //   this.schoolinitiationplan.status.statusId != 9
+          // ) {
+          //   this.fileStatus = true;
+          // }
         },
         error: (error) => {
           this.toastService.showError('error', 'Lỗi', error.error.message);
@@ -158,6 +173,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.pdfUrl = blobUrl;
     this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
     this.pdfLoaded = true;
+    this.pdfPreviewVisibility = true;
   }
   openNewTab(documentLink: string) {
     this.pdfPreviewVisibility = true;
@@ -169,7 +185,6 @@ export class InitiationPlanDetailComponent implements OnInit {
         this.pdfUrl = blobUrl;
         this.safePdfUrl =
           this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-        this.pdfPreviewVisibility = false;
         this.pdfLoaded = true;
       });
   }
@@ -182,7 +197,10 @@ export class InitiationPlanDetailComponent implements OnInit {
     }
   }
   upload() {
-    console.log(this.inputFileForm.value);
+    if (this.inputFileForm.invalid) {
+      this.inputFileForm.markAllAsTouched();
+      return;
+    }
     this.uploadFileVisible = false;
     this.fileStatus = true;
     this.iconStatus = true;
@@ -207,18 +225,53 @@ export class InitiationPlanDetailComponent implements OnInit {
   redirectToIssue() {
     this.router.navigateByUrl('/issuelist/1');
   }
-  deleteFile(event: MouseEvent) {
+  deleteFile(event: MouseEvent, documentId: number) {
     event.stopPropagation();
+    console.log('DocumentID:' + documentId);
     this.confirmationService.confirm({
       header: 'Xác nhận xóa',
       message: 'Bạn có chắc chắn muốn xóa tài liệu?',
       key: 'confirmInitiationplan',
       accept: () => {
-        this.fileStatus = false;
-        this.inputFileForm.reset();
-        this.fileInputPlaceholders = '';
-        this.buttonApproveStatus = false;
-        this.isDelete = true;
+        if (documentId != 0) {
+          this.isFileLoading = true;
+          this.initiationplanService
+            .deleteDocument({
+              initiationPlanId: this.initiationplanId,
+              documentId: documentId,
+            })
+            .subscribe({
+              next: (data) => {
+                // this.fileStatus = false;
+                this.inputFileForm.reset();
+                this.fileInputPlaceholders = '';
+                this.buttonApproveStatus = false;
+                // this.isDelete = true;
+                console.log(this.fileStatus);
+                this.initData();
+                this.fileStatus = false;
+                this.isFileLoading = false;
+                if (this.fileInput) {
+                  this.fileInput.nativeElement.value = '';
+                }
+              },
+              error: (error) => {
+                this.toastService.showError(
+                  'toastInitiationPlan',
+                  'Lỗi',
+                  error.error.message
+                );
+              },
+            });
+        } else {
+          this.fileStatus = false;
+          this.inputFileForm.reset();
+          this.fileInputPlaceholders = '';
+          this.buttonApproveStatus = false;
+          if (this.fileInput) {
+            this.fileInput.nativeElement.value = '';
+          }
+        }
       },
     });
     // console.log(123);
@@ -235,7 +288,7 @@ export class InitiationPlanDetailComponent implements OnInit {
       accept: () => {
         this.isLoading = true;
         if (this.inputFileForm.get('file')?.value) {
-          this.inputFileForm.get('isPasssed')?.setValue(true);
+          // this.inputFileForm.get('isPasssed')?.setValue(true);
           const formData = new FormData();
           const initiationplan = {
             initiationPlanId: this.schoolinitiationplan.initiationPlanId,
@@ -346,5 +399,6 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+    this.pdfPreviewVisibility = false;
   }
 }

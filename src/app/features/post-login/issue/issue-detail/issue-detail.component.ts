@@ -12,6 +12,7 @@ import { FileService } from 'src/app/services/file.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { unSub } from 'src/app/shared/util/util';
 import { Dialog } from 'primeng/dialog';
+import { TuiPdfViewerOptions, TuiPdfViewerService } from '@taiga-ui/kit';
 
 @Component({
   selector: 'app-issue-detail',
@@ -29,11 +30,28 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
   sub: any[] = [];
   pdfPreviewVisibility: boolean = false;
   @ViewChild('pdfDialog') yourDialog!: Dialog;
+
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch kiểm tra',
+      routerLink: '/issue/list',
+    },
+    {
+      caption: 'Chi tiết kế hoạch kiểm tra'
+    },
+  ];
+
+
   constructor(
     private route: ActivatedRoute,
     private issueService: IssueService,
     private fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private readonly pdfService: TuiPdfViewerService
   ) {}
   ngOnInit(): void {
     const sub = this.route.params

@@ -3,12 +3,18 @@
 :host ::ng-deep .p-tabmenu-nav{
   border: none;
 }
+
 :host ::ng-deep .p-tabmenu-nav{
+  .p-highlight{
+    border-bottom: 2px solid !important;
+    border-bottom-color: $primary !important;
+  }
   .p-menuitem-link{
     text-decoration: none;
-    color: $primary;
+    color: $primary !important;
   }
   .p-menuitem-link-active{
-    border-bottom-color: $primary;
+    border-bottom: 2px solid !important;
+    border-bottom-color: $primary !important;
   }
 }

@@ -1,8 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../../../services/auth.service";
-import {Router} from "@angular/router";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
+import {dateToTuiDay} from "../../../../shared/util/util";
+import {TuiDay} from "@taiga-ui/cdk";
+import {SelectItem} from "primeng/api";
+import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
+import {InspectorService} from "../../../../services/inspector.service";
+import {UserResponseForUserList} from "../../../../models/user-response-for-user-list";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-create-issue',
@@ -12,112 +18,119 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 
 export class CreateIssueComponent implements OnInit {
-  docTypes_select_1 = [
-    {
-      id: 1,
-      name: "Kế hoạch công tác kiểm tra năm học",
-    },
-    {
-      id: 2,
-      name: "Hướng dẫn công tác KTNB",
-    },
-    {
-      id: 3,
-      name: "Quyết định thành lập BKTB",
-    }
-  ]
-  docTypes_select_2 = [
-    {
-      id: 1,
-      name: "Kế hoạch công tác kiểm tra năm học",
-    },
-    {
-      id: 2,
-      name: "Hướng dẫn công tác KTNB",
-    },
-    {
-      id: 3,
-      name: "Quyết định thành lập BKTB",
-    }
-  ]
-  docTypes_select_3 = [
-    {
-      id: 1,
-      name: "Kế hoạch công tác kiểm tra năm học",
-    },
-    {
-      id: 2,
-      name: "Hướng dẫn công tác KTNB",
-    },
-    {
-      id: 3,
-      name: "Quyết định thành lập BKTB",
-    }
-  ]
-
-  selectedValue_1: any;
-  selectedValue_2: any;
-  selectedValue_3: any;
-
-
-  onChange1(e: any) {
-    this.selectedValue_1 = e.target.value;
-
-  };
-
-  onChange2(e: any) {
-    this.selectedValue_2 = e.target.value;
-
-  };
-
-  onChange3(e: any) {
-    this.selectedValue_3 = e.target.value;
-  };
-
+  tomorrowDate: Date;
+  tomorrow: TuiDay;
   issueForm: FormGroup;
+  selectedInspectors: UserResponseForUserList[] = [];
+  inspectors: UserResponseForUserList[];
+  inspectorListIsValid: boolean = false;
+  popupInspectorVisible: boolean = false;
+
+  private subscriptions: Subscription[] = [];
+
+  //breadcrumb
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch kiểm tra',
+      routerLink: '/issue/list',
+    },
+    {
+      caption: 'Tạo mới kế hoạch kiểm tra',
+      routerLink: '/issue/create',
+    },
+  ];
 
   constructor(
     private fb: FormBuilder,
-    protected http: HttpClient
+    protected http: HttpClient,
+    private readonly inspectionplanInspectorService: InspectionplanInspectorlistService,
+    private readonly inspectorService: InspectorService,
   ) {
   }
 
   ngOnInit() {
+    this.tomorrowDate = new Date();
+    this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1);
+    this.tomorrow = dateToTuiDay(this.tomorrowDate)
+
     this.issueForm = this.fb.group({
-      issueName: [null, Validators.compose([Validators.required])],
-      issueDetail: [null, Validators.compose([Validators.required])],
+      issueName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+      issueDetail: [null, Validators.compose([NoWhitespaceValidator(), Validators.required])],
       inspectorId: [null, Validators.compose([Validators.required])],
+      endDate: [this.tomorrow, Validators.compose([Validators.required])],
       issueDocList: this.fb.group({
         issueDoc_1: this.fb.group({
-          documentName: [null, Validators.compose([Validators.required])],
-          documentTypeId: [0, Validators.compose([Validators.required])],
-          documentCode: [null, Validators.compose([Validators.required])],
+          documentName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+          documentTypeId: [null, Validators.compose([Validators.required])],
+          documentCode: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
           documentFile: [null, Validators.compose([Validators.required])]
         }),
         issueDoc_2: this.fb.group({
-          documentName: [null, Validators.compose([Validators.required])],
-          documentTypeId: [0, Validators.compose([Validators.required])],
-          documentCode: [null, Validators.compose([Validators.required])],
+          documentName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+          documentTypeId: [null, Validators.compose([Validators.required])],
+          documentCode: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
           documentFile: [null, Validators.compose([Validators.required])]
         }),
         issueDoc_3: this.fb.group({
-          documentName: [null, Validators.compose([Validators.required])],
-          documentTypeId: [0, Validators.compose([Validators.required])],
-          documentCode: [null, Validators.compose([Validators.required])],
+          documentName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+          documentTypeId: [null, Validators.compose([Validators.required])],
+          documentCode: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
           documentFile: [null, Validators.compose([Validators.required])]
         })
       })
     })
+
+    this.inspectionplanInspectorService.setInspectorList(this.selectedInspectors);
+    const setInspectorList = this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.selectedInspectors = list);
+    const setInspectorListValid = this.inspectionplanInspectorService.inspectorListIsValid$.subscribe(isValid => {
+      this.inspectorListIsValid = isValid;
+    });
+
+    this.initInspectorList();;
+
     this.fileInputPlaceholders = ['', '', ''];
   }
 
-  popupInspectorVisible:boolean = false;
-  inspectorLeftList:any= [];
-  selectedInspectors: any = [];
-  addInspector(){}
+  initInspectorList() {
+    this.subscriptions.push(
+      this.inspectorService.getNoneInspectors().subscribe({
+        next: (data) => {
+          this.inspectors = data;
+          this.inspectionplanInspectorService.setPopupInspectorList(this.inspectors);
+          const setPopUpList = this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectors = list);
+          this.subscriptions.push(setPopUpList);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      })
+    )
+  }
 
-  changeInspectorVisible(){
+  changeInspectorVisible() {
     this.popupInspectorVisible = !this.popupInspectorVisible;
+  }
+
+  onResetList() {
+    this.inspectionplanInspectorService.resetBothLists();
+  }
+
+  getInspectorIds(data: any) {
+    let inspectorListId = data.map((item: { accountId: any; }) => item.accountId);
+    console.log(inspectorListId);
+    this.issueForm.get('inspectorId')?.setValue(inspectorListId);
+  }
+
+  resetInspectorList() {
+    this.issueForm.get('inspectorId')?.setValue(null);
+    this.selectedInspectors = [];
+    this.inspectors = [];
+    this.inspectionplanInspectorService.setInspectorListIsValid(false);
+    this.initInspectorList();
   }
 
   fileInputPlaceholders: string[] = [];
@@ -145,11 +158,33 @@ export class CreateIssueComponent implements OnInit {
     }
   }
 
+  get documentFirstNameControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_1') as FormGroup).controls['documentName'];
+  }
+
+  get documentFirstTypeControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_1') as FormGroup).controls['documentTypeId'];
+  }
+
+  get documentFirstCodeControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_1') as FormGroup).controls['documentCode'];
+  }
+
+  get documentFirstFileControls() {
+    return (this.issueForm.get('issueDocList.issueDoc_1') as FormGroup).controls['documentFile'];
+  }
+
+
   onSubmit() {
+    if (this.issueForm.invalid) {
+      this.issueForm.markAllAsTouched();
+      return;
+    }
+
     const formData = new FormData();
     const issue = {
       issueName: this.issueForm.get('issueName')?.value,
-      inspectorId: [1, 2, 3, 4, 5],
+      inspectorId: [],
       description: this.issueForm.get('issueDetail')?.value,
       documentIssues: [],
     }
@@ -176,7 +211,7 @@ export class CreateIssueComponent implements OnInit {
       }
     }
 
-    formData.append("issue",new Blob([JSON.stringify(issue)], {type:"application/json"}));
+    formData.append("issue", new Blob([JSON.stringify(issue)], {type: "application/json"}));
 
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'undefined');
@@ -190,6 +225,52 @@ export class CreateIssueComponent implements OnInit {
       }
     );
   }
+
+  filterOptions(options: SelectItem[], value1: any, value2: any): SelectItem[] {
+    return options.filter(option => option.value !== value1 && option.value !== value2);
+  }
+
+  docTypes_select_1: SelectItem[] = [
+    {label: 'Chọn loại tài liệu', value: null},
+    {label: 'Kế hoạch công tác kiểm tra năm học', value: 1},
+    {label: 'Hướng dẫn công tác KTNB', value: 2},
+    {label: 'Quyết định thành lập BKTB', value: 3}
+  ];
+
+  docTypes_select_2: SelectItem[] = [
+    {label: 'Chọn loại tài liệu', value: null},
+    {label: 'Kế hoạch công tác kiểm tra năm học', value: 1},
+    {label: 'Hướng dẫn công tác KTNB', value: 2},
+    {label: 'Quyết định thành lập BKTB', value: 3}
+  ];
+
+  docTypes_select_3: SelectItem[] = [
+    {label: 'Chọn loại tài liệu', value: null},
+    {label: 'Kế hoạch công tác kiểm tra năm học', value: 1},
+    {label: 'Hướng dẫn công tác KTNB', value: 2},
+    {label: 'Quyết định thành lập BKTB', value: 3}
+  ];
+
+  selectedValue_1: any;
+  selectedValue_2: any;
+  selectedValue_3: any;
+
+
+  onChange1(e: any) {
+    this.selectedValue_1 = e.value;
+    this.issueForm.get('issueDocList.issueDoc_1.documentTypeId')?.setValue(this.selectedValue_1);
+    console.log(this.issueForm.get('issueDocList.issueDoc_1.documentTypeId')?.value);
+  };
+
+  onChange2(e: any) {
+    this.selectedValue_2 = e.value;
+
+  };
+
+  onChange3(e: any) {
+    this.selectedValue_3 = e.value;
+  };
+
 }
 
 

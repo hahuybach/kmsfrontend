@@ -26,7 +26,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
-import {TuiInputDateModule, TuiInputDateRangeModule} from '@taiga-ui/kit';
+import {TuiInputDateModule, TuiInputDateRangeModule, TuiBreadcrumbsModule} from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
 import {CheckboxModule} from "primeng/checkbox";
 import {TuiRingChartModule} from '@taiga-ui/addon-charts';
@@ -66,6 +66,7 @@ import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
     MatFormFieldModule,
     TuiInputDateModule,
     TuiInputDateRangeModule,
+    TuiBreadcrumbsModule,
     CheckboxModule,
     TuiRingChartModule,
     TuiMoneyModule
@@ -100,6 +101,7 @@ import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
     TuiInputDateModule,
     DataNotExistComponent,
     TuiInputDateRangeModule,
+    TuiBreadcrumbsModule,
     CheckboxModule,
     TuiRingChartModule,
     TuiMoneyModule

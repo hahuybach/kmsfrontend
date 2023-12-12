@@ -24,3 +24,10 @@ table.table-fit tfoot td {
     padding-top: 0 !important;
   }
 }
+
+tui-breadcrumbs{
+  a{
+    text-decoration: none;
+    color: $primary;
+  }
+}

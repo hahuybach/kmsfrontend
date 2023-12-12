@@ -6,6 +6,19 @@
   [complete]="'Tạo mới văn bản bổ sung thành công'"
 ></app-loading-complete-dialog>
 <div class="container-fluid">
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium">Tạo văn bản bổ sung</h5>
   <form [formGroup]="guidanceForm">
     <div class="row">

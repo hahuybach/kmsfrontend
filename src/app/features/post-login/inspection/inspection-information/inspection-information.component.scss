@@ -1,16 +1,16 @@
 @import "../../../../../assets/scss/base";
 
-.inspection-detail {
+* {
   font-size: 16px;
 }
 
-:host ::ng-deep .p-tag {
-  font-size: 15px;
-}
-
 :host ::ng-deep .p-tabmenu-nav {
-  .p-menuitem-link {
+  .p-menuitem {
     text-decoration: none;
+    color: $primary;
+  }
+
+  .p-menuitem-text {
     color: $primary;
   }
 
@@ -20,4 +20,3 @@
     }
   }
 }
-

@@ -8,29 +8,65 @@
     (onHide)="assignmentPopuptHideEvent()"
   >
     <div *ngIf="selectedAssignment && action == 'addchild'" class="mb-2">
-      <span class="mb-1">Thuộc</span>
+      <label class="mb-1 fw-medium">Thuộc</label>
       <br />
       <span class="text-black-50">{{ selectedAssignment.assignmentName }}</span>
     </div>
     <div class="mb-2">
-      <span class="mb-1">Tên công việc</span>
+      <label class="mb-1 fw-medium"
+        >Tên công việc<span class="p-error">*</span></label
+      >
       <br />
       <input
         class="mb-1"
         pInputText
         type="text"
         formControlName="assignmentName"
+        placeholder="Điền tên công việc"
       />
+      <div
+        *ngIf="assignmentForm.controls?.['assignmentName']?.invalid && (assignmentForm.controls?.['assignmentName']?.touched || assignmentForm.controls?.['assignmentName']?.dirty)"
+      >
+        <span
+          *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['required'] || assignmentForm.controls?.['assignmentName']?.errors?.['whitespace']"
+          class="p-error"
+        >
+          Vui lòng điền tên công việc
+        </span>
+        <span
+          *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
+          class="p-error"
+        >
+          Tên công việc quá dài
+        </span>
+      </div>
     </div>
     <div class="mb-5">
-      <span class="mb-1">Mô tả chi tiết</span>
+      <label class="fw-medium mb-1">Mô tả chi tiết</label>
       <br />
       <textarea
         class="mb-1"
         rows="5"
         pInputTextarea
         formControlName="description"
+        placeholder="Điền chi tiết công việc"
       ></textarea>
+      <div
+        *ngIf="assignmentForm.controls?.['description']?.invalid && (assignmentForm.controls?.['description']?.touched || assignmentForm.controls?.['description']?.dirty)"
+      >
+        <span
+          *ngIf="assignmentForm.controls?.['description']?.errors?.['required'] || assignmentForm.controls?.['description']?.errors?.['whitespace']"
+          class="p-error"
+        >
+          Vui lòng điền chi tiết công việc
+        </span>
+        <span
+          *ngIf="assignmentForm.controls?.['description']?.errors?.['maxlength']"
+          class="p-error"
+        >
+          Chi tiết công việc quá dài
+        </span>
+      </div>
     </div>
     <!-- <div class="mb-5">
       <span class="mb-1">Hạn nộp</span><br />

@@ -16,9 +16,21 @@
   </ng-template>
 </p-dialog>
 <div class="container-fluid">
+  <tui-breadcrumbs
+    size="l"
+  >
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium">Chi tiết quyết định kiểm tra</h5>
   <div class="row inspection-plan-detail">
-    <h4 class="mb-3">Chi tiết quyết định kiểm tra</h4>
     <div class="row">
       <div
         class="form-content col-md-8 d-flex flex-column justify-content-between"
@@ -87,7 +99,7 @@
             </p-tag>
           </div>
         </div>
-        <h5 class="mb-2">Tài liệu công văn</h5>
+        <h6 class="mat-headline-6 mb-1">Tài liệu công văn</h6>
         <div
           class="file-item py-1 d-flex"
           (click)="
@@ -103,41 +115,27 @@
           </div>
           <div class="row col-md-10 d-flex align-items-end mb-3">
             <div class="col-md-8">
-              <p class="mb-0">
-                <span class="fw-medium">{{
-                  inspectionPlanDetail.inspectionPlan.documents[0]?.documentName
-                  }}</span>
-                <span class="fw-medium">.{{inspectionPlanDetail.inspectionPlan.documents[0]?.fileExtension}}</span>
+              <div class="d-flex flex-row w-100">
+                <label pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}" tooltipPosition="top"
+                       class="fw-medium overflow-text">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentName}}.</label>
+                <label class="fw-medium">{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.fileExtension}}</label>
+              </div>
+              <p class="mb-0 w-100">
+                <label pTooltip="{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}"  tooltipPosition="right"
+                       class="fw-medium w-100 overflow-text"><span class="fw-normal">Loại tài liệu: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentType.documentTypeName}}</label>
               </p>
-              <p class="mb-0">
-                <span>Loại tài liệu: </span>
-                <span class="fw-medium">{{
-                  inspectionPlanDetail.inspectionPlan.documents[0]?.documentType
-                    .documentTypeName
-                  }}</span>
-              </p>
-              <p class="mb-0">
-                <span>Mã tài liệu: </span>
-                <span class="fw-medium">{{
-                  inspectionPlanDetail.inspectionPlan.documents[0]?.documentCode
-                  }}</span>
+              <p class="mb-0 w-100">
+                <label class="fw-medium w-100 overflow-text"><span class="fw-normal">Mã tài liệu: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.documentCode}}</label>
               </p>
             </div>
             <div class="col-md-4 text-end">
               <p class="mb-0">
-                <span>Kích thước: </span>
-                <span class="fw-medium">{{
-                  inspectionPlanDetail.inspectionPlan.documents[0]?.size
-                    | fileSizePipe : "MB"
-                  }}</span>
+                <label
+                  class="fw-medium"><span class="fw-normal">Kích thước: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.size  | fileSizePipe:'MB' }}</label>
               </p>
               <p class="mb-0">
-                <span>Ngày tạo: </span>
-                <span class="fw-medium">{{
-                  inspectionPlanDetail.inspectionPlan.documents[0]?.uploadedDate
-                    | date : "MM/dd/yyyy"
-                  }}</span>
-              </p>
+                <label
+                  class="fw-medium"><span class="fw-normal">Ngày tạo: </span>{{ inspectionPlanDetail?.inspectionPlan?.documents[0]?.uploadedDate | date : "MM/dd/yyyy" }}</label>
             </div>
           </div>
         </div>

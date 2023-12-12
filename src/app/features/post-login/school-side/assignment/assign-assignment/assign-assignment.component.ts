@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import {
   DomSanitizer,
@@ -15,6 +15,17 @@ import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.
 import { Menu } from 'primeng/menu';
 import { StompService } from '../../../push-notification/stomp.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import { Dialog } from 'primeng/dialog';
+import { TreeTable } from 'primeng/treetable';
+import {
+  dateToTuiDay,
+  toIsoString,
+  tuiDayToDate,
+  tuiDayToDateNull,
+  unSub,
+} from 'src/app/shared/util/util';
+import { TuiDay } from '@taiga-ui/cdk';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -22,16 +33,30 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './assign-assignment.component.html',
   styleUrls: ['./assign-assignment.component.scss'],
 })
-export class AssignAssignmentComponent implements OnInit {
+export class AssignAssignmentComponent implements OnInit, OnDestroy {
   issueId: number;
   assignments: any[];
   assignmentVisible = false;
   selectedAssignment: any;
   action: string | undefined;
   assignmentForm = this.fb.group({
-    assignmentName: ['', NoWhitespaceValidator()],
-    description: [''],
-    deadline: ['', Validators.required],
+    assignmentName: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
+    description: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
+    deadline: [dateToTuiDay(new Date()), Validators.required],
     parentId: ['', Validators.required],
     assigneeId: ['', Validators.required],
     isTask: [false, Validators.required],
@@ -61,8 +86,15 @@ export class AssignAssignmentComponent implements OnInit {
   fileInputPlaceholders: string;
   @ViewChild('fileInput') fileInput: any;
   fileInputForm = this.fb.group({
-    documentCode: ['', NoWhitespaceValidator()],
-    documentName: ['', NoWhitespaceValidator()],
+    documentCode: [''],
+    documentName: [
+      '',
+      Validators.compose([
+        Validators.required,
+        Validators.maxLength(256),
+        NoWhitespaceValidator(),
+      ]),
+    ],
     file: ['', Validators.required],
   });
   historyDtos: any[] = [];
@@ -74,6 +106,13 @@ export class AssignAssignmentComponent implements OnInit {
   isFileLoading = false;
   tabs: MenuItem[];
   activeTab: MenuItem | undefined;
+  sub: any[] = [];
+  pdfPreviewVisibility: boolean = false;
+  @ViewChild('treeTable') treeTable: TreeTable;
+  nodeStateMap: { [key: number]: boolean } = {};
+  minDate: TuiDay;
+  maxDate: TuiDay;
+  today: Date = new Date();
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -82,6 +121,7 @@ export class AssignAssignmentComponent implements OnInit {
       { label: 'Thư mục', value: false },
       { label: 'Nộp tài liệu', value: true },
     ];
+    this.assignmentForm.get('isTask')?.setValue(true);
     this.tabs = [
       {
         label: 'Bình luận',
@@ -100,7 +140,7 @@ export class AssignAssignmentComponent implements OnInit {
     ];
     this.activeTab = this.tabs[0];
     // lay issueId tu url goi theo issueId
-    this.activateRouter.params
+    const method = this.activateRouter.params
       .pipe(
         switchMap((params) => {
           this.issueId = +params['issueId'];
@@ -109,7 +149,12 @@ export class AssignAssignmentComponent implements OnInit {
       )
       .subscribe((data) => {
         this.assignments = data.assignmentListDtos;
+        // this.setExpandedForAllNodes(this.assignments);
+        // this.restoreNodeState(this.assignments);
+        // this.treeTable.expandAll();
       });
+    this.sub.push(method);
+    this.minDate = dateToTuiDay(new Date());
     // this.issueService.getCurrentActiveIssue().subscribe({
     //   next: (data) => {
     //     issueId = data.issueDto.issueId;
@@ -118,7 +163,7 @@ export class AssignAssignmentComponent implements OnInit {
     //         this.assignments = data.assignmentListDtos;
     //       },
     //       error: (error) => {
-    //         this.messageService.add({
+    //         this.toastService.add({
     //           severity: 'error',
     //           summary: 'Xảy ra lỗi',
     //           detail: error.error.message,
@@ -160,7 +205,7 @@ export class AssignAssignmentComponent implements OnInit {
     private assignmentService: AssignmentService,
     private issueService: IssueService,
     private fb: FormBuilder,
-    private messageService: MessageService,
+    private toastService: ToastService,
     private confirmationService: ConfirmationService,
     private authService: AuthService,
     private fileService: FileService,
@@ -170,24 +215,42 @@ export class AssignAssignmentComponent implements OnInit {
     private router: Router
   ) {}
   initData() {
-    this.assignmentService.getAssignmentByIssueId(this.issueId).subscribe({
-      next: (data) => {
-        this.assignments = data.assignmentListDtos;
-      },
-    });
+    const method = this.assignmentService
+      .getAssignmentByIssueId(this.issueId)
+      .subscribe({
+        next: (data) => {
+          this.assignments = data.assignmentListDtos;
+          this.restoreNodeState(this.assignments);
+        },
+      });
+    console.log(this.nodeStateMap);
+    this.sub.push(method);
   }
+
   // ADD
   openDetail(assignment?: any, action?: string) {
     this.selectedAssignment = assignment;
-    this.assignmentVisible = true;
     const parentIdObj = { parentId: assignment.assignmentId };
-    this.assignmentService.getPossibleAssignee(parentIdObj).subscribe({
-      next: (data) => {
-        console.log(data);
-        console.log(data.listOfPossibleAssignees);
-        this.listOfPossibleAssignees = data.listOfPossibleAssignees;
-      },
-    });
+    const method = this.assignmentService
+      .getPossibleAssignee(parentIdObj)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          console.log(data.listOfPossibleAssignees);
+          if (data.listOfPossibleAssignees) {
+            this.listOfPossibleAssignees = data.listOfPossibleAssignees;
+            this.selectedAssignee = this.listOfPossibleAssignees[0];
+            this.assignmentForm
+              .get('assigneeId')
+              ?.setValue(this.listOfPossibleAssignees[0].accountId);
+          }
+          if (data.maxDate) {
+            this.maxDate = data.maxDate;
+          }
+          this.assignmentVisible = true;
+        },
+      });
+
     this.action = action;
     switch (action) {
       case 'addchild': {
@@ -209,50 +272,58 @@ export class AssignAssignmentComponent implements OnInit {
             this.assignmentForm
               .get('deadline')
               ?.setValue(
-                new Date(this.selectedAssignment.deadline)
-                  .toISOString()
-                  .split('T')[0]
+                dateToTuiDay(new Date(this.selectedAssignment.deadline))
               );
           }
         }
         break;
     }
+    this.sub.push(method);
   }
   add() {
-    const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
-    const isoDateString = new Date(deadlineValue).toISOString();
+    if (this.assignmentForm.invalid) {
+      this.assignmentForm.markAllAsTouched();
+      console.log(this.assignmentForm.value);
+      return;
+    }
+    const deadlineValue = tuiDayToDateNull(
+      this.assignmentForm.get('deadline')?.value
+    );
     this.confirmationService.confirm({
-      message: 'Bạn có muốn tạo mới công việc  này?',
+      message: 'Bạn có muốn tạo mới công việc này?',
       header: 'Xác nhận tạo mới',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
         const data = {
           parentId: this.selectedAssignment.assignmentId,
           assignmentName: this.assignmentForm.get('assignmentName')?.value,
-          deadline: isoDateString,
+          deadline: deadlineValue?.toISOString(),
           description: this.assignmentForm.get('description')?.value,
           assigneeId: this.assignmentForm.get('assigneeId')?.value,
           isTask: this.assignmentForm.get('isTask')?.value,
         };
         console.log(data);
-        this.assignmentService.addSchoolAssignment(data).subscribe({
-          next: (data) => {
-            this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Thêm mới thành công',
-              detail: 'Thêm mới thành công',
-            });
-            this.assignmentVisible = false;
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Thêm mới thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        const method = this.assignmentService
+          .addSchoolAssignment(data)
+          .subscribe({
+            next: (data) => {
+              this.initData();
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Thêm mới thành công',
+                'Thêm mới thành công'
+              );
+              this.assignmentVisible = false;
+            },
+            error: (error) => {
+              this.toastService.showError(
+                'toastAssignAssignment',
+                'Thêm mới thất bại',
+                error.error.message
+              );
+            },
+          });
+        this.sub.push(method);
       },
       reject: (type: any) => {},
     });
@@ -264,31 +335,34 @@ export class AssignAssignmentComponent implements OnInit {
       message:
         'Bạn có muốn xóa công việc ' + assignment.assignmentName + ' này?',
       header: 'Xác nhận xóa',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
 
       // icon: 'pi pi-info-circle',
       accept: () => {
         const deleteAssignment = {
           id: assignment.assignmentId,
         };
-        this.assignmentService.deleteAssignment(deleteAssignment).subscribe({
-          next: (response) => {
-            console.log(response);
-            this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xóa thành công',
-              detail: 'Xóa thành công',
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xóa thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        const method = this.assignmentService
+          .deleteAssignment(deleteAssignment)
+          .subscribe({
+            next: (response) => {
+              console.log(response);
+              this.initData();
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Xóa thành công',
+                'Xóa thành công'
+              );
+            },
+            error: (error) => {
+              this.toastService.showError(
+                'error',
+                'Xóa thất bại',
+                error.error.message
+              );
+            },
+          });
+        this.sub.push(method);
       },
       reject: (type: any) => {},
     });
@@ -298,7 +372,7 @@ export class AssignAssignmentComponent implements OnInit {
     console.log(rowNode);
     this.action = action;
 
-    this.assignmentService
+    const methodHis = this.assignmentService
       .getHistoryByAssignmentId(rowNode.assignmentId)
       .subscribe({
         next: (data) => {
@@ -307,30 +381,33 @@ export class AssignAssignmentComponent implements OnInit {
         },
         error: () => {},
       });
-    this.assignmentService
+    this.sub.push(methodHis);
+    const methodComment = this.assignmentService
       .getCommentsByAssignmentId(rowNode.assignmentId)
       .subscribe({
         next: (data) => {
           this.comments = data.commentDtos;
         },
         error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Không tìm thấy công việc',
-            detail: error.error.message,
-          });
+          this.toastService.showError(
+            'error',
+            'Không tìm thấy công việc',
+            error.error.message
+          );
           this.router.navigate(['/assignassignment/' + this.issueId], {
             queryParams: {},
           });
         },
       });
+    this.sub.push(methodComment);
 
-    this.assignmentService
+    const methodAss = this.assignmentService
       .getAssignmentsById(rowNode.assignmentId)
       .subscribe((data) => {
         this.selectedAssignment = data;
         this.listOfPossibleAssignees = data.listOfPossibleAssginees;
         console.log(this.selectedAssignment);
+        console.log(this.selectedAssignment.documents.length == 0);
         this.documents = data.documents;
         if (this.selectedAssignment) {
           this.assignmentForm
@@ -342,9 +419,7 @@ export class AssignAssignmentComponent implements OnInit {
           this.assignmentForm
             .get('deadline')
             ?.setValue(
-              new Date(this.selectedAssignment.deadline)
-                .toISOString()
-                .split('T')[0]
+              dateToTuiDay(new Date(this.selectedAssignment.deadline))
             );
           this.selectedAssignee = this.selectedAssignment.assignee;
           this.detailVisible = true;
@@ -352,25 +427,30 @@ export class AssignAssignmentComponent implements OnInit {
           console.log(this.assignmentForm.get('deadline')?.value);
         }
       });
+    this.sub.push(methodAss);
+
     console.log(rowNode.assignmentId);
     this.stompService.subscribe('/comment/' + rowNode.assignmentId, (): any => {
       this.refreshSelectedAssignment();
     });
   }
   update() {
-    const deadlineValue = this.assignmentForm.get('deadline')?.value ?? '';
-    const isoDateString = new Date(deadlineValue).toISOString();
+    const deadlineValue = tuiDayToDateNull(
+      this.assignmentForm.get('deadline')?.value
+    );
+
+    // console.log(toIsoString(deadlineValue));
     this.confirmationService.confirm({
       message: 'Bạn có muốn cập nhật công việc  này?',
       header: 'Xác nhận cập nhật',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
           updateAssignmentDto: {
             assignmentId: this.selectedAssignment.assignmentId,
             assignmentName: this.assignmentForm.get('assignmentName')?.value,
-            deadline: isoDateString,
+            deadline: deadlineValue?.toISOString(),
             description: this.assignmentForm.get('description')?.value,
           },
         };
@@ -378,18 +458,18 @@ export class AssignAssignmentComponent implements OnInit {
         this.assignmentService.updateSchoolAssignment(data).subscribe({
           next: (data) => {
             this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Cập nhật thành công',
-              detail: 'Cập nhật thành công',
-            });
+            this.toastService.showSuccess(
+              'toastAssignAssignment',
+              'Cập nhật thành công',
+              'Cập nhật thành công'
+            );
           },
           error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Cập nhật thất bại',
-              detail: error.error.message,
-            });
+            this.toastService.showError(
+              'toastAssignAssignment',
+              'Cập nhật thất bại',
+              error.error.message
+            );
           },
         });
       },
@@ -400,10 +480,18 @@ export class AssignAssignmentComponent implements OnInit {
     this.assignmentForm.reset();
     this.showComment = true;
     this.stompService.unsubscribe(this.selectedAssignment.assignmentId);
+    this.assignmentForm.get('isTask')?.setValue(false);
+    this.activeTab = this.tabs[0];
     this.router.navigate(['/assignassignment/' + this.issueId], {
       queryParams: {},
     });
-    this.activeTab = this.tabs[0];
+  }
+  uploadFilePopupHideEvent() {
+    this.fileInputForm.reset();
+    this.fileInputPlaceholders = '';
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   getStatusSeverity(statusId: number): string {
@@ -418,29 +506,20 @@ export class AssignAssignmentComponent implements OnInit {
   }
 
   // PREVIEW PDF
-  openNewTab(documentLink: string) {
-    console.log(documentLink);
-    this.fileService.readAssignmentPDF(documentLink).subscribe((response) => {
-      const blobUrl = window.URL.createObjectURL(response.body as Blob);
-      this.pdfUrl = blobUrl;
-      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-      this.pdfLoaded = true;
-    });
-  }
-  // preview docx and excel
-  previewFile(documentLink: string, fileExtension: string) {
-    this.isFileLoading = true;
-    this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
-      const blobUrl = window.URL.createObjectURL(data.body as Blob);
-      this.pdfUrl = blobUrl;
-      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-      if (this.safePdfUrl !== undefined) {
-        this.fileUrl = this.safePdfUrl + '';
-      }
-      this.isFileLoading = false;
-      this.pdfLoaded = true;
-      console.log(this.safePdfUrl);
-    });
+  openNewTab(documentLink: string, fileExtension: string) {
+    if (fileExtension === 'application/pdf') {
+      this.pdfPreviewVisibility = true;
+    }
+    const method = this.fileService
+      .readAssignmentPDF(documentLink)
+      .subscribe((response) => {
+        const blobUrl = window.URL.createObjectURL(response.body as Blob);
+        this.pdfUrl = blobUrl;
+        this.safePdfUrl =
+          this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+        this.pdfLoaded = true;
+      });
+    this.sub.push(method);
   }
   // check authorities
   hasAuthority(authority: string): boolean {
@@ -458,33 +537,34 @@ export class AssignAssignmentComponent implements OnInit {
         (status ? 'xác nhận hoàn thành' : 'hủy xác nhận') +
         ' công việc  này?',
       header: status ? 'Xác nhận hoàn thành' : 'Xác nhận hủy',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       // icon: 'pi pi-info-circle',
       accept: () => {
         const data = {
           assignmentId: this.selectedAssignment.assignmentId,
           isConfirm: status,
         };
-        this.assignmentService.confirmAssignment(data).subscribe({
-          next: (data) => {
-            this.detailVisible = false;
-            this.initData();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xác nhận',
-              detail: status
-                ? 'Xác nhận thành công'
-                : 'Hủy xác nhận thành công',
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xác nhận thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        const method = this.assignmentService
+          .confirmAssignment(data)
+          .subscribe({
+            next: (data) => {
+              this.detailVisible = false;
+              this.initData();
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Xác nhận',
+                status ? 'Xác nhận thành công' : 'Hủy xác nhận thành công'
+              );
+            },
+            error: (error) => {
+              this.toastService.showError(
+                'error',
+                'Xác nhận thất bại',
+                error.error.message
+              );
+            },
+          });
+        this.sub.push(method);
       },
       reject: (type: any) => {},
     });
@@ -506,23 +586,25 @@ export class AssignAssignmentComponent implements OnInit {
       assignmentId: this.selectedAssignment.assignmentId,
       assigneeId: selectedAssignee.accountId,
     };
-    this.assignmentService.assignAssignment(data).subscribe({
+    const method = this.assignmentService.assignAssignment(data).subscribe({
       next: (data) => {
         this.initData();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Đổi thành công',
-          detail: 'Đổi người làm thành công',
-        });
+        this.refreshSelectedAssignment();
+        this.toastService.showSuccess(
+          'toastAssignAssignment',
+          'Đổi thành công',
+          'Đổi người làm thành công'
+        );
       },
       error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Đổi thất bại',
-          detail: 'Đổi người làm thất bại',
-        });
+        this.toastService.showError(
+          'toastAssignAssignment',
+          'Đổi thất bại',
+          'Đổi người làm thất bại'
+        );
       },
     });
+    this.sub.push(method);
   }
 
   onPatchAssigneeId() {
@@ -543,6 +625,10 @@ export class AssignAssignmentComponent implements OnInit {
     }
   }
   uploadFiles() {
+    if (this.fileInputForm.invalid) {
+      this.fileInputForm.markAllAsTouched();
+      return;
+    }
     this.isFileLoading = true;
     const documentData = {
       assignmentId: this.selectedAssignment.assignmentId,
@@ -560,7 +646,7 @@ export class AssignAssignmentComponent implements OnInit {
       const pdfFile = fileControl.value;
       formData.append('files', pdfFile);
     }
-    this.assignmentService.uploadDocument(formData).subscribe({
+    const method = this.assignmentService.uploadDocument(formData).subscribe({
       next: (data) => {
         this.refreshSelectedAssignment();
         this.fileVisible = false;
@@ -568,6 +654,7 @@ export class AssignAssignmentComponent implements OnInit {
       },
       error: (error) => {},
     });
+    this.sub.push(method);
     // this.documents.push(data);
     this.fileInputForm.reset();
     this.fileInputPlaceholders = '';
@@ -580,29 +667,35 @@ export class AssignAssignmentComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có muốn xóa tài liệu  này?',
       header: 'Xác nhận xóa',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
+        this.isFileLoading = true;
         this.documents.splice(index, 1);
         const deleteDocument = {
           assignmentId: this.selectedAssignment.assignmentId,
           documentId: documentId,
         };
-        this.assignmentService.deleteDocument(deleteDocument).subscribe({
-          next: (data) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Xóa thành công',
-              detail: 'Xóa tài liệu thành công',
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Xóa thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        const method = this.assignmentService
+          .deleteDocument(deleteDocument)
+          .subscribe({
+            next: (data) => {
+              this.refreshSelectedAssignment();
+              this.isFileLoading = false;
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Xóa thành công',
+                'Xóa tài liệu thành công'
+              );
+            },
+            error: (error) => {
+              this.toastService.showError(
+                'toastAssignAssignment',
+                'Xóa thất bại',
+                error.error.message
+              );
+            },
+          });
+        this.sub.push(method);
       },
     });
   }
@@ -611,29 +704,33 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn nộp công việc này?',
       header: 'Xác nhận nộp',
       icon: 'bi bi-exclamation-triangle-fill',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
         const jsonData = {
           assignmentId: this.selectedAssignment.assignmentId,
           isSubmit: true,
         };
-        this.assignmentService.submitAssignment(jsonData).subscribe({
-          next: (data) => {
-            this.selectedAssignment = data;
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Nộp thành công',
-              detail: 'Nộp thành công',
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Nộp thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        const method = this.assignmentService
+          .submitAssignment(jsonData)
+          .subscribe({
+            next: (data) => {
+              this.selectedAssignment = data;
+              this.initData();
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Nộp thành công',
+                'Nộp thành công'
+              );
+            },
+            error: (error) => {
+              this.toastService.showError(
+                'toastAssignAssignment',
+                'Nộp thất bại',
+                error.error.message
+              );
+            },
+          });
+        this.sub.push(method);
       },
       reject: (type: any) => {},
     });
@@ -644,30 +741,34 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn hủy công việc này?',
       header: 'Xác nhận hủy',
       icon: 'bi bi-exclamation-triangle-fill',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
 
       accept: () => {
         const jsonData = {
           assignmentId: this.selectedAssignment.assignmentId,
           isSubmit: false,
         };
-        this.assignmentService.submitAssignment(jsonData).subscribe({
-          next: (data) => {
-            this.selectedAssignment = data;
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Hủy nộp thành công',
-              detail: 'Hủy nộp thành công',
-            });
-          },
-          error: (error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Hủy nộp thất bại',
-              detail: error.error.message,
-            });
-          },
-        });
+        const method = this.assignmentService
+          .submitAssignment(jsonData)
+          .subscribe({
+            next: (data) => {
+              this.selectedAssignment = data;
+              this.initData();
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Hủy nộp thành công',
+                'Hủy nộp thành công'
+              );
+            },
+            error: (error) => {
+              this.toastService.showError(
+                'toastAssignAssignment',
+                'Hủy nộp thất bại',
+                error.error.message
+              );
+            },
+          });
+        this.sub.push(method);
       },
       reject: (type: any) => {},
     });
@@ -678,9 +779,9 @@ export class AssignAssignmentComponent implements OnInit {
       message: 'Bạn có muốn đánh giá công việc này?',
       header: 'Xác nhận đánh giá',
       icon: 'bi bi-exclamation-triangle-fill',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
-        this.assignmentService
+        const method = this.assignmentService
           .evaluateTask({
             assignmentId: this.selectedAssignment.assignmentId,
             isPassed: isPassed,
@@ -689,20 +790,21 @@ export class AssignAssignmentComponent implements OnInit {
             next: (data) => {
               this.selectedAssignment = data;
               this.initData();
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Phê duyệt',
-                detail: 'Đánh giá thành công',
-              });
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Đánh giá',
+                isPassed ? 'Phê duyệt thành công' : 'Không phê duyệt thành công'
+              );
             },
             error: (error) => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Phê duyệt',
-                detail: error.error.message,
-              });
+              this.toastService.showError(
+                'toastAssignAssignment',
+                'Phê duyệt',
+                error.error.message
+              );
             },
           });
+        this.sub.push(method);
       },
     });
   }
@@ -713,16 +815,17 @@ export class AssignAssignmentComponent implements OnInit {
       content: this.commentForm.get('content')?.value,
       assignmentId: this.selectedAssignment.assignmentId,
     };
-    this.assignmentService.addComment(data).subscribe({
+    const method = this.assignmentService.addComment(data).subscribe({
       next: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Bình luận thành công',
-          detail: 'Bình luận thành công',
-        });
+        this.toastService.showSuccess(
+          'toastAssignAssignment',
+          'Bình luận thành công',
+          'Bình luận thành công'
+        );
         this.refreshSelectedAssignment();
       },
     });
+    this.sub.push(method);
     this.commentForm.reset();
   }
   onKeyPress(event: KeyboardEvent) {
@@ -735,27 +838,36 @@ export class AssignAssignmentComponent implements OnInit {
     const assignmentId = this.selectedAssignment?.assignmentId;
 
     if (assignmentId) {
-      this.assignmentService.getAssignmentsById(assignmentId).subscribe({
-        next: (data) => {
-          this.selectedAssignment = data;
-        },
-        error: (error) => {
-          console.error('Error refreshing assignment:', error);
-        },
-      });
-      this.assignmentService.getHistoryByAssignmentId(assignmentId).subscribe({
-        next: (data) => {
-          this.historyDtos = data.historyDtos;
-          console.log(this.historyDtos);
-        },
-        error: () => {},
-      });
-      this.assignmentService.getCommentsByAssignmentId(assignmentId).subscribe({
-        next: (data) => {
-          this.comments = data.commentDtos;
-        },
-        error: () => {},
-      });
+      const methodAss = this.assignmentService
+        .getAssignmentsById(assignmentId)
+        .subscribe({
+          next: (data) => {
+            this.selectedAssignment = data;
+          },
+          error: (error) => {
+            console.error('Error refreshing assignment:', error);
+          },
+        });
+      this.sub.push(methodAss);
+      const methodHis = this.assignmentService
+        .getHistoryByAssignmentId(assignmentId)
+        .subscribe({
+          next: (data) => {
+            this.historyDtos = data.historyDtos;
+            console.log(this.historyDtos);
+          },
+          error: () => {},
+        });
+      this.sub.push(methodHis);
+      const methodComment = this.assignmentService
+        .getCommentsByAssignmentId(assignmentId)
+        .subscribe({
+          next: (data) => {
+            this.comments = data.commentDtos;
+          },
+          error: () => {},
+        });
+      this.sub.push(methodComment);
     }
   }
   toggleMenu(commentId: number, event: Event) {
@@ -772,28 +884,29 @@ export class AssignAssignmentComponent implements OnInit {
       header: 'Xác nhận tạo mới',
       key: 'confirmAssignment',
       accept: () => {
-        this.assignmentService
+        const method = this.assignmentService
           .deleteComment({
             assignmentId: this.selectedAssignment.assignmentId,
             commentId: this.deleteCommentId,
           })
           .subscribe({
             next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Xóa bình luận',
-                detail: 'Xóa bình luận thành công',
-              });
+              this.toastService.showSuccess(
+                'toastAssignAssignment',
+                'Xóa bình luận',
+                'Xóa bình luận thành công'
+              );
               this.refreshSelectedAssignment();
             },
             error: (error) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Xóa bị lỗi',
-                detail: error.error.message,
-              });
+              this.toastService.showError(
+                'error',
+                'Xóa bị lỗi',
+                error.error.message
+              );
             },
           });
+        this.sub.push(method);
       },
     });
   }
@@ -801,7 +914,7 @@ export class AssignAssignmentComponent implements OnInit {
     let url = '';
     switch (fileExtension) {
       case 'application/pdf':
-        url = '../../../../../assets/img/pdf.png';
+        url = '../../../../../assets/img/pdf_logo.svg';
         break;
       case 'application/msword':
         url = '../../../../../assets/img/doc.png';
@@ -833,27 +946,49 @@ export class AssignAssignmentComponent implements OnInit {
     }
     return extension;
   }
-  // viewDocxFile(documentLink: string) {
-  //   this.fileService
-  //     .readAssignmentPDF(documentLink)
-  //     .subscribe((response: HttpResponse<Blob>) => {
-  //       const fileName = this.getFileNameFromResponseHeaders(response);
-  //       const blobUrl = window.URL.createObjectURL(response.body);
-  //       this.docxUrl = blobUrl;
-  //       this.safeDocxUrl =
-  //         this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-  //       saveAs(response.body, fileName);
-  //     });
-  // }
-  // readWordDocument(blobData: Blob): void {
-  //   this.wordDocService
-  //     .readWordBlob(blobData)
-  //     .then((content) => {
-  //       console.log(content);
-  //       this.documentContent = content;
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error reading Word document:', error);
-  //     });
-  // }
+  onHideFilePreviewEvent() {
+    this.pdfUrl = '';
+    this.safePdfUrl = '';
+    this.pdfLoaded = false;
+  }
+  navigateChildren(assignmentId: number) {
+    this.router.navigate(['/assignassignment', this.issueId], {
+      queryParams: { id: assignmentId },
+    });
+  }
+  setExpandedForAllNodes(nodes: any[]) {
+    nodes.forEach((node) => {
+      if (node.children && node.children.length > 0) {
+        this.setExpandedForAllNodes(node.children);
+      }
+      node.expanded = true;
+      this.nodeStateMap[node.assignmentId] = true;
+    });
+  }
+  onNodeExpand(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+  onNodeCollapse(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+  restoreNodeState(nodes: any[]) {
+    nodes.forEach((node) => {
+      if (this.nodeStateMap[node.assignmentId] !== undefined) {
+        node.expanded = this.nodeStateMap[node.assignmentId];
+      }
+
+      if (node.children && node.children.length > 0) {
+        this.restoreNodeState(node.children);
+      }
+    });
+  }
+  ngOnDestroy(): void {
+    unSub(this.sub);
+  }
 }

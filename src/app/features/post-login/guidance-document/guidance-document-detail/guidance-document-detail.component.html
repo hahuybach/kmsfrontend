@@ -1,19 +1,32 @@
+<p-dialog
+  header="Xem tài liệu"
+  [(visible)]="pdfPreviewVisibility"
+  [style]="{ width: '90vw', height: '100vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
+    <div class="spinner-border text-center" role="status"></div>
+    <p>Đang tải...</p>
+  </div>
+  <ng-template #pdfIsLoaded>
+    <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
+  </ng-template>
+</p-dialog>
 <div class="container-fluid">
-  <p-dialog
-    header="Xem tài liệu"
-    [(visible)]="pdfPreviewVisibility"
-    [style]="{ width: '90vw', height: '100vh' }"
-    [draggable]="false"
-    [resizable]="false"
+  <tui-breadcrumbs
+    size="l"
   >
-    <div *ngIf="!pdfLoaded; else pdfIsLoaded" class="spinner">
-      <div class="spinner-border text-center" role="status"></div>
-      <p>Đang tải...</p>
-    </div>
-    <ng-template #pdfIsLoaded>
-      <iframe [src]="safePdfUrl" width="100%" height="105%"></iframe>
-    </ng-template>
-  </p-dialog>
+    <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium">Chi tiết văn bản bổ sung</h5>
 
   <div class="row">
