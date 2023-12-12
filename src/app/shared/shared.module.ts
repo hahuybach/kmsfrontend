@@ -28,6 +28,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
 import {TuiInputDateModule, TuiInputDateRangeModule, TuiBreadcrumbsModule} from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
+import {CheckboxModule} from "primeng/checkbox";
+import {TuiRingChartModule} from '@taiga-ui/addon-charts';
+import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
 
 @NgModule({
   declarations: [
@@ -63,7 +66,10 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
     MatFormFieldModule,
     TuiInputDateModule,
     TuiInputDateRangeModule,
-    TuiBreadcrumbsModule
+    TuiBreadcrumbsModule,
+    CheckboxModule,
+    TuiRingChartModule,
+    TuiMoneyModule
   ],
   exports: [
     InputTextModule,
@@ -95,7 +101,10 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
     TuiInputDateModule,
     DataNotExistComponent,
     TuiInputDateRangeModule,
-    TuiBreadcrumbsModule
+    TuiBreadcrumbsModule,
+    CheckboxModule,
+    TuiRingChartModule,
+    TuiMoneyModule
   ],
 })
 export class SharedModule {

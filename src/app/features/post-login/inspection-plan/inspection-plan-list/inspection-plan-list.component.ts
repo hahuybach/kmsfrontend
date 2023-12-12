@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {IssueDropDownResponse} from "../../../../models/issue-drop-down-response";
@@ -11,6 +11,7 @@ import {AuthService} from "../../../../services/auth.service";
 import {Role} from "../../../../shared/enum/role";
 import {dateToTuiDay, toIsoStringUrl, tuiDayToDate, unSub} from "../../../../shared/util/util";
 import {TuiDayRange} from "@taiga-ui/cdk";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-inspection-plan-list',
@@ -41,6 +42,8 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
   schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
     Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY]
 
+  isMine: any;
+
   constructor(
     private readonly router: Router,
     private readonly inspectionPlanService: inspectionPlanService,
@@ -48,8 +51,9 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
     private issueService: IssueService,
     private toastService: ToastService,
     private auth: AuthService,
-    private activateRouter: ActivatedRoute,
+    private activateRouter: ActivatedRoute
   ) {
+
   }
 
   statuses = [
@@ -70,6 +74,10 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
   createDateRange: any;
   deadlineDateRange: any;
   subs: any[] = []
+  isMineSelection =  [
+    {label: 'Bao gồm tôi', value: true},
+    {label: 'Không bao gồm tôi', value: false},
+  ];
 
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
@@ -150,12 +158,15 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
 
         }
         if (value['schoolId'] && value['schoolId'] !== undefined) {
-          this.selectedSchool = Number(value['schoolId']) ;
+          this.selectedSchool = Number(value['schoolId']);
 
         }
 
         if (value['status'] && value['status'] !== undefined) {
-          this.selectedStatus = Number(value['status']) ;
+          this.selectedStatus = Number(value['status']);
+        }
+        if (value['isMine'] && value['isMine'] !== undefined && value['isMine'] == 'true') {
+          this.isMine = true;
         }
 
         if (value['advanceSearch']) {
@@ -184,14 +195,20 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setAuth()
-    for (const role of this.auth.getRoleFromJwt()) {
-      if (role.authority === Role.PRINCIPAL) {
-        this.isPrincipal = true;
-        this.selectedSchool = this.auth.getSchoolFromJwt().schoolId;
-      }
-    }
-    if (!this.isPrincipal) {
+
+    if (this.isDirector) {
       const sub = this.schoolService.findAllSchools().subscribe({
+          next: (data) => {
+            this.schools = data
+          },
+          error: (error) => {
+            this.toastService.showError("error", "Lỗi", error.error.message)
+          }
+        }
+      )
+      this.subs.push(sub);
+    } else {
+      this.schoolService.getInspectedSchoolByInspectorEmail(this.auth.getSubFromCookie()).subscribe({
         next: (data) => {
           this.schools = data
         },
@@ -199,7 +216,6 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
           this.toastService.showError("error", "Lỗi", error.error.message)
         }
       })
-      this.subs.push(sub);
     }
     const sub2 = this.issueService.getIssueDropDownResponse()
       .subscribe({
@@ -218,9 +234,12 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
 
 
   loadDocuments() {
+    if (!(this.isPrincipal || this.isDirector)){
+      this.isMine = true;
+    }
     const sub = this.inspectionPlanService.filterInspectionPlan(this.pageNo, this.pageSize, this.sortBy,
       this.sortDirection, this.planName, this.selectedStatus, this.currentIssueSelected, this.selectedSchool,
-      this.creationStartDateTime, this.creationEndDateTime, this.deadlineStartDateTime, this.deadlineEndDateTime).subscribe({
+      this.creationStartDateTime, this.creationEndDateTime, this.deadlineStartDateTime, this.deadlineEndDateTime, this.isMine).subscribe({
       next: (data) => {
         this.inspectionPlans = data.inspectionPlanFilterDtos.content;
         this.maxPage = data.inspectionPlanFilterDtos.totalPages;
@@ -242,6 +261,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
             advanceSearch: this.advanceSearch,
             status: this.selectedStatus,
             schoolId: this.selectedSchool,
+            isMine: this.isMine
 
 
             // Add other query parameters as needed
@@ -251,7 +271,6 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
       }
     })
     this.subs.push(sub)
-
   }
 
   onAdvanceSearch() {
@@ -280,6 +299,10 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
     this.deadlineEndDateTime = null;
     this.createDateRange = null;
     this.deadlineDateRange = null;
+    this.isMine = null;
+    if (!(this.isPrincipal || this.isDirector)){
+      this.isMine = true
+    }
     this.loadDocuments();
   }
 
@@ -350,4 +373,6 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     unSub(this.subs)
   }
+
+
 }

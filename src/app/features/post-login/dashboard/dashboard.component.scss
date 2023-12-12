@@ -64,3 +64,33 @@
         background-color: #eaeaea;
     }
 }
+:host {
+    --tui-chart-0: #fc9e5b;
+    --tui-chart-1: #9ad6ff;
+    --tui-chart-2: #9ff7ab;
+    --tui-chart-3: rgb(243, 146, 146);
+    --tui-chart-4: #9795cd;
+}
+.bg-color-0 {
+    background-color: var(--tui-chart-0);
+}
+.bg-color-1 {
+    background-color: var(--tui-chart-1);
+}
+.bg-color-2 {
+    background-color: var(--tui-chart-2);
+}
+.bg-color-3 {
+    background-color: var(--tui-chart-3);
+}
+.bg-color-4 {
+    background-color: var(--tui-chart-4);
+}
+.box-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+// .p-dropdown-label {
+//     font-size: 16px !important;
+// }
