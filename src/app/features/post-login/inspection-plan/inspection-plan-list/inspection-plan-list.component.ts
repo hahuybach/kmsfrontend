@@ -375,4 +375,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
   }
 
 
+  onInspectingDetail(inspectionPlanId: any) {
+    this.router.navigate(['inspection/' + inspectionPlanId])
+  }
 }

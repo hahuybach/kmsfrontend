@@ -546,7 +546,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         0,
         3,
         'History.createdDate',
-        'asc',
+        'desc',
         '',
         this.selectedStatus,
         this.issue?.issueId

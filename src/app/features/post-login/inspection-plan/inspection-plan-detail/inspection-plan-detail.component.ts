@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 import {Subscription, switchMap} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FileService} from "../../../../services/file.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 
@@ -62,7 +62,8 @@ export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly cdref: ChangeDetectorRef,
     private readonly fileService: FileService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private router: Router
   ) {
     this
       .inspectionPlanDetail = {
@@ -123,5 +124,9 @@ export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubscribeAll();
+  }
+
+  onUpdate() {
+    this.router.navigate(['inspection-plan/update/' + this.inspectionPlanId])
   }
 }

@@ -292,17 +292,19 @@
             <button
               class="action-button"
               type="button"
+              (click)="onInspectingDetail(plan.inspectionPlanId)"
+            >
+              <i class="bi bi-info-square"></i>
+            </button>
+
+            <button
+              class="action-button"
+              type="button"
               (click)="onDetail(plan.inspectionPlanId)"
             >
               <i class="bi bi-info-circle-fill"></i>
             </button>
-            <button
-              class="action-button"
-              type="button"
-              (click)="onUpdate(plan.inspectionPlanId)"
-            >
-              <i class="bi bi-pencil-fill"></i>
-            </button>
+
           </div>
         </td>
       </tr>
