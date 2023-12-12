@@ -52,9 +52,9 @@ export class StompService {
     return this.http.get(url, {headers});
   }
 
-  public getAllUnseenNotification(): Observable<any> {
+  public getNextNotification(page: number, seen: boolean): Observable<any> {
     let headers = new HttpHeaders();
-    const url = `${this.notificationApiUrl}/unseen_list`;
+    const url = `${this.notificationApiUrl}/noti-page?pageNum=${page}&seen=${seen}`;
     return this.http.get(url, {headers});
   }
 }

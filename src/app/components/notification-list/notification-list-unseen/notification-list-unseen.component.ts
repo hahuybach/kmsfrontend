@@ -23,6 +23,8 @@ export class NotificationListUnseenComponent {
     notificationType: string
   }[];
 
+  @Input() allNotificationLoaded: boolean = false;
+
   handleCLickNotificationItem(index: number) {
     let notificationId: number = this.unseenNotificationDtos[index].notificationId;
     this.notificationService.notificationIsSeen(notificationId).subscribe({

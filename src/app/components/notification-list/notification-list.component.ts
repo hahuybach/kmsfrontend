@@ -13,17 +13,15 @@ import {AuthService} from "../../services/auth.service";
 export class NotificationListComponent implements OnInit {
   badgeValue: string = "0";
   user: string | null;
-  notificationItems: {
-    notificationListDtos: {
-      createdOn: Date,
-      isSeen: boolean,
-      link: string,
-      message: string,
-      notificationId: number,
-      notificationType: string
-    }[],
-    unseen: number
-  };
+  notificationListDtos: {
+    createdOn: Date,
+    isSeen: boolean,
+    link: string,
+    message: string,
+    notificationId: number,
+    notificationType: string
+  }[]
+  unseen: number
 
   unseenNotificationDtos: {
     createdOn: Date,
@@ -35,7 +33,9 @@ export class NotificationListComponent implements OnInit {
   }[];
 
   showAllNotification: boolean = true;
-
+  notificationPageSize: number = 10;
+  notificationAllPageNumber: number = 1;
+  notificationUnSeenPageNumber: number = 1;
   constructor(
     private http: HttpClient,
     private stompService: StompService,
@@ -54,7 +54,7 @@ export class NotificationListComponent implements OnInit {
     this.showAllNotification = false;
   }
 
-  resetScroll(){
+  resetScroll() {
     const notificationListElement = document.querySelector('.notification-item-list');
     if (notificationListElement) {
       notificationListElement.scrollTop = 0;
@@ -63,7 +63,6 @@ export class NotificationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNotification();
-    this.getUnseenNotification();
     this.user = this.authService.getSubFromCookie();
     this.stompService.subscribe('/notify/' + this.user, (): any => {
       this.getNotification();
@@ -79,9 +78,12 @@ export class NotificationListComponent implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          this.notificationItems = data;
-          if (this.notificationItems?.unseen != 0) {
-            this.badgeValue = this.notificationItems?.unseen < 99 ? this.notificationItems?.unseen.toString() : "99+";
+          console.log(data);
+          this.notificationListDtos = data.notificationListDtos;
+          this.unseen = data.unseen;
+          this.unseenNotificationDtos = data.unseenNotificationListDtos;
+          if (data.unseen != 0) {
+            this.badgeValue = this.unseen < 99 ? this.unseen.toString() : "99+";
           } else {
             this.badgeValue = "0";
           }
@@ -92,31 +94,30 @@ export class NotificationListComponent implements OnInit {
       });
   }
 
-  private getUnseenNotification(): void {
-    this.route.params
-      .pipe(
-        switchMap((params) => {
-          return this.stompService.getAllUnseenNotification();
-        })
-      )
-      .subscribe({
-        next: (data) => {
-          this.unseenNotificationDtos = data.notificationListDtos;
-        },
-        error: (error) => {
-          console.log(error)
-        }
-      });
-  }
 
-
-  onNotificationListScroll(e: any){
+  onNotificationListScroll(e: any) {
     const element = e.target as HTMLElement;
+    console.log(element.offsetHeight);
+    console.log(element.scrollTop);
+    console.log(element.scrollHeight);
     if ((element.offsetHeight + element.scrollTop + 1) >= element.scrollHeight) {
-      if (this.showAllNotification){
-        console.log('end of notification all');
-      }else{
-        console.log('end of notification unseen');
+      if (this.showAllNotification) {
+        this.stompService.getNextNotification(this.notificationAllPageNumber ,true).subscribe({
+          next: (data) => {
+            console.log(data)
+            this.notificationListDtos.push(...data.notificationListDtos);
+            console.log(this.notificationListDtos);
+            this.notificationAllPageNumber++;
+          }
+        })
+      } else {
+        this.stompService.getNextNotification(this.notificationUnSeenPageNumber ,false).subscribe({
+          next: (data) => {
+            console.log(data)
+            this.unseenNotificationDtos.push(...data.notificationListDtos);
+            this.notificationUnSeenPageNumber++;
+          }
+        })
       }
     }
   }

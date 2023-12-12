@@ -16,7 +16,7 @@
     <div class="notification-item-list" (scroll)="onNotificationListScroll($event)">
       <app-notification-list-all
         *ngIf="showAllNotification"
-        [notificationItems]="notificationItems">
+        [notificationListDtos]="notificationListDtos">
       </app-notification-list-all>
       <app-notification-list-unseen
         *ngIf="!showAllNotification"
