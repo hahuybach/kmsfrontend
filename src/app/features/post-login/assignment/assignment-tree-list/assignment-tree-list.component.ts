@@ -250,7 +250,7 @@ export class AssignmentTreeListComponent implements OnInit, OnDestroy {
             'Hồ sơ của trường chưa hoàn thành\nVui lòng không thực hiện thao tác này'
           );
         } else {
-          this.router.navigate(['detail-assignment'], {
+          this.router.navigate(['list-assignment/detail-assignment'], {
             queryParams: { issueId: issueId, schoolId: schoolId },
           });
         }
