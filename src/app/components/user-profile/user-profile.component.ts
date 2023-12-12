@@ -6,7 +6,7 @@ import {validateDateNotGreaterThanToday} from "../../shared/validators/date-not-
 import {UserResponseForUserList} from "../../models/user-response-for-user-list";
 import {ToastService} from "../../shared/toast/toast.service";
 import {ConfirmationService} from "primeng/api";
-import {unSub} from "../../shared/util/util";
+import {getFirstAndLastName, unSub} from "../../shared/util/util";
 
 @Component({
     selector: 'app-user-profile',
@@ -39,12 +39,14 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     isVisible: any;
     isLoading = false;
     submitCompleted = false;
+    avatar: string;
 
     ngOnInit(): void {
 
         const sub = this.accountService.getCurrentUser().subscribe({
             next: (data) => {
                 this.currentUser = data.userDto;
+                this.avatar = getFirstAndLastName(this.currentUser.fullName);
                 this.form.patchValue({
                     fullName: this.currentUser.fullName,
                     dob: this.currentUser?.dob,

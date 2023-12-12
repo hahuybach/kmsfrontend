@@ -566,10 +566,12 @@
                   <div
                     class="comment-item-person col-md-1 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(item.creator.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="comment-item-content col-md-10">
                     <span class="font-weight-bold font-size-18"
@@ -600,10 +602,12 @@
                   <div
                     class="history-item-ava col-md-1 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(item.actionCreator.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-11 history-item-content">
                     <span>
@@ -628,7 +632,14 @@
               <div
                 class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
               >
-                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+                <tui-avatar
+                  text="{{
+                    getAvatar(selectedAssignment.assigner?.user.fullName)
+                  }}"
+                  [rounded]="true"
+                  [autoColor]="true"
+                >
+                </tui-avatar>
               </div>
               <div class="col-md-10 d-flex align-items-center">
                 <span class="font-weight-bold">{{
@@ -655,10 +666,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(selectedAssignee?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -675,10 +688,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(option?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -702,10 +717,14 @@
                 <div
                   class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                 >
-                  <img
-                    src="../../../../../../assets/img/user_icon.svg"
-                    alt=""
-                  />
+                  <tui-avatar
+                    text="{{
+                      getAvatar(selectedAssignment.assignee?.user.fullName)
+                    }}"
+                    [rounded]="true"
+                    [autoColor]="true"
+                  >
+                  </tui-avatar>
                 </div>
                 <div class="col-md-10 d-flex align-items-center">
                   <span class="font-weight-bold">{{
@@ -924,10 +943,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(option?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -941,10 +962,12 @@
                   <div
                     class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
                   >
-                    <img
-                      src="../../../../../../assets/img/user_icon.svg"
-                      alt=""
-                    />
+                    <tui-avatar
+                      text="{{ getAvatar(option?.user.fullName) }}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
                     <span class="font-weight-bold">{{
@@ -1031,7 +1054,12 @@
               <div
                 class="comment-item-person col-md-2 d-flex justify-content-center align-items-center"
               >
-                <img src="../../../../../../assets/img/user_icon.svg" alt="" />
+                <tui-avatar
+                  text="{{ getAvatar(rowData.node.assignee?.user.fullName) }}"
+                  [rounded]="true"
+                  [autoColor]="true"
+                >
+                </tui-avatar>
               </div>
               <div class="col-md-10 d-flex align-items-center">
                 <span class="font-weight-bold">{{

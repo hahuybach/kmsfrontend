@@ -567,7 +567,12 @@
                   <div
                     class="scrollview-item-icon d-flex justify-content-center align-items-center"
                   >
-                    <img src="../../../../../assets/img/user_icon.svg" alt=""/>
+                    <tui-avatar
+                      text="{{getAvatar(item.user.fullName)}}"
+                      [rounded]="true"
+                      [autoColor]="true"
+                    >
+                    </tui-avatar>
                   </div>
                   <div class="scrollview-item-content ms-3">
                   <span class="font-weight-bold font-size-18">{{

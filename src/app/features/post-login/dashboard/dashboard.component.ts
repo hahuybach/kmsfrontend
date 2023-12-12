@@ -109,14 +109,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
     'Taxi',
     'other',
   ];
-  readonly valueExample = [13769, 12367, 10172, 3018, 2592];
-  readonly total = tuiSum(...this.valueExample);
+
+  issueNotFound = false;
   sum(chart: any, index: number): number {
-    return Number.isNaN(index) ? tuiSum(...chart?.data) : chart?.data[index];
+    if (Number.isNaN(index)) {
+      if (chart && Array.isArray(chart.data)) {
+        return this.sumArray(chart.data);
+      }
+    } else {
+      if (chart && Array.isArray(chart.data) && chart.labels[index]) {
+        return chart.data[index];
+      }
+    }
+    return 0; // Or any other default value if the conditions are not met
   }
 
   label(chart: any, index: number): string {
-    return Number.isNaN(index) ? 'Tổng số' : chart?.labels[index];
+    if (Number.isNaN(index)) {
+      return 'Tổng số';
+    } else if (chart && Array.isArray(chart.labels) && chart.labels[index]) {
+      return chart.labels[index];
+    }
+    return ''; // Or any other default value if the conditions are not met
   }
 
   setAuth() {
@@ -210,16 +224,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.asmChartData = {
       labels: [
         'Chưa hoàn thành',
+        'Chờ phê duyệt',
         'Hoàn thành',
-        'Đang chờ phê duyệt',
-        'Phê duyệt',
         'Không phê duyệt',
+        // 'Phê duyệt',
       ],
       data: [
         this.numberOfNotCompletedAsm,
-        this.numberOfCompletedAsm,
         this.numberWaitingForApprovalAsm,
-        this.numberApprovedAsm,
+        this.numberOfCompletedAsm + this.numberApprovedAsm,
         this.numberDisApprovedAsm,
       ],
     };
@@ -252,11 +265,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               console.log(this.numberOfInspectedSchool);
             },
             error: (error) => {
-              this.toastService.showError(
-                'dashboard-toast',
-                'Lỗi',
-                error.error.message
-              );
+              this.issueNotFound = true;
             },
           });
         const sub4 = this.initiationPlanService
@@ -360,6 +369,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               console.log(this.inspectionPlans);
             },
             error: (error) => {
+              this.issueNotFound = true;
               this.toastService.showError(
                 'dashboard-toast',
                 'Lỗi',
@@ -370,11 +380,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.subs.push(sub2);
       },
       error: (error) => {
-        this.toastService.showError(
-          'dashboard-toast',
-          'Lỗi',
-          error.error.message
-        );
+        this.issueNotFound = true;
       },
     });
     this.subs.push(sub);
@@ -407,11 +413,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 data.inspectionPlanFilterDtos.totalElements;
             },
             error: (error) => {
-              this.toastService.showError(
-                'dashboard-toast',
-                'Lỗi',
-                error.error.message
-              );
+              this.issueNotFound = true;
             },
           });
 
@@ -635,5 +637,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   viewGuidanceDocumentDetail(guidanceDocumentId: any) {
     this.router.navigate(['guidance-document/' + guidanceDocumentId]);
+  }
+  sumArray<T>(array: T[]): number {
+    if (array.length === 0) {
+      return 0; // Return 0 for an empty array or an appropriate value for your use case
+    }
+
+    // Use the reduce function to calculate the sum
+    return array.reduce((acc, value) => {
+      if (typeof value === 'number') {
+        return acc + value;
+      } else {
+        // Handle non-numeric values (e.g., strings)
+        return acc;
+      }
+    }, 0);
   }
 }

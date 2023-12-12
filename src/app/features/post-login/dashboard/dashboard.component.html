@@ -100,13 +100,17 @@
     </div>
     <div class="row mt-4">
       <div class="col-md-4">
-        <div class="card p-3">
+        <p *ngIf="issueNotFound">
+          Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng
+          kế hoạch thanh tra
+        </p>
+        <div class="card p-3" *ngIf="inspectionPlanDataChart">
           <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thanh tra</h6>
           <div class="row">
             <div class="col-md-7">
               <tui-ring-chart
                 size="xl"
-                [value]="inspectionPlanDataChart.data"
+                [value]="inspectionPlanDataChart?.data"
                 [(activeItemIndex)]="index_inspection"
               >
                 {{ sum(inspectionPlanDataChart, index_inspection) }}
@@ -118,7 +122,7 @@
             <div class="row col-md-5">
               <div
                 *ngFor="
-                  let item of inspectionPlanDataChart.labels;
+                  let item of inspectionPlanDataChart?.labels;
                   let i = index
                 "
               >
@@ -141,14 +145,18 @@
           ></p-chart> -->
         </div>
       </div>
-      <div class="col-md-4">
+      <p *ngIf="issueNotFound">
+        Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng
+        kế hoạch thực hiện nhiệm vụ
+      </p>
+      <div class="col-md-4" *ngIf="initiationPlanDataChart">
         <div class="card p-3">
           <h6 class="mat-headline-6">Thống kê thực trạng kế hoạch thực hiện</h6>
           <div class="row">
             <div class="col-md-7">
               <tui-ring-chart
                 size="xl"
-                [value]="initiationPlanDataChart.data"
+                [value]="initiationPlanDataChart?.data"
                 [(activeItemIndex)]="index_init"
               >
                 {{ sum(initiationPlanDataChart, index_init) }}
@@ -188,7 +196,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Tạo văn bản bổ sung</span>
+                  <span>Tạo văn bản bổ sung</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -200,7 +208,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Cuộc thanh tra của tôi</span>
+                  <span>Cuộc thanh tra của tôi</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -224,7 +232,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Xem mẫu hồ sơ</span>
+                  <span>Xem mẫu hồ sơ</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -297,9 +305,9 @@
   </ng-container>
   <!-- PRINCIPAL -->
   <ng-container *ngIf="isPrincipal">
-    <div class="row">
+    <div class="row height-row-principal">
       <div class="col-md-4">
-        <div class="card p-3">
+        <div class="card p-3 h-100">
           <div class="row">
             <div class="col-md-6 mb-2">
               <label class="fw-medium fs-18">Phiên thanh tra của bạn</label>
@@ -367,7 +375,7 @@
               </ng-container>
 
               <ng-template #noInspecPlan>
-                <div class="col-md-12">
+                <div class="col-md-12 mt-2">
                   <label class="fw-medium color-gray"
                     >Không có phiên thanh tra
                   </label>
@@ -379,7 +387,7 @@
         </div>
       </div>
       <div class="col-md-5">
-        <div class="card p-3">
+        <div class="card p-3 h-100">
           <div class="row">
             <div class="col-md-6 mb-2">
               <label class="fw-medium fs-18">Công việc hiện tại</label>
@@ -416,7 +424,11 @@
             <ng-container *ngIf="taskTrees && taskTrees.length > 0">
               <ng-container *ngFor="let task of taskTrees; let i = index">
                 <div class="row mb-2">
-                  <div class="col-md-6 td-content">
+                  <div
+                    class="col-md-6 td-content"
+                    pTooltip="{{ task.rootAssignmentName }}"
+                    tooltipPosition="top"
+                  >
                     <span>{{ task.rootAssignmentName }}</span>
                   </div>
                   <div class="col-md-4">
@@ -452,7 +464,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card p-3">
+        <div class="card p-3 h-100">
           <label class="fw-medium fs-18 mb-3">Truy cập nhanh</label>
           <div>
             <div class="card mb-2 shortcut-item" (click)="viewIssueDetail()">
@@ -460,7 +472,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Xem kế hoạch kiểm tra năm</span>
+                  <span>Xem kế hoạch kiểm tra năm</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -472,7 +484,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Xem danh sách công việc</span>
+                  <span>Xem danh sách công việc</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -487,7 +499,7 @@
                 class="p-3 d-flex justify-content-between align-items-center"
               >
                 <div>
-                  <span class="fs-18">Xem thanh tra ở trường bạn</span>
+                  <span>Xem thanh tra ở trường bạn</span>
                 </div>
                 <div class="shortcut-icon">
                   <i class="bi bi-caret-right-fill"></i>
@@ -498,78 +510,78 @@
         </div>
       </div>
     </div>
-
-    <div class="col-md-4">
-      <div class="card p-3">
-        <h6 class="mat-headline-6">Thống kê công việc toàn trường</h6>
-        <div class="row" *ngIf="asmChartData">
-          <div class="col-md-7">
-            <tui-ring-chart
-              size="s"
-              [value]="asmChartData.data"
-              [(activeItemIndex)]="index_asm"
-            >
-              {{ sum(asmChartData, index_asm) }}
-              <div>
-                {{ label(asmChartData, index_asm) }}
-              </div>
-            </tui-ring-chart>
-          </div>
-          <div class="row col-md-5">
-            <div
-              *ngFor="let item of inspectionPlanDataChart.labels; let i = index"
-            >
-              <div class="row">
-                <div class="col-md-2">
-                  <div class="box-color" [ngClass]="'bg-color-' + i"></div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="card p-3">
+          <h6 class="mat-headline-6">Thống kê công việc toàn trường</h6>
+          <div class="row" *ngIf="asmChartData">
+            <div class="col-md-7">
+              <tui-ring-chart
+                size="m"
+                [value]="asmChartData.data"
+                [(activeItemIndex)]="index_asm"
+              >
+                {{ sum(asmChartData, index_asm) }}
+                <div>
+                  {{ label(asmChartData, index_asm) }}
                 </div>
-                <div class="col-md-10">
-                  <label class="fw-medium">{{ item }}</label>
+              </tui-ring-chart>
+            </div>
+            <div class="row col-md-5" *ngIf="asmChartData">
+              <div *ngFor="let item of asmChartData?.labels; let i = index">
+                <div class="row">
+                  <div class="col-md-2">
+                    <div class="box-color" [ngClass]="'bg-color-' + i"></div>
+                  </div>
+                  <div class="col-md-10">
+                    <label class="fw-medium">{{ item }}</label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- <p-chart
-            type="pie"
-            [data]="inspectionPlanDataChart"
-            [options]="inspectionPlanOptionsChart"
-          ></p-chart> -->
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <label class="fw-medium fs-18">Thống kê công việc cá nhân</label>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card p-3">
+          <label class="fw-medium fs-18 mb-3"
+            >Văn bản bổ sung vừa đăng tải</label
+          >
+          <ng-container
+            *ngIf="guidanceDocuments && guidanceDocuments.length > 0"
+          >
+            <ng-container *ngFor="let doc of guidanceDocuments; let i = index">
+              <div class="row mb-2">
+                <div class="col-md-1 d-flex align-items-center file-icon">
+                  <i class="bi bi-file-earmark-fill"></i>
+                </div>
+                <div
+                  class="col-md-9 td-content d-flex align-items-center"
+                  pTooltip="{{ doc.guidanceDocumentName }}"
+                  tooltipPosition="top"
+                >
+                  {{ doc.guidanceDocumentName }}
+                </div>
+                <div class="col-md-2 d-flex justify-content-end">
+                  <button
+                    pButton
+                    class="action-item d-flex justify-content-center align-items-center"
+                    (click)="viewGuidanceDocumentDetail(doc.guidanceDocumentId)"
+                  >
+                    <i class="bi bi-info-circle-fill"></i>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <p-chart
-        type="doughnut"
-        [data]="asmChartData"
-        [options]="amsChartOptions"
-      ></p-chart>
-    </div>
-
-    <table class="table table-striped">
-      <tr>
-        <th>Văn bản bổ sung vừa đăng tải</th>
-      </tr>
-      <tbody *ngIf="guidanceDocuments && guidanceDocuments.length > 0">
-        <tr *ngFor="let doc of guidanceDocuments; let i = index">
-          <td>{{ doc.guidanceDocumentName }}</td>
-
-          <td>
-            <button
-              pButton
-              (click)="viewGuidanceDocumentDetail(doc.guidanceDocumentId)"
-            >
-              Xem chi tiết
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <tui-ring-chart [value]="value" [(activeItemIndex)]="index">
-      <p>{{ sum }}</p>
-      <div>{{ label }}</div>
-    </tui-ring-chart>
   </ng-container>
 
   <p-toast position="top-right" key="dashboard-toast"></p-toast>

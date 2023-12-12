@@ -1,3 +1,4 @@
+<p-toast position="top-right" key="createIssue"></p-toast>
 <app-issue-inspector-popup
   (popupInspectorVisibleChange)="changeInspectorVisible()"
   [popupInspectorVisible]="popupInspectorVisible"
@@ -6,6 +7,16 @@
   [inspectorListIsValid]="inspectorListIsValid"
 >
 </app-issue-inspector-popup>
+<app-loading-complete-dialog
+  [visible]="formSubmitted"
+  [completed]="formCompleted"
+  [failed]="formFailed"
+  [header]="'Tạo mới kế hoạch kiểm tra'"
+  [progress]="'Đang tạo kế hoạch kiểm tra'"
+  [complete]="'Tạo kế hoạch kiểm tra thành công'"
+  [fail]="'Tạo kế hoạch kiểm tra không thành công'"
+>
+</app-loading-complete-dialog>
 <div class="container-fluid">
   <tui-breadcrumbs
     size="l"
@@ -20,16 +31,16 @@
       </a>
     </ng-container>
   </tui-breadcrumbs>
-  <h5 class="mat-headline-5 mb-2">Tạo mới kế hoạch triển khai</h5>
+  <h5 class="mat-headline-5 mb-2">Tạo mới kế hoạch kiểm tra</h5>
   <div class="row create-issue">
     <form class="row" [formGroup]="issueForm" (ngSubmit)="onSubmit()">
       <div class="form-content col-md-8">
         <div class="issue-name mb-2">
-          <label class="fw-medium mb-1">Tên kế hoạch triển khai<span class="p-error">*</span></label>
+          <label class="fw-medium mb-1">Tên kế hoạch kiểm tra<span class="p-error">*</span></label>
           <input
             type="text"
             pInputText
-            placeholder="Tên kế hoạch triển khai"
+            placeholder="Tên kế hoạch kiểm tra"
             class="w-100"
             formControlName="issueName"
           />
@@ -40,13 +51,13 @@
               *ngIf="issueForm.controls?.['issueName']?.errors?.['whitespace'] || issueForm.controls?.['issueName']?.errors?.['required']"
               class="p-error"
             >
-              Vui lòng điền tên kế hoạch triển khai
+              Vui lòng điền tên kế hoạch kiểm tra
             </span>
             <span
               *ngIf="issueForm.controls?.['issueName']?.errors?.['maxlength']"
               class="p-error"
             >
-              Tên kế hoạch triển khai quá dài
+              Tên kế hoạch kiểm tra quá dài
             </span>
           </div>
         </div>
@@ -55,7 +66,7 @@
           <textarea
             type="text"
             pInputTextarea
-            placeholder="Chi tiết kế hoạch triển khai"
+            placeholder="Chi tiết kế hoạch kiểm tra"
             rows="5"
             class="w-100"
             formControlName="issueDetail"
@@ -67,13 +78,13 @@
               *ngIf="issueForm.controls?.['issueDetail']?.errors?.['whitespace'] || issueForm.controls?.['issueDetail']?.errors?.['required']"
               class="p-error"
             >
-              Vui lòng điền tên kế hoạch triển khai
+              Vui lòng điền tên kế hoạch kiểm tra
             </span>
             <span
               *ngIf="issueForm.controls?.['issueDetail']?.errors?.['maxlength']"
               class="p-error"
             >
-              Tên kế hoạch triển khai quá dài
+              Tên kế hoạch kiểm tra quá dài
             </span>
           </div>
         </div>
@@ -89,7 +100,7 @@
         </div>
         <h6 class="mat-headline-6">Tài liệu công văn</h6>
         <div class="document" formGroupName="issueDocList">
-          <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_1">
+          <div class="row document-item mb-4 border-top rounded py-2 mx-0" formGroupName="issueDoc_1">
             <div class="col-md-12 d-flex flex-row">
               <div class="col-md-6 pe-3">
                 <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label>
@@ -144,6 +155,7 @@
                   pInputText
                   placeholder="Điền mã tài liệu"
                   formControlName="documentCode"
+                  (keyup)="checkDuplicateDocumentCode()"
                 />
                 <div
                   *ngIf="
@@ -158,10 +170,16 @@
                   Vui lòng điền mã
                 </span>
                   <span
+                    *ngIf="documentFirstCodeControls?.errors?.['duplicate']"
+                    class="p-error"
+                  >
+                  Mã tài liệu trùng
+                </span>
+                  <span
                     *ngIf="documentFirstCodeControls?.errors?.['maxlength']"
                     class="p-error"
                   >
-                  Tên tài liệu quá dài
+                  Mã tài liệu quá dài
                 </span>
                 </div>
               </div>
@@ -200,7 +218,7 @@
               </div>
             </div>
           </div>
-          <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_2">
+          <div class="row document-item mb-4 border-top rounded py-2 mx-0" formGroupName="issueDoc_2">
             <div class="col-md-12 d-flex flex-row">
               <div class="col-md-6 pe-3">
                 <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label>
@@ -209,6 +227,25 @@
                   placeholder="Điền tên tài liệu"
                   formControlName="documentName"
                 />
+                <div
+                  *ngIf="
+                  documentSecondNameControls?.invalid &&
+                  (documentSecondNameControls?.touched || documentSecondNameControls?.dirty)
+                "
+                >
+                <span
+                  *ngIf="documentSecondNameControls?.errors?.['whitespace'] ||documentSecondNameControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng điền tên tài liệu
+                </span>
+                  <span
+                    *ngIf="documentSecondNameControls?.errors?.['maxlength']"
+                    class="p-error"
+                  >
+                  Tên tài liệu quá dài
+                </span>
+                </div>
               </div>
               <div class="col-md-3 pe-3">
                 <label class="fw-medium mb-1">Loại tài liệu<span class="p-error">*</span></label>
@@ -216,6 +253,19 @@
                             placeholder="Chọn loại tài liệu"
                             (onChange)="onChange2($event)">
                 </p-dropdown>
+                <div
+                  *ngIf="
+                  documentSecondTypeControls?.invalid &&
+                  (documentSecondTypeControls?.touched || documentSecondTypeControls?.dirty)
+                "
+                >
+                <span
+                  *ngIf="documentSecondTypeControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng chọn loại
+                </span>
+                </div>
               </div>
               <div class="col-md-3">
                 <label class="fw-medium mb-1">Mã tài liệu<span class="p-error">*</span></label>
@@ -223,7 +273,33 @@
                   pInputText
                   placeholder="Điền mã tài liệu"
                   formControlName="documentCode"
+                  (keyup)="checkDuplicateDocumentCode()"
                 />
+                <div
+                  *ngIf="
+                  documentSecondCodeControls?.invalid &&
+                  (documentSecondCodeControls?.touched || documentSecondCodeControls?.dirty)
+                "
+                >
+                <span
+                  *ngIf="documentSecondCodeControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng điền mã
+                </span>
+                  <span
+                    *ngIf="documentSecondCodeControls?.errors?.['duplicate']"
+                    class="p-error"
+                  >
+                  Mã tài liệu trùng
+                </span>
+                  <span
+                    *ngIf="documentSecondCodeControls?.errors?.['maxlength']"
+                    class="p-error"
+                  >
+                  Mã tài liệu quá dài
+                </span>
+                </div>
               </div>
             </div>
             <div class="col-md-12">
@@ -245,9 +321,22 @@
                   class="col-md-3"
                 ></button>
               </div>
+              <div
+                *ngIf="
+                  documentSecondFileControls?.invalid &&
+                  (documentSecondFileControls?.touched || documentSecondFileControls?.dirty)
+                "
+              >
+                <span
+                  *ngIf="documentSecondFileControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng chọn tài liệu công văn
+                </span>
+              </div>
             </div>
           </div>
-          <div class="row document-item mb-4 border-top rounded py-3 mx-0" formGroupName="issueDoc_3">
+          <div class="row document-item mb-4 border-top rounded py-2 mx-0" formGroupName="issueDoc_3">
             <div class="col-md-12 d-flex flex-row">
               <div class="col-md-6 pe-3">
                 <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label>
@@ -256,6 +345,25 @@
                   placeholder="Điền tên tài liệu"
                   formControlName="documentName"
                 />
+                <div
+                  *ngIf="
+                  documentThirdNameControls?.invalid &&
+                  (documentThirdNameControls?.touched || documentThirdNameControls?.dirty)
+                "
+                >
+                <span
+                  *ngIf="documentThirdNameControls?.errors?.['whitespace'] ||documentThirdNameControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng điền tên tài liệu
+                </span>
+                  <span
+                    *ngIf="documentThirdNameControls?.errors?.['maxlength']"
+                    class="p-error"
+                  >
+                  Tên tài liệu quá dài
+                </span>
+                </div>
               </div>
               <div class="col-md-3 pe-3">
                 <label class="fw-medium mb-1">Loại tài liệu<span class="p-error">*</span></label>
@@ -263,6 +371,19 @@
                             placeholder="Chọn loại tài liệu"
                             (onChange)="onChange3($event)">
                 </p-dropdown>
+                <div
+                  *ngIf="
+                  documentThirdTypeControls?.invalid &&
+                  (documentThirdTypeControls?.touched || documentThirdTypeControls?.dirty)
+                "
+                >
+                <span
+                  *ngIf="documentThirdTypeControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng chọn loại
+                </span>
+                </div>
               </div>
               <div class="col-md-3">
                 <label class="fw-medium mb-1">Mã tài liệu<span class="p-error">*</span></label>
@@ -270,7 +391,33 @@
                   pInputText
                   placeholder="Điền mã tài liệu"
                   formControlName="documentCode"
+                  (keyup)="checkDuplicateDocumentCode()"
                 />
+                <div
+                  *ngIf="
+                  documentThirdCodeControls?.invalid &&
+                  (documentThirdCodeControls?.touched || documentThirdCodeControls?.dirty)
+                "
+                >
+                <span
+                  *ngIf="documentThirdCodeControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng điền mã
+                </span>
+                  <span
+                    *ngIf="documentThirdCodeControls?.errors?.['duplicate']"
+                    class="p-error"
+                  >
+                  Mã tài liệu trùng
+                </span>
+                  <span
+                    *ngIf="documentThirdCodeControls?.errors?.['maxlength']"
+                    class="p-error"
+                  >
+                  Mã tài liệu quá dài
+                </span>
+                </div>
               </div>
             </div>
             <div class="col-md-12">
@@ -292,11 +439,21 @@
                   class="col-md-3"
                 ></button>
               </div>
+              <div
+                *ngIf="
+                  documentThirdFileControls?.invalid &&
+                  (documentThirdFileControls?.touched || documentThirdFileControls?.dirty)
+                "
+              >
+                <span
+                  *ngIf="documentThirdFileControls?.errors?.['required']"
+                  class="p-error"
+                >
+                  Vui lòng chọn tài liệu công văn
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-12 save-button w-100 mb-2">
-          <button class="btn text-white">Lưu kế hoạch</button>
         </div>
       </div>
       <div class="col-md-4 d-flex justify-content-start flex-column align-items-center">
@@ -310,6 +467,20 @@
           (recreateInspectorList)="resetInspectorList()"
         >
         </app-issue-inspector-list>
+        <div
+          class="mt-1"
+          *ngIf="issueForm.controls?.['inspectorId']?.invalid && (issueForm.controls?.['inspectorId']?.touched ||issueForm.controls?.['inspectorId']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['inspectorId']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng chọn danh sách đoàn kiểm tra
+          </span>
+        </div>
+      </div>
+      <div class="col-md-12 text-center save-button w-100 mb-3">
+        <button class="btn text-white">Lưu kế hoạch</button>
       </div>
     </form>
   </div>

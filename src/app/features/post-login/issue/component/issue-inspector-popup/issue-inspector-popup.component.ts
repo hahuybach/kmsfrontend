@@ -31,6 +31,10 @@ export class IssueInspectorPopupComponent implements OnChanges {
     if (!this.selectedInspectors || !this.selectedInspectors.length) {
       this.errorText = 'Vui lòng chọn ít nhất một thành viên cho đoàn kiểm tra';
       return;
+    } else if (!this.isEligibleInspectorExist(this.selectedInspectors) && !this.inspectorListIsValid) {
+      this.errorText =
+        'Đoàn kiểm tra phải bao gồm ít nhất một trưởng phòng hoặc phó phòng';
+      return;
     }
     this.errorText = '';
     this.inspectionplanInspectorService.saveToInspectorList(
@@ -43,14 +47,10 @@ export class IssueInspectorPopupComponent implements OnChanges {
   }
 
   isEligibleInspectorExist(selectedInspectors: any[]): boolean {
-    let eligibleChiefList = selectedInspectors.filter(
-      (eligibleInspector: { accountId: number }) =>
-        this.chiefList.some(
-          (inspector) => inspector.accountId === eligibleInspector.accountId
-        )
+    console.log(selectedInspectors);
+    return selectedInspectors.some(
+      (inspector: any) => inspector.roles && inspector.roles.some((role: { roleName: string; }):boolean => role.roleName === "Trưởng Phòng")
     );
-    console.log(eligibleChiefList);
-    return eligibleChiefList.length > 0;
   }
 
   changeFilterVisible(status: Boolean) {

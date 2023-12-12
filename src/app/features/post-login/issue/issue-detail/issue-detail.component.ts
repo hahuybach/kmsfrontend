@@ -10,7 +10,7 @@ import { IssueService } from '../../../../services/issue.service';
 import { switchMap } from 'rxjs';
 import { FileService } from 'src/app/services/file.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { unSub } from 'src/app/shared/util/util';
+import {getFirstAndLastName, unSub} from 'src/app/shared/util/util';
 import { Dialog } from 'primeng/dialog';
 import { TuiPdfViewerOptions, TuiPdfViewerService } from '@taiga-ui/kit';
 
@@ -63,6 +63,7 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
       )
       .subscribe((data) => {
         this.issue = data.issue;
+        console.log(data);
         console.log(this.issue);
       });
     this.sub.push(sub);
@@ -100,5 +101,9 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+  }
+
+  getAvatar(fullName: string):string{
+    return getFirstAndLastName(fullName);
   }
 }
