@@ -1,6 +1,6 @@
-<div *ngIf="notificationItems &&  notificationItems.notificationListDtos.length > 0; else notificationEmpty">
+<div *ngIf="notificationListDtos &&  notificationListDtos.length > 0; else notificationEmpty">
   <a class="notification-item p-3 mx-1 my-1"
-     *ngFor="let notification of notificationItems?.notificationListDtos; let i = index"
+     *ngFor="let notification of notificationListDtos; let i = index"
      (click)="handleCLickNotificationItem(i)">
     <div class="notification-info">
       <p class="mb-1 fw-bold">{{notification.notificationType}}</p>
@@ -11,7 +11,18 @@
       <i class="bi bi-circle-fill"></i>
     </div>
   </a>
+  <a class="notification-item p-3 mx-1 my-1" *ngIf="!allNotificationLoaded">
+    <div class="notification-info">
+      <p class="mb-1 tui-skeleton w-75">Quyết định kiểm tra</p>
+      <p class="mb-1 tui-skeleton">Có quyết định kiểm tra mới vừa được tạo</p>
+      <p class="mb-1 tui-skeleton w-50">2023/12/12 | 03:21</p>
+    </div>
+    <div class="skeleton-icon">
+      <i class="bi bi-circle-fill"></i>
+    </div>
+  </a>
 </div>
+
 <ng-template #notificationEmpty>
   <div class="text-center notification-item-empty my-3">
     <p>Không có thông báo</p>

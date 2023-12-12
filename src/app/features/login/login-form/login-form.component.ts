@@ -22,20 +22,14 @@ export class LoginFormComponent implements OnInit {
 
   login() {
     const val = this.signInForm.value;
-    console.log(val);
     if (val.email && val.password) {
       this.auth.login(val.email, val.password).subscribe({
         next: (response) => {
-
           this.auth.setJwtInCookie(response.token);
           this.auth.setTokenTimeOut();
           this.router.navigateByUrl('/dashboard');
         },
         error: (err) => {
-
-          console.log('Error: ' + err);
-
-          console.log(err.error.message);
           this.toastService.showError('center', 'Thông báo', err.error.message);
         },
       });

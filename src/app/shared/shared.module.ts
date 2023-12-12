@@ -31,6 +31,17 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
 import {CheckboxModule} from "primeng/checkbox";
 import {TuiRingChartModule} from '@taiga-ui/addon-charts';
 import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
+import {TuiDropdownModule, TuiDataListModule} from '@taiga-ui/core';
+
+// ...
+
+@NgModule({
+  imports: [
+    // ...
+  ],
+  // ...
+})
+export class MyModule {}
 
 @NgModule({
   declarations: [
@@ -70,7 +81,10 @@ import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
     CheckboxModule,
     TuiRingChartModule,
     TuiMoneyModule,
-    TuiAvatarModule
+    TuiAvatarModule,
+    TuiAvatarModule,
+    TuiDropdownModule,
+    TuiDataListModule
   ],
   exports: [
     InputTextModule,
@@ -106,7 +120,10 @@ import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
     CheckboxModule,
     TuiRingChartModule,
     TuiMoneyModule,
-    TuiAvatarModule
+    TuiAvatarModule,
+    TuiAvatarModule,
+    TuiDropdownModule,
+    TuiDataListModule
   ],
 })
 export class SharedModule {

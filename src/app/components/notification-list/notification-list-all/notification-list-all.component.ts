@@ -8,17 +8,16 @@ import {NotificationService} from "../../../services/notification.service";
   styleUrls: ['./notification-list-all.component.scss']
 })
 export class NotificationListAllComponent {
-  @Input() notificationItems: {
-    notificationListDtos: {
-      createdOn: Date,
-      isSeen: boolean,
-      link: string,
-      message: string,
-      notificationId: number,
-      notificationType: string
-    }[],
-    unseen: number
-  };
+  @Input() notificationListDtos: {
+    createdOn: Date,
+    isSeen: boolean,
+    link: string,
+    message: string,
+    notificationId: number,
+    notificationType: string
+  }[]
+
+  @Input() allNotificationLoaded: boolean = false;
 
   constructor(
     private readonly router: Router,
@@ -27,14 +26,13 @@ export class NotificationListAllComponent {
   }
 
   handleCLickNotificationItem(index: number) {
-    let notificationId: number = this.notificationItems.notificationListDtos[index].notificationId;
+    let notificationId: number = this.notificationListDtos[index].notificationId;
     this.notificationService.notificationIsSeen(notificationId).subscribe({
       next: (response) => {
         console.log(response);
       }
     });
-    let link: string = this.notificationItems.notificationListDtos[index].link;
-    console.log(link.toString())
+    let link: string = this.notificationListDtos[index].link;
     this.router.navigateByUrl(link.toString());
   }
 }
