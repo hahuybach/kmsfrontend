@@ -101,6 +101,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   historyDtos: any[] = [];
   comments: any[] = [];
   items: MenuItem[] | undefined;
+  assItems: MenuItem[] | undefined;
   menuVisible = false;
   deleteCommentId = 0;
   @ViewChild('menu') menu: Menu;
@@ -114,6 +115,10 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   minDate: TuiDay;
   maxDate: TuiDay;
   today: Date = new Date();
+  searchDialogVisible : boolean = false;
+  searchData: string;
+  searchItem: any[];
+  canChangeDate : boolean = true;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -246,40 +251,20 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               .get('assigneeId')
               ?.setValue(this.listOfPossibleAssignees[0].accountId);
           }
-          if (data.maxDate) {
-            this.maxDate = data.maxDate;
-          }
+          // this.minDate = dateToTuiDay(new Date ())
+          // if(data.maxDate){
+          //   this.maxDate = dateToTuiDay(new Date(data.maxDate) );
+          // }
           this.assignmentVisible = true;
         },
       });
 
     this.action = action;
-    switch (action) {
-      case 'addchild': {
         this.assignmentForm
           .get('parentId')
           ?.setValue(this.selectedAssignment.assignmentId);
         // this.assignmentForm.get('isTask')?.setValue(false);
-        break;
-      }
-      case 'update':
-        {
-          if (this.selectedAssignment) {
-            this.assignmentForm
-              .get('assignmentName')
-              ?.setValue(this.selectedAssignment.assignmentName);
-            this.assignmentForm
-              .get('description')
-              ?.setValue(this.selectedAssignment.description);
-            this.assignmentForm
-              .get('deadline')
-              ?.setValue(
-                dateToTuiDay(new Date(this.selectedAssignment.deadline))
-              );
-          }
-        }
-        break;
-    }
+
     this.sub.push(method);
   }
   add() {
@@ -412,17 +397,25 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         console.log(this.selectedAssignment.documents.length == 0);
         this.documents = data.documents;
         if (this.selectedAssignment) {
+          const temp : Date = new Date(this.selectedAssignment.maxDate)
+          if(temp)
+          temp.setDate(temp.getDate() + 1)
+          // this.maxDate = dateToTuiDay(temp);
           this.assignmentForm
             .get('assignmentName')
             ?.setValue(this.selectedAssignment.assignmentName);
           this.assignmentForm
             .get('description')
             ?.setValue(this.selectedAssignment.description);
-          this.assignmentForm
-            .get('deadline')
-            ?.setValue(
-              dateToTuiDay(new Date(this.selectedAssignment.deadline))
-            );
+          if(data.deadline){
+            this.assignmentForm
+              .get('deadline')
+              ?.setValue(
+                dateToTuiDay(new Date(this.selectedAssignment.deadline))
+              );
+            console.log(this.assignmentForm.get('deadline')?.value)
+          }
+
           this.selectedAssignee = this.selectedAssignment.assignee;
           this.detailVisible = true;
 
@@ -887,7 +880,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: 'Bạn có muốn xóa bình luận này?',
       header: 'Xác nhận tạo mới',
-      key: 'confirmAssignment',
+      key: 'confirmAssignAssignment',
       accept: () => {
         const method = this.assignmentService
           .deleteComment({
@@ -1008,5 +1001,19 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
 
   getAvatar(fullName: string): string {
     return getFirstAndLastName(fullName);
+  }
+  loadAssignment(){
+    this.assignmentService.searchAssignment({
+      searchedText : this.searchData,
+      issueId: this.issueId,
+      schoolId: this.authService.getSchoolFromJwt().schoolId
+    }).subscribe({
+      next: (data)=>{
+        this.searchItem = data
+      },
+      error : (error) => {
+
+      }
+    })
   }
 }

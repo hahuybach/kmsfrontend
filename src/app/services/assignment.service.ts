@@ -112,7 +112,13 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}add_comment`;
     return this.http.post(url, data, { headers });
   }
+  public searchAssignment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
 
+    const url = `${this.assignmentApiUrl}search_assignment`;
+    return this.http.post(url, data, { headers });
+  }
   // PUT
   public uploadDocument(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();

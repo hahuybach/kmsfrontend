@@ -249,10 +249,8 @@
                 action === 'update' &&
                 hasAuthority('canModifyFolderAsmMetaData')
               "
-              [min]="minDate"
-              [max]="maxDate"
-              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               class="tui-date"
+              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               tuiTextfieldSize="m"
               formControlName="deadline"
             >
@@ -908,7 +906,6 @@
               >Hạn nộp<span class="p-error">*</span></label
             ><br />
             <tui-input-date
-              [min]="minDate"
               tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               class="tui-date"
               tuiTextfieldSize="m"
@@ -1022,6 +1019,9 @@
         <div class="d-flex justify-content-between align-items-center">
           <div>
             <h6 class="mat-headline-6">Chi tiết danh sách công việc</h6>
+          </div>
+          <div class="search-button">
+            <button pButton (click)="searchDialogVisible = true" >Tìm kiếm</button>
           </div>
         </div>
       </ng-template>
@@ -1165,5 +1165,40 @@
         </tr>
       </ng-template>
     </p-treeTable>
+    <p-dialog
+      header="Tìm kiếm"
+      [(visible)]="searchDialogVisible"
+      [style]="{ width: '70vw', height: '600px' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div class="row">
+        <input pInputText [(ngModel)]="searchData" class="search" placeholder="Tìm kiếm" (keyup)="loadAssignment()">
+      </div>
+      <div class="row mt-2" >
+        <h6 class="mat-headline-6">Nội dung tìm kiếm: {{searchData}}</h6>
+      </div>
+      <div class="row mt-2">
+        <h6 class="mat-headline-6">Kết quả</h6>
+        <ng-container *ngIf="searchItem && searchItem.length > 0;else noAss">
+          <div class="row">
+            <div class="col-md-5">Địa chỉ</div>
+            <div class="col-md-6">Tên</div>
+            <div class="col-md-1"></div>
+          </div>
+          <ng-container *ngFor="let item of searchItem">
+            <div class="row">
+              <div class="col-md-5">{{item.breadcrumb}}</div>
+              <div class="col-md-6">{{item.searchedAssignment.assignmentName}}</div>
+              <div class="col-md-1"></div>
+            </div>
+          </ng-container>
+
+        </ng-container>
+        <ng-template #noAss>
+          đéo thấy
+        </ng-template>
+      </div>
+    </p-dialog>
   </div>
 </div>
