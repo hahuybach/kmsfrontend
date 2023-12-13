@@ -75,7 +75,14 @@
       </div>
       <div class="col-md-6">
         <label class="fw-medium mb-2">Năm sinh<span class="p-error">*</span></label>
-        <input pInputText type="date" formControlName='dob' class="form-control">
+<!--        <input pInputText type="date" formControlName='dob' class="form-control">-->
+        <tui-input-date
+          tuiTextfieldSize="m"
+          class="tui-date"
+          formControlName='dob'
+          [max]="today"
+        >
+        </tui-input-date>
         <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
       </div>
     </div>
@@ -91,10 +98,10 @@
     </div>
     <div class="col-md-12 action-button d-flex flex-row justify-content-between mt-2" *ngIf="isUpdate">
       <div class="col-md-6 text-center">
-        <button class="justify-content-center py-2 w-75" pButton (click)="confirm()">Cập nhật</button>
+        <button class="reset-button justify-content-center py-2 w-75" pButton (click)="onUpdate()">Hủy cập nhập</button>
       </div>
       <div class="col-md-6 text-center">
-        <button class="reset-button justify-content-center py-2 w-75" pButton (click)="onUpdate()">Hủy cập nhập</button>
+        <button class="justify-content-center py-2 w-75" pButton (click)="confirm()">Cập nhật</button>
       </div>
     </div>
   </div>
