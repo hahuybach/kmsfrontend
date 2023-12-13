@@ -55,14 +55,14 @@
   <div class="row" *ngIf="isUpdate && this.currentUser" [formGroup]="form">
     <div class="row mb-3">
       <div class="col-md-6">
-        <label class="fw-medium mb-2">Tên</label>
+        <label class="fw-medium mb-2">Tên<span class="p-error">*</span></label>
         <input type="text" pInputText formControlName='fullName' class="form-control">
         <span class="p-error" *ngIf="isError('fullName', 'whitespace')">Mục này không được trống</span>
         <span class="p-error"
               *ngIf="this.form.get('fullName')?.hasError('maxlength')">Tên không được quá 254 ký tự</span>
       </div>
       <div class="col-md-6">
-        <label class="fw-medium mb-2">Số điện thoại</label>
+        <label class="fw-medium mb-2">Số điện thoại<span class="p-error">*</span></label>
         <input pInputText type="text" formControlName='phoneNumber' class="form-control">
         <span class="p-error" *ngIf="isError('phoneNumber', 'pattern')">Sai định dạng số điện thoại</span>
         <span class="p-error" *ngIf="isBlank('phoneNumber')">Mục này không được trống</span>
@@ -74,7 +74,7 @@
         <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
       </div>
       <div class="col-md-6">
-        <label class="fw-medium mb-2">Năm sinh</label>
+        <label class="fw-medium mb-2">Năm sinh<span class="p-error">*</span></label>
         <input pInputText type="date" formControlName='dob' class="form-control">
         <span class="p-error" *ngIf="isError('dob', 'invalidDate')">Ngày sinh không thể là tương lai</span>
       </div>
