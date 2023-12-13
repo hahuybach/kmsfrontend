@@ -619,6 +619,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   viewAsmDetail(rootAssignmentId: any) {
+    this.router.navigate(['assign-assignment/'+ this.issue?.issueId], {
+      queryParams: { id: rootAssignmentId },
+    })
+
   }
 
   viewAsmTree() {

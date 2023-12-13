@@ -463,7 +463,7 @@
             </div>
             <div class="col-md-6 mb-2 d-flex justify-content-end">
               <!-- <label class="fw-medium">Trạng thái</label> -->
-              <span class="redirect-link" (click)="viewMyInspection()"
+              <span class="redirect-link" (click)="viewAsmTree()"
                 >Xem thêm</span
               >
             </div>
@@ -557,12 +557,12 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3" >
+    <div class="row mt-3 height-row-principal" >
       <div class="col-md-4" *ngIf="isPrincipal">
-        <div class="card p-3">
-          <h6 class="mat-headline-6">Thống kê công việc toàn trường</h6>
+        <div class="card p-3 h-100">
+          <label class="fw-medium fs-18 mb-3">Thống kê công việc toàn trường</label>
           <div class="row" *ngIf="asmChartData">
-            <div class="col-md-7">
+            <div class="col-md-5">
               <tui-ring-chart
                 size="m"
                 [value]="asmChartData.data"
@@ -574,7 +574,7 @@
                 </div>
               </tui-ring-chart>
             </div>
-            <div class="row col-md-5" *ngIf="asmChartData">
+            <div class="row col-md-7" *ngIf="asmChartData">
               <div *ngFor="let item of asmChartData?.labels; let i = index">
                 <div class="row">
                   <div class="col-md-2">
@@ -590,10 +590,10 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card p-3">
-          <label class="fw-medium fs-18">Thống kê công việc cá nhân</label>
+        <div class="card p-3 h-100">
+          <label class="fw-medium fs-18 mb-3">Thống kê công việc cá nhân</label>
           <div class="row" *ngIf="myAsmChartData">
-            <div class="col-md-7">
+            <div class="col-md-5">
               <tui-ring-chart
                 size="m"
                 [value]="myAsmChartData.data"
@@ -605,7 +605,7 @@
                 </div>
               </tui-ring-chart>
             </div>
-            <div class="row col-md-5" *ngIf="myAsmChartData">
+            <div class="row col-md-7" *ngIf="myAsmChartData">
               <div *ngFor="let item of myAsmChartData?.labels; let i = index">
                 <div class="row">
                   <div class="col-md-2">
@@ -621,7 +621,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="card p-3">
+        <div class="card p-3 h-100">
           <label class="fw-medium fs-18 mb-3"
             >Văn bản bổ sung vừa đăng tải</label
           >
