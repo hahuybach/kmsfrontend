@@ -151,9 +151,8 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.assignments = data.assignmentListDtos;
         console.log(data.assignmentListDtos);
-
         // this.setExpandedForAllNodes(this.assignments);
-        // this.restoreNodeState(this.assignments);
+        this.restoreNodeState(this.assignments);
         // this.treeTable.expandAll();
       });
     this.sub.push(method);
@@ -991,6 +990,15 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
       }
     });
   }
+  expandNodesByIds(nodeIds: number[]) {
+    this.nodeStateMap = [];
+    for (let i = 0; i < nodeIds.length; i++) {
+      const nodeId = nodeIds[i];
+      this.nodeStateMap[nodeId] = true;
+    }
+    console.log(this.nodeStateMap);
+  }
+
   ngOnDestroy(): void {
     unSub(this.sub);
   }
