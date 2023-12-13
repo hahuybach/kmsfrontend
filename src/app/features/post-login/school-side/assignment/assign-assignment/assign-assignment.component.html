@@ -655,11 +655,13 @@
               class="assignee-dropdown"
               [options]="listOfPossibleAssignees"
               [filter]="true"
-              filterBy="user.fullName"
+              filterBy="user?.fullName"
               *ngIf="action === 'info' && hasAuthority('canChangeAssignee')"
               (onChange)="[onChangeAssignee($event), onPatchAssigneeId()]"
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="selectedAssignee"
+              optionLabel="user.fullName"
+
             >
               <ng-template pTemplate="selectedItem">
                 <div class="row">
@@ -700,9 +702,9 @@
                       option?.user.fullName
                     }}</span
                     >&nbsp;
-                    <span class="text-black-50 font-size-14">
-                      {{ option?.email }}</span
-                    >
+<!--                    <span class="text-black-50 font-s ize-14">-->
+<!--                      {{ option?.email }}</span-->
+<!--                    >-->
                   </div>
                 </div>
               </ng-template>
@@ -937,6 +939,8 @@
               (onChange)="[onPatchAssigneeId()]"
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="selectedAssignee"
+              optionLabel="user.fullName"
+
             >
               <ng-template let-option pTemplate="selectedItem">
                 <div class="row">

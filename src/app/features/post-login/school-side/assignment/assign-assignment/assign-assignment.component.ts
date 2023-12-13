@@ -239,7 +239,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           console.log(data);
-          console.log(data.listOfPossibleAssignees);
+          console.log("possible " + data.listOfPossibleAssignees);
           if (data.listOfPossibleAssignees) {
             this.listOfPossibleAssignees = data.listOfPossibleAssignees;
             this.selectedAssignee = this.listOfPossibleAssignees[0];
@@ -592,7 +592,10 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     const method = this.assignmentService.assignAssignment(data).subscribe({
       next: (data) => {
         this.initData();
+        console.log("before refresh")
         this.refreshSelectedAssignment();
+        console.log("after refresh")
+
         this.toastService.showSuccess(
           'toastAssignAssignment',
           'Đổi thành công',
