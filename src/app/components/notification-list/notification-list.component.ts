@@ -84,6 +84,12 @@ export class NotificationListComponent implements OnInit {
           this.notificationListDtos = data.notificationListDtos;
           this.all = data.all;
           this.unseen = data.unseen;
+          if (this.all <= this.notificationPageSize){
+            this.notificationAllIsLoaded= true;
+          }
+          if (this.unseen <= this.notificationPageSize){
+            this.notificationUnSeenIsLoaded= true;
+          }
           this.unseenNotificationDtos = data.unseenNotificationListDtos;
           if (data.unseen != 0) {
             this.badgeValue = this.unseen < 99 ? this.unseen.toString() : "99+";
@@ -115,7 +121,6 @@ export class NotificationListComponent implements OnInit {
 
   onNotificationListScroll(e: any) {
     const element = e.target as HTMLElement;
-    console.log(element.scrollTop)
     if ((element.offsetHeight + element.scrollTop + 1) >= element.scrollHeight) {
       if (this.showAllNotification && this.all >= this.notificationPageSize) {
         this.stompService.getNextNotification(this.notificationAllPageNumber, true).subscribe({

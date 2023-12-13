@@ -403,7 +403,7 @@
         >Vui lòng điền chi tiết kế hoạch</span
         >
       </div>
-      <div class="mb-2">
+      <div class="">
         <h6 class="mb-2 mat-headline-6">Tài liệu công văn</h6>
         <button
           class="mb-3"
@@ -546,7 +546,6 @@
         </ng-container>
         <!-- <button type="button" pButton>Thêm mới</button> -->
         <!-- <br /> -->
-        <button class="mt-3" pButton>Lưu</button>
       </div>
     </div>
     <div class="col-md-4">
@@ -629,10 +628,11 @@
             [(value)]="issue.inspector"
             formControlName="inspector"
           />
-          <!-- <pre>{{issueF}}</pre> -->
         </div>
       </div>
     </div>
-    <!-- <pre>{{ issueForm.value | json }}</pre> -->
+    <div class="col-md-12 text-center">
+      <button class="mt-3" pButton>Cập nhật kế hoạch</button>
+    </div>
   </form>
 </div>
