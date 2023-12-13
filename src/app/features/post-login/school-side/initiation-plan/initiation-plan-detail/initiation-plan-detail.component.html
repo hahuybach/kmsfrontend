@@ -400,7 +400,7 @@
 
         <br />
 
-        <ng-container *ngIf="lastDocs?.departmentDocument">
+        <ng-container *ngIf="lastDocs?.departmentDocument; else noDeptFile">
           <div
             *ngIf="schoolinitiationplan?.status.statusId != 6"
             class="file-item py-1 d-flex"
@@ -443,6 +443,14 @@
             </div>
           </div>
         </ng-container>
+        <ng-template #noDeptFile>
+          <div
+            class="file-item-empty mt-2 py-3 d-flex flex-column justify-content-around align-items-center"
+          >
+            <i class="bi bi-file-earmark-x-fill"></i>
+            <p class="fw-medium mt-2">Tài liệu đánh giá phía phòng hiện chưa có</p>
+          </div>
+        </ng-template>
       </div>
     </div>
     <div class="col-md-5">
@@ -457,16 +465,21 @@
             schoolinitiationplan?.status.statusId == 9
           "
         >
-          <div
-            *ngIf="!fileStatus"
-            class="d-flex justify-content-center align-items-center btn-upload mt-5"
-          >
-            <button
-              type="button"
-              pButton
-              label="Nộp"
+          <div *ngIf="!fileStatus" class="mt-2">
+            <div
+              class="img-upload d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../../assets/img/add-file.svg" />
+            </div>
+            <!-- <div class="d-flex justify-content-center">
+              <label class="fw-medium fs-18">Nộp tài liệu</label>
+            </div> -->
+            <div
+              class="d-flex justify-content-center align-items-center btn-upload"
               (click)="uploadFileVisible = true"
-            ></button>
+            >
+              <button type="button" pButton label="Nộp"></button>
+            </div>
           </div>
 
           <div *ngIf="fileStatus" class="px-4 my-4">
