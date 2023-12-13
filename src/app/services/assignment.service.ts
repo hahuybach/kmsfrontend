@@ -176,8 +176,8 @@ export class AssignmentService {
     return this.http.get<any>(url);
   }
 
-  public getAssignmentDashboardResponse(issueId: any){
-    const url = this.assignmentApiUrl + "getAssignmentDashboardResponse?issueId=" + issueId;
+  public getAssignmentDashboardResponse(issueId: any, isMine: any){
+    const url = this.assignmentApiUrl + "getAssignmentDashboardResponse?issueId=" + issueId + "&isMine=" + isMine;
     return this.http.get<any>(url);
   }
 

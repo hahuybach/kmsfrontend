@@ -1,24 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { StompService } from '../push-notification/stomp.service';
-import { switchMap } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
-import { SchoolService } from '../../../services/school.service';
-import { inspectionPlanService } from '../../../services/inspectionplan.service';
-import { ToastService } from '../../../shared/toast/toast.service';
-import { IssueService } from '../../../services/issue.service';
-import { IssueResponse } from '../../../models/issue-response';
-import { unSub } from '../../../shared/util/util';
-import { InitiationplanService } from '../../../services/initiationplan.service';
-import { AssignmentService } from '../../../services/assignment.service';
-import { Role } from '../../../shared/enum/role';
-import { InspectionPlanResponse } from '../../../models/inspection-plan-response';
-import { TaskTreeResponse } from '../../../models/task-tree-response';
-import { DocumentService } from '../../../services/document.service';
-import { GuidanceDocumentService } from '../../../services/guidance-document.service';
-import { FilterGuidanceDocumentResponse } from '../../../models/filter-guidance-document-response';
-import { tuiSum } from '@taiga-ui/cdk';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {StompService} from '../push-notification/stomp.service';
+import {switchMap} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthService} from '../../../services/auth.service';
+import {SchoolService} from '../../../services/school.service';
+import {inspectionPlanService} from '../../../services/inspectionplan.service';
+import {ToastService} from '../../../shared/toast/toast.service';
+import {IssueService} from '../../../services/issue.service';
+import {IssueResponse} from '../../../models/issue-response';
+import {unSub} from '../../../shared/util/util';
+import {InitiationplanService} from '../../../services/initiationplan.service';
+import {AssignmentService} from '../../../services/assignment.service';
+import {Role} from '../../../shared/enum/role';
+import {InspectionPlanResponse} from '../../../models/inspection-plan-response';
+import {TaskTreeResponse} from '../../../models/task-tree-response';
+import {DocumentService} from '../../../services/document.service';
+import {GuidanceDocumentService} from '../../../services/guidance-document.service';
+import {FilterGuidanceDocumentResponse} from '../../../models/filter-guidance-document-response';
+import {tuiSum} from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-dashboard',
@@ -60,22 +60,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     Role.MEDIC,
     Role.CLERICAL_ASSISTANT,
     Role.SECURITY,
+    Role.CHIEF_NUTRITION, Role.NUTRITION_EMP
   ];
 
   inspectionPlans: InspectionPlanResponse[];
   totalNumberOfInspectionPlan: any;
 
   inspectionPlanStatuses = [
-    { label: 'Chưa bắt đầu', value: 19 },
-    { label: 'Đang tiến hành', value: 20 },
-    { label: 'Hoàn thành', value: 23 },
+    {label: 'Chưa bắt đầu', value: 19},
+    {label: 'Đang tiến hành', value: 20},
+    {label: 'Hoàn thành', value: 23},
   ];
   inspectionPlanSelectedStatus = 20;
   totalNumberOfAsm: any;
   selectedStatus = 15;
   statuses = [
-    { label: 'Chưa hoàn thành', value: 14 },
-    { label: 'Hoàn thành', value: 15 },
+    {label: 'Chưa hoàn thành', value: 14},
+    {label: 'Hoàn thành', value: 15},
   ];
 
   taskTrees: TaskTreeResponse[];
@@ -87,7 +88,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   numberDisApprovedAsm: any;
   totalAsm: any;
 
+  // thống kế công việc của tôi
+  myNumberOfNotCompletedAsm: any;
+  myNumberOfCompletedAsm: any;
+  myNumberWaitingForApprovalAsm: any;
+  myNumberApprovedAsm: any;
+  myNumberDisApprovedAsm: any;
+  myTotalAsm: any;
+
   asmChartData: any;
+  // thống kế công việc của tôi
+  myAsmChartData: any;
   amsChartOptions: any;
   guidanceDocuments: FilterGuidanceDocumentResponse[];
   private readonly labels = [
@@ -102,15 +113,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   index_inspection = NaN;
   index_init = NaN;
   index_asm = NaN;
-  private readonly labelsExample = [
-    'Food',
-    'Cafe',
-    'Open Source',
-    'Taxi',
-    'other',
-  ];
+  myIndex_asm = NaN;
+
 
   issueNotFound = false;
+
   sum(chart: any, index: number): number {
     if (Number.isNaN(index)) {
       if (chart && Array.isArray(chart.data)) {
@@ -132,6 +139,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     return ''; // Or any other default value if the conditions are not met
   }
+
 
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
@@ -189,7 +197,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private documentService: DocumentService,
     private guidanceDocumentService: GuidanceDocumentService
-  ) {}
+  ) {
+  }
 
   setInitiationPlanChartData() {
     this.initiationPlanDataChart = {
@@ -238,6 +247,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
     console.log(this.asmChartData);
   }
+
+  setMyAsmChartData() {
+    this.myAsmChartData = {
+      labels: [
+        'Chưa hoàn thành',
+        'Chờ phê duyệt',
+        'Hoàn thành',
+        'Không phê duyệt',
+        'Phê duyệt',
+      ],
+      data: [
+        this.myNumberOfNotCompletedAsm,
+        this.myNumberWaitingForApprovalAsm,
+        this.myNumberOfCompletedAsm,
+        this.myNumberDisApprovedAsm,
+        this.myNumberApprovedAsm
+      ],
+    };
+  }
+
 
   setInitDataForDirector() {
     const sub1 = this.schoolService.getNumberOfSchools().subscribe({
@@ -419,6 +448,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.loadAsm();
         this.getAssignmentDashboardResponse();
+        this.getMyAssignmentDashboardResponse()
         this.getGuidanceDocument();
       },
       error: (error) => {
@@ -439,7 +469,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.isSpecialist) {
       this.setInitDataForSpecialist();
     }
-    if (this.isPrincipal) {
+    if (this.isPrincipal || this.isSchoolNormalEmp) {
       this.setInitDataForPrincipal();
     }
   }
@@ -541,30 +571,58 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   loadAsm() {
-    const sub = this.documentService
-      .filterAsm(
-        0,
-        3,
-        'History.createdDate',
-        'desc',
-        '',
-        this.selectedStatus,
-        this.issue?.issueId
-      )
-      .subscribe({
-        next: (data) => {
-          this.taskTrees = data.taskTreeDtos.content;
-          this.totalNumberOfAsm = data.taskTreeDtos.totalElements;
-          console.log(data);
-        },
-      });
-    this.subs.push(sub);
+    if (this.isPrincipal){
+      const sub = this.documentService
+        .filterAsm(
+          0,
+          3,
+          'History.createdDate',
+          'desc',
+          '',
+          this.selectedStatus,
+          this.issue?.issueId,
+            this.auth.getSchoolFromJwt().schoolId,
+            false
+
+        )
+        .subscribe({
+          next: (data) => {
+            this.taskTrees = data.taskTreeDtos.content;
+            this.totalNumberOfAsm = data.taskTreeDtos.totalElements;
+            console.log(data);
+          },
+        });
+      this.subs.push(sub);
+    }else{
+      const sub = this.documentService
+        .filterAsm(
+            0,
+            3,
+            'History.createdDate',
+            'desc',
+            '',
+            this.selectedStatus,
+            this.issue?.issueId,
+            this.auth.getSchoolFromJwt().schoolId,
+            false, this.auth.getSubFromCookie()
+        )
+        .subscribe({
+          next: (data) => {
+            this.taskTrees = data.taskTreeDtos.content;
+            this.totalNumberOfAsm = data.taskTreeDtos.totalElements;
+            console.log(data);
+          },
+        });
+      this.subs.push(sub);
+    }
+
   }
 
-  viewAsmDetail(rootAssignmentId: any) {}
+  viewAsmDetail(rootAssignmentId: any) {
+  }
 
   viewAsmTree() {
-    this.router.navigate(['assignassignment/1']);
+    this.router.navigate(['assign-assignment/' + this.issue?.issueId]);
   }
 
   viewSchoolInspection() {
@@ -582,7 +640,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getAssignmentDashboardResponse() {
     const sub = this.assignmentService
-      .getAssignmentDashboardResponse(this.issue.issueId)
+      .getAssignmentDashboardResponse(this.issue.issueId, false)
       .subscribe({
         next: (data) => {
           this.numberOfNotCompletedAsm = data.numberOfNotCompletedAsm;
@@ -592,6 +650,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.numberDisApprovedAsm = data.numberDisApprovedAsm;
           this.totalAsm = data.totalAsm;
           this.setAsmChartData();
+        },
+        error: (error) => {
+          this.toastService.showError(
+            'dashboard-toast',
+            'Lỗi',
+            error.error.message
+          );
+        },
+      });
+    this.subs.push(sub);
+  }
+
+  getMyAssignmentDashboardResponse() {
+    const sub = this.assignmentService
+      .getAssignmentDashboardResponse(this.issue.issueId, true)
+      .subscribe({
+        next: (data) => {
+          this.myNumberOfNotCompletedAsm = data.numberOfNotCompletedAsm;
+          this.myNumberOfCompletedAsm = data.numberOfCompletedAsm;
+          this.myNumberWaitingForApprovalAsm = data.numberWaitingForApprovalAsm;
+          this.myNumberApprovedAsm = data.numberApprovedAsm;
+          this.myNumberDisApprovedAsm = data.numberDisApprovedAsm;
+          this.myTotalAsm = data.totalAsm;
+          this.setMyAsmChartData();
         },
         error: (error) => {
           this.toastService.showError(
@@ -638,6 +720,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   viewGuidanceDocumentDetail(guidanceDocumentId: any) {
     this.router.navigate(['guidance-document/' + guidanceDocumentId]);
   }
+
   sumArray<T>(array: T[]): number {
     if (array.length === 0) {
       return 0; // Return 0 for an empty array or an appropriate value for your use case
@@ -653,4 +736,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     }, 0);
   }
+
+  protected readonly NaN = NaN;
 }

@@ -32,11 +32,11 @@ export class ForgotPasswordComponent {
 
   onSubmit() {
     this.isSubmitted = true;
-    this.isLoading = true;
     if (!this.form.invalid){
+      this.isLoading = true;
       this.auth.sendResetPasswordToken(this.form.value).subscribe({
         next: (data) => {
-          this.toastService.showSuccess('error', "Thông báo", data.message)
+          this.toastService.showSuccess('reset-password', "Thông báo", data.message)
           this.isLoading = false;
           this.isConfirm = true;
           this.confirmForm.patchValue({
@@ -45,7 +45,7 @@ export class ForgotPasswordComponent {
         },
         error : (error) => {
           this.isLoading = false;
-          this.toastService.showWarn('error', "Lỗi", error.error.message)
+          this.toastService.showWarn('reset-password', "Lỗi", error.error.message)
         }
       })
     }
@@ -67,17 +67,16 @@ export class ForgotPasswordComponent {
     );
   }
   onSubmitConfirm(){
-    this.isLoading = true;
     if (!this.confirmForm.invalid){
+      this.isLoading = true;
       this.auth.resetPassword(this.confirmForm.value).subscribe({
         next: (data) =>{
           this.isLoading = false;
-          this.toastService.showSuccess("error","Thành công", data.message);
+          this.toastService.showSuccess("reset-password","Thành công", data.message);
         },
         error: (error) => {
           this.isLoading = false;
-
-          this.toastService.showError("error","Lỗi", error.error.message);
+          this.toastService.showError("reset-password","Lỗi", error.error.message);
 
         }
       })

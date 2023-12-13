@@ -53,6 +53,7 @@ export class SchoolListComponent implements OnInit {
     Role.MEDIC,
     Role.CLERICAL_ASSISTANT,
     Role.SECURITY,
+    Role.CHIEF_NUTRITION, Role.NUTRITION_EMP
   ];
 
   setAuth() {

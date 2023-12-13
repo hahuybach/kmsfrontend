@@ -19,7 +19,7 @@ export class InitiationPlanDetailGuardGuard implements CanActivate {
   isSchoolNormalEmp: boolean = false;
   isSpecialist: boolean = false;
   schoolRoles: any[] = [Role.VICE_PRINCIPAL, Role.CHIEF_TEACHER, Role.CHIEF_OFFICE, Role.TEACHER,
-    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY]
+    Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY,   Role.CHIEF_NUTRITION, Role.NUTRITION_EMP]
 
   setAuth() {
     if (this.authService.getRolesFromCookie()) {

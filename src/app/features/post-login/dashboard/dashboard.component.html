@@ -350,7 +350,7 @@
     </div>
   </ng-container>
   <!-- PRINCIPAL -->
-  <ng-container *ngIf="isPrincipal">
+  <ng-container *ngIf="isPrincipal || isSchoolNormalEmp">
     <div class="row height-row-principal">
       <div class="col-md-4">
         <div class="card p-3 h-100">
@@ -540,6 +540,7 @@
             <div
               class="card mb-2 shortcut-item"
               (click)="viewSchoolInspection()"
+              *ngIf="isPrincipal"
             >
               <div
                 class="p-3 d-flex justify-content-between align-items-center"
@@ -556,8 +557,8 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3">
-      <div class="col-md-4">
+    <div class="row mt-3" >
+      <div class="col-md-4" *ngIf="isPrincipal">
         <div class="card p-3">
           <h6 class="mat-headline-6">Thống kê công việc toàn trường</h6>
           <div class="row" *ngIf="asmChartData">
@@ -591,6 +592,32 @@
       <div class="col-md-4">
         <div class="card p-3">
           <label class="fw-medium fs-18">Thống kê công việc cá nhân</label>
+          <div class="row" *ngIf="myAsmChartData">
+            <div class="col-md-7">
+              <tui-ring-chart
+                size="m"
+                [value]="myAsmChartData.data"
+                [(activeItemIndex)]="myIndex_asm"
+              >
+                {{ sum(myAsmChartData, myIndex_asm) }}
+                <div>
+                  {{ label(myAsmChartData, myIndex_asm) }}
+                </div>
+              </tui-ring-chart>
+            </div>
+            <div class="row col-md-5" *ngIf="myAsmChartData">
+              <div *ngFor="let item of myAsmChartData?.labels; let i = index">
+                <div class="row">
+                  <div class="col-md-2">
+                    <div class="box-color" [ngClass]="'bg-color-' + i"></div>
+                  </div>
+                  <div class="col-md-10">
+                    <label class="fw-medium">{{ item }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-4">
