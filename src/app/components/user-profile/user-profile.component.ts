@@ -66,7 +66,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.isUpdate = false;
         this.form.patchValue({
             fullName: this.currentUser.fullName,
-            dob: dateToTuiDay(this.currentUser?.dob),
+            dob: dateToTuiDay(new Date(this.currentUser?.dob)),
             gender: this.currentUser.gender,
             phoneNumber: this.currentUser.phoneNumber,
         })
