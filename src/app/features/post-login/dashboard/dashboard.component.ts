@@ -497,7 +497,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   viewCompletedSchoolAssignmentList() {
-    this.router.navigate(['listAssignment'], {
+    this.router.navigate(['list-assignment'], {
       queryParams: {
         advanceSearch: true,
         status: 15,
