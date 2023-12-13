@@ -21,7 +21,7 @@
       <h5 class="m-3">Thông tin trường</h5>
       <div class="col-md-10">
         <div class="m-3">
-          <label>Tên trường</label>
+          <label>Tên trường<span class="p-error">*</span></label>
         </div>
         <div class="m-3">
           <input
@@ -37,7 +37,7 @@
       </div>
       <div class="col-md-10">
         <div class="m-3">
-          <label>Địa chỉ</label>
+          <label>Địa chỉ<span class="p-error">*</span></label>
 
         </div>
         <div class="m-3">
@@ -151,7 +151,7 @@
       <ng-container>
         <div class="col-md-10">
           <div class="m-3">
-            <label><span class="p-error">*</span>Email <span class="p-error">(bắt buộc)</span></label>
+            <label>Email<span class="p-error">*</span></label>
           </div>
           <div class="m-3">
             <input
@@ -161,7 +161,7 @@
               placeholder="(VD): nguyenvan-a@mamnon.edu.vn"
             >
             <span class="p-error"
-                  *ngIf="isBlank('principalEmail')">Không được để trống mục này</span>
+                  *ngIf="isBlank('principalEmail')">Không được để trống email của hiệu trưởng</span>
             <span class="p-error"
                   *ngIf="updateForm.get('principalEmail')?.hasError('email')">Sai định dạng gmail</span>
             <span class="p-error"
@@ -173,7 +173,7 @@
 
         <div class="col-md-10">
           <div class="m-3">
-            <label><span class="p-error">*</span>Tên <span class="p-error">(bắt buộc)</span></label>
+            <label>Tên<span class="p-error">*</span></label>
           </div>
           <div class="m-3">
             <input
@@ -184,7 +184,7 @@
             >
             <span class="p-error"
                   *ngIf="check('fullName', 'whitespace')">
-            Không được để trống mục này</span>
+            Không được để trống tên</span>
 
 
           </div>

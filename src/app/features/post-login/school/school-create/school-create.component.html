@@ -27,9 +27,7 @@
             formControlName="schoolName"
             placeholder="(VD): Trường mầm non Ánh sao"
           />
-          <span *ngIf="isBlank('schoolName')" class="p-error"
-            >Không được để trống mục này</span
-          >
+          <span *ngIf="check('schoolName','whitespace')" class="p-error">Tên trường không được để trống</span>
           <span
             *ngIf="saveSchoolForm.get('schoolName')?.hasError('notUnique')"
             class="p-error"
@@ -53,9 +51,8 @@
             formControlName="exactAddress"
             placeholder="(VD): Số 32, Phường A, Quận Cầu Giấy"
           />
-          <span *ngIf="isBlank('exactAddress')" class="p-error"
-            >Không được để trống mục này</span
-          >
+          <span *ngIf="check('exactAddress','whitespace')" class="p-error">Địa chỉ trường không được để trống</span>
+
           <span
                   *ngIf="saveSchoolForm.get('exactAddress')?.hasError('maxlength')"
                   class="p-error"
@@ -77,7 +74,7 @@
             placeholder="(VD): nguyenvan-a@mamnon.edu.vn"
           />
           <span class="p-error" *ngIf="isBlank('email')"
-            >Không được để trống mục này</span
+            >Email hiệu trưởng không được để trống</span
           >
           <span
             class="p-error"
@@ -105,7 +102,7 @@
             placeholder="(VD): Nguyen Van A"
           />
           <span class="p-error" *ngIf="checkError('fullName', 'whitespace')">
-            Không được để trống mục này</span
+            Tên hiệu trưởng không được để trống</span
           >
           <span
                   *ngIf="saveSchoolForm.get('fullName')?.hasError('maxlength')"
@@ -127,7 +124,14 @@
         <div class="col-md-5">
           <div class="mb-2">
             <label class="fw-medium mb-1">Ngày sinh</label>
-            <input pInputText type="date" formControlName="dob" />
+            <tui-input-date
+              tuiTextfieldSize="m"
+              class="tui-date"
+              formControlName='dob'
+              [max]="today"
+              tuiUnfinishedValidator="Vui lòng điền ngày sinh (ngày sinh không thể là tương lai)"
+            >
+            </tui-input-date>
             <span class="p-error" *ngIf="checkError('dob', 'invalidDate')">
               Ngày sinh không thể là tương lai
             </span>
@@ -172,3 +176,4 @@
     [complete]="'Tạo mới trường học thành công'"
   ></app-loading-complete-dialog>
 </div>
+<p-toast key="toastSchoolCreate" position="top-right"></p-toast>

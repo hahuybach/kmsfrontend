@@ -7,6 +7,7 @@ import { SchoolDetailComponent } from './school-detail/school-detail.component';
 import { SchoolCreateComponent } from './school-create/school-create.component';
 import { SchoolService } from 'src/app/services/school.service';
 import { SchoolBaseComponent } from './school-base/school-base.component';
+import {TuiUnfinishedValidatorModule} from "@taiga-ui/kit";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,7 @@ import { SchoolBaseComponent } from './school-base/school-base.component';
     SchoolCreateComponent,
     SchoolBaseComponent,
   ],
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, TuiUnfinishedValidatorModule],
   providers: [SchoolService],
 })
 export class SchoolListModule {}
