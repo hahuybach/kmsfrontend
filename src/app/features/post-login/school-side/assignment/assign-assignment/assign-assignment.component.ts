@@ -115,10 +115,10 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   minDate: TuiDay;
   maxDate: TuiDay;
   today: Date = new Date();
-  searchDialogVisible : boolean = false;
+  searchDialogVisible: boolean = false;
   searchData: string;
   searchItem: any[];
-  canChangeDate : boolean = true;
+  canChangeDate: boolean = true;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -243,7 +243,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           console.log(data);
-          console.log("possible " + data.listOfPossibleAssignees);
+          console.log('possible ' + data.listOfPossibleAssignees);
           if (data.listOfPossibleAssignees) {
             this.listOfPossibleAssignees = data.listOfPossibleAssignees;
             this.selectedAssignee = this.listOfPossibleAssignees[0];
@@ -260,10 +260,10 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
       });
 
     this.action = action;
-        this.assignmentForm
-          .get('parentId')
-          ?.setValue(this.selectedAssignment.assignmentId);
-        // this.assignmentForm.get('isTask')?.setValue(false);
+    this.assignmentForm
+      .get('parentId')
+      ?.setValue(this.selectedAssignment.assignmentId);
+    // this.assignmentForm.get('isTask')?.setValue(false);
 
     this.sub.push(method);
   }
@@ -397,9 +397,8 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         console.log(this.selectedAssignment.documents.length == 0);
         this.documents = data.documents;
         if (this.selectedAssignment) {
-          const temp : Date = new Date(this.selectedAssignment.maxDate)
-          if(temp)
-          temp.setDate(temp.getDate() + 1)
+          const temp: Date = new Date(this.selectedAssignment.maxDate);
+          if (temp) temp.setDate(temp.getDate() + 1);
           // this.maxDate = dateToTuiDay(temp);
           this.assignmentForm
             .get('assignmentName')
@@ -407,13 +406,13 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
           this.assignmentForm
             .get('description')
             ?.setValue(this.selectedAssignment.description);
-          if(data.deadline){
+          if (data.deadline) {
             this.assignmentForm
               .get('deadline')
               ?.setValue(
                 dateToTuiDay(new Date(this.selectedAssignment.deadline))
               );
-            console.log(this.assignmentForm.get('deadline')?.value)
+            console.log(this.assignmentForm.get('deadline')?.value);
           }
 
           this.selectedAssignee = this.selectedAssignment.assignee;
@@ -584,9 +583,9 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     const method = this.assignmentService.assignAssignment(data).subscribe({
       next: (data) => {
         this.initData();
-        console.log("before refresh")
+        console.log('before refresh');
         this.refreshSelectedAssignment();
-        console.log("after refresh")
+        console.log('after refresh');
 
         this.toastService.showSuccess(
           'toastAssignAssignment',
@@ -985,12 +984,14 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         this.restoreNodeState(node.children);
       }
     });
+    console.log('restore');
+    console.log(this.nodeStateMap);
   }
   expandNodesByIds(nodeIds: number[]) {
-    this.nodeStateMap = [];
     for (let i = 0; i < nodeIds.length; i++) {
       const nodeId = nodeIds[i];
       this.nodeStateMap[nodeId] = true;
+      console.log(nodeId + ' ' + this.nodeStateMap[nodeId]);
     }
     console.log(this.nodeStateMap);
   }
@@ -1002,18 +1003,28 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   getAvatar(fullName: string): string {
     return getFirstAndLastName(fullName);
   }
-  loadAssignment(){
-    this.assignmentService.searchAssignment({
-      searchedText : this.searchData,
-      issueId: this.issueId,
-      schoolId: this.authService.getSchoolFromJwt().schoolId
-    }).subscribe({
-      next: (data)=>{
-        this.searchItem = data
-      },
-      error : (error) => {
-
-      }
-    })
+  loadAssignment() {
+    this.assignmentService
+      .searchAssignment({
+        searchedText: this.searchData,
+        issueId: this.issueId,
+        schoolId: this.authService.getSchoolFromJwt().schoolId,
+      })
+      .subscribe({
+        next: (data) => {
+          this.searchItem = data;
+          console.log(data);
+        },
+        error: (error) => {},
+      });
+  }
+  navigateSearch(assignment: any, ids: number[]) {
+    // this.router.navigate(['/assign-assignment', this.issueId], {
+    //   queryParams: { id: assignmentId },
+    // });
+    this.searchDialogVisible = false;
+    this.openDetailRowNode(assignment, 'info');
+    this.expandNodesByIds(ids);
+    this.initData();
   }
 }

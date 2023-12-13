@@ -659,7 +659,6 @@
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="selectedAssignee"
               optionLabel="user.fullName"
-
             >
               <ng-template pTemplate="selectedItem">
                 <div class="row">
@@ -700,9 +699,9 @@
                       option?.user.fullName
                     }}</span
                     >&nbsp;
-<!--                    <span class="text-black-50 font-s ize-14">-->
-<!--                      {{ option?.email }}</span-->
-<!--                    >-->
+                    <!--                    <span class="text-black-50 font-s ize-14">-->
+                    <!--                      {{ option?.email }}</span-->
+                    <!--                    >-->
                   </div>
                 </div>
               </ng-template>
@@ -937,7 +936,6 @@
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="selectedAssignee"
               optionLabel="user.fullName"
-
             >
               <ng-template let-option pTemplate="selectedItem">
                 <div class="row">
@@ -1021,7 +1019,9 @@
             <h6 class="mat-headline-6">Chi tiết danh sách công việc</h6>
           </div>
           <div class="search-button">
-            <button pButton (click)="searchDialogVisible = true" >Tìm kiếm</button>
+            <button pButton (click)="searchDialogVisible = true">
+              Tìm kiếm
+            </button>
           </div>
         </div>
       </ng-template>
@@ -1165,38 +1165,74 @@
         </tr>
       </ng-template>
     </p-treeTable>
+
     <p-dialog
-      header="Tìm kiếm"
+      header="Tìm kiếm công việc"
       [(visible)]="searchDialogVisible"
       [style]="{ width: '70vw', height: '600px' }"
       [draggable]="false"
       [resizable]="false"
     >
-      <div class="row">
-        <input pInputText [(ngModel)]="searchData" class="search" placeholder="Tìm kiếm" (keyup)="loadAssignment()">
+      <div class="row my-3 d-flex justify-content-between align-items-center">
+        <div class="col-md-10">
+          <input
+            pInputText
+            [(ngModel)]="searchData"
+            class="search"
+            placeholder="Tìm kiếm"
+            (keyup)="loadAssignment()"
+          />
+        </div>
+        <div class="col-md-2 d-flex justify-content-end">
+          <button pButton class="">Tra cứu nâng cao</button>
+        </div>
       </div>
-      <div class="row mt-2" >
-        <h6 class="mat-headline-6">Nội dung tìm kiếm: {{searchData}}</h6>
+      <div class="row mt-2">
+        <div>
+          <span class="fw-medium">Nội dung tìm kiếm: </span
+          ><span>{{ searchData }}</span>
+        </div>
       </div>
       <div class="row mt-2">
         <h6 class="mat-headline-6">Kết quả</h6>
-        <ng-container *ngIf="searchItem && searchItem.length > 0;else noAss">
-          <div class="row">
-            <div class="col-md-5">Địa chỉ</div>
-            <div class="col-md-6">Tên</div>
+        <ng-container *ngIf="searchItem && searchItem.length > 0; else noAss">
+          <div class="row search-heading">
+            <div class="col-md-5">
+              <label class="fs-18 fw-medium">Địa chỉ</label>
+            </div>
+            <div class="col-md-6">
+              <label class="fs-18 fw-medium">Tên công việc</label>
+            </div>
             <div class="col-md-1"></div>
           </div>
           <ng-container *ngFor="let item of searchItem">
-            <div class="row">
-              <div class="col-md-5">{{item.breadcrumb}}</div>
-              <div class="col-md-6">{{item.searchedAssignment.assignmentName}}</div>
+            <div
+              class="row mt-2 children d-flex align-items-center"
+              (click)="
+                navigateSearch(item.searchedAssignment, item.idsOfBreadcrumb)
+              "
+            >
+              <div class="col-md-5">{{ item.breadcrumb }}</div>
+              <div class="col-md-6">
+                {{ item.searchedAssignment.assignmentName }}
+              </div>
               <div class="col-md-1"></div>
             </div>
           </ng-container>
-
         </ng-container>
         <ng-template #noAss>
-          đéo thấy
+          <div
+            class="empty-assignment row d-flex justify-content-center align-items-center"
+          >
+            <div class="empty-assignment-img">
+              <img src="../../../../../../assets/img/not-found-data.svg" />
+            </div>
+            <div
+              class="empty-assignment-mess mt-2 d-flex justify-content-center align-items-center"
+            >
+              <label class="fw-medium fs-18">Không tìm thấy công việc</label>
+            </div>
+          </div>
         </ng-template>
       </div>
     </p-dialog>
