@@ -245,12 +245,18 @@
       type="button"
       class="mb-1 complete-button"
       pButton
-      *ngIf="inspectionDocument && !inspectionDocument.isChief"
+      *ngIf="inspectionDocument && inspectionDocument.isChief"
       [class.disabled-action-button]="
         inspectionDocument.isChief && !inspectionDocument.canFinish
       "
+      (click)="onFinish()"
     >
       Hoàn thành
     </button>
   </div>
 </div>
+<p-confirmDialog
+  key="inspection-document-confirm"
+  [style]="{ width: '50vw' }"
+></p-confirmDialog>
+<p-toast key="inspection-document"></p-toast>

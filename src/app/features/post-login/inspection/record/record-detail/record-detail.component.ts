@@ -131,6 +131,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     formData.append(`file`, file, file.name);
 
     this.updateDocumentSubmitted = true;
+    console.log("document " + document.documentTaskDto?.documentName);
     const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
       next: (response) => {
         this.updateDocumentCompleted = true;

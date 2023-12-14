@@ -112,4 +112,11 @@ export class inspectionPlanService {
     return this.http.get(url, {headers});
   }
 
+  public finishInspectionPlan(inspectionPlanId: any) {
+    const request = Number(inspectionPlanId);
+    console.log(request);
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.http.put<any>(this.inspectionApiUrl + '/finish', request, { headers });
+  }
 }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { InspectionDocument } from '../../../../models/inspection';
 import { InspectionService } from '../../../../services/inspection.service';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { RecordService } from '../../../../services/record.service';
 import { ToastService } from '../../../../shared/toast/toast.service';
+import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 
 @Component({
   selector: 'app-inspection-document',
@@ -25,7 +26,9 @@ export class InspectionDocumentComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly confirmationService: ConfirmationService,
     private readonly recordService: RecordService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly inspectionPlanService: inspectionPlanService,
+    private readonly router: Router
   ) {}
 
   changeCreateRecordVisible() {
@@ -65,6 +68,8 @@ export class InspectionDocumentComponent implements OnInit {
     this.changeDetailRecordVisible();
   }
 
+
+
   handleOnClickDeleteRecord(recordId: number) {
     this.confirmationService.confirm({
       message: 'Bạn có chắc muốn xóa mục kiểm tra này?',
@@ -73,10 +78,14 @@ export class InspectionDocumentComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.deleteRecord(recordId);
+      } ,
+      reject: (type: ConfirmEventType) => {
+
       },
-      reject: (type: ConfirmEventType) => {},
-    });
+    } )
   }
+
+
 
   deleteRecord(recordId: number) {
     const deleteRecord = this.recordService
@@ -119,5 +128,35 @@ export class InspectionDocumentComponent implements OnInit {
   }
   changeFilterVisible(status: Boolean) {
     this.filterVisible = status;
+  }
+
+
+
+
+
+  onFinish() {
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận kết thúc phiên thanh tra này không? (Sẽ không thể thay đổi sau khi kết thúc phiên)',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel: 'Không',
+      accept: () => {
+
+        if (this.inspectionDocument.canFinish){
+          this.inspectionPlanService.finishInspectionPlan(this.inspectionId).subscribe({
+            next: (data) => {
+              this.toastService.showSuccess('inspection-document', "Thành công", "Kết thúc phiên kiểm tra thành công")
+                this.router.navigate(['inspection/' + this.inspectionId +'/information'])
+            }, error: (error) => {
+              this.toastService.showError('inspection-document', "Lỗi", error.error.message)
+            }
+          })
+        }
+
+      }, key: 'inspection-document-confirm'
+    });
+
+
   }
 }
