@@ -26,12 +26,18 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PrimeNGConfig } from 'primeng/api';
-import {TuiInputDateModule, TuiInputDateRangeModule, TuiBreadcrumbsModule, TuiAvatarModule} from '@taiga-ui/kit';
+import {
+  TuiInputDateModule,
+  TuiInputDateRangeModule,
+  TuiBreadcrumbsModule,
+  TuiAvatarModule,
+} from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
-import {CheckboxModule} from "primeng/checkbox";
-import {TuiRingChartModule} from '@taiga-ui/addon-charts';
-import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
-import {TuiDropdownModule, TuiDataListModule} from '@taiga-ui/core';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TuiRingChartModule } from '@taiga-ui/addon-charts';
+import { TuiMoneyModule } from '@taiga-ui/addon-commerce';
+import { TuiDropdownModule, TuiDataListModule } from '@taiga-ui/core';
+import { EllipsisPipe } from './pipes/ellipsis.pipe';
 
 // ...
 
@@ -49,6 +55,7 @@ export class MyModule {}
     LoadingCompleteDialogComponent,
     FileLoadingComponent,
     DataNotExistComponent,
+    EllipsisPipe,
   ],
   imports: [
     CommonModule,
@@ -84,7 +91,7 @@ export class MyModule {}
     TuiAvatarModule,
     TuiAvatarModule,
     TuiDropdownModule,
-    TuiDataListModule
+    TuiDataListModule,
   ],
   exports: [
     InputTextModule,
@@ -123,7 +130,8 @@ export class MyModule {}
     TuiAvatarModule,
     TuiAvatarModule,
     TuiDropdownModule,
-    TuiDataListModule
+    TuiDataListModule,
+    EllipsisPipe,
   ],
 })
 export class SharedModule {

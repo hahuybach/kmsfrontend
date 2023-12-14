@@ -187,5 +187,28 @@ export class AssignmentService {
     return this.http.get<any>(url);
   }
 
+  public filterAsm(issueId: any, schoolId: any, pageNo: any, searchName: any){
+    let params = new HttpParams();
+    let headers = new HttpHeaders();
+
+    params = params.set('issueId', issueId);
+    params = params.set('schoolId', schoolId);
+    if (pageNo){
+      params = params.set('pageNo', pageNo);
+    }else {
+      params = params.set('pageNo', 0);
+
+    }
+
+    if (searchName){
+      params = params.set('searchName', searchName);
+    }
+
+    return this.http.get<any>(this.assignmentApiUrl+ 'filter', {headers,params});
+
+
+
+  }
+
 
 }

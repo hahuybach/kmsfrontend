@@ -119,6 +119,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   searchData: string;
   searchItem: any[];
   canChangeDate: boolean = true;
+  pageNo: number = 0;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -1022,9 +1023,29 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     // this.router.navigate(['/assign-assignment', this.issueId], {
     //   queryParams: { id: assignmentId },
     // });
-    this.searchDialogVisible = false;
+    // this.nodeStateMap = [];
     this.openDetailRowNode(assignment, 'info');
     this.expandNodesByIds(ids);
     this.initData();
+    this.searchDialogVisible = false;
+  }
+  onResultScroll(e: any) {
+    const element = e.target as HTMLElement;
+    if (element.offsetHeight + element.scrollTop + 1 == element.scrollHeight) {
+      this.pageNo++;
+      this.assignmentService
+        .filterAsm(
+          this.issueId,
+          this.authService.getSchoolFromJwt().schoolId,
+          this.pageNo,
+          this.searchData
+        )
+        .subscribe({
+          next: (data) => {
+            this.searchItem.push(...data);
+            console.log(this.searchItem.length);
+          },
+        });
+    }
   }
 }
