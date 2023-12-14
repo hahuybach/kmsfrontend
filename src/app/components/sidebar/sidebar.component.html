@@ -1,16 +1,15 @@
-<div class="sticky-top sidebar-content d-flex flex-column justify-content-between h-100 w-100 fixed-sidebar">
+<div
+  class="sticky-top sidebar-content d-flex flex-column justify-content-between h-100 w-100 fixed-sidebar"
+>
   <div class="sidebar-content-top">
     <div class="logo mt-2 mb-3">
       <div class="sidebar-logo">
-        <img src="../../../assets/img/PGD-logo.svg" />
+        <img src="../../../assets/img/logo-page.jpg" />
       </div>
     </div>
     <div>
       <ul>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-        >
+        <li class="p-2 rounded" routerLinkActive="active">
           <a routerLink="" [routerLink]="['/dashboard']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-bar-chart"></i>
@@ -18,11 +17,7 @@
             </div>
           </a>
         </li>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-          *ngIf="!isAdmin"
-        >
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="!isAdmin">
           <a class="" [routerLink]="['/issue']">
             <div>
               <i class="bi bi-list-check"></i>
@@ -42,10 +37,7 @@
             </div>
           </a>
         </li>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-        >
+        <li class="p-2 rounded" routerLinkActive="active">
           <a class="" [routerLink]="['/inspection-plan']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-file-earmark-person"></i>
@@ -53,11 +45,7 @@
             </div>
           </a>
         </li>
-        <li
-          class="p-2 rounded"
-          routerLinkActive="active"
-
-        >
+        <li class="p-2 rounded" routerLinkActive="active">
           <a class="" [routerLink]="['/guidance-document']" *ngIf="!isAdmin">
             <div>
               <i class="bi bi-clipboard2-check"></i>
@@ -65,7 +53,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="!(isAdmin || isPrincipal || isSchoolNormalEmp)">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="!(isAdmin || isPrincipal || isSchoolNormalEmp)"
+        >
           <a class="" [routerLink]="['/create-template']">
             <div>
               <i class="bi bi-folder-plus"></i>
@@ -100,7 +92,7 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="isDirector || isAdmin || isViceDirector || isSpecialist "
+          *ngIf="isDirector || isAdmin || isViceDirector || isSpecialist"
         >
           <a class="" [routerLink]="['/school']">
             <div>
@@ -109,7 +101,11 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal || isSchoolNormalEmp">
+        <li
+          class="p-2 rounded"
+          routerLinkActive="active"
+          *ngIf="isPrincipal || isSchoolNormalEmp"
+        >
           <a class="" [routerLink]="['/school/'] + schoolId">
             <div>
               <i class="bi bi-building"></i>
@@ -130,9 +126,6 @@
             </div>
           </a>
         </li>
-
-
-
 
         <!-- <li class="p-2 rounded" routerLinkActive="active" *ngIf="isPrincipal">
           <a class="" [routerLink]="['/submitassignment']">
