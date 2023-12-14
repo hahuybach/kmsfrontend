@@ -16,6 +16,27 @@ export class SearchbarComponent implements OnInit {
   user: string | null;
   isVisible = false;
 
+  notificationListDtos: {
+    createdOn: Date;
+    isSeen: boolean;
+    link: string;
+    message: string;
+    notificationId: number;
+    notificationType: string;
+  }[];
+  unseenNotificationDtos: {
+    createdOn: Date;
+    isSeen: boolean;
+    link: string;
+    message: string;
+    notificationId: number;
+    notificationType: string;
+  }[];
+  unseen: number;
+  all: number;
+
+  notificationPageSize: number = 10;
+
   constructor(
     private http: HttpClient,
     private stompService: StompService,
@@ -25,9 +46,43 @@ export class SearchbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getNotification();
+    this.user = this.authService.getSubFromCookie();
+    this.stompService.subscribe('/notify/' + this.user, (): any => {
+      this.getNotification();
+    });
   }
 
-
+  private getNotification(): void {
+    this.route.params
+      .pipe(
+        switchMap((params) => {
+          return this.stompService.getAllNotification();
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.notificationListDtos = data.notificationListDtos;
+          this.all = data.all;
+          this.unseen = data.unseen;
+          if (this.all <= this.notificationPageSize) {
+            this.notificationAllIsLoaded = true;
+          }
+          if (this.unseen <= this.notificationPageSize) {
+            this.notificationUnSeenIsLoaded = true;
+          }
+          this.unseenNotificationDtos = data.unseenNotificationListDtos;
+          if (data.unseen != 0) {
+            this.badgeValue = this.unseen < 99 ? this.unseen.toString() : '99+';
+          } else {
+            this.badgeValue = '0';
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+  }
 
   onClickUserProfile() {
     this.isVisible = !this.isVisible;

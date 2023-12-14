@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { StompService } from '../../features/post-login/push-notification/stomp.service';
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 export class NotificationListComponent implements OnInit {
   badgeValue: string = '0';
   user: string | null;
-  notificationListDtos: {
+  @Input() notificationListDtos: {
     createdOn: Date;
     isSeen: boolean;
     link: string;
@@ -21,7 +21,7 @@ export class NotificationListComponent implements OnInit {
     notificationId: number;
     notificationType: string;
   }[];
-  unseenNotificationDtos: {
+  @Input() unseenNotificationDtos: {
     createdOn: Date;
     isSeen: boolean;
     link: string;
@@ -29,10 +29,10 @@ export class NotificationListComponent implements OnInit {
     notificationId: number;
     notificationType: string;
   }[];
-  unseen: number;
-  all: number;
+  @Input() unseen: number;
+  @Input() all: number;
   showAllNotification: boolean = true;
-  notificationPageSize: number = 10;
+  @Input() notificationPageSize: number = 10;
   notificationAllPageNumber: number = 1;
   notificationAllIsLoaded: boolean = false;
   notificationUnSeenPageNumber: number = 1;
@@ -64,44 +64,6 @@ export class NotificationListComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-    this.getNotification();
-    this.user = this.authService.getSubFromCookie();
-    this.stompService.subscribe('/notify/' + this.user, (): any => {
-      this.getNotification();
-    });
-  }
-
-  private getNotification(): void {
-    this.route.params
-      .pipe(
-        switchMap((params) => {
-          return this.stompService.getAllNotification();
-        })
-      )
-      .subscribe({
-        next: (data) => {
-          this.notificationListDtos = data.notificationListDtos;
-          this.all = data.all;
-          this.unseen = data.unseen;
-          if (this.all <= this.notificationPageSize) {
-            this.notificationAllIsLoaded = true;
-          }
-          if (this.unseen <= this.notificationPageSize) {
-            this.notificationUnSeenIsLoaded = true;
-          }
-          this.unseenNotificationDtos = data.unseenNotificationListDtos;
-          if (data.unseen != 0) {
-            this.badgeValue = this.unseen < 99 ? this.unseen.toString() : '99+';
-          } else {
-            this.badgeValue = '0';
-          }
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
-  }
 
   onNotificationClose(e: any) {
     if (!e) {
