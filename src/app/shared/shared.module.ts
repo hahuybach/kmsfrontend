@@ -33,10 +33,10 @@ import {
   TuiAvatarModule,
 } from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
-import { CheckboxModule } from 'primeng/checkbox';
-import { TuiRingChartModule } from '@taiga-ui/addon-charts';
-import { TuiMoneyModule } from '@taiga-ui/addon-commerce';
-import { TuiDropdownModule, TuiDataListModule } from '@taiga-ui/core';
+import {CheckboxModule} from "primeng/checkbox";
+import {TuiRingChartModule} from '@taiga-ui/addon-charts';
+import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
+import { StepsModule } from 'primeng/steps';
 import { EllipsisPipe } from './pipes/ellipsis.pipe';
 
 // ...
@@ -90,8 +90,7 @@ export class MyModule {}
     TuiMoneyModule,
     TuiAvatarModule,
     TuiAvatarModule,
-    TuiDropdownModule,
-    TuiDataListModule,
+    StepsModule
   ],
   exports: [
     InputTextModule,
@@ -129,8 +128,7 @@ export class MyModule {}
     TuiMoneyModule,
     TuiAvatarModule,
     TuiAvatarModule,
-    TuiDropdownModule,
-    TuiDataListModule,
+    StepsModule,
     EllipsisPipe,
   ],
 })
