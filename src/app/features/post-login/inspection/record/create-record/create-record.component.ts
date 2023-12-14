@@ -71,7 +71,6 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initInspectionPlan()
-
     this.recordForm = this.fb.group({
       recordName: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required, Validators.maxLength(256)])],
       recordDescription: [null, Validators.compose([NoWhitespaceValidator() ,Validators.required])],
@@ -108,6 +107,11 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.formFailed = true;
         this.toastService.showError('createRecordError', "Tạo mục kiểm tra không thành công", error.error.message);
+        setTimeout(() => {
+          this.formSubmitted = false;
+          this.formFailed = false;
+          this.resetForm();
+        }, 1000);
       }
     });
     this.subscriptions.push(saveTask);
