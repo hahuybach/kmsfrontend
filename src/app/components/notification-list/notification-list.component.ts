@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { StompService } from '../../features/post-login/push-notification/stomp.service';
@@ -10,9 +10,8 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './notification-list.component.html',
   styleUrls: ['./notification-list.component.scss'],
 })
-export class NotificationListComponent implements OnInit {
-  badgeValue: string = '0';
-  user: string | null;
+export class NotificationListComponent {
+  @Input() badgeValue: string = '0';
   @Input() notificationListDtos: {
     createdOn: Date;
     isSeen: boolean;
@@ -34,10 +33,10 @@ export class NotificationListComponent implements OnInit {
   showAllNotification: boolean = true;
   @Input() notificationPageSize: number = 10;
   notificationAllPageNumber: number = 1;
-  notificationAllIsLoaded: boolean = false;
+  @Input() notificationAllIsLoaded: boolean = false;
   notificationUnSeenPageNumber: number = 1;
-  notificationUnSeenIsLoaded: boolean = false;
-
+  @Input() notificationUnSeenIsLoaded: boolean = false;
+  @Output() notificationListClosed = new EventEmitter<void>;
   constructor(
     private http: HttpClient,
     private stompService: StompService,
@@ -68,7 +67,7 @@ export class NotificationListComponent implements OnInit {
   onNotificationClose(e: any) {
     if (!e) {
       this.resetNotificationList();
-      this.getNotification();
+      this.notificationListClosed.emit();
     }
   }
 

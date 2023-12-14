@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {StompService} from "../../features/post-login/push-notification/stomp.service";
 import {ActivatedRoute} from "@angular/router";
@@ -11,11 +11,10 @@ import {switchMap} from "rxjs";
   styleUrls: ['./searchbar.component.scss']
 })
 export class SearchbarComponent implements OnInit {
-  notificationListDtos: any;
-  unseenNotificationListDtos: any;
   user: string | null;
   isVisible = false;
 
+  badgeValue: string = '0';
   notificationListDtos: {
     createdOn: Date;
     isSeen: boolean;
@@ -34,7 +33,8 @@ export class SearchbarComponent implements OnInit {
   }[];
   unseen: number;
   all: number;
-
+  notificationAllIsLoaded: boolean = false;
+  notificationUnSeenIsLoaded: boolean = false;
   notificationPageSize: number = 10;
 
   constructor(
@@ -51,6 +51,10 @@ export class SearchbarComponent implements OnInit {
     this.stompService.subscribe('/notify/' + this.user, (): any => {
       this.getNotification();
     });
+  }
+
+  onNotificationListClose(){
+    this.getNotification();
   }
 
   private getNotification(): void {

@@ -5,6 +5,15 @@
     class="col-md-6 d-flex flex-row justify-content-end align-items-center top-nav"
   >
     <app-notification-list
+      [badgeValue]="badgeValue"
+      [notificationListDtos]="notificationListDtos"
+      [unseenNotificationDtos]="unseenNotificationDtos"
+      [unseen]="unseen"
+      [all]="all"
+      [notificationPageSize]="notificationPageSize"
+      [notificationAllIsLoaded]="notificationAllIsLoaded"
+      [notificationUnSeenIsLoaded]="notificationUnSeenIsLoaded"
+      (notificationListClosed)="onNotificationListClose()"
     ></app-notification-list>
     <a>
       <i class="bi bi-person-circle" (click)="onClickUserProfile()"></i>
