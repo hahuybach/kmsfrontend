@@ -4,6 +4,8 @@ import {Subscription, switchMap} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FileService} from "../../../../services/file.service";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {Role} from "../../../../shared/enum/role";
+import {AuthService} from "../../../../services/auth.service";
 
 @Component({
   selector: 'app-inspection-plan-detail',
@@ -18,6 +20,28 @@ export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
   pdfLoaded: boolean = false;
   safePdfUrl: SafeResourceUrl | undefined;
   pdfPreviewVisibility: boolean = false;
+  isDirector: boolean = false;
+  isAdmin: boolean = false;
+  isInspector: boolean = false;
+  isChiefInspector: boolean = false;
+  isViceDirector: boolean = false;
+  isSchoolNormalEmp: boolean = false;
+  isSpecialist: boolean = false;
+  isPrincipal: boolean = false;
+  schoolRoles: any[] = [
+    Role.VICE_PRINCIPAL,
+    Role.CHIEF_TEACHER,
+    Role.CHIEF_OFFICE,
+    Role.TEACHER,
+    Role.ACCOUNTANT,
+    Role.MEDIC,
+    Role.CLERICAL_ASSISTANT,
+    Role.SECURITY,
+    Role.CHIEF_NUTRITION, Role.NUTRITION_EMP
+  ];
+
+
+
 
   breadCrumb = [
     {
@@ -34,6 +58,8 @@ export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
   ];
 
   private subscriptions: Subscription[] = [];
+
+
 
   getStatusSeverity(status: string): string {
     const statusSeverityMap: { [key: string]: string } = {
@@ -57,13 +83,45 @@ export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
     }))
   }
 
+  setAuth() {
+    if (this.auth.getRolesFromCookie()) {
+      for (const argument of this.auth.getRoleFromJwt()) {
+        if (argument.authority === Role.DIRECTOR) {
+          this.isDirector = true;
+        }
+        if (argument.authority === Role.PRINCIPAL) {
+          this.isPrincipal = true;
+        }
+        if (argument.authority === Role.ADMIN) {
+          this.isAdmin = true;
+        }
+        if (argument.authority === Role.VICE_DIRECTOR) {
+          this.isViceDirector = true;
+        }
+        if (argument.authority === Role.INSPECTOR) {
+          this.isInspector = true;
+        }
+        if (argument.authority === Role.CHIEF_INSPECTOR) {
+          this.isChiefInspector = true;
+        }
+        if (argument.authority === Role.SPECIALIST) {
+          this.isSpecialist = true;
+        }
+        if (this.schoolRoles.some((value) => value === argument.authority)) {
+          this.isSchoolNormalEmp = true;
+        }
+      }
+    }
+  }
+
   constructor(
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly route: ActivatedRoute,
     private readonly cdref: ChangeDetectorRef,
     private readonly fileService: FileService,
     private sanitizer: DomSanitizer,
-    private router: Router
+    private router: Router,
+    private auth: AuthService
   ) {
     this
       .inspectionPlanDetail = {
@@ -94,6 +152,7 @@ export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.setAuth()
     this.subscriptions.push(this.route.params
       .pipe(
         switchMap((params) => {
