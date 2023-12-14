@@ -372,7 +372,7 @@
   </div>
   <p-toast key="paging" position="bottom-right"></p-toast>
   <p-toast key="issueId" position="top-right"></p-toast>
-  <p-toast position="top-right" key="userListError"></p-toast>
+  <p-toast position="top-right" key="userListError" [life]="20000"></p-toast>
   <p-dialog
     header="Tạo người dùng bằng file excel"
     [(visible)]="visible"
