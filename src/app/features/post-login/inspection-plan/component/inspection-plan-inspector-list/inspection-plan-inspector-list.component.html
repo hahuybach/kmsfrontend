@@ -62,7 +62,7 @@
           </ng-container>
         </div>
       </div>
-      <div class="w-100 d-flex justify-content-center my-1" *ngIf="listEditable">
+      <div class="w-100 d-flex justify-content-center my-1" *ngIf="listEditable && selectedInspectors.length > 0">
         <div *ngIf="toggleChange">
           <button type="button" pButton class="create-inspector"
                   (click)="changeToggleStatus()">Chỉnh sửa ban KTNB
@@ -72,7 +72,7 @@
           <button type="button" pButton class="create-inspector px-4" (click)="onReset()">
             Hủy
           </button>
-          <button type="button" pButton class="create-inspector px-5" (click)="changeInspectorVisible()">
+          <button *ngIf="popup" type="button" pButton class="create-inspector px-5" (click)="changeInspectorVisible()">
             <i class="bi bi-plus-lg"></i>
           </button>
           <button type="button" pButton class="create-inspector px-4" (click)="onSave()">
