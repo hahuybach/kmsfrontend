@@ -112,7 +112,13 @@ export class AssignmentService {
     const url = `${this.assignmentApiUrl}add_comment`;
     return this.http.post(url, data, { headers });
   }
+  public searchAssignment(data: object): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
 
+    const url = `${this.assignmentApiUrl}search_assignment`;
+    return this.http.post(url, data, { headers });
+  }
   // PUT
   public uploadDocument(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
@@ -176,9 +182,32 @@ export class AssignmentService {
     return this.http.get<any>(url);
   }
 
-  public getAssignmentDashboardResponse(issueId: any){
-    const url = this.assignmentApiUrl + "getAssignmentDashboardResponse?issueId=" + issueId;
+  public getAssignmentDashboardResponse(issueId: any, isMine: any){
+    const url = this.assignmentApiUrl + "getAssignmentDashboardResponse?issueId=" + issueId + "&isMine=" + isMine;
     return this.http.get<any>(url);
+  }
+
+  public filterAsm(issueId: any, schoolId: any, pageNo: any, searchName: any){
+    let params = new HttpParams();
+    let headers = new HttpHeaders();
+
+    params = params.set('issueId', issueId);
+    params = params.set('schoolId', schoolId);
+    if (pageNo){
+      params = params.set('pageNo', pageNo);
+    }else {
+      params = params.set('pageNo', 0);
+
+    }
+
+    if (searchName){
+      params = params.set('searchName', searchName);
+    }
+
+    return this.http.get<any>(this.assignmentApiUrl+ 'filter', {headers,params});
+
+
+
   }
 
 

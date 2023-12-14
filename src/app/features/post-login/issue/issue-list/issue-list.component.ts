@@ -37,6 +37,7 @@ export class IssueListComponent implements OnInit, OnDestroy {
     Role.MEDIC,
     Role.CLERICAL_ASSISTANT,
     Role.SECURITY,
+    Role.CHIEF_NUTRITION, Role.NUTRITION_EMP
   ];
   sub: any[] = [];
   @ViewChild('dt') dt: Table;

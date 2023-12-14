@@ -249,10 +249,8 @@
                 action === 'update' &&
                 hasAuthority('canModifyFolderAsmMetaData')
               "
-              [min]="minDate"
-              [max]="maxDate"
-              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               class="tui-date"
+              tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               tuiTextfieldSize="m"
               formControlName="deadline"
             >
@@ -655,11 +653,12 @@
               class="assignee-dropdown"
               [options]="listOfPossibleAssignees"
               [filter]="true"
-              filterBy="user.fullName"
+              filterBy="user?.fullName"
               *ngIf="action === 'info' && hasAuthority('canChangeAssignee')"
               (onChange)="[onChangeAssignee($event), onPatchAssigneeId()]"
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="selectedAssignee"
+              optionLabel="user.fullName"
             >
               <ng-template pTemplate="selectedItem">
                 <div class="row">
@@ -700,9 +699,9 @@
                       option?.user.fullName
                     }}</span
                     >&nbsp;
-                    <span class="text-black-50 font-size-14">
-                      {{ option?.email }}</span
-                    >
+                    <!--                    <span class="text-black-50 font-s ize-14">-->
+                    <!--                      {{ option?.email }}</span-->
+                    <!--                    >-->
                   </div>
                 </div>
               </ng-template>
@@ -906,7 +905,6 @@
               >Hạn nộp<span class="p-error">*</span></label
             ><br />
             <tui-input-date
-              [min]="minDate"
               tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               class="tui-date"
               tuiTextfieldSize="m"
@@ -937,6 +935,7 @@
               (onChange)="[onPatchAssigneeId()]"
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="selectedAssignee"
+              optionLabel="user.fullName"
             >
               <ng-template let-option pTemplate="selectedItem">
                 <div class="row">
@@ -1018,6 +1017,11 @@
         <div class="d-flex justify-content-between align-items-center">
           <div>
             <h6 class="mat-headline-6">Chi tiết danh sách công việc</h6>
+          </div>
+          <div class="search-button">
+            <button pButton (click)="searchDialogVisible = true">
+              Tìm kiếm
+            </button>
           </div>
         </div>
       </ng-template>
@@ -1161,5 +1165,87 @@
         </tr>
       </ng-template>
     </p-treeTable>
+
+    <p-dialog
+      header="Tìm kiếm công việc"
+      [(visible)]="searchDialogVisible"
+      [style]="{ width: '60vw', height: '600px' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div class="container-fluid">
+        <div class="row my-3 d-flex justify-content-between align-items-center">
+          <!-- <div class="col-md-10"> -->
+          <input
+            class="w-100"
+            pInputText
+            [(ngModel)]="searchData"
+            class="search"
+            placeholder="Tìm kiếm"
+            (keyup)="loadAssignment()"
+          />
+          <!-- </div> -->
+          <!-- <div class="col-md-2 d-flex justify-content-end">
+        <button pButton class="">Tra cứu nâng cao</button>
+      </div> -->
+        </div>
+        <div class="row mt-2">
+          <ng-container *ngIf="searchItem && searchItem.length > 0; else noAss">
+            <div class="row search-heading">
+              <div class="col-md-5">
+                <label class="fs-18 fw-medium">Địa chỉ</label>
+              </div>
+              <div class="col-md-6">
+                <label class="fs-18 fw-medium">Tên công việc</label>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+            <div class="search-result" (scroll)="onResultScroll($event)">
+              <ng-container *ngFor="let item of searchItem">
+                <div
+                  class="row mt-2 children d-flex align-items-center"
+                  (click)="
+                    navigateSearch(
+                      item.searchedAssignment,
+                      item.idsOfBreadcrumb
+                    )
+                  "
+                >
+                  <div class="row">
+                    <div
+                      class="col-md-5"
+                      pTooltip="{{ item.breadcrumb }}"
+                      tooltipPosition="top"
+                    >
+                      <span class="color-gray">{{
+                        item.breadcrumb | ellipsis : 50
+                      }}</span>
+                    </div>
+                    <div class="col-md-6 fw-medium">
+                      {{ item.searchedAssignment.assignmentName }}
+                    </div>
+                    <div class="col-md-1"></div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+          <ng-template #noAss>
+            <div
+              class="empty-assignment row d-flex justify-content-center align-items-center"
+            >
+              <div class="empty-assignment-img">
+                <img src="../../../../../../assets/img/not-found-data.svg" />
+              </div>
+              <div
+                class="empty-assignment-mess mt-2 d-flex justify-content-center align-items-center"
+              >
+                <label class="fw-medium fs-18">Không tìm thấy công việc</label>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </p-dialog>
   </div>
 </div>

@@ -6,7 +6,8 @@ import {validateDateNotGreaterThanToday} from "../../shared/validators/date-not-
 import {UserResponseForUserList} from "../../models/user-response-for-user-list";
 import {ToastService} from "../../shared/toast/toast.service";
 import {ConfirmationService} from "primeng/api";
-import {getFirstAndLastName, unSub} from "../../shared/util/util";
+import {dateToTuiDay, getFirstAndLastName, unSub} from "../../shared/util/util";
+import {TuiDay} from "@taiga-ui/cdk";
 
 @Component({
     selector: 'app-user-profile',
@@ -17,15 +18,15 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     @Input() visible = false;
     @Output() visibleChange = new EventEmitter<boolean>();
     isUpdate = false
-    currentUser: UserResponseForUserList
+    currentUser: any
     form = this.fb.group({
         fullName: ['', [NoWhitespaceValidator(), Validators.maxLength(254)]],
-        dob: [null as unknown as Date, validateDateNotGreaterThanToday.bind(this)],
+        dob: [dateToTuiDay(new Date()), validateDateNotGreaterThanToday.bind(this)],
         gender: ['', Validators.required],
         phoneNumber: ['', [Validators.pattern("^[0-9]{10}$"), Validators.required]]
     })
     subs: any[] = []
-
+  today: TuiDay;
     constructor(private fb: FormBuilder,
                 private accountService: AccountService,
                 private toastService: ToastService,
@@ -49,7 +50,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
                 this.avatar = getFirstAndLastName(this.currentUser.fullName);
                 this.form.patchValue({
                     fullName: this.currentUser.fullName,
-                    dob: this.currentUser?.dob,
+                    dob: dateToTuiDay(new Date(this.currentUser?.dob) ) ,
                     gender: this.currentUser.gender,
                     phoneNumber: this.currentUser.phoneNumber,
                 })
@@ -65,7 +66,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.isUpdate = false;
         this.form.patchValue({
             fullName: this.currentUser.fullName,
-            dob: this.currentUser?.dob,
+            dob: dateToTuiDay(new Date(this.currentUser?.dob)),
             gender: this.currentUser.gender,
             phoneNumber: this.currentUser.phoneNumber,
         })
@@ -75,8 +76,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.isUpdate = !this.isUpdate;
         this.form.patchValue({
             fullName: this.currentUser.fullName,
-            dob: this.currentUser?.dob,
-            gender: this.currentUser.gender,
+          dob: dateToTuiDay(new Date(this.currentUser?.dob) ),
+
+          gender: this.currentUser.gender,
             phoneNumber: this.currentUser.phoneNumber,
         })
     }

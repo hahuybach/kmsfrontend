@@ -1,13 +1,13 @@
-import { error } from '@angular/compiler-cli/src/transformers/util';
-import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { School } from 'src/app/models/task';
-import { AssignmentService } from 'src/app/services/assignment.service';
-import { DocumentService } from 'src/app/services/document.service';
-import { FileService } from 'src/app/services/file.service';
-import { SchoolService } from 'src/app/services/school.service';
-import { ToastService } from 'src/app/shared/toast/toast.service';
+import {error} from '@angular/compiler-cli/src/transformers/util';
+import {Component, OnInit} from '@angular/core';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {ActivatedRoute, Router} from '@angular/router';
+import {School} from 'src/app/models/task';
+import {AssignmentService} from 'src/app/services/assignment.service';
+import {DocumentService} from 'src/app/services/document.service';
+import {FileService} from 'src/app/services/file.service';
+import {SchoolService} from 'src/app/services/school.service';
+import {ToastService} from 'src/app/shared/toast/toast.service';
 
 @Component({
   selector: 'app-assignment-detail',
@@ -26,6 +26,15 @@ export class AssignmentDetailComponent implements OnInit {
   header: string;
   pdfPreviewVisibility: boolean = false;
   sub: any[] = [];
+  issueId: number;
+  schoolId: number;
+  assId: number;
+  searchData: string;
+  searchItem: any[];
+  searchDialogVisible: boolean = false;
+  nodeStateMap: { [key: number]: boolean } = {};
+  pageNo: number = 0
+
   constructor(
     private assignmentService: AssignmentService,
     private route: ActivatedRoute,
@@ -35,13 +44,16 @@ export class AssignmentDetailComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private schoolService: SchoolService,
     private router: Router
-  ) {}
+  ) {
+  }
+
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      const issueId = +params['issueId'];
-      const schoolId = +params['schoolId'];
+      this.issueId = +params['issueId'];
+      this.schoolId = +params['schoolId'];
+      this.assId = +params['assId'];
       this.documentService
-        .getAssignmentsBySchoolId(issueId, schoolId)
+        .getAssignmentsBySchoolId(this.issueId, this.schoolId)
         .subscribe({
           next: (data) => {
             console.log(data);
@@ -52,15 +64,20 @@ export class AssignmentDetailComponent implements OnInit {
             this.router.navigate(['/listAssignment']);
           },
         });
-      this.schoolService.findSchoolById(schoolId).subscribe({
+      this.schoolService.findSchoolById(this.schoolId).subscribe({
         next: (data) => {
           console.log(data.schoolName);
           this.school = data;
         },
-        error: (error) => {},
+        error: (error) => {
+        },
       });
+      if (this.assId) {
+        this.openDetail(this.assId);
+      }
     });
   }
+
   openDetail(assignmentId: number) {
     this.detailVisible = true;
     this.assignmentService.getAssignmentsById(assignmentId).subscribe({
@@ -68,9 +85,11 @@ export class AssignmentDetailComponent implements OnInit {
         this.selectedAssignment = data;
         console.log(this.selectedAssignment);
       },
-      error: (error) => {},
+      error: (error) => {
+      },
     });
   }
+
   previewFile(documentLink: string, fileExtension: string) {
     this.fileService.readAssignmentPDF(documentLink).subscribe((data) => {
       const blobUrl = window.URL.createObjectURL(data.body as Blob);
@@ -83,6 +102,7 @@ export class AssignmentDetailComponent implements OnInit {
       console.log(this.safePdfUrl);
     });
   }
+
   getIconFileType(fileExtension: string): string {
     let url = '';
     switch (fileExtension) {
@@ -101,6 +121,7 @@ export class AssignmentDetailComponent implements OnInit {
     }
     return url;
   }
+
   openNewTab(documentLink: string, fileExtension: string) {
     if (fileExtension === 'application/pdf') {
       this.pdfPreviewVisibility = true;
@@ -116,6 +137,7 @@ export class AssignmentDetailComponent implements OnInit {
       });
     this.sub.push(method);
   }
+
   getFileExtension(fileExtension: string): string {
     let extension = '';
     switch (fileExtension) {
@@ -134,9 +156,119 @@ export class AssignmentDetailComponent implements OnInit {
     }
     return extension;
   }
+
   onHideFilePreviewEvent() {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+  }
+
+  navigateChildren(assignmentId: number) {
+    this.router.navigate(['detail-assignment'], {
+      queryParams: {
+        issueId: this.issueId,
+        schoolId: this.schoolId,
+        assId: assignmentId,
+      },
+    });
+  }
+  loadAssignment() {
+    this.pageNo = 0
+    if (this.searchData) {
+      this.assignmentService.filterAsm(this.issueId, this.schoolId, this.pageNo, this.searchData).subscribe({
+        next: (data) => {
+          this.searchItem = data;
+          console.log(data);
+          console.log(this.searchItem.length)
+        }
+      })
+    } else {
+      this.assignmentService.filterAsm(this.issueId, this.schoolId, null, this.searchData).subscribe({
+        next: (data) => {
+          this.searchItem = data;
+          console.log(data);
+          console.log(this.searchItem.length)
+        }
+      })
+    }
+
+
+  }
+
+  navigateSearch(assignment: any, ids: number[]) {
+    // this.router.navigate(['/assign-assignment', this.issueId], {
+    //   queryParams: { id: assignmentId },
+    // });
+    this.searchDialogVisible = false;
+    this.openDetail(assignment.assignmentId);
+    this.expandNodesByIds(ids);
+    this.initData();
+  }
+
+  expandNodesByIds(nodeIds: number[]) {
+    for (let i = 0; i < nodeIds.length; i++) {
+      const nodeId = nodeIds[i];
+      this.nodeStateMap[nodeId] = true;
+      console.log(nodeId + ' ' + this.nodeStateMap[nodeId]);
+    }
+    console.log(this.nodeStateMap);
+  }
+
+  initData() {
+    const method = this.documentService
+      .getAssignmentsBySchoolId(this.issueId, this.schoolId)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.assignments = [data];
+          this.restoreNodeState(this.assignments);
+        },
+        error: (error) => {
+          this.toastService.showError('error', 'Lỗi', error.error.message);
+          this.router.navigate(['/listAssignment']);
+        },
+      });
+    this.sub.push(method);
+  }
+
+  restoreNodeState(nodes: any[]) {
+    nodes.forEach((node) => {
+      if (this.nodeStateMap[node.assignmentId] !== undefined) {
+        node.expanded = this.nodeStateMap[node.assignmentId];
+      }
+
+      if (node.children && node.children.length > 0) {
+        this.restoreNodeState(node.children);
+      }
+    });
+    console.log('restore');
+    console.log(this.nodeStateMap);
+  }
+
+  onNodeExpand(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+
+  onNodeCollapse(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+
+  onResultScroll(e: any) {
+    const element = e.target as HTMLElement;
+    if ((element.offsetHeight + element.scrollTop) + 1 == element.scrollHeight) {
+      this.pageNo++;
+      this.assignmentService.filterAsm(this.issueId, this.schoolId, this.pageNo, this.searchData).subscribe({
+        next: (data) => {
+          this.searchItem.push(...data)
+          console.log(this.searchItem.length)
+        }
+      })
+    }
   }
 }

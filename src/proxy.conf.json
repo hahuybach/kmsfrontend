@@ -1,6 +1,7 @@
 {
   "/api": {
-    "target": "http://159.223.58.220:80",
+    "target": "https://ksm.edu.vn:8080",
     "secure": false
   }
 }
+
