@@ -241,11 +241,12 @@ const routes: Routes = [
         path: 'list-assignment',
         component: AssignmentTreeListComponent,
         children: [
-          {
-            path: 'detail-assignment',
-            component: AssignmentDetailComponent,
-          }
+
         ]
+      },
+      {
+        path: 'detail-assignment',
+        component: AssignmentDetailComponent,
       },
 
       {
