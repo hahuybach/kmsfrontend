@@ -24,5 +24,7 @@ export class InspectionService {
     const url = `${this.inspectionApiUrl}/inspection_doc/${inspectionId}`;
     return this.http.get(url, {headers});
   }
- 
+
+
+
 }

@@ -150,4 +150,6 @@
   </div>
 </div>
 
-<button class="mt-2 ml-2" (click)="onUpdate()" pButton>Cập nhật </button>
+<button class="mt-2 ml-2" (click)="onUpdate()"
+        *ngIf="isChiefInspector"
+        pButton>Cập nhật </button>
