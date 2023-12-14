@@ -53,13 +53,23 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
     this.formCompleted = false;
   }
 
+  isBeforeToday(date: Date): boolean{
+    let today: Date = new Date();
+    return date < today;
+  }
+
   initInspectionPlan(){
     const initInspectionPlan = this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
-        this.startDate = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+        if (this.isBeforeToday(new Date(data.inspectionPlan.startDate))){
+          this.startDate = dateToTuiDay(new Date());
+          this.defaultDeadline = dateToTuiDay(new Date());
+        }else{
+          this.startDate = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+          this.defaultDeadline = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+        }
         this.endDate = dateToTuiDay(new Date(data.inspectionPlan.endDate));
-        this.defaultDeadline = dateToTuiDay(new Date(data.inspectionPlan.startDate));
         this.recordForm.get('deadline')?.setValue(this.defaultDeadline);
       },
       error: (error) => {

@@ -38,28 +38,28 @@
   </app-loading-complete-dialog>
   <div class="container-fluid" *ngIf="task">
     <div class="row">
-      <div class="record-name col-md-12 mt-1">
-        <span>Mục kiểm tra</span>
-        <p class="fw-bolder">{{task.taskName}}</p>
+      <div class="record-name col-md-12 mb-2">
+        <label class="span-heading-color mb-1">Mục kiểm tra</label>
+        <p class="fw-medium">{{task.taskName}}</p>
       </div>
-      <div class="record-description col-md-12 mt-1">
-        <span>Chi tiết</span>
-        <p class="fw-bolder">{{task.description}}</p>
+      <div class="record-description col-md-12 mb-2">
+        <label class="span-heading-color mb-1">Chi tiết</label>
+        <p class="fw-medium">{{task.description}}</p>
       </div>
-      <div class="record-deadline col-md-12 mt-1">
-        <span>Hạn nộp</span>
-        <p class="fw-bolder"> {{task.deadline | date: "dd/MM/yyyy"}}</p>
+      <div class="record-deadline col-md-12 mb-2">
+        <label class="span-heading-color mb-1">Hạn nộp</label>
+        <p class="fw-medium"> {{task.deadline | date: "dd/MM/yyyy"}}</p>
       </div>
-      <div class="record-assignee col-md-12 mt-1">
-        <span>Người thực hiện</span>
-        <p class="fw-bolder">{{task.assignee.user.fullName}}</p>
+      <div class="record-assignee col-md-12 mb-2">
+        <label class="span-heading-color mb-1">Người thực hiện</label>
+        <p class="fw-medium">{{task.assignee.user.fullName}}</p>
       </div>
       <form class="record-document col-md-12 mt-1" [formGroup]="documentForm" (ngSubmit)="onSubmit()">
-        <span>Tài liệu</span>
+        <h6 class="mat-headline-6 mb-1">Tài liệu</h6>
         <div *ngIf="canUploadDocument && task.document === null">
           <div class="row">
-            <div class="col-md-8">
-              <label class="fw-medium">Tên tài liệu<span class="p-error">*</span></label><br/>
+            <div class="col-md-8 mb-2">
+              <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label><br/>
               <input
                 pInputText
                 placeholder="Điền tên tài liệu"
@@ -75,8 +75,8 @@
                 </span>
               </div>
             </div>
-            <div class="col-md-4">
-              <label class="fw-medium">Mã tài liệu<span class="p-error">*</span></label><br/>
+            <div class="col-md-4 mb-2">
+              <label class="fw-medium mb-1">Mã tài liệu<span class="p-error">*</span></label><br/>
               <input
                 pInputText
                 placeholder="Điền mã tài liệu"
@@ -92,8 +92,8 @@
                 </span>
               </div>
             </div>
-            <div class="col-md-12">
-              <label class="fw-medium mb-2">Tài liệu<span class="p-error">*</span></label><br/>
+            <div class="col-md-12 mb-2">
+              <label class="fw-medium mb-1">Tài liệu<span class="p-error">*</span></label><br/>
               <div class="input-file">
                 <input
                   type="file"
