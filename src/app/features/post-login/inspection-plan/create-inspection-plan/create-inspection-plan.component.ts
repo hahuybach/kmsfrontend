@@ -169,6 +169,11 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentFile'];
   }
 
+  // onNextButton(){
+  //   this.initInspectorList()
+  //   this.activeIndex = 1;
+  // }
+
   onNextButton() {
     if (
       this.inspectionPlanForm.get('inspectionPlanName')?.valid &&

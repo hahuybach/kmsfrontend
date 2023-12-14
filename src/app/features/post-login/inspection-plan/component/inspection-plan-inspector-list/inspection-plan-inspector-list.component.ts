@@ -9,6 +9,7 @@ import {getFirstAndLastName} from "../../../../../shared/util/util";
   styleUrls: ['./inspection-plan-inspector-list.component.scss']
 })
 export class InspectionPlanInspectorListComponent {
+  @Input() popup: boolean = true;
   @Input() createButton: boolean = false;
   @Input() listEditable: boolean = false;
   @Input() selectedInspectors: any[] = [];
