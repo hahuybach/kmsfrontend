@@ -31,7 +31,7 @@ import { DataNotExistComponent } from '../components/data-not-exist/data-not-exi
 import {CheckboxModule} from "primeng/checkbox";
 import {TuiRingChartModule} from '@taiga-ui/addon-charts';
 import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
-import {TuiDropdownModule, TuiDataListModule} from '@taiga-ui/core';
+import { StepsModule } from 'primeng/steps';
 
 // ...
 
@@ -83,8 +83,7 @@ export class MyModule {}
     TuiMoneyModule,
     TuiAvatarModule,
     TuiAvatarModule,
-    TuiDropdownModule,
-    TuiDataListModule
+    StepsModule
   ],
   exports: [
     InputTextModule,
@@ -122,8 +121,7 @@ export class MyModule {}
     TuiMoneyModule,
     TuiAvatarModule,
     TuiAvatarModule,
-    TuiDropdownModule,
-    TuiDataListModule
+    StepsModule
   ],
 })
 export class SharedModule {

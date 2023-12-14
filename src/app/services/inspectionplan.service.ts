@@ -39,6 +39,12 @@ export class inspectionPlanService {
     return this.http.get<any[]>(url, {headers});
   }
 
+  public getEligibleInspectorForCreate(startDate: string, endDate: string, schoolId: number): Observable<any[]> {
+    let headers = new HttpHeaders();
+    const url = `${this.inspectionApiUrl}/get_eligible_inspector?startDate=${startDate}&endDate=${endDate}&schoolId=${schoolId}`;
+    return this.http.get<any[]>(url, {headers});
+  }
+
   public getInspectionPlanById(inspectionPlanId: number): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.inspectionApiUrl}/detail/${inspectionPlanId}`;
