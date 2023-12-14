@@ -249,6 +249,8 @@
                 action === 'update' &&
                 hasAuthority('canModifyFolderAsmMetaData')
               "
+              [min]="minDate"
+              [max]="maxDate"
               class="tui-date"
               tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               tuiTextfieldSize="m"
@@ -695,13 +697,17 @@
                     </tui-avatar>
                   </div>
                   <div class="col-md-10 d-flex align-items-center">
-                    <span class="font-weight-bold">{{
-                      option?.user.fullName
-                    }}</span
-                    >&nbsp;
-                    <!--                    <span class="text-black-50 font-s ize-14">-->
-                    <!--                      {{ option?.email }}</span-->
-                    <!--                    >-->
+                    <div>
+                      <span class="font-weight-bold">{{
+                        option?.user.fullName
+                        }}</span
+                      >&nbsp;
+                      <br />
+                      <br />
+                      <span class="text-black-50 font-size-14" pTooltip="{{option?.email}}" tooltipPosition="top">
+                                          {{ option?.email }}</span>
+                    </div>
+
                   </div>
                 </div>
               </ng-template>
@@ -905,6 +911,8 @@
               >Hạn nộp<span class="p-error">*</span></label
             ><br />
             <tui-input-date
+              [min]="minDate"
+              [max]="maxDate"
               tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
               class="tui-date"
               tuiTextfieldSize="m"
@@ -968,14 +976,19 @@
                     >
                     </tui-avatar>
                   </div>
-                  <div class="col-md-10 d-flex align-items-center">
-                    <span class="font-weight-bold">{{
-                      option?.user.fullName
-                    }}</span
-                    >&nbsp;
-                    <span class="text-black-50 font-size-14">
+                  <div class="col-md-10 d-flex align-items-center" >
+                    <div>
+                      <span class="font-weight-bold">{{
+                        option?.user.fullName
+                        }}</span
+                      >&nbsp;
+                      <br />
+                      <br />
+                      <span class="text-black-50 font-size-14" pTooltip="{{option?.email}}" tooltipPosition="top">
                       {{ option?.email }}</span
-                    >
+                      >
+                    </div>
+
                   </div>
                 </div>
               </ng-template>

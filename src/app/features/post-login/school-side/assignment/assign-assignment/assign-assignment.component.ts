@@ -252,9 +252,10 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               .get('assigneeId')
               ?.setValue(this.listOfPossibleAssignees[0].accountId);
           }
-          // this.minDate = dateToTuiDay(new Date ())
+          this.minDate = dateToTuiDay(new Date ())
+          this.maxDate = dateToTuiDay(new Date(data.maxDate) );
           // if(data.maxDate){
-          //   this.maxDate = dateToTuiDay(new Date(data.maxDate) );
+          //
           // }
           this.assignmentVisible = true;
         },
@@ -398,9 +399,13 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         console.log(this.selectedAssignment.documents.length == 0);
         this.documents = data.documents;
         if (this.selectedAssignment) {
-          const temp: Date = new Date(this.selectedAssignment.maxDate);
-          if (temp) temp.setDate(temp.getDate() + 1);
-          // this.maxDate = dateToTuiDay(temp);
+          // const temp: Date = new Date(this.selectedAssignment.maxDate);
+          // if (temp) temp.setDate(temp.getDate() + 1);
+          // // this.maxDate = dateToTuiDay(temp);
+          this.minDate = dateToTuiDay(new Date ())
+          this.maxDate = dateToTuiDay(new Date(data.maxDate) );
+          console.log("maxdate when update: " + data.maxDate)
+          console.log("deadline hien tai: " + dateToTuiDay(new Date(this.selectedAssignment.deadline)))
           this.assignmentForm
             .get('assignmentName')
             ?.setValue(this.selectedAssignment.assignmentName);
