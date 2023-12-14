@@ -33,9 +33,15 @@ export class inspectionPlanService {
     return this.http.get<any[]>(url, {headers});
   }
 
-  public getEligibleInspector(startDate: string, endDate: string): Observable<any[]> {
+  public getEligibleInspector(startDate: string, endDate: string, id: number): Observable<any[]> {
     let headers = new HttpHeaders();
-    const url = `${this.inspectionApiUrl}/get_eligible_inspector?startDate=${startDate}&endDate=${endDate}`;
+    const url = `${this.inspectionApiUrl}/get_eligible_inspector?startDate=${startDate}&endDate=${endDate}&inspectionPlanId=${id}`;
+    return this.http.get<any[]>(url, {headers});
+  }
+
+  public getEligibleInspectorForCreate(startDate: string, endDate: string, schoolId: number): Observable<any[]> {
+    let headers = new HttpHeaders();
+    const url = `${this.inspectionApiUrl}/get_eligible_inspector?startDate=${startDate}&endDate=${endDate}&schoolId=${schoolId}`;
     return this.http.get<any[]>(url, {headers});
   }
 
@@ -112,4 +118,11 @@ export class inspectionPlanService {
     return this.http.get(url, {headers});
   }
 
+  public finishInspectionPlan(inspectionPlanId: any) {
+    const request = Number(inspectionPlanId);
+    console.log(request);
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    return this.http.put<any>(this.inspectionApiUrl + '/finish', request, { headers });
+  }
 }

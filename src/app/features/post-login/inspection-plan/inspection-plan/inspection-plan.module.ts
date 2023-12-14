@@ -13,8 +13,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TuiTextfieldControllerModule } from '@taiga-ui/core';
 import { TuiValueChangesModule } from '@taiga-ui/cdk';
 import { TuiUnfinishedValidatorModule } from '@taiga-ui/kit';
-import { CheckboxModule } from 'primeng/checkbox';
-
 @NgModule({
   declarations: [
     InspectionPlanListComponent,

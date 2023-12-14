@@ -1,4 +1,4 @@
-export enum Role{
+export enum Role {
   ADMIN = 'ADMIN',
   DIRECTOR = 'Trưởng Phòng',
   VICE_DIRECTOR = "Phó Phòng",
@@ -13,5 +13,7 @@ export enum Role{
   CLERICAL_ASSISTANT = 'Văn thư',
   SECURITY = 'Bảo vệ',
   VICE_PRINCIPAL = 'Hiệu phó',
-  CHIEF_OFFICE = 'Tổ trưởng tổ văn phòng'
+  CHIEF_OFFICE = 'Tổ trưởng tổ văn phòng',
+  CHIEF_NUTRITION = 'Tổ trưởng tổ nuôi dưỡng',
+  NUTRITION_EMP = 'Nhân viên nuôi dưỡng'
 }

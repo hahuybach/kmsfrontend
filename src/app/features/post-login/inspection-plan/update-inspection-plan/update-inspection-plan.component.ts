@@ -234,7 +234,7 @@ export class UpdateInspectionPlanComponent {
   initInspectorList() {
     let startDate = new Date(tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value)).toISOString();
     let endDate = new Date(tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value)).toISOString();
-    const initInspector = this.inspectionPlanService.getEligibleInspector(startDate, endDate).subscribe({
+    const initInspector = this.inspectionPlanService.getEligibleInspector(startDate, endDate, this.inspectionPlanId).subscribe({
       next: (data: any) => {
         this.nonInspectorList = data.inspectorDtos;
         this.chiefList = data.chiefDtos;
@@ -256,14 +256,17 @@ export class UpdateInspectionPlanComponent {
         key: 'changeTime',
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
-          this.resetInspectorList()
+          this.resetInspectorList();
+          this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
+          this.initInspectorList()
         },
         reject: (type: ConfirmEventType) => {
         }
       });
+    }else {
+      this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
+      this.initInspectorList()
     }
-    this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
-    this.initInspectorList()
   }
 
   onStartDateChange() {
@@ -274,14 +277,17 @@ export class UpdateInspectionPlanComponent {
         key: 'changeTime',
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
-          this.resetInspectorList()
+          this.resetInspectorList();
+          this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
+          this.initInspectorList();
         },
         reject: (type: ConfirmEventType) => {
         }
       });
+    }else{
+      this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
+      this.initInspectorList();
     }
-    this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
-    this.initInspectorList();
   }
 
   resetInspectorList() {
@@ -293,7 +299,6 @@ export class UpdateInspectionPlanComponent {
     this.inspectorList = [];
     this.inspectionplanInspectorService.clearBothList();
     this.inspectionplanInspectorService.setInspectorListIsValid(false);
-    this.initInspectorList();
   }
 
 

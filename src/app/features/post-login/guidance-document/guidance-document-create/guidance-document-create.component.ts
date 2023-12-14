@@ -127,7 +127,7 @@ export class GuidanceDocumentCreateComponent implements OnInit, OnDestroy {
                         this.submitCompleted = true;
                         setTimeout(() => {
                             this.route.navigate([
-                                'guidanceDocument/' +
+                                'guidance-document/' +
                                 result.guidanceDocumentDto.guidanceDocumentId,
                             ]);
                         }, 1500);

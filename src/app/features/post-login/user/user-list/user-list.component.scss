@@ -105,6 +105,13 @@
       text-overflow: ellipsis;
       font-size: 15px;
       border: none;
+      div{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 15px;
+        border: none;
+      }
     }
 
     th:first-child, td:first-child {

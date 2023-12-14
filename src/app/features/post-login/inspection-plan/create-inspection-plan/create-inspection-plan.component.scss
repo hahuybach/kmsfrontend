@@ -89,7 +89,6 @@
     border-radius: 8px;
     padding: 10px 40px;
     border: none;
-
     &:hover,
     &:active {
       background-color: $primary-hover;
@@ -107,4 +106,17 @@
     margin-left: 30px;
     width: 150px;
   }
+}
+
+:host ::ng-deep .p-steps{
+  .p-steps-number{
+    background-color: $primary;
+    color: white;
+  }
+  a{
+    text-decoration: none !important;
+  }
+}
+.back-button{
+  padding: 0;
 }

@@ -34,12 +34,12 @@ export class ChangePasswordComponent implements OnDestroy {
 
     resetVisible() {
         this.visibleChange.emit(this.visible);
-        console.log("I hide");
         this.form.reset()
         this.form.markAsPristine();
-        this.form.get('password')?.setErrors(null);
-        this.form.get('changePassword')?.setErrors(null);
-        this.form.get('confirmPassword')?.setErrors(null);
+      console.log("i hide dew")
+        // this.form.get('password')?.setErrors(null);
+        // this.form.get('changePassword')?.setErrors(null);
+        // this.form.get('confirmPassword')?.setErrors(null);
 
     }
 
@@ -73,7 +73,6 @@ export class ChangePasswordComponent implements OnDestroy {
     onSubmit() {
         this.isSubmitted = true;
         if (!this.form.invalid) {
-
             const sub =   this.accountService.changePassword(this.form.value).subscribe({
                 next: (data) => {
                     this.visible = false;
@@ -93,22 +92,22 @@ export class ChangePasswordComponent implements OnDestroy {
     }
 
     confirm() {
-        if (this.form.invalid) {
-            this.isSubmitted = true;
-            return
-        }
-        this.confirmationService.confirm({
+      this.isSubmitted = true;
+        if (!this.form.invalid) {
+          this.confirmationService.confirm({
             message: 'Bạn có xác nhận việc thay đổi này không?',
             header: 'Xác nhận',
             icon: 'pi pi-exclamation-triangle',
             acceptLabel: 'Có',
             rejectLabel: 'Không',
             accept: () => {
-                this.onSubmit()
+              this.onSubmit()
 
             },
             key: "change-password-confirm"
-        });
+          });
+        }
+
     }
 
     ngOnDestroy(): void {

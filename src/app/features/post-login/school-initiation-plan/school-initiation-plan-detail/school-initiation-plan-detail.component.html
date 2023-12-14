@@ -1,13 +1,7 @@
 <div class="container-fluid">
-  <tui-breadcrumbs
-    size="l"
-  >
+  <tui-breadcrumbs size="l">
     <ng-container *ngFor="let item of breadCrumb">
-      <a
-        *tuiItem
-        tuiLink
-        [routerLink]="item.routerLink"
-      >
+      <a *tuiItem tuiLink [routerLink]="item.routerLink">
         {{ item.caption }}
       </a>
     </ng-container>
@@ -458,7 +452,7 @@
         <div class="row">
           <div class="col-md-8">
             <button pButton class="mb-2" (click)="docHistoryVisible = true">
-              Xem lịch sử phê duyệt tài liệu
+              Lịch sử phê duyệt
             </button>
           </div>
           <!-- <div class="col-md-4">
@@ -467,49 +461,59 @@
             </button>
           </div> -->
         </div>
-
-        <div
-          *ngIf="schoolinitiationplan?.status.statusId != 6"
-          class="file-item py-1 d-flex"
-          (click)="openNewTab(lastDocs.schoolDocument?.documentLink)"
-          pTooltip="{{ lastDocs.schoolDocument.documentName }}.pdf"
-          tooltipPosition="top"
+        <ng-container
+          *ngIf="schoolinitiationplan?.status.statusId != 6; else noSchoolFile"
         >
           <div
-            class="file-item-icon d-flex justify-content-center align-items-center"
+            class="file-item py-1 d-flex"
+            (click)="openNewTab(lastDocs.schoolDocument?.documentLink)"
+            pTooltip="{{ lastDocs.schoolDocument.documentName }}.pdf"
+            tooltipPosition="top"
           >
-            <img src="assets/img/pdf_logo.svg" alt="" />
-          </div>
-          <div class="row col-md-10 d-flex align-items-center mb-3">
-            <div class="col-md-8">
-              <p class="mb-0">
-                <span class="fw-medium"
-                  >{{ lastDocs.schoolDocument.documentName }}.pdf</span
-                ><span></span>
-              </p>
-              <p class="mb-0">
-                <span>Mã tài liệu: </span>
-                <span class="fw-medium">{{
-                  lastDocs.schoolDocument.documentCode
-                }}</span>
-              </p>
+            <div
+              class="file-item-icon d-flex justify-content-center align-items-center"
+            >
+              <img src="assets/img/pdf_logo.svg" alt="" />
             </div>
-            <div class="col-md-4 text-end">
-              <p class="mb-0">
-                <!-- <span>Kích thước: </span> -->
-                <span class="fw-medium">{{
-                  lastDocs.schoolDocument.sizeFormat
-                }}</span>
-              </p>
-              <p class="mb-0">
-                <!-- <span>Ngày tạo: </span> -->
-                <span class="fw-medium">{{
-                  lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
-                }}</span>
-              </p>
+            <div class="row col-md-10 d-flex align-items-center mb-3 file-item-content">
+              <div class="col-md-8">
+                <p class="mb-0">
+                  <span class="fw-medium span-doc-name"
+                    >{{ lastDocs.schoolDocument.documentName }}</span
+                  ><span class="fw-medium">.pdf</span>
+                </p>
+                <p class="mb-0">
+                  <span>Mã tài liệu: </span>
+                  <span class="fw-medium">{{
+                    lastDocs.schoolDocument.documentCode
+                  }}</span>
+                </p>
+              </div>
+              <div class="col-md-4 text-end">
+                <p class="mb-0">
+                  <!-- <span>Kích thước: </span> -->
+                  <span class="fw-medium">{{
+                    lastDocs.schoolDocument.sizeFormat
+                  }}</span>
+                </p>
+                <p class="mb-0">
+                  <!-- <span>Ngày tạo: </span> -->
+                  <span class="fw-medium">{{
+                    lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
+                  }}</span>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-template #noSchoolFile>
+          <div
+            class="file-item-empty mt-2 py-3 d-flex flex-column justify-content-around align-items-center"
+          >
+            <i class="bi bi-file-earmark-x-fill"></i>
+            <p class="fw-medium mt-2">Tài liệu phía trường hiện chưa có</p>
+          </div>
+        </ng-template>
       </div>
     </div>
     <div class="col-md-5">
@@ -520,10 +524,15 @@
 
         <ng-container *ngIf="schoolinitiationplan?.status.statusId == 6">
           <div class="input-file">
-            <div class="my-4 d-flex justify-content-center align-items-center">
+            <div class="d-flex justify-content-center align-items-center">
               <span class="p-error">
                 Phía trường chưa gửi tài liệu nên không thể đánh giá
               </span>
+            </div>
+            <div
+              class="img-upload d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../../assets/img/add-file.svg" />
             </div>
             <div class="d-flex justify-content-center align-items-center">
               <button
@@ -538,17 +547,23 @@
           </div>
         </ng-container>
         <ng-container *ngIf="schoolinitiationplan?.status.statusId == 7">
-          <div
-            *ngIf="!fileStatus"
-            class="input-file d-flex justify-content-center align-items-center"
-          >
-            <button
-              type="button"
-              pButton
-              label="Đánh giá"
-              (click)="uploadFileVisible = true"
-              class="col-md-3"
-            ></button>
+          <div *ngIf="!fileStatus">
+            <div
+              class="img-upload d-flex justify-content-center align-items-center"
+            >
+              <img src="../../../../../../assets/img/add-file.svg" />
+            </div>
+            <div
+              class="input-file d-flex justify-content-center align-items-center"
+            >
+              <button
+                type="button"
+                pButton
+                label="Đánh giá"
+                (click)="uploadFileVisible = true"
+                class="col-md-3"
+              ></button>
+            </div>
           </div>
 
           <!-- <div
@@ -606,12 +621,12 @@
               >
                 <img src="assets/img/pdf_logo.svg" alt="" />
               </div>
-              <div class="row col-md-10 d-flex align-items-center mb-3">
+              <div class="row col-md-10 d-flex align-items-center mb-3 file-item-content">
                 <div class="col-md-8">
                   <p class="mb-0">
-                    <span class="fw-medium"
-                      >{{ lastDocs.departmentDocument.documentName }}.pdf</span
-                    ><span></span>
+                    <span class="fw-medium span-doc-name"
+                      >{{ lastDocs.departmentDocument.documentName }}</span
+                    ><span class="fw-medium">.pdf</span>
                   </p>
                   <p class="mb-0">
                     <span>Mã tài liệu: </span>

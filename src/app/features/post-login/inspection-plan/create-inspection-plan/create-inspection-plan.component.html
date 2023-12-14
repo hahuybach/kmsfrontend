@@ -1,13 +1,5 @@
 <p-toast position="top-right" key="deleteComplete"></p-toast>
 <p-toast position="top-right" key="deleteInComplete"></p-toast>
-<app-inspection-plan-inspector-popup
-  (popupInspectorVisibleChange)="changeInspectorVisible()"
-  [popupInspectorVisible]="popupInspectorVisible"
-  [inspectorList]="inspectorList"
-  (selectedInspectorsList)="getInspectorIds($event)"
-  [chiefList]="chiefList"
-  [inspectorListIsValid]="inspectorListIsValid"
-></app-inspection-plan-inspector-popup>
 <p-confirmDialog
   [style]="{ width: '50vw' }"
   acceptLabel="Xác nhận"
@@ -39,9 +31,12 @@
     </ng-container>
   </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium">Tạo mới quyết định kiểm tra</h5>
-  <div class="row create-inspection-plan">
+  <p-steps [model]="items" [activeIndex]="activeIndex"
+           (activeIndexChange)="onActiveIndexChange($event)"></p-steps>
+  <div class="row create-inspection-plan mt-3">
     <form class="row" [formGroup]="inspectionPlanForm" (ngSubmit)="onSubmit()">
-      <div class="form-content col-md-8 mb-2">
+      <div class="form-content col-md-8 mb-2" *ngIf="activeIndex == 0">
+        <h6 class="mat-headline-6 fw-medium mb-2">Thông tin cơ bản</h6>
         <div class="inspection-plan-name mb-2">
           <label class="fw-medium mb-1">Tên quyết định kiểm tra<span class="p-error">*</span></label>
           <input
@@ -89,36 +84,11 @@
             </span>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-6 mb-2">
-            <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
-            <tui-input-date
-              tuiUnfinishedValidator="Vui lòng chọn ngày bắt đầu"
-              (tuiValueChanges)="onStartDateChange()"
-              [min]="minStartDate"
-              [max]="maxStartDate"
-              class="tui-date"
-              tuiTextfieldSize="m"
-              formControlName="startDate">
-            </tui-input-date>
-          </div>
-          <div class="col-md-6 mb-2">
-            <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
-            <tui-input-date
-              tuiUnfinishedValidator="Vui lòng chọn ngày kết thúc"
-              (tuiValueChanges)="onEndDateChange()"
-              [min]="minEndDate"
-              class="tui-date"
-              tuiTextfieldSize="m"
-              formControlName="endDate"
-            >
-            </tui-input-date>
-          </div>
-        </div>
         <div class="inspection-plan-school row">
           <div class="col-md-6 mb-2">
             <label class="fw-medium mb-1">Trường kiểm tra<span class="p-error">*</span></label>
             <p-dropdown
+              (onChange)="onSchoolIdChange()"
               class="full-width-dropdown"
               [options]="schoolList"
               formControlName="schoolId"
@@ -141,165 +111,229 @@
               </span>
             </div>
           </div>
-          <div class="col-md-6 mb-2" *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.valid">
-            <label class="fw-medium mb-1">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
-            <p-dropdown
-              class="full-width-dropdown"
-              [options]="eligibleChiefList"
-              formControlName="chiefId"
-              optionLabel="user.fullName"
-              [filter]="true"
-              filterBy="user.fullName"
-              optionValue="accountId"
-              [showClear]="true"
-              placeholder="Chọn trưởng đoàn kiểm tra"
-            >
-            </p-dropdown>
-            <div
-              *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)"
-            >
-              <span
-                *ngIf="inspectionPlanForm.controls?.['chiefId']?.errors?.['required']"
-                class="p-error"
-              >
-                Vui lòng chọn trưởng đoàn kiểm tra
-              </span>
-            </div>
-          </div>
         </div>
-      </div>
-      <div
-        class="col-md-4 d-flex justify-content-start flex-column align-items-center"
-      >
-        <app-inspection-plan-inspector-list
-          class="w-100"
-          [listEditable]="true"
-          [selectedInspectors]="selectedInspectorList"
-          (toggleIssueListPopup)="changeInspectorVisible()"
-          (resetList)="onResetList()"
-          (inspectorList)="getInspectorIds($event)"
-          [chiefList]="chiefList"
-          (recreateInspectorList)="resetInspectorList()"
-        ></app-inspection-plan-inspector-list>
-        <div
-          class="mt-1"
-          *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.invalid && (inspectionPlanForm.controls?.['inspectorIds']?.touched ||inspectionPlanForm.controls?.['inspectorIds']?.dirty)"
-        >
-          <span
-            *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.errors?.['required']"
-            class="p-error"
-          >
-            Vui lòng chọn danh sách đoàn kiểm tra
-          </span>
-        </div>
-      </div>
-      <h6 class="mat-headline-6 fw-medium mb-1">Tài liệu công văn</h6>
-      <div class="document col-md-8" formGroupName="documentInspectionPlanDto">
-        <div class="row document-item">
-          <div class="col-md-8 mb-2">
-            <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label>
-            <input
-              pInputText
-              class="w-100"
-              placeholder="Điền tên tài liệu"
-              formControlName="documentName"
-            />
-            <div
-              *ngIf="
+        <h6 class="mat-headline-6 fw-medium mb-1">Tài liệu công văn</h6>
+        <div class="document" formGroupName="documentInspectionPlanDto">
+          <div class="row document-item">
+            <div class="col-md-8 mb-2">
+              <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label>
+              <input
+                pInputText
+                class="w-100"
+                placeholder="Điền tên tài liệu"
+                formControlName="documentName"
+              />
+              <div
+                *ngIf="
                   documentNameControls?.invalid &&
                   (documentNameControls?.touched || documentNameControls?.dirty)
                 "
-            >
+              >
                 <span
                   *ngIf="documentNameControls?.errors?.['whitespace'] ||documentNameControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng điền tên tài liệu
                 </span>
-              <span
-                *ngIf="documentNameControls?.errors?.['maxlength']"
-                class="p-error"
-              >
+                <span
+                  *ngIf="documentNameControls?.errors?.['maxlength']"
+                  class="p-error"
+                >
                   Tên tài liệu quá dài
                 </span>
+              </div>
             </div>
-          </div>
-          <div class="col-md-4 mb-2">
-            <label class="fw-medium mb-1">Mã tài liệu<span class="p-error">*</span></label>
-            <input
-              pInputText
-              placeholder="Điền mã tài liệu"
-              formControlName="documentCode"
-            />
-            <div *ngIf="duplicateDocumentCode">
-              <span class="p-error">Mã tài liệu trùng lặp</span>
-            </div>
-            <div
-              *ngIf="
+            <div class="col-md-4 mb-2">
+              <label class="fw-medium mb-1">Mã tài liệu<span class="p-error">*</span></label>
+              <input
+                pInputText
+                placeholder="Điền mã tài liệu"
+                formControlName="documentCode"
+              />
+              <div *ngIf="duplicateDocumentCode">
+                <span class="p-error">Mã tài liệu trùng lặp</span>
+              </div>
+              <div
+                *ngIf="
                   documentCodeControls?.invalid &&
                   (documentCodeControls?.touched || documentCodeControls?.dirty)
                 "
-            >
+              >
                 <span
                   *ngIf="documentCodeControls?.errors?.['whitespace'] || documentCodeControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng điền mã tài liệu
                 </span>
-              <span
-                *ngIf="documentCodeControls?.errors?.['maxlength']"
-                class="p-error">
+                <span
+                  *ngIf="documentCodeControls?.errors?.['maxlength']"
+                  class="p-error">
                 Mã tài liệu quá dài
                 </span>
+              </div>
             </div>
-          </div>
-          <div class="col-md-12">
-            <label class="fw-medium mb-1">Tài liệu<span class="p-error">*</span></label>
-            <div class="input-file">
-              <input
-                type="file"
-                #fileInput
-                style="display: none"
-                (change)="handleFileInputChange(fileInput)"
-              />
-              <input
-                pInputText
-                readonly
-                class="col-md-9"
-                placeholder="{{
+            <div class="col-md-12">
+              <label class="fw-medium mb-1">Tài liệu<span class="p-error">*</span></label>
+              <div class="input-file">
+                <input
+                  type="file"
+                  #fileInput
+                  style="display: none"
+                  (change)="handleFileInputChange(fileInput)"
+                />
+                <input
+                  pInputText
+                  readonly
+                  class="col-md-9"
+                  placeholder="{{
                     fileInputPlaceholders
                       ? fileInputPlaceholders
                       : 'Chọn file để tải lên'
                   }}"
-              />
-              <button
-                type="button"
-                pButton
-                label="Chọn tệp"
-                (click)="fileInput.click()"
-                class="col-md-3"
-              ></button>
-            </div>
-            <div
-              *ngIf="
+                />
+                <button
+                  type="button"
+                  pButton
+                  label="Chọn tệp"
+                  (click)="fileInput.click()"
+                  class="col-md-3"
+                ></button>
+              </div>
+              <div
+                *ngIf="
                   documentFileControls?.invalid &&
                   (documentFileControls?.touched || documentFileControls?.dirty)
                 "
-            >
+              >
                 <span
                   *ngIf="documentFileControls?.errors?.['required']"
                   class="p-error"
                 >
                   Vui lòng chọn tài liệu công văn
                 </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="mt-5 mb-3 row w-100">
-        <div class="col-12 save-button d-flex w-100 justify-content-center">
-          <button class="btn text-white">Lưu quyết định</button>
+      <div *ngIf="activeIndex == 1">
+        <h6 class="mat-headline-6 fw-medium mb-2">Danh sách thanh tra</h6>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label class="fw-medium mb-1">Ngày bắt đầu<span class="p-error">*</span></label>
+                <tui-input-date
+                  tuiUnfinishedValidator="Vui lòng chọn ngày bắt đầu"
+                  (tuiValueChanges)="onStartDateChange()"
+                  [min]="minStartDate"
+                  [max]="maxStartDate"
+                  class="tui-date"
+                  tuiTextfieldSize="m"
+                  formControlName="startDate">
+                </tui-input-date>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label class="fw-medium mb-1">Ngày kết thúc<span class="p-error">*</span></label>
+                <tui-input-date
+                  tuiUnfinishedValidator="Vui lòng chọn ngày kết thúc"
+                  (tuiValueChanges)="onEndDateChange()"
+                  [min]="minEndDate"
+                  class="tui-date"
+                  tuiTextfieldSize="m"
+                  formControlName="endDate"
+                >
+                </tui-input-date>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.valid">
+              <label class="fw-medium mb-1">Trưởng đoàn kiểm tra<span class="p-error">*</span></label>
+              <p-dropdown
+                class="full-width-dropdown"
+                [options]="eligibleChiefList"
+                formControlName="chiefId"
+                optionLabel="user.fullName"
+                [filter]="true"
+                filterBy="user.fullName"
+                optionValue="accountId"
+                [showClear]="true"
+                placeholder="Chọn trưởng đoàn kiểm tra"
+              >
+              </p-dropdown>
+              <div
+                *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)"
+              >
+              <span
+                *ngIf="inspectionPlanForm.controls?.['chiefId']?.errors?.['required']"
+                class="p-error"
+              >
+                Vui lòng chọn trưởng đoàn kiểm tra
+              </span>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="row">
+          <div class="col-md-8 mh-100">
+            <app-inspection-plan-inspector-popup
+              class="mb-0"
+              [loadingList]="loadingInspector"
+              [popup]="false"
+              (popupInspectorVisibleChange)="changeInspectorVisible()"
+              [popupInspectorVisible]="popupInspectorVisible"
+              [inspectorList]="inspectorList"
+              (selectedInspectorsList)="getInspectorIds($event)"
+              [chiefList]="chiefList"
+              [inspectorListIsValid]="inspectorListIsValid"
+            ></app-inspection-plan-inspector-popup>
+          </div>
+          <div class="col-md-4 mh-100">
+            <app-inspection-plan-inspector-list
+              class="w-100"
+              [listEditable]="true"
+              [selectedInspectors]="selectedInspectorList"
+              (toggleIssueListPopup)="changeInspectorVisible()"
+              (resetList)="onResetList()"
+              (inspectorList)="getInspectorIds($event)"
+              [chiefList]="chiefList"
+              (recreateInspectorList)="resetInspectorList()"
+            ></app-inspection-plan-inspector-list>
+            <div
+              class="mt-1"
+              *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.invalid && (inspectionPlanForm.controls?.['inspectorIds']?.touched ||inspectionPlanForm.controls?.['inspectorIds']?.dirty)"
+            >
+          <span
+            *ngIf="inspectionPlanForm.controls?.['inspectorIds']?.errors?.['required']"
+            class="p-error"
+          >
+            Vui lòng chọn danh sách đoàn kiểm tra
+          </span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 mb-3 row w-100">
+          <div class="col-12 d-flex w-100">
+            <div class="col-md-3">
+              <button type="button" (click)="onBackButton()" pButton>
+                <i class="bi bi-caret-left-fill"></i>
+                Trang trước
+              </button>
+            </div>
+            <div class="col-md-6 save-button text-center">
+              <button pButton>Lưu quyết định</button>
+            </div>
+            <div class="col-md-3">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 text-end mb-2" *ngIf="activeIndex == 0">
+        <button type="button" (click)="onNextButton()" pButton>
+          Trang sau
+          <i class="bi bi-caret-right-fill"></i>
+        </button>
       </div>
     </form>
   </div>
