@@ -13,7 +13,9 @@ import { InspectionplanInspectorlistService } from '../../../../../services/insp
   templateUrl: './inspection-plan-inspector-popup.component.html',
   styleUrls: ['./inspection-plan-inspector-popup.component.scss'],
 })
-export class InspectionPlanInspectorPopupComponent implements OnChanges{
+export class InspectionPlanInspectorPopupComponent implements OnChanges, OnInit{
+  @Input() loadingList: boolean;
+  @Input() popup: boolean = true;
   @Input() popupInspectorVisible: boolean;
   @Input() inspectorList: any[] = [];
   @Input() chiefList: any[] = [];
@@ -23,6 +25,7 @@ export class InspectionPlanInspectorPopupComponent implements OnChanges{
   selectedInspectors: any[] = [];
   errorText: string = '';
   filterVisible: Boolean = false;
+  data: any[] = [];
   constructor(
     private readonly inspectionplanInspectorService: InspectionplanInspectorlistService
   ) {}
@@ -68,5 +71,11 @@ export class InspectionPlanInspectorPopupComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(this.inspectorList);
+  }
+
+  ngOnInit(): void {
+    for (let i = 0; i < 5; i++) {
+      this.data.push({ column1: '', column2: '', column3: ''});
+    }
   }
 }

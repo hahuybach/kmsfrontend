@@ -4,7 +4,7 @@ import {inspectionPlanService} from "../../../../services/inspectionplan.service
 import {IssueService} from "../../../../services/issue.service";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
 import {Router} from "@angular/router";
-import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import {ConfirmationService, ConfirmEventType, MenuItem} from "primeng/api";
 import {ToastService} from "../../../../shared/toast/toast.service";
 import {Subscription} from "rxjs";
 import {TuiDay} from "@taiga-ui/cdk";
@@ -32,7 +32,8 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
   createFailed: boolean = false;
   inspectorListIsValid: boolean = false;
   duplicateDocumentCode: boolean = false;
-
+  loadingInspector: boolean = false;
+  loadingInspectorComplete: boolean = false;
   breadCrumb = [
     {
       caption: 'Trang chủ',
@@ -60,7 +61,23 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
   ) {
   }
 
+  onActiveIndexChange(event: number) {
+    this.activeIndex = event;
+  }
+
+  activeIndex: number = 0;
+  items: MenuItem[] | undefined;
+
   ngOnInit() {
+    this.items = [
+      {
+        label: 'Thông tin',
+      },
+      {
+        label: 'Danh sách thanh tra',
+      }
+    ];
+
     this.inspectionplanInspectorService.setInspectorList(this.selectedInspectorList);
     const setInspectorList = this.inspectionplanInspectorService.inspectorList$.subscribe(list => this.selectedInspectorList = list);
     const setInspectorListValid = this.inspectionplanInspectorService.inspectorListIsValid$.subscribe(isValid => {
@@ -84,23 +101,21 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     tomorow.setDate(tomorow.getDate() + 1);
 
     this.inspectionPlanForm = this.fb.group({
-      inspectionPlanName: [null, Validators.compose([NoWhitespaceValidator() , Validators.required, Validators.maxLength(256)])],
-      description: [null, Validators.compose([NoWhitespaceValidator() , Validators.required])],
+      inspectionPlanName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+      description: [null, Validators.compose([NoWhitespaceValidator(), Validators.required])],
       chiefId: [null, Validators.compose([Validators.required])],
       inspectorIds: [[], Validators.compose([Validators.required])],
       startDate: [dateToTuiDay(tomorow), Validators.compose([Validators.required])],
       endDate: [dateToTuiDay(tomorow), Validators.compose([Validators.required])],
       schoolId: [null, Validators.compose([Validators.required])],
       documentInspectionPlanDto: this.fb.group({
-        documentName: [null, Validators.compose([NoWhitespaceValidator() , Validators.required, Validators.maxLength(256)])],
-        documentCode: [null, Validators.compose([NoWhitespaceValidator() , Validators.required, Validators.maxLength(256)])],
+        documentName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
+        documentCode: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
         documentFile: [null, Validators.compose([Validators.required])]
       })
     })
     this.minEndDate = dateToTuiDay(tomorow);
     this.minStartDate = dateToTuiDay(tomorow);
-
-    this.initInspectorList();
   }
 
   popupInspectorVisible: boolean = false;
@@ -110,15 +125,17 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
   }
 
   initInspectorList() {
+    this.loadingInspector = true;
     let startDate = new Date(tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value)).toISOString();
     let endDate = new Date(tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value)).toISOString();
-    const getEligibleInspector = this.inspectionPlanService.getEligibleInspector(startDate, endDate).subscribe({
+    let schoolId = this.inspectionPlanForm.get('schoolId')?.value;
+    const getEligibleInspector = this.inspectionPlanService.getEligibleInspectorForCreate(startDate, endDate, schoolId).subscribe({
       next: (data: any) => {
-        console.log(data)
         this.inspectorList = data.inspectorDtos;
         this.chiefList = data.chiefDtos;
         this.inspectionplanInspectorService.setPopupInspectorList(this.inspectorList);
         const setPopUpList = this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectorList = list);
+        this.loadingInspector = false;
         this.subscriptions.push(setPopUpList);
       },
       error: (error) => {
@@ -152,22 +169,67 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentFile'];
   }
 
+  onNextButton() {
+    if (
+      this.inspectionPlanForm.get('inspectionPlanName')?.valid &&
+      this.inspectionPlanForm.get('description')?.valid &&
+      this.inspectionPlanForm.get('schoolId')?.valid &&
+      this.inspectionPlanForm.get('documentInspectionPlanDto')?.valid
+    ) {
+      this.initInspectorList();
+      this.activeIndex = 1;
+    } else {
+      this.inspectionPlanForm.get('inspectionPlanName')?.markAllAsTouched();
+      this.inspectionPlanForm.get('description')?.markAllAsTouched();
+      this.inspectionPlanForm.get('schoolId')?.markAllAsTouched();
+      this.inspectionPlanForm.get('documentInspectionPlanDto')?.markAllAsTouched();
+    }
+  }
+
+  onBackButton() {
+    this.activeIndex = 0;
+  }
+
   onStartDateChange() {
     if (this.selectedInspectorList.length > 0) {
       this.confirmationService.confirm({
         message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
         header: 'Xác nhận thay đổi',
-        key:  'changeTime',
+        key: 'changeTime',
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
           this.resetInspectorList()
+          this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
+          this.initInspectorList();
         },
         reject: (type: ConfirmEventType) => {
+          return;
         }
       });
+    }else {
+      this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
+      this.initInspectorList();
     }
-    this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
-    this.initInspectorList();
+  }
+
+  onSchoolIdChange() {
+    if (this.selectedInspectorList.length > 0) {
+      this.confirmationService.confirm({
+        message: 'Thay trường sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        key: 'changeTime',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+          this.initInspectorList();
+        },
+        reject: (type: ConfirmEventType) => {
+          return;
+        }
+      });
+    }else {
+      this.initInspectorList();
+    }
   }
 
   onEndDateChange() {
@@ -175,17 +237,21 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
       this.confirmationService.confirm({
         message: 'Thay đổi thời gian sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
         header: 'Xác nhận thay đổi',
-        key:  'changeTime',
+        key: 'changeTime',
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
-          this.resetInspectorList()
+          this.resetInspectorList();
+          this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
+          this.initInspectorList();
         },
         reject: (type: ConfirmEventType) => {
+          return;
         }
       });
+    }else {
+      this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
+      this.initInspectorList();
     }
-    this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
-    this.initInspectorList();
   }
 
 
@@ -197,7 +263,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     this.chiefList = [];
     this.inspectorList = [];
     this.inspectionplanInspectorService.setInspectorListIsValid(false);
-    this.initInspectorList();
   }
 
   handleFileInputChange(fileInput: any): void {
@@ -252,7 +317,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.createFailed = true;
         this.toastService.showError('deleteInComplete', "Tạo kế hoạch không thành công", error.error.message);
-        if(error.error.message == "Mã văn bản trùng lặp"){
+        if (error.error.message == "Mã văn bản trùng lặp") {
           this.duplicateDocumentCode = true;
         }
         setTimeout(() => {

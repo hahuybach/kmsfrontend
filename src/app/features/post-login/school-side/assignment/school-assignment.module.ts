@@ -6,6 +6,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { AssignAssignmentComponent } from './assign-assignment/assign-assignment.component';
 import { FormsModule } from '@angular/forms';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { EllipsisPipe } from 'src/app/shared/pipes/ellipsis.pipe';
 @NgModule({
   declarations: [
     AssignmentListComponent,
