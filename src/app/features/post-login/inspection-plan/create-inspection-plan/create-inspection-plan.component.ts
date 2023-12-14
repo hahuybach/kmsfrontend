@@ -186,6 +186,10 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     }
   }
 
+  onBackButton() {
+    this.activeIndex = 0;
+  }
+
   onStartDateChange() {
     if (this.selectedInspectorList.length > 0) {
       this.confirmationService.confirm({
