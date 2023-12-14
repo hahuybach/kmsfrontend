@@ -273,8 +273,9 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-8 h-100">
+          <div class="col-md-8 mh-100">
             <app-inspection-plan-inspector-popup
+              class="mb-0"
               [loadingList]="loadingInspector"
               [popup]="false"
               (popupInspectorVisibleChange)="changeInspectorVisible()"
@@ -310,12 +311,15 @@
           </div>
         </div>
         <div class="mt-5 mb-3 row w-100">
-          <div class="col-12 save-button d-flex w-100">
+          <div class="col-12 d-flex w-100">
             <div class="col-md-3">
-              <button type="button" (click)="onBackButton()" pButton>Trang trước</button>
+              <button type="button" (click)="onBackButton()" pButton>
+                <i class="bi bi-caret-left-fill"></i>
+                Trang trước
+              </button>
             </div>
-            <div class="col-md-6 text-center">
-              <button class="btn text-white">Lưu quyết định</button>
+            <div class="col-md-6 save-button text-center">
+              <button pButton>Lưu quyết định</button>
             </div>
             <div class="col-md-3">
             </div>

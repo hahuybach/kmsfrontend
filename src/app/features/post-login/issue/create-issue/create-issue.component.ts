@@ -67,7 +67,6 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
     this.tomorrowDate = new Date();
     this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1);
     this.tomorrow = dateToTuiDay(this.tomorrowDate)
-
     this.issueForm = this.fb.group({
       issueName: [null, Validators.compose([NoWhitespaceValidator(), Validators.required, Validators.maxLength(256)])],
       issueDetail: [null, Validators.compose([NoWhitespaceValidator(), Validators.required])],
@@ -105,7 +104,6 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
     this.subscriptions.push(setInspectorListValid)
 
     this.initInspectorList();
-    ;
 
     this.fileInputPlaceholders = ['', '', ''];
   }

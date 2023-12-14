@@ -157,9 +157,10 @@
     <div *ngIf="errorText" class="p-error">{{ errorText }}</div>
   </div>
 </p-dialog>
-<ng-template #nonPopUp class="h-100">
-  <div class="card h-100">
+<ng-template #nonPopUp>
+  <div class="card mh-100">
     <p-table
+      class="mh-100"
       *ngIf="!loadingList; else loading"
       #dt
       [value]="inspectorList"

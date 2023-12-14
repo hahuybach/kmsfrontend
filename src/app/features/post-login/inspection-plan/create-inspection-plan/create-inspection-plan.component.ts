@@ -199,13 +199,15 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
           this.resetInspectorList()
+          this.initInspectorList();
+          this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
+          this.initInspectorList();
         },
         reject: (type: ConfirmEventType) => {
+          return;
         }
       });
     }
-    this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
-    this.initInspectorList();
   }
 
   onEndDateChange() {
@@ -216,9 +218,11 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
         key: 'changeTime',
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
-          this.resetInspectorList()
+          this.resetInspectorList();
+          this.initInspectorList();
         },
         reject: (type: ConfirmEventType) => {
+          return;
         }
       });
     }
@@ -235,7 +239,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     this.chiefList = [];
     this.inspectorList = [];
     this.inspectionplanInspectorService.setInspectorListIsValid(false);
-    this.initInspectorList();
   }
 
   handleFileInputChange(fileInput: any): void {
