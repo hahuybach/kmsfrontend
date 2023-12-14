@@ -199,7 +199,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
           this.resetInspectorList()
-          this.initInspectorList();
           this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
           this.initInspectorList();
         },
@@ -207,6 +206,29 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
           return;
         }
       });
+    }else {
+      this.minEndDate = this.inspectionPlanForm.get('startDate')?.value;
+      this.initInspectorList();
+    }
+  }
+
+  onSchoolIdChange() {
+    if (this.selectedInspectorList.length > 0) {
+      this.confirmationService.confirm({
+        message: 'Thay trường sẽ xóa danh sách đoàn kiểm tra. Bạn có muốn tiếp tục?',
+        header: 'Xác nhận thay đổi',
+        key: 'changeTime',
+        icon: 'bi bi-exclamation-triangle',
+        accept: () => {
+          this.resetInspectorList()
+          this.initInspectorList();
+        },
+        reject: (type: ConfirmEventType) => {
+          return;
+        }
+      });
+    }else {
+      this.initInspectorList();
     }
   }
 
@@ -219,15 +241,17 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
         icon: 'bi bi-exclamation-triangle',
         accept: () => {
           this.resetInspectorList();
+          this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
           this.initInspectorList();
         },
         reject: (type: ConfirmEventType) => {
           return;
         }
       });
+    }else {
+      this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
+      this.initInspectorList();
     }
-    this.maxStartDate = this.inspectionPlanForm.get('endDate')?.value;
-    this.initInspectorList();
   }
 
 
