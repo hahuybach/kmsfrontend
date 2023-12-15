@@ -1,6 +1,7 @@
+<p-toast position="top-right" key="my-task"></p-toast>
 <app-record-detail
-  [canUploadDocument]="true"
-  [canDeleteDocument]="true"
+  [canUploadDocument]="canAlterDoc"
+  [canDeleteDocument]="canAlterDoc"
   [recordId]="recordId"
   [detailRecordPopupVisible]="detailRecordPopupVisible"
   (detailRecordPopupVisibleChange)="changeDetailRecordVisible()"

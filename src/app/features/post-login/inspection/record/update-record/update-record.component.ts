@@ -109,9 +109,12 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
         },1000)
       },
       error: (error) => {
+        this.formFailed = true;
         this.toastService.showError('updateRecordFail', "Cập nhật mục kiểm tra không thành công", error.error.message);
         setTimeout(() =>{
           this.updateRecordPopupVisible = false;
+          this.formFailed = false;
+          this.resetForm();
           this.initInspectionPlan();
         },1000)
       }

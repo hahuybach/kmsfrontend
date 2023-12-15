@@ -42,10 +42,9 @@ export class InspectionInformationComponent implements OnInit {
 
   getStatusSeverity(status: string): string {
     const statusSeverityMap: { [key: string]: string } = {
-      "Chưa bắt đầu": 'info',
-      "Đang tiến hành": 'warning',
+      "Chưa bắt đầu": 'warning',
+      "Đang tiến hành": 'info',
       "Đã hoàn thành": 'success',
-      "Đã quá hạn": 'danger',
     };
     return statusSeverityMap[status] || 'info'; // Default to ' info' if statusId is not in the map
   }

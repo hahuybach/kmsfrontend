@@ -3,6 +3,7 @@ import { InspectionService } from '../../../../services/inspection.service';
 import { ActivatedRoute } from '@angular/router';
 import { Inspection, TaskListDto } from '../../../../models/inspection';
 import { RecordService } from '../../../../services/record.service';
+import {ToastService} from "../../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-inspection-mytask',
@@ -15,9 +16,12 @@ export class InspectionMytaskComponent implements OnInit {
   recordId: number;
   detailRecordPopupVisible: boolean = false;
   filterVisible: Boolean = false;
+  canAlterDoc: boolean = false
   constructor(
     private readonly taskService: RecordService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly toastService: ToastService,
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   changeDetailRecordVisible() {
@@ -36,10 +40,9 @@ export class InspectionMytaskComponent implements OnInit {
     this.taskService.getInspectionMyTask(this.inspectionId).subscribe({
       next: (data) => {
         this.taskList = data.taskListDtos;
-        console.log(this.taskList);
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError('my-task', "Không tìm thấy công việc của bạn", error.error.message);
       },
     });
   }

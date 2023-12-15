@@ -3,7 +3,7 @@
 <p-dialog header="Tạo mới mục kiểm tra"
           [(visible)]="createRecordPopupVisible"
           [modal]="true"
-          [style]="{ width: '60%' }"
+          [style]="{ width: '50%', height: '60vh'}"
           [draggable]="false"
           [resizable]="false"
           (onHide)="resetCreateRecordPopupVisible()"
@@ -58,7 +58,7 @@
                     </span>
                 </div>
             </div>
-            <div class="record-deadline col-md-6 mb-2">
+            <div class="record-deadline col-md-6">
                 <label class="fw-medium mb-1">Hạn nộp<span class="p-error">*</span></label>
                 <tui-input-date
                         [min]="startDate"
@@ -75,8 +75,8 @@
                     </span>
                 </div>
             </div>
-            <div class="record-assignee col-md-6 mb-2" *ngIf="inspectionPlan">
-                <label for="deadline" class="fw-medium mb-1">Người thực hiện<span class="p-error">*</span></label>
+            <div class="record-assignee col-md-6" *ngIf="inspectionPlan">
+                <label class="fw-medium mb-1">Người thực hiện<span class="p-error">*</span></label>
                 <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors"
                             formControlName="assigneeId"
                             optionLabel="user.fullName"
@@ -91,9 +91,9 @@
                 </div>
             </div>
         </div>
-        <div class="mt-5 mb-3 row w-100">
+        <div class="row w-100 mt-2">
             <div class="col-12 save-button d-flex w-100 justify-content-center">
-                <button class="btn text-white">Lưu</button>
+                <button class="btn text-white">Tạo mới</button>
             </div>
         </div>
     </form>
