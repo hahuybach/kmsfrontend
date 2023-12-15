@@ -16,7 +16,7 @@ export class InspectionMytaskComponent implements OnInit {
   recordId: number;
   detailRecordPopupVisible: boolean = false;
   filterVisible: Boolean = false;
-  canAlterDoc: boolean = false
+  canAlterDoc: boolean;
   constructor(
     private readonly taskService: RecordService,
     private readonly route: ActivatedRoute,
@@ -39,7 +39,9 @@ export class InspectionMytaskComponent implements OnInit {
     });
     this.taskService.getInspectionMyTask(this.inspectionId).subscribe({
       next: (data) => {
+        console.log(data)
         this.taskList = data.taskListDtos;
+        this.canAlterDoc = data.canAlterDoc;
       },
       error: (error) => {
         this.toastService.showError('my-task', "Không tìm thấy công việc của bạn", error.error.message);
