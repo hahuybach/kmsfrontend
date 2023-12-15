@@ -163,6 +163,7 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
     this.issueForm.get('inspectorId')?.setValue(null);
     this.selectedInspectors = [];
     this.inspectors = [];
+    this.inspectionplanInspectorService.clearBothList();
     this.inspectionplanInspectorService.setInspectorListIsValid(false);
     this.initInspectorList();
   }
