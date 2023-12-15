@@ -47,9 +47,6 @@ textarea {
     .scrollview-item-content {
         width: 400px;
         font-size: 16px;
-        .font-weight-bold {
-            font-weight: bold;
-        }
     }
 }
 .file-item {
@@ -86,6 +83,7 @@ textarea {
     }
 }
 .list-inspector {
+  height: 100%;
     border-radius: 10px;
     // border: 0.8px solid $primary;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -104,12 +102,12 @@ textarea {
     button {
         &.cancel {
             background-color: white;
-            color: $primary;
+            color: $primary !important;
             border: $primary 1px solid;
             &:hover {
                 background-color: $primary-hover;
                 border-color: $primary-hover;
-                color: #fff;
+                color: #fff !important;
             }
         }
     }
@@ -134,7 +132,7 @@ textarea {
     }
 }
 .overflow-auto {
-    height: 480px;
+    height: 460px;
     overflow: auto;
 }
 .font-weight-bold {
