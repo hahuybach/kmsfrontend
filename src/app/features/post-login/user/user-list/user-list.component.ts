@@ -64,6 +64,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.myInputVariable.nativeElement.value = "";
     console.log(this.myInputVariable.nativeElement.files);
   }
+
   setAuthority() {
     for (const argument of this.auth.getRoleFromJwt()) {
       if (argument.authority === Role.PRINCIPAL) {
@@ -438,6 +439,10 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   confirm() {
+    if (!this.excelFile) {
+      this.toastService.showWarn('userListError', 'Thông báo', 'Vui lòng chọn 1 file');
+      return
+    }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận việc tạo người dùng bằng file excel này không?',
       header: 'Xác nhận',
@@ -448,16 +453,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.onCreateUserByFile()
 
       },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toastService.showError('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
-            break;
-        }
-      }, key: 'createUserByExcel'
+      key: 'createUserByExcel'
     });
   }
 

@@ -213,6 +213,7 @@
 >
   <div>
     <input
+      #fileInput
       class="form-control"
       required
       (change)="onSubmitFile($event)"
@@ -230,7 +231,7 @@
   key="createSchoolByExcel"
   [style]="{ width: '50vw' }"
 ></p-confirmDialog>
-<p-toast position="top-right" key="error"></p-toast>
+<p-toast position="top-right" key="school-list" [life]="20000"></p-toast>
 <app-loading-complete-dialog
   [visible]="isLoading"
   [completed]="submitCompleted"
