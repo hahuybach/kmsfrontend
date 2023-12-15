@@ -16,6 +16,7 @@ export class InspectionMytaskComponent implements OnInit {
   recordId: number;
   detailRecordPopupVisible: boolean = false;
   filterVisible: Boolean = false;
+  canAlterDoc: boolean = false
   constructor(
     private readonly taskService: RecordService,
     private readonly route: ActivatedRoute,
