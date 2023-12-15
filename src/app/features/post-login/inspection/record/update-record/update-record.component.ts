@@ -49,11 +49,20 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     this.updateRecordPopupVisibleChange.emit(this.updateRecordPopupVisible);
   }
 
+  isBeforeToday(date: Date): boolean{
+    let today: Date = new Date();
+    return date < today;
+  }
+
   initInspectionPlan(){
     const initInspectionPlan = this.inspectionPlanService.getInspectionPlanById(this.inspectionPlanId).subscribe({
       next: (data) => {
         this.inspectionPlan = data;
-        this.startDate = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+        if (this.isBeforeToday(new Date(data.inspectionPlan.startDate))){
+          this.startDate = dateToTuiDay(new Date());
+        }else{
+          this.startDate = dateToTuiDay(new Date(data.inspectionPlan.startDate));
+        }
         this.endDate = dateToTuiDay(new Date(data.inspectionPlan.endDate));
       },
       error: (error) => {
