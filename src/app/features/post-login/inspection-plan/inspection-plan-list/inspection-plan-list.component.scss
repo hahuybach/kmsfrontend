@@ -245,7 +245,7 @@
 
     th:first-child,
     td:first-child {
-      width: 25%;
+      width: 24%;
     }
 
     th:nth-child(2),
@@ -260,22 +260,22 @@
 
     th:nth-child(4),
     td:nth-child(4) {
-      width: 12%;
+      width: 11%;
     }
 
     th:nth-child(5),
     td:nth-child(5) {
-      width: 12%;
+      width: 11%;
     }
 
     th:nth-child(6),
     td:nth-child(6) {
-      width: 13%;
+      width: 12.5%;
     }
 
     th:last-child,
     td:last-child {
-      width: 8%;
+      width: 12.5%;
     }
   }
 }
