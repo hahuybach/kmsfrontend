@@ -37,6 +37,7 @@ export class IssueInspectorListComponent {
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.recreateInspectorList.emit();
+        this.changeToggleStatus();
         return;
       },
       reject: (type: ConfirmEventType) => {
