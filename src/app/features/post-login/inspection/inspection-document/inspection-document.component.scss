@@ -12,6 +12,16 @@
   border-radius: 20px;
 }
 
+.information-icon{
+  i{
+    color: $primary;
+    font-size: 1.7rem;
+  }
+}
+
+.information-container{
+  width: auto;
+}
 .action-button {
   button {
     width: 35px;

@@ -38,8 +38,7 @@ import {TuiRingChartModule} from '@taiga-ui/addon-charts';
 import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
 import { StepsModule } from 'primeng/steps';
 import { EllipsisPipe } from './pipes/ellipsis.pipe';
-
-// ...
+import {TuiDropdownModule} from '@taiga-ui/core';
 
 @NgModule({
   imports: [
@@ -90,7 +89,8 @@ export class MyModule {}
     TuiMoneyModule,
     TuiAvatarModule,
     TuiAvatarModule,
-    StepsModule
+    StepsModule,
+    TuiDropdownModule
   ],
   exports: [
     InputTextModule,
@@ -130,6 +130,7 @@ export class MyModule {}
     TuiAvatarModule,
     StepsModule,
     EllipsisPipe,
+    TuiDropdownModule
   ],
 })
 export class SharedModule {

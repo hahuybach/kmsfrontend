@@ -30,7 +30,7 @@
   <div class="row">
     <h5 class="mat-headline-5 fw-medium mb-3">Chi tiết quyết định kiểm tra</h5>
     <div class="row">
-      <div class="col-md-12 d-flex flex-row mb-2 report-button">
+      <div class="col-md-6 d-flex flex-row mb-2 report-button">
         <button
           type="button"
           class="me-2"
@@ -46,6 +46,27 @@
         >
           Kết luận
         </button>
+      </div>
+      <div class="col-md-6 information-icon d-flex flex-row justify-content-end align-items-center">
+        <i class="bi bi-question-circle"
+           tuiDropdownHover
+           [tuiDropdown]="content"
+        ></i>
+        <ng-template #content>
+          <div class="container-fluid px-4 py-3 information-container">
+            <ul>
+              <li class="tui-list__item">
+                Biên bản chỉ được nộp sau khi phiên thanh tra bắt đầu
+              </li>
+              <li class="tui-list__item">
+                Báo cáo và kết luận chỉ được nộp sau khi hoàn thành các mục kiểm tra
+              </li>
+              <li class="tui-list__item">
+                Phiên kiểm tra chỉ hoàn thành khi báo cáo và kết luận được nộp
+              </li>
+            </ul>
+          </div>
+        </ng-template>
       </div>
       <div class="form-content col-md-12 h-100">
         <div class="card">
