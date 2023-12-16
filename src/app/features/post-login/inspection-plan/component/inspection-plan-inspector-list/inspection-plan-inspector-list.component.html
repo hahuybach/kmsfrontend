@@ -62,7 +62,7 @@
           </ng-container>
         </div>
       </div>
-      <div class="w-100 d-flex justify-content-center my-1" *ngIf="listEditable && selectedInspectors.length > 0">
+      <div class="w-100 d-flex justify-content-center my-1" *ngIf="listEditable && selectedInspectors && selectedInspectors.length > 0">
         <div *ngIf="toggleChange">
           <button type="button" pButton class="create-inspector"
                   (click)="changeToggleStatus()">Chỉnh sửa ban KTNB

@@ -315,56 +315,69 @@ export class UpdateInspectionPlanComponent {
       this.inspectionPlanForm.markAllAsTouched();
       return;
     }
-    const startDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
-    startDate.setUTCHours(0);
-    const endDate = tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value);
-    endDate.setUTCHours(0);
 
-    const formData = new FormData();
-    const inspectionPlan = {
-      inspectionPlanId: this.inspectionPlanDetail.inspectionPlan.inspectionPlanId,
-      inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
-      description: this.inspectionPlanForm.get('description')?.value,
-      chiefId: this.inspectionPlanForm.get('chiefId')?.value,
-      inspectorIds: this.inspectionPlanForm.get('inspectorIds')?.value,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-      documentInspectionPlanDto: {
-        documentName: null,
-        documentCode: null
-      }
-    }
-    if (this.documentUpdated) {
-      inspectionPlan.documentInspectionPlanDto.documentName = this.inspectionPlanForm.get('documentInspectionPlanDto.documentName')?.value;
-      inspectionPlan.documentInspectionPlanDto.documentCode = this.inspectionPlanForm.get('documentInspectionPlanDto.documentCode')?.value;
-      const file = this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.value
-      formData.append(`file`, file, file?.name);
-    } else {
-      formData.append(`file`, '');
-    }
-    formData.append("request", new Blob([JSON.stringify(inspectionPlan)], {type: "application/json"}))
+    this.confirmationService.confirm({
+      message: 'Cập nhật quyết định kiểm tra sẽ xóa các mục kiểm tra đã tạo. Bạn có muốn tiếp tục?',
+      header: 'Xác nhận cập nhật',
+      key: 'update',
+      icon: 'bi bi-exclamation-triangle',
+      accept: () => {
+        const startDate = tuiDayToDate(this.inspectionPlanForm.get('startDate')?.value);
+        startDate.setUTCHours(0);
+        const endDate = tuiDayToDate(this.inspectionPlanForm.get('endDate')?.value);
+        endDate.setUTCHours(0);
 
-    this.updateLoadingVisibility = true
-    const update = this.inspectionPlanService.updateInspectionPlan(formData).subscribe({
-      next: (response) => {
-        this.updateComplete = true;
-        setTimeout(() => {
-          this.router.navigateByUrl("inspection-plan/" + response.inspectionPlan.inspectionPlanId);
-        }, 1000);
-      },
-      error: (error) => {
-        this.updateFailed = true;
-        this.toastService.showError('updateInspectionPlan', "Cập nhật kế hoạch không thành công", error.error.message);
-        if (error.error.message == "Mã văn bản trùng lặp") {
-          this.duplicateDocumentCode = true;
+        const formData = new FormData();
+        const inspectionPlan = {
+          inspectionPlanId: this.inspectionPlanDetail.inspectionPlan.inspectionPlanId,
+          inspectionPlanName: this.inspectionPlanForm.get('inspectionPlanName')?.value,
+          description: this.inspectionPlanForm.get('description')?.value,
+          chiefId: this.inspectionPlanForm.get('chiefId')?.value,
+          inspectorIds: this.inspectionPlanForm.get('inspectorIds')?.value,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+          documentInspectionPlanDto: {
+            documentName: null,
+            documentCode: null
+          }
         }
-        setTimeout(() => {
-          this.updateLoadingVisibility = false;
-          this.updateFailed = false;
-        }, 1000)
+        if (this.documentUpdated) {
+          inspectionPlan.documentInspectionPlanDto.documentName = this.inspectionPlanForm.get('documentInspectionPlanDto.documentName')?.value;
+          inspectionPlan.documentInspectionPlanDto.documentCode = this.inspectionPlanForm.get('documentInspectionPlanDto.documentCode')?.value;
+          const file = this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.value
+          formData.append(`file`, file, file?.name);
+        } else {
+          formData.append(`file`, '');
+        }
+        formData.append("request", new Blob([JSON.stringify(inspectionPlan)], {type: "application/json"}))
+
+        this.updateLoadingVisibility = true
+        const update = this.inspectionPlanService.updateInspectionPlan(formData).subscribe({
+          next: (response) => {
+            this.updateComplete = true;
+            setTimeout(() => {
+              this.router.navigateByUrl("inspection-plan/" + response.inspectionPlan.inspectionPlanId);
+            }, 1000);
+          },
+          error: (error) => {
+            this.updateFailed = true;
+            this.toastService.showError('updateInspectionPlan', "Cập nhật kế hoạch không thành công", error.error.message);
+            if (error.error.message == "Mã văn bản trùng lặp") {
+              this.duplicateDocumentCode = true;
+            }
+            setTimeout(() => {
+              this.updateLoadingVisibility = false;
+              this.updateFailed = false;
+            }, 1000)
+          }
+        })
+        this.subscriptions.push(update);
+      },
+      reject: (type: ConfirmEventType) => {
+        return;
       }
-    })
-    this.subscriptions.push(update);
+    });
+
   }
 
   private unsubscribeAll(): void {

@@ -288,7 +288,7 @@
           ></p-tag>
         </td>
         <td class="py-3 px-2">
-          <div class="d-flex align-items-center" [class.justify-content-evenly]="plan.status.value == 23" [class.justify-content-between]="plan.status.value != 23">
+          <div class="d-flex align-items-center" [class.justify-content-evenly]="plan.status.statusId != 19" [class.justify-content-between]="plan.status.statusId === 19">
             <button
               class="action-button"
               type="button"
@@ -300,7 +300,7 @@
             </button>
 
             <button
-              *ngIf="plan.status.value != 23"
+              *ngIf="plan.status.statusId === 19"
               class="action-button"
               type="button"
               (click)="onUpdate(plan.inspectionPlanId)"
