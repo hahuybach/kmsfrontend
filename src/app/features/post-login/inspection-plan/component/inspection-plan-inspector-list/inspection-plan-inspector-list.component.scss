@@ -37,8 +37,16 @@
   }
 }
 
-.scrollable-container {
+.scrollable-container-update {
   max-height: 454px;
+  overflow-y: auto;
+}
+.scrollable-container-detail {
+  max-height: 350px;
+  overflow-y: auto;
+}
+.scrollable-container-information {
+  max-height: 555px;
   overflow-y: auto;
 }
 

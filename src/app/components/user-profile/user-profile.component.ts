@@ -136,8 +136,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             message: 'Bạn có xác nhận việc thay đổi này không?',
             header: 'Xác nhân',
             icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Có',
-            rejectLabel: 'Không',
+            acceptLabel: 'Xác nhận',
+            rejectLabel: 'Hủy bỏ',
             accept: () => {
                 this.onSubmit()
 

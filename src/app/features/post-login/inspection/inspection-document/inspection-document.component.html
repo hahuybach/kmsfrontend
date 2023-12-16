@@ -247,6 +247,7 @@
       class="mb-1 complete-button"
       pButton
       *ngIf="inspectionDocument && inspectionDocument.isChief"
+      [disabled]="inspectionDocument.isChief && !inspectionDocument.canFinish"
       [class.disabled-action-button]="
         inspectionDocument.isChief && !inspectionDocument.canFinish
       "
