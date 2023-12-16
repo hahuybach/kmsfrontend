@@ -408,3 +408,7 @@ th {
 .search-item {
     height: 40px;
 }
+.search-result {
+    max-height: 350px;
+    overflow-y: auto;
+}
