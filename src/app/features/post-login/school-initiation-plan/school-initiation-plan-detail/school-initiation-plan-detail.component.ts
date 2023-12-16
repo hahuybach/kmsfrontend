@@ -256,6 +256,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   resetDeadline() {
     let newDeadline = this.inputFileForm.get('deadline')?.value;
     let formattedDeadline = this.datePipe.transform(newDeadline, 'dd/MM/yyyy');
+
+    console.log()
     this.confirmationService.confirm({
       message:
         'Bạn có chắc chắn không phê duyệt kế hoạch này và thay đổi lịch sang ngày ' +
@@ -265,6 +267,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmSchoolInitiationplan',
       accept: () => {
+        newDeadline?.setDate(newDeadline?.getDate())
+        console.log(this.setDateTimeToISO(newDeadline))
         this.uploadFileVisible = false;
         this.resetDeadlineVisible = false;
         this.isLoading = true;
@@ -305,29 +309,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
             console.log(error);
           },
         });
-        //
-        // const headers = new HttpHeaders();
-        // headers.append('Content-Type', 'undefined');
-        // this.http
-        //   .put(
-        //     'http://localhost:8080/api/v1/initiation_plan/evaluate_school_document',
-        //     formData,
-        //     { headers }
-        //   )
-        //   .subscribe(
-        //     (response) => {
-        //       console.log('Form data sent to the backend:', response);
-        //       this.messageService.add({
-        //         severity: 'success',
-        //         summary: 'Đã gửi đánh giá',
-        //         detail: 'Đã gửi đánh giá thành công',
-        //       });
-        //       window.location.reload();
-        //     },
-        //     (error) => {
-        //       console.error('Error while sending form data:', error);
-        //     }
-        //   );
+
       },
       reject: (type: any) => {},
     });
@@ -362,5 +344,21 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+  }
+   setDateTimeToISO(date:Date|null|undefined) {
+    if(date){
+      // Set the time to 23:59:59
+      date.setHours(23);
+      date.setMinutes(59);
+      date.setSeconds(59);
+
+      // Convert the date to local ISO string format (Vietnam time zone)
+      const options = { timeZone: "Asia/Ho_Chi_Minh" };
+      const isoString = date.toLocaleString("en-US", options);
+
+      return isoString;
+    }
+    // Set the time to 23:59:59
+    return ''
   }
 }
