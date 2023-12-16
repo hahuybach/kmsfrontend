@@ -1,9 +1,9 @@
 <div class="container-fluid">
   <h5 class="mat-headline-5 fw-medium">Trang chủ</h5>
   <!-- DIRECTOR -->
-  <ng-container *ngIf="isDirector">
+  <ng-container *ngIf="isDirector || isViceDirector">
     <div class="row">
-      <div class="col-md-4">
+      <div  class="col-md-4" *ngIf="isDirector">
         <div class="card mb-0 p-4">
           <div class="row">
             <div class="col-md-10">
@@ -33,7 +33,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4" >
         <div class="card mb-0 p-4">
           <div class="row">
             <div class="col-md-10">
@@ -65,7 +65,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4" *ngIf="isDirector">
         <div class="card mb-0 p-4">
           <div class="row">
             <div class="col-md-10">
@@ -99,7 +99,7 @@
       </div>
     </div>
     <div class="row mt-4 height-row-director">
-      <div class="col-md-4">
+      <div class="col-md-4" *ngIf="isDirector" >
         <p *ngIf="issueNotFound">
           Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng
           kế hoạch thanh tra
@@ -215,7 +215,7 @@
                 </div>
               </div>
             </div>
-            <div class="card mb-2 shortcut-item" (click)="viewTreeList()">
+            <div *ngIf="isDirector" class="card mb-2 shortcut-item" (click)="viewTreeList()">
               <div
                 class="p-3 d-flex justify-content-between align-items-center"
               >
@@ -227,7 +227,7 @@
                 </div>
               </div>
             </div>
-            <div class="card mb-2 shortcut-item" (click)="viewTemplate()">
+            <div *ngIf="isDirector" class="card mb-2 shortcut-item" (click)="viewTemplate()">
               <div
                 class="p-3 d-flex justify-content-between align-items-center"
               >

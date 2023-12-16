@@ -56,7 +56,7 @@
         <li
           class="p-2 rounded"
           routerLinkActive="active"
-          *ngIf="!(isAdmin || isPrincipal || isSchoolNormalEmp)"
+          *ngIf="isDirector"
         >
           <a class="" [routerLink]="['/create-template']">
             <div>

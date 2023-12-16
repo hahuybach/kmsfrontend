@@ -9,6 +9,7 @@ import {getFirstAndLastName} from "../../../../../shared/util/util";
   styleUrls: ['./inspection-plan-inspector-list.component.scss']
 })
 export class InspectionPlanInspectorListComponent {
+  @Input() popup: boolean = true;
   @Input() createButton: boolean = false;
   @Input() listEditable: boolean = false;
   @Input() selectedInspectors: any[] = [];
@@ -31,12 +32,13 @@ export class InspectionPlanInspectorListComponent {
   }
   confirmDeleteRemainingInspector(index: number) {
     this.confirmationService.confirm({
-      message: ' . Bạn có muốn tiếp tục?',
+      message: 'Xóa thanh tra này sẽ xóa danh sách do không đủ ứng viên trưởng đoàn. Bạn có muốn tiếp tục?',
       header: 'Xác nhận xóa thanh tra',
       key: 'confirmDeleteRemainingInspector',
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.recreateInspectorList.emit();
+        this.changeToggleStatus();
         return;
       },
       reject: (type : ConfirmEventType) => {

@@ -283,6 +283,7 @@
             </div>
             <div class="col-md-4 d-flex align-items-start">
                 <app-inspection-plan-inspector-list class="w-100 h-100"
+                                                    [createButton]="true"
                                                     (toggleIssueListPopup)="changeInspectorVisible()"
                                                     [listEditable]="true"
                                                     [selectedInspectors]="inspectorList"

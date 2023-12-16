@@ -90,35 +90,35 @@
     </p-dialog>
     <div class="row col-md-8">
       <div class="col-6 mb-2">
-        <span class="span-heading-color">Tên kế hoạch</span>
+        <label class="span-heading-color mb-1">Tên kế hoạch</label>
         <br />
         <p class="fw-medium p-content-fs">{{ issue.issueName }}</p>
       </div>
       <div class="col-3 mb-2">
-        <span class="span-heading-color">Người tạo</span>
+        <label class="span-heading-color mb-1">Người tạo</label>
         <br />
         <p class="fw-medium p-content-fs">{{ issue.account.user.fullName }}</p>
       </div>
       <div class="col-3 mb-2">
-        <span class="span-heading-color">Trạng thái</span>
+        <label class="span-heading-color mb-1">Trạng thái</label>
         <br />
         <p class="fw-medium p-content-fs">{{ issue.status.statusName }}</p>
       </div>
 
       <div class="col-6 mb-2">
-        <span class="span-heading-color">Chi tiết</span>
+        <label class="span-heading-color mb-1">Chi tiết</label>
         <br />
         <p class="fw-medium p-content-fs">{{ issue.description }}</p>
       </div>
       <div class="col-3 mb-2">
-        <span class="span-heading-color">Ngày tạo</span>
+        <label class="span-heading-color mb-1">Ngày tạo</label>
         <br />
         <p class="fw-medium p-content-fs">
           {{ issue.createdDate | date : "MM/dd/yyyy" }}
         </p>
       </div>
       <div class="col-3 mb-2">
-        <span class="span-heading-color">Ngày kết thúc</span>
+        <label class="span-heading-color mb-1">Ngày kết thúc</label>
         <br />
         <p class="fw-medium p-content-fs" *ngIf="issue.endDate">{{issue.endDate | date : "MM/dd/yyyy"}}</p>
         <p class="fw-medium p-content-fs" *ngIf="!issue.endDate">Chưa kết thúc</p>
@@ -185,7 +185,7 @@
     <div class="col-md-4">
       <div class="list-inspector">
         <div class="list-inspector-header p-3 text-center">
-          <h6 class="mat-headline-6 mx-auto">Danh sách thanh tra</h6>
+          <label class="fw-medium my-2 font-size-18">Danh sách thanh tra</label>
           <div class="total">
             <span class="mx-auto">Tổng số: {{ issue.inspectors.length }}</span>
           </div>
@@ -212,7 +212,7 @@
                     }}</span>
                     <br />
                     <span>
-                      {{ item.roles[0].roleName }}-
+                      {{ item.roles[0].roleName }} -
                       {{ item.school.schoolName }}
                     </span>
                   </div>

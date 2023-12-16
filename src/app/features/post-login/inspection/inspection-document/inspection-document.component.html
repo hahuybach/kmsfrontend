@@ -101,6 +101,7 @@
                     class="create-button ms-2"
                     pButton
                     (click)="changeCreateRecordVisible()"
+                    *ngIf="inspectionDocument.isChief && inspectionDocument.canCreateTask"
                   >
                     Tạo mới
                   </button>

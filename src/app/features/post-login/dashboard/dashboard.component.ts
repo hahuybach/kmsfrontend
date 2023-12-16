@@ -463,7 +463,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setAuth();
-    if (this.isDirector) {
+    if (this.isDirector || this.isViceDirector) {
       this.setInitDataForDirector();
     }
     if (this.isSpecialist) {
@@ -511,7 +511,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   createGuidanceDocument() {
-    this.router.navigate(['guidance-document/create/1']);
+    this.router.navigate(['guidance-document/create/' + this.issue?.issueId]);
   }
 
   viewMyInspection() {
@@ -529,7 +529,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   viewTreeList() {
-    this.router.navigate(['listAssignment']);
+    this.router.navigate(['list-assignment']);
   }
 
   viewTemplate() {

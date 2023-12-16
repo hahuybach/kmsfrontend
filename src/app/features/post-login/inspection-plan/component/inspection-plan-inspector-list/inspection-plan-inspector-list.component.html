@@ -12,7 +12,7 @@
 ></p-confirmDialog>
 <div *ngIf="selectedInspectors && selectedInspectors.length == 0 && listEditable && createButton; else inspectorList"
      class="text-center">
-  <button type="button" pButton class="create-inspector" (click)="changeInspectorVisible()">Tạo ban KTNB</button>
+  <button type="button" pButton class="create-inspector" (click)="changeInspectorVisible()">Tạo ban kiểm tra</button>
 </div>
 <ng-template #inspectorList>
   <div class="list-inspector h-100 d-flex flex-column">
@@ -24,7 +24,7 @@
     </div>
     <div class="d-flex flex-column justify-content-between h-100">
       <div class="card mt-2 h-100">
-        <div class="scrollable-container overflow-auto d-flex flex-column justify-content-between h-100">
+        <div class="scrollable-container overflow-auto d-flex flex-column h-100">
           <ng-container *ngFor="let item of selectedInspectors; let i = index">
             <div *ngIf="selectedInspectors" class="mt-1 my-2">
               <div class="scrollview-item d-flex flex-row justify-content-between align-items-center p-2 h-full mx-1">
@@ -62,7 +62,7 @@
           </ng-container>
         </div>
       </div>
-      <div class="w-100 d-flex justify-content-center my-1" *ngIf="listEditable">
+      <div class="w-100 d-flex justify-content-center my-1" *ngIf="listEditable && selectedInspectors.length > 0">
         <div *ngIf="toggleChange">
           <button type="button" pButton class="create-inspector"
                   (click)="changeToggleStatus()">Chỉnh sửa ban KTNB
@@ -72,7 +72,7 @@
           <button type="button" pButton class="create-inspector px-4" (click)="onReset()">
             Hủy
           </button>
-          <button type="button" pButton class="create-inspector px-5" (click)="changeInspectorVisible()">
+          <button *ngIf="popup" type="button" pButton class="create-inspector px-5" (click)="changeInspectorVisible()">
             <i class="bi bi-plus-lg"></i>
           </button>
           <button type="button" pButton class="create-inspector px-4" (click)="onSave()">

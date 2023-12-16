@@ -86,6 +86,8 @@ export interface TaskListDto {
   deadline: Date;
   statusName: string;
   canManipulate: boolean;
+  canAlterDoc: boolean;
+
 }
 
 export interface Record{
@@ -98,6 +100,8 @@ export interface InspectionDocument {
   reportId: number;
   conclusionId: number;
   canFinish: boolean;
+  canUploadFinalDoc: boolean;
+  canCreateTask: boolean;
   isChief: boolean;
 }
 

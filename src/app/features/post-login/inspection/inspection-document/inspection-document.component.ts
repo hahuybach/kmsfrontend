@@ -59,7 +59,8 @@ export class InspectionDocumentComponent implements OnInit {
     if (
       this.inspectionDocument.isChief &&
       (recordId === this.inspectionDocument.reportId ||
-        recordId === this.inspectionDocument.conclusionId)
+        recordId === this.inspectionDocument.conclusionId) &&
+      this.inspectionDocument.canUploadFinalDoc
     ) {
       this.canUploadDocument = true;
     } else {
@@ -113,6 +114,7 @@ export class InspectionDocumentComponent implements OnInit {
     this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
       next: (data) => {
         this.inspectionDocument = data;
+        console.log(data)
       },
       error: (error) => {
         console.log(error);

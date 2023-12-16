@@ -37,6 +37,7 @@ export class IssueInspectorListComponent {
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.recreateInspectorList.emit();
+        this.changeToggleStatus();
         return;
       },
       reject: (type: ConfirmEventType) => {
@@ -55,7 +56,7 @@ export class IssueInspectorListComponent {
       message: 'Xác nhận xóa thanh tra này ?',
       header: 'Xác nhận xóa thanh tra',
       key: 'confirmDeleteInspector',
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.deleteInspector(index);
         return;
@@ -81,15 +82,20 @@ export class IssueInspectorListComponent {
   }
 
   isEligibleInspectorExist(selectedInspectors: any[]): boolean {
-    let eligibleChiefList = selectedInspectors.filter((eligibleInspector: {
-      accountId: number;
-    }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
-    return eligibleChiefList.length > 0;
+    console.log(selectedInspectors);
+    return selectedInspectors.some(
+      (inspector: any) => inspector.roles && inspector.roles.some((role: { roleName: string; }):boolean => role.roleName === "Trưởng Phòng")
+    );
   }
 
   onDeleteInspector(index: number) {
     let tempSelectedInspectors = this.selectedInspectors.slice();
     tempSelectedInspectors.splice(index, 1);
+    if (!this.isEligibleInspectorExist(tempSelectedInspectors)) {
+      this.confirmDeleteRemainingInspector(index);
+    } else {
+      this.confirmDeleteInspector(index);
+    }
   }
 
   deleteInspector(index: number) {

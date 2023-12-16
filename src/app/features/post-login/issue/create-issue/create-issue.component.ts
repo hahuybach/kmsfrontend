@@ -31,9 +31,6 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
   formSubmitted: boolean = false;
   formCompleted: boolean = false;
   formFailed: boolean = false;
-  documentCodeError_1: boolean = false;
-  documentCodeError_2: boolean = false;
-  documentCodeError_3: boolean = false;
   private subscriptions: Subscription[] = [];
 
   //breadcrumb
@@ -166,6 +163,7 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
     this.issueForm.get('inspectorId')?.setValue(null);
     this.selectedInspectors = [];
     this.inspectors = [];
+    this.inspectionplanInspectorService.clearBothList();
     this.inspectionplanInspectorService.setInspectorListIsValid(false);
     this.initInspectorList();
   }

@@ -292,6 +292,7 @@
           <div class="col-md-4 mh-100">
             <app-inspection-plan-inspector-list
               class="w-100"
+              [popup]="false"
               [listEditable]="true"
               [selectedInspectors]="selectedInspectorList"
               (toggleIssueListPopup)="changeInspectorVisible()"

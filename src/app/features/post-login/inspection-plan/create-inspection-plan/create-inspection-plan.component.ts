@@ -155,6 +155,9 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
       accountId: number;
     }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
     this.inspectionPlanForm.get('inspectorIds')?.setValue(inspectorListId);
+    if (!inspectorListId.includes(this.inspectionPlanForm.get('chiefId')?.value)){
+      this.inspectionPlanForm.get('chiefId')?.setValue(null);
+    }
   }
 
   get documentNameControls() {
@@ -168,6 +171,11 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
   get documentFileControls() {
     return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentFile'];
   }
+
+  // onNextButton(){
+  //   this.initInspectorList()
+  //   this.activeIndex = 1;
+  // }
 
   onNextButton() {
     if (

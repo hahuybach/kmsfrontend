@@ -391,11 +391,14 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.loadUsers();
           }, 1500)
           this.isLoading = false;
+          this.excelFile = null;
 
 
         },
         error: (error) => {
+          this.isLoading = false;
           this.toastService.showWarn('userListError', "Lỗi", error.error.message)
+          this.excelFile = null;
 
         }
       });
