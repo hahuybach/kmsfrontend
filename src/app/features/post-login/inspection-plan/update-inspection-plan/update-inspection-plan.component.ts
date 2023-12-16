@@ -303,16 +303,6 @@ export class UpdateInspectionPlanComponent {
     this.inspectionplanInspectorService.setInspectorListIsValid(false);
   }
 
-  public findInvalidControls() {
-    const invalid = [];
-    const controls = this.inspectionPlanForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    return invalid;
-  }
 
   onSubmit() {
     if (!this.documentUpdated) {
