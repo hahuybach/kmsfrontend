@@ -700,14 +700,18 @@
                     <div>
                       <span class="font-weight-bold">{{
                         option?.user.fullName
-                        }}</span
+                      }}</span
                       >&nbsp;
                       <br />
                       <br />
-                      <span class="text-black-50 font-size-14" pTooltip="{{option?.email}}" tooltipPosition="top">
-                                          {{ option?.email }}</span>
+                      <span
+                        class="text-black-50 font-size-14"
+                        pTooltip="{{ option?.email }}"
+                        tooltipPosition="top"
+                      >
+                        {{ option?.email }}</span
+                      >
                     </div>
-
                   </div>
                 </div>
               </ng-template>
@@ -846,6 +850,7 @@
       [draggable]="false"
       [resizable]="false"
       (onHide)="assignmentPopuptHideEvent()"
+      [modal]="true"
     >
       <div *ngIf="selectedAssignment" class="row assignment-container">
         <div class="col-md-8 left-box">
@@ -976,19 +981,22 @@
                     >
                     </tui-avatar>
                   </div>
-                  <div class="col-md-10 d-flex align-items-center" >
+                  <div class="col-md-10 d-flex align-items-center">
                     <div>
                       <span class="font-weight-bold">{{
                         option?.user.fullName
-                        }}</span
+                      }}</span
                       >&nbsp;
                       <br />
                       <br />
-                      <span class="text-black-50 font-size-14" pTooltip="{{option?.email}}" tooltipPosition="top">
-                      {{ option?.email }}</span
+                      <span
+                        class="text-black-50 font-size-14"
+                        pTooltip="{{ option?.email }}"
+                        tooltipPosition="top"
+                      >
+                        {{ option?.email }}</span
                       >
                     </div>
-
                   </div>
                 </div>
               </ng-template>

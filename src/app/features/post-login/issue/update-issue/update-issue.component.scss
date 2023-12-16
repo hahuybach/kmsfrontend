@@ -83,7 +83,7 @@ textarea {
     }
 }
 .list-inspector {
-  height: 100%;
+    height: 100%;
     border-radius: 10px;
     // border: 0.8px solid $primary;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
@@ -124,11 +124,14 @@ textarea {
         border-radius: 8px;
         border: solid 1px $primary;
         transition: all 0.5s ease;
-        margin-right: 20px;
+        // margin-right: 20px;
         &:hover {
             background-color: $primary-hover;
             border-color: $primary-hover;
         }
+    }
+    .p-confirm-dialog-accept {
+        margin-left: 20px;
     }
 }
 .overflow-auto {

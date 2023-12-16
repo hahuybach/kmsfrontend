@@ -1010,19 +1010,41 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     return getFirstAndLastName(fullName);
   }
   loadAssignment() {
-    this.assignmentService
-      .searchAssignment({
-        searchedText: this.searchData,
-        issueId: this.issueId,
-        schoolId: this.authService.getSchoolFromJwt().schoolId,
-      })
-      .subscribe({
-        next: (data) => {
-          this.searchItem = data;
-          console.log(data);
-        },
-        error: (error) => {},
-      });
+    this.pageNo = 0;
+    if (this.searchData) {
+      this.assignmentService
+        .filterAsm(this.issueId, this.authService.getSchoolFromJwt().schoolId, this.pageNo, this.searchData)
+        .subscribe({
+          next: (data) => {
+            this.searchItem = data;
+            console.log(data);
+            console.log(this.searchItem.length);
+          },
+        });
+    } else {
+      this.assignmentService
+        .filterAsm(this.issueId, this.authService.getSchoolFromJwt().schoolId, null, this.searchData)
+        .subscribe({
+          next: (data) => {
+            this.searchItem = data;
+            console.log(data);
+            console.log(this.searchItem.length);
+          },
+        });
+    }
+    // this.assignmentService
+    //   .searchAssignment({
+    //     searchedText: this.searchData,
+    //     issueId: this.issueId,
+    //     schoolId: this.authService.getSchoolFromJwt().schoolId,
+    //   })
+    //   .subscribe({
+    //     next: (data) => {
+    //       this.searchItem = data;
+    //       console.log(data);
+    //     },
+    //     error: (error) => {},
+    //   });
   }
   navigateSearch(assignment: any, ids: number[]) {
     // this.router.navigate(['/assign-assignment', this.issueId], {
