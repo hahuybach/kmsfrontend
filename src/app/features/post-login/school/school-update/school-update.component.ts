@@ -10,6 +10,7 @@ import {ToastService} from "../../../../shared/toast/toast.service";
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
 import {validateDateNotGreaterThanToday} from "../../../../shared/validators/date-not-greater-than-today";
 import {ConfirmationService, ConfirmEventType} from "primeng/api";
+import { getFirstAndLastName } from 'src/app/shared/util/util';
 
 @Component({
   selector: 'app-school-update',
@@ -52,6 +53,7 @@ export class SchoolUpdateComponent implements OnInit {
       caption: 'Cập nhật trường'
     },
   ];
+  avatar: String;
 
   constructor(private router: Router,
               private schoolService: SchoolService,
@@ -72,6 +74,7 @@ export class SchoolUpdateComponent implements OnInit {
     ).subscribe((data) => {
       this.school = data;
       this.principal = data.principal;
+      this.avatar = getFirstAndLastName(data.principal.user.fullName);
       this.updateForm.patchValue({
         schoolId: this.school.schoolId,
         schoolName: this.school.schoolName,
