@@ -145,6 +145,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
         console.log(this.issueForm.value);
       });
     this.inspectorService.getNoneInspectors().subscribe((data) => {
+      console.log(data);
       this.inspectorLeftList = data;
       this.inspectorLeftBeforeList = data;
     });
@@ -168,6 +169,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
 
   // click trash icon event in scrollview
   confirmDelete(inspector: any) {
+    console.log(inspector);
     if (this.issue.inspectors.length == 1) {
       this.toastService.showWarn(
         'toastUpdateIssue',
