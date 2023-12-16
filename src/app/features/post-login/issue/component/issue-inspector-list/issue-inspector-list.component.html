@@ -52,7 +52,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="" *ngIf="deleteButtonVisibility">
+                <div class="" *ngIf="deleteButtonVisibility && !toggleChange">
                   <button type="button" class="delete-button" (click)="onDeleteInspector(i)">
                     <i class="bi bi-trash-fill"></i>
                   </button>
