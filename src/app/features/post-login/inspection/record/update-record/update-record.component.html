@@ -1,5 +1,11 @@
 <p-toast position="top-right" key="updateRecordFail"></p-toast>
 <p-toast position="top-right" key="updateRecordComplete"></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Xác nhận"
+  rejectLabel="Hủy bỏ"
+  key="updateTask"
+></p-confirmDialog>
 <p-dialog header="Danh sách đoàn kiểm tra"
           [(visible)]="updateRecordPopupVisible"
           [modal]="true"

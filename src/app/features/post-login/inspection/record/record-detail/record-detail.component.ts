@@ -141,7 +141,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     }
 
     this.confirmationService.confirm({
-      message: "Bạn có muốn tải tài liệu này?",
+      message: "Bạn có muốn tải lên tài liệu này?",
       header: "Xác nhận tải tài liệu",
       key: "deleteDocument",
       icon: 'bi bi-exclamation-triangle',
