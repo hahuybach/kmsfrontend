@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {TaskDetailDto} from "../../../../../models/task";
 import {RecordService} from "../../../../../services/record.service";
@@ -13,6 +23,7 @@ import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-s
   styleUrls: ['./record-detail.component.scss']
 })
 export class RecordDetailComponent implements OnChanges, OnInit {
+  @ViewChild('fileInput', {static: false}) fileInputRef!: ElementRef;
   @Input() canUploadDocument: boolean = false;
   @Input() canDeleteDocument: boolean = false;
   @Input() recordId: number;
@@ -39,6 +50,9 @@ export class RecordDetailComponent implements OnChanges, OnInit {
 
   resetDetailRecordPopupVisible() {
     this.resetForm();
+    if (this.fileInputRef) {
+      this.fileInputRef.nativeElement.value = null;
+    }
     this.detailRecordPopupVisibleChange.emit(this.detailRecordPopupVisible);
   }
 
@@ -51,6 +65,14 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     } else {
       this.documentForm.get('documentFile')?.setValue(null);
     }
+  }
+
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      22: 'warning',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info';
   }
 
   handleOnClickDeleteDocument() {
