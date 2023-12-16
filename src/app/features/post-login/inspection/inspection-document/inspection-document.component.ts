@@ -110,6 +110,15 @@ export class InspectionDocumentComponent implements OnInit {
       });
   }
 
+
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      22: 'warning',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info';
+  }
+
   initInspectionData() {
     this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
       next: (data) => {

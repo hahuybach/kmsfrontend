@@ -58,7 +58,6 @@
             [rows]="5"
             [showCurrentPageReport]="true"
             [paginator]="true"
-            currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
             [filterDelay]="0"
             [globalFilterFields]="['taskName', 'assigneeName']"
           >
@@ -162,6 +161,12 @@
                     <p-sortIcon field="deadline"></p-sortIcon>
                   </div>
                 </th>
+                <th pSortableColumn="status.statusId">
+                  <div>
+                    Trạng thái
+                    <p-sortIcon field="status.statusId"></p-sortIcon>
+                  </div>
+                </th>
                 <th *ngIf="inspectionDocument.isChief" class="th-small"></th>
               </tr>
             </ng-template>
@@ -182,6 +187,13 @@
                 <td>
                   <span class="p-column-title">Ngày nộp</span>
                   {{ taskList.deadline | date : "dd/MM/yyyy" }}
+                </td>
+                <td>
+                  <span class="p-column-title">Trạng thái</span>
+                  <p-tag
+                    [severity]="getStatusSeverity(taskList?.status?.statusId)"
+                    [value]="taskList?.status?.statusName"
+                  ></p-tag>
                 </td>
                 <td
                   style="text-align: center"
