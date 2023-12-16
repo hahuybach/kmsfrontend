@@ -249,24 +249,14 @@ export class UserCreateComponent implements OnInit {
     }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận muốn tạo người dùng này không?',
-      header: 'Xác nhân',
+      header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
       rejectLabel: 'Không',
       accept: () => {
         this.onSubmit()
 
-      },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toast.showError('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toast.showWarn('error', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
-            break;
-        }
-      },key: 'popUpConfirm'
+      }, key: 'popUpConfirm'
     });
   }
 
