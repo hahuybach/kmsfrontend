@@ -7,10 +7,12 @@ import {
 } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import {AuthService} from "../../../services/auth.service";
 
 @Injectable()
 export class TokenExpirationInterceptor implements HttpInterceptor {
-  constructor(private readonly router: Router) {}
+  constructor(private readonly router: Router,
+  private readonly authService: AuthService) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -18,9 +20,9 @@ export class TokenExpirationInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((error) => {
-        if (error.status === 4000) {
+        if (error.error.message === "Hết thời hạn đăng nhập") {
           const customError = new Error('Token has expired');
-          // Include the error message in the route parameters
+          this.authService.logout();
           this.router.navigate(['/login'], {
             queryParams: { error: customError.message },
           });

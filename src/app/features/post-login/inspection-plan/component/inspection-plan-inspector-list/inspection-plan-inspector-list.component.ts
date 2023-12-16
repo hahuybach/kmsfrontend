@@ -9,6 +9,7 @@ import {getFirstAndLastName} from "../../../../../shared/util/util";
   styleUrls: ['./inspection-plan-inspector-list.component.scss']
 })
 export class InspectionPlanInspectorListComponent {
+  @Input() screen: string;
   @Input() popup: boolean = true;
   @Input() createButton: boolean = false;
   @Input() listEditable: boolean = false;
@@ -51,12 +52,12 @@ export class InspectionPlanInspectorListComponent {
       }
     });
   }
-  confirmDeleteInspector(index: number) {
+  confirmDeleteInspector(index: number, inspector: string) {
     this.confirmationService.confirm({
-      message: 'Xác nhận xóa thanh tra này ?',
+      message: 'Xác nhận xóa thanh tra ' + inspector + '?',
       header: 'Xác nhận xóa thanh tra',
       key: 'confirmDeleteInspector',
-      icon: 'pi pi-exclamation-triangle',
+      icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.deleteInspector(index);
         return;
@@ -91,13 +92,13 @@ export class InspectionPlanInspectorListComponent {
     return eligibleChiefList.length > 0;
   }
 
-  onDeleteInspector(index: number) {
+  onDeleteInspector(index: number, inspector: string) {
     let tempSelectedInspectors = this.selectedInspectors.slice();
     tempSelectedInspectors.splice(index, 1);
     if (!this.isEligibleInspectorExist(tempSelectedInspectors)) {
       this.confirmDeleteRemainingInspector(index);
     } else {
-      this.confirmDeleteInspector(index);
+      this.confirmDeleteInspector(index, inspector);
     }
   }
 

@@ -154,15 +154,11 @@
       </div>
     </div>
   </form>
-  <button pButton class="mb-2" (click)="confirm()" type="submit">
-    Tạo trường mầm non
-  </button>
-  <!--<div class="overlay" *ngIf="isLoading">-->
-  <!--    <div class="spinner-container">-->
-  <!--        <div class="spinner-border" role="status"></div>-->
-  <!--    </div>-->
-  <!--</div>-->
-
+  <div class="mt-4 col-md-12 text-center">
+    <button pButton class="mb-2" (click)="confirm()" type="submit">
+      Tạo trường mầm non
+    </button>
+  </div>
   <p-toast position="top-right" key="error"></p-toast>
   <p-confirmDialog
     key="updateConfirm"

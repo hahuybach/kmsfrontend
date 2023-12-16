@@ -6,6 +6,11 @@
 .th-small {
   width: 100px;
 }
+
+:host ::ng-deep .p-tag {
+  border-radius: 20px;
+}
+
 .p-button {
   background-color: $primary;
   border-radius: 8px;

@@ -33,6 +33,14 @@ export class InspectionMytaskComponent implements OnInit {
     this.changeDetailRecordVisible();
   }
 
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      22: 'warning',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info';
+  }
+
   ngOnInit(): void {
     this.route.parent?.params.subscribe((parentParams) => {
       this.inspectionId = parentParams['id'];

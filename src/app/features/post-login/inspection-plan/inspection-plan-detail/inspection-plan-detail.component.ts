@@ -63,10 +63,9 @@ export class InspectionPlanDetailComponent implements OnInit, OnDestroy {
 
   getStatusSeverity(status: string): string {
     const statusSeverityMap: { [key: string]: string } = {
-      "Chưa bắt đầu": 'info',
-      "Đang tiến hành": 'warning',
-      "Đã hoàn thành": 'success',
-      "Đã quá hạn": 'danger',
+      "Chưa bắt đầu": 'warning',
+      "Đang tiến hành": 'info',
+      "Đã hoàn thành": 'success'
     };
 
     return statusSeverityMap[status] || 'info'; // Default to ' info' if statusId is not in the map

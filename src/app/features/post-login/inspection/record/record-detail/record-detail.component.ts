@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {TaskDetailDto} from "../../../../../models/task";
 import {RecordService} from "../../../../../services/record.service";
@@ -13,6 +23,7 @@ import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-s
   styleUrls: ['./record-detail.component.scss']
 })
 export class RecordDetailComponent implements OnChanges, OnInit {
+  @ViewChild('fileInput', {static: false}) fileInputRef!: ElementRef;
   @Input() canUploadDocument: boolean = false;
   @Input() canDeleteDocument: boolean = false;
   @Input() recordId: number;
@@ -39,6 +50,9 @@ export class RecordDetailComponent implements OnChanges, OnInit {
 
   resetDetailRecordPopupVisible() {
     this.resetForm();
+    if (this.fileInputRef) {
+      this.fileInputRef.nativeElement.value = null;
+    }
     this.detailRecordPopupVisibleChange.emit(this.detailRecordPopupVisible);
   }
 
@@ -53,6 +67,14 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     }
   }
 
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      22: 'warning',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info';
+  }
+
   handleOnClickDeleteDocument() {
     this.confirmationService.confirm({
       message: "Bạn có chắc muốn xóa mục kiểm tra này?",
@@ -63,6 +85,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         this.deleteDocument();
       },
       reject: (type: ConfirmEventType) => {
+        return;
       }
     })
   }
@@ -117,42 +140,53 @@ export class RecordDetailComponent implements OnChanges, OnInit {
       return;
     }
 
-    const formData = new FormData();
-    const document = {
-      taskId: this.recordId,
-      documentTaskDto: {
-        documentName: this.documentForm.get('documentName')?.value,
-        documentCode: this.documentForm.get('documentCode')?.value
-      }
-    }
+    this.confirmationService.confirm({
+      message: "Bạn có muốn tải lên tài liệu này?",
+      header: "Xác nhận tải tài liệu",
+      key: "deleteDocument",
+      icon: 'bi bi-exclamation-triangle',
+      accept: () => {
+        const formData = new FormData();
+        const document = {
+          taskId: this.recordId,
+          documentTaskDto: {
+            documentName: this.documentForm.get('documentName')?.value,
+            documentCode: this.documentForm.get('documentCode')?.value
+          }
+        }
 
-    formData.append("request", new Blob([JSON.stringify(document)], {type: "application/json"}))
-    const file = this.documentForm.get('documentFile')?.value
-    formData.append(`file`, file, file.name);
+        formData.append("request", new Blob([JSON.stringify(document)], {type: "application/json"}))
+        const file = this.documentForm.get('documentFile')?.value
+        formData.append(`file`, file, file.name);
 
-    this.updateDocumentSubmitted = true;
-    console.log("document " + document.documentTaskDto?.documentName);
-    const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
-      next: (response) => {
-        this.updateDocumentCompleted = true;
-        setTimeout(() => {
-          this.detailRecordPopupVisible = false;
-          this.resetForm();
-          this.initRecordData();
-        }, 1000);
+        this.updateDocumentSubmitted = true;
+        console.log("document " + document.documentTaskDto?.documentName);
+        const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
+          next: (response) => {
+            this.updateDocumentCompleted = true;
+            setTimeout(() => {
+              this.detailRecordPopupVisible = false;
+              this.resetForm();
+              this.initRecordData();
+            }, 1000);
+          },
+          error: (error) => {
+            console.log(error)
+            this.updateDocumentFailed = true;
+            setTimeout(() => {
+              this.updateDocumentSubmitted = false;
+              this.updateDocumentFailed = false;
+              this.resetForm();
+              this.initRecordData();
+            }, 1000);
+          }
+        })
+        this.subscriptions.push(documentUpdate);
       },
-      error: (error) => {
-        console.log(error)
-        this.updateDocumentFailed = true;
-        setTimeout(() => {
-          this.updateDocumentSubmitted = false;
-          this.updateDocumentFailed = false;
-          this.resetForm();
-          this.initRecordData();
-        }, 1000);
+      reject: (type: ConfirmEventType) => {
+        return;
       }
     })
-    this.subscriptions.push(documentUpdate);
   }
 
   ngOnInit(): void {

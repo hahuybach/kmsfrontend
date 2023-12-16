@@ -11,6 +11,7 @@ import {ToastService} from "../../../../../shared/toast/toast.service";
 import {TuiDay} from "@taiga-ui/cdk";
 import {dateToTuiDay, tuiDayToDate} from "../../../../../shared/util/util";
 import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
   selector: 'app-update-record',
@@ -40,7 +41,8 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
     private readonly fb: FormBuilder,
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly recordService: RecordService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly confirmationService: ConfirmationService,
   ) {
   }
 
@@ -96,39 +98,51 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
       this.recordForm.markAllAsTouched();
       return;
     }
-    const deadline = tuiDayToDate(this.recordForm.get('deadline')?.value);
-    deadline.setUTCHours(0);
 
-    const record = {
-      taskId: this.taskId,
-      taskName: this.recordForm.get('recordName')?.value,
-      description: this.recordForm.get('recordDescription')?.value,
-      deadline: deadline.toISOString(),
-      assigneeId: this.recordForm.get('assigneeId')?.value,
-    }
+    this.confirmationService.confirm({
+      message: "Bạn có muốn cập nhật mục kiểm tra này?",
+      header: "Xác nhận cập nhật mục kiểm tra",
+      key: "updateTask",
+      icon: 'bi bi-exclamation-triangle',
+      accept: () => {
+        const deadline = tuiDayToDate(this.recordForm.get('deadline')?.value);
+        deadline.setUTCHours(0);
 
-    this.formSubmitted = true;
-    const updateRecord = this.recordService.updateTask(record).subscribe({
-      next: (response) => {
-        this.formCompleted = true;
-        setTimeout(() =>{
-          this.updateRecordPopupVisible = false;
-          this.formCompleted = false;
-          this.formSubmitted = false;
-        },1000)
+        const record = {
+          taskId: this.taskId,
+          taskName: this.recordForm.get('recordName')?.value,
+          description: this.recordForm.get('recordDescription')?.value,
+          deadline: deadline.toISOString(),
+          assigneeId: this.recordForm.get('assigneeId')?.value,
+        }
+
+        this.formSubmitted = true;
+        const updateRecord = this.recordService.updateTask(record).subscribe({
+          next: (response) => {
+            this.formCompleted = true;
+            setTimeout(() =>{
+              this.updateRecordPopupVisible = false;
+              this.formCompleted = false;
+              this.formSubmitted = false;
+            },1000)
+          },
+          error: (error) => {
+            this.formFailed = true;
+            this.toastService.showError('updateRecordFail', "Cập nhật mục kiểm tra không thành công", error.error.message);
+            setTimeout(() =>{
+              this.updateRecordPopupVisible = false;
+              this.formFailed = false;
+              this.resetForm();
+              this.initInspectionPlan();
+            },1000)
+          }
+        })
+        this.subscriptions.push(updateRecord);
       },
-      error: (error) => {
-        this.formFailed = true;
-        this.toastService.showError('updateRecordFail', "Cập nhật mục kiểm tra không thành công", error.error.message);
-        setTimeout(() =>{
-          this.updateRecordPopupVisible = false;
-          this.formFailed = false;
-          this.resetForm();
-          this.initInspectionPlan();
-        },1000)
+      reject: (type: ConfirmEventType) => {
+        return;
       }
     })
-    this.subscriptions.push(updateRecord);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {MessageService} from "primeng/api";
+import {ToastService} from "../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-login-base',
@@ -12,19 +13,15 @@ export class LoginBaseComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private messageService: MessageService) {
+    private readonly toastService: ToastService
+  ) {
   }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.errorMessage = params['error'];
       if (this.errorMessage) {
-        console.log(this.errorMessage)
-        this.messageService.add({
-          severity: 'danger',
-          summary: 'Lỗi',
-          detail: 'Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại'
-        })
+        this.toastService.showError('login-base', 'Hết phiên đăng nhập', "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại");
       }
     });
   }
