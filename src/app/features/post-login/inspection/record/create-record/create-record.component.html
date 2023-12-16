@@ -1,5 +1,11 @@
 <p-toast position="top-right" key="createRecordError"></p-toast>
 <p-toast position="top-right" key="createRecordComplete"></p-toast>
+<p-confirmDialog
+  [style]="{ width: '50vw' }"
+  acceptLabel="Xác nhận"
+  rejectLabel="Hủy bỏ"
+  key="createTask"
+></p-confirmDialog>
 <p-dialog header="Tạo mới mục kiểm tra"
           [(visible)]="createRecordPopupVisible"
           [modal]="true"

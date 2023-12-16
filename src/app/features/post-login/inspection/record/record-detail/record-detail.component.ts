@@ -85,6 +85,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         this.deleteDocument();
       },
       reject: (type: ConfirmEventType) => {
+        return;
       }
     })
   }
@@ -139,42 +140,53 @@ export class RecordDetailComponent implements OnChanges, OnInit {
       return;
     }
 
-    const formData = new FormData();
-    const document = {
-      taskId: this.recordId,
-      documentTaskDto: {
-        documentName: this.documentForm.get('documentName')?.value,
-        documentCode: this.documentForm.get('documentCode')?.value
-      }
-    }
+    this.confirmationService.confirm({
+      message: "Bạn có muốn tải tài liệu này?",
+      header: "Xác nhận tải tài liệu",
+      key: "deleteDocument",
+      icon: 'bi bi-exclamation-triangle',
+      accept: () => {
+        const formData = new FormData();
+        const document = {
+          taskId: this.recordId,
+          documentTaskDto: {
+            documentName: this.documentForm.get('documentName')?.value,
+            documentCode: this.documentForm.get('documentCode')?.value
+          }
+        }
 
-    formData.append("request", new Blob([JSON.stringify(document)], {type: "application/json"}))
-    const file = this.documentForm.get('documentFile')?.value
-    formData.append(`file`, file, file.name);
+        formData.append("request", new Blob([JSON.stringify(document)], {type: "application/json"}))
+        const file = this.documentForm.get('documentFile')?.value
+        formData.append(`file`, file, file.name);
 
-    this.updateDocumentSubmitted = true;
-    console.log("document " + document.documentTaskDto?.documentName);
-    const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
-      next: (response) => {
-        this.updateDocumentCompleted = true;
-        setTimeout(() => {
-          this.detailRecordPopupVisible = false;
-          this.resetForm();
-          this.initRecordData();
-        }, 1000);
+        this.updateDocumentSubmitted = true;
+        console.log("document " + document.documentTaskDto?.documentName);
+        const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
+          next: (response) => {
+            this.updateDocumentCompleted = true;
+            setTimeout(() => {
+              this.detailRecordPopupVisible = false;
+              this.resetForm();
+              this.initRecordData();
+            }, 1000);
+          },
+          error: (error) => {
+            console.log(error)
+            this.updateDocumentFailed = true;
+            setTimeout(() => {
+              this.updateDocumentSubmitted = false;
+              this.updateDocumentFailed = false;
+              this.resetForm();
+              this.initRecordData();
+            }, 1000);
+          }
+        })
+        this.subscriptions.push(documentUpdate);
       },
-      error: (error) => {
-        console.log(error)
-        this.updateDocumentFailed = true;
-        setTimeout(() => {
-          this.updateDocumentSubmitted = false;
-          this.updateDocumentFailed = false;
-          this.resetForm();
-          this.initRecordData();
-        }, 1000);
+      reject: (type: ConfirmEventType) => {
+        return;
       }
     })
-    this.subscriptions.push(documentUpdate);
   }
 
   ngOnInit(): void {
