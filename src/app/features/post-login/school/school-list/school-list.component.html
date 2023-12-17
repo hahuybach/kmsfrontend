@@ -20,9 +20,9 @@
             *ngIf="!filterVisible"
             pInputText
             type="text"
-            class="fontAwesome w-100"
+            class="w-100"
             (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
-            placeholder="&#xF002; Tra cứu nhanh theo tên trường hoặc địa chỉ"
+            placeholder="Tra cứu nhanh theo tên trường hoặc địa chỉ"
           />
           <div class="mb-3">
             <tr *ngIf="filterVisible">
@@ -197,7 +197,7 @@
     <ng-template pTemplate="emptymessage">
       <tr>
         <td colspan="5">
-          <p class="w-100 text-center mt-4 fw-medium fs-4">Không tìm thấy trường nào phù hợp</p>
+          <p class="w-100 text-center mt-4 fw-medium fs-4">Không tìm thấy trường phù hợp</p>
         </td>
       </tr>
     </ng-template>
