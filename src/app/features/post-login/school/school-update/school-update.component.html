@@ -6,65 +6,54 @@
       </a>
     </ng-container>
   </tui-breadcrumbs>
-  <h5 class="mat-headline-5 mb-2">Cập nhật trường</h5>
+  <h5 class="mat-headline-5 fw-medium">Cập nhật trường</h5>
   <form [formGroup]="updateForm" class="row">
     <div class="col-md-6" *ngIf="school">
-      <h5 class="m-3">Thông tin trường</h5>
-      <div class="col-md-10">
-        <div class="m-3">
-          <label>Tên trường<span class="p-error">*</span></label>
-        </div>
-        <div class="m-3">
-          <input
-            class="form-control"
-            type="text"
-            formControlName="schoolName"
-          />
-          <span *ngIf="check('schoolName', 'whitespace')" class="p-error"
-            >Không được để trống mục này</span
-          >
-          <span
-            *ngIf="updateForm.get('schoolName')?.hasError('notUnique')"
-            class="p-error"
-            >Tên trường này đã tồn tại</span
-          >
-        </div>
+      <label class="fw-medium p-content-fs mb-4">Thông tin trường</label>
+      <div class="mb-3">
+        <label class="fw-medium mb-1"
+          >Tên trường<span class="p-error">*</span></label
+        >
+        <br />
+        <input pInputText type="text" formControlName="schoolName" />
+        <span *ngIf="check('schoolName', 'whitespace')" class="p-error"
+          >Không được để trống mục này</span
+        >
+        <span
+          *ngIf="updateForm.get('schoolName')?.hasError('notUnique')"
+          class="p-error"
+          >Tên trường này đã tồn tại</span
+        >
       </div>
-      <div class="col-md-10">
-        <div class="m-3">
-          <label>Địa chỉ<span class="p-error">*</span></label>
-        </div>
-        <div class="m-3">
-          <input class="form-control" type="text" formControlName="address" />
-          <span *ngIf="check('address', 'whitespace')" class="p-error"
-            >Không được để trống mục này</span
-          >
-        </div>
+      <div class="mb-3">
+        <label class="fw-medium mb-1"
+          >Địa chỉ<span class="p-error">*</span></label
+        >
+        <br />
+        <input pInputText type="text" formControlName="address" />
+        <span *ngIf="check('address', 'whitespace')" class="p-error"
+          >Không được để trống mục này</span
+        >
       </div>
-      <div class="col-md-10">
-        <div class="m-3">
-          <label>Trạng thái</label>
-        </div>
-        <div class="m-3">
-          <select class="form-control" formControlName="isActive">
-            <option value="true">
-              <span class="badge bg-success">Đang hoạt động</span>
-            </option>
-            <option value="false">
-              <span class="badge bg-success">Ngưng hoạt động</span>
-            </option>
-          </select>
-        </div>
+      <div class="mb-3">
+        <label class="fw-medium mb-1"
+          >Trạng thái <span class="p-error">*</span></label
+        >
+        <p-dropdown [options]="isActive" formControlName="isActive">
+        </p-dropdown>
       </div>
-      <button class="m-3 btn btn-primary" type="submit" (click)="confirm()">
-        Cập nhật
-      </button>
+      <div class="d-flex justify-content-center align-items-center">
+        <button pButton type="submit" (click)="confirm()">
+          Cập nhật
+        </button>
+      </div>
+
       <!--        <button class="m-3 btn btn-primary" (click)="onBack()" >Quay lại</button>-->
     </div>
     <div class="col-md-6">
-      <div class="m-3">
+      <div>
         <div class="d-flex justify-content-start">
-          <h5>Thông tin hiệu trưởng</h5>
+          <label class="fw-medium p-content-fs">Thông tin hiệu trưởng</label>
 
           <i
             (click)="showDialog()"
