@@ -1058,9 +1058,12 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   }
   onResultScroll(e: any) {
     const element = e.target as HTMLElement;
-    if (element.offsetHeight + element.scrollTop + 1 == element.scrollHeight) {
+    if (element.offsetHeight + element.scrollTop + 1 >= element.scrollHeight) {
       this.pageNo++;
+      console.log(this.pageNo);
+
       this.assignmentService
+
         .filterAsm(
           this.issueId,
           this.authService.getSchoolFromJwt().schoolId,
