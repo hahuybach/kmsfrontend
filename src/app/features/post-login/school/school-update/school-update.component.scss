@@ -39,3 +39,16 @@
     border-color: $primary-hover;
   }
 }
+:host ::ng-deep {
+  .p-confirm-dialog-reject,
+  .p-confirm-dialog-accept {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}
