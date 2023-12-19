@@ -188,6 +188,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         }
         if (value['pageSize']) {
           this.pageSize = value['pageSize'];
+          if (this.pageSize != 5 && this.pageSize != 10 && this.pageSize != 15) {
+            this.toastService.showWarn('paging', 'Cảnh báo', 'Vui lòng không nhập số bản ghi sai với quy định')
+            this.pageSize = 5;
+          }
         }
         if (value['sortBy']) {
           this.sortBy = value['sortBy'];

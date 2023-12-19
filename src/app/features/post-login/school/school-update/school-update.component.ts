@@ -34,7 +34,7 @@ export class SchoolUpdateComponent implements OnInit {
     isActive: [false, Validators.required],
     principalEmail: [
       '',
-      [Validators.email],
+      [Validators.email, Validators.required],
       [this.validateEmailUnique.bind(this)],
     ],
     fullName: ['', [NoWhitespaceValidator(), Validators.required]],
@@ -93,7 +93,7 @@ export class SchoolUpdateComponent implements OnInit {
       .subscribe((data) => {
         this.school = data;
         this.principal = data.principal;
-        this.avatar = getFirstAndLastName(data.principal.user.fullName);
+        this.avatar = getFirstAndLastName(data.principal?.user.fullName);
         this.updateForm.patchValue({
           schoolId: this.school.schoolId,
           schoolName: this.school.schoolName,
@@ -228,7 +228,7 @@ export class SchoolUpdateComponent implements OnInit {
       });
       this.confirmationService.confirm({
         message:
-          'Bạn có xác nhận hành động này không? (nếu bạn cập nhật hiệu trưởng, tài khoản hiệu trưởng cũ sẽ bị vô hiệu hóa',
+          'Bạn có xác nhận hành động này không?',
         header: 'Xác nhận',
         icon: 'pi pi-exclamation-triangle',
         acceptLabel: 'Có',
@@ -248,25 +248,46 @@ export class SchoolUpdateComponent implements OnInit {
     this.isUpdatePrincipalEmail = true;
   }
 
-  onSubmitPrincipal() {
-    this.ngOnInit();
+  confirmUpdatePrincipal(){
     if (this.isUpdatePrincipalEmail == true && !this.updateForm.invalid) {
-      this.isLoading = true;
-      this.schoolService.updateSchool(this.updateForm.value).subscribe({
-        next: (data) => {
-          this.submitCompleted = true;
-          setTimeout(() => {
-            this.router.navigate(['school/' + this.school.schoolId]);
-          }, 1500);
+      this.confirmationService.confirm({
+        message:
+          'Bạn có xác nhận hành động này không? Tài khoản hiệu trưởng cũ sẽ bị vô hiệu hóa',
+        header: 'Xác nhận',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Có',
+        rejectLabel: 'Không',
+        accept: () => {
+          this.onSubmitPrincipal();
         },
-        error: (err) => {
-          this.isLoading = false;
-          this.toastService.showWarn('error', 'Lỗi', err.error.message);
-          console.log(err);
-        },
+        key: 'updateSchoolConfirm',
       });
-    } else {
+
+    }else {
       this.isSubmitted = true;
+    }
+
+
+  }
+  onSubmitPrincipal() {
+        this.ngOnInit();
+        if (this.isUpdatePrincipalEmail == true && !this.updateForm.invalid) {
+          this.isLoading = true;
+          this.schoolService.updateSchool(this.updateForm.value).subscribe({
+            next: (data) => {
+              this.submitCompleted = true;
+              setTimeout(() => {
+                this.router.navigate(['school/' + this.school.schoolId]);
+              }, 1500);
+            },
+            error: (err) => {
+              this.isLoading = false;
+              this.toastService.showWarn('error', 'Lỗi', err.error.message);
+              console.log(err);
+            },
+          });
+        } else {
+          this.isSubmitted = true;
     }
   }
 
