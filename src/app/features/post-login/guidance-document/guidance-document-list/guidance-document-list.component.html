@@ -89,7 +89,7 @@
       <button pButton class="reset-button" (click)="reset()">Đặt lại</button>
     </div>
     <div
-      class="col-md-12 d-flex flex-row justify-content-end align-items-center"
+      class="col-md-12 d-flex flex-row justify-content-end align-items-center mt-2"
     >
       <button
         pButton
@@ -105,8 +105,8 @@
       <thead>
         <tr>
           <th (click)="onSort('guidanceDocumentId')">
-            <div class="header-container">
-              <span class="icon-text">Mã</span>
+            <div class="header-container" [class.table-header-sort]="sortBy == 'guidanceDocumentId'">
+              <label class="icon-text me-1">Mã</label>
               <i
                 class="bi bi-sort-up"
                 *ngIf="
@@ -122,8 +122,8 @@
             </div>
           </th>
           <th (click)="onSort('guidanceDocumentName')">
-            <div class="header-container">
-              <span class="icon-text">Tiêu đề</span>
+            <div class="header-container" [class.table-header-sort]="sortBy == 'guidanceDocumentName'">
+              <label class="icon-text me-1">Tiêu đề</label>
               <i
                 class="bi bi-sort-up"
                 *ngIf="
@@ -139,8 +139,8 @@
             </div>
           </th>
           <th (click)="onSort('issue.createdDate')">
-            <div class="header-container">
-              <span class="icon-text">Kế hoạch kiểm tra</span>
+            <div class="header-container" [class.table-header-sort]="sortBy == 'issue.createdDate'">
+              <label class="icon-text me-1">Kế hoạch kiểm tra</label>
               <i
                 class="bi bi-sort-up"
                 *ngIf="
@@ -156,8 +156,8 @@
             </div>
           </th>
           <th (click)="onSort('createdDate')">
-            <div class="header-container">
-              <span class="icon-text">Ngày tạo</span>
+            <div class="header-container" [class.table-header-sort]="sortBy == 'createdDate'">
+              <label class="icon-text me-1">Ngày tạo</label>
               <i
                 class="bi bi-sort-up"
                 *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"
@@ -169,8 +169,8 @@
             </div>
           </th>
           <th (click)="onSort('account.user.fullName')">
-            <div class="header-container">
-              <span class="icon-text">Người tạo</span>
+            <div class="header-container" [class.table-header-sort]="sortBy == 'account.user.fullName'">
+              <label class="icon-text me-1">Người tạo</label>
               <i
                 class="bi bi-sort-up"
                 *ngIf="
