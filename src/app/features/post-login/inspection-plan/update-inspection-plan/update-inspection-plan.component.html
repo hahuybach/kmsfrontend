@@ -5,6 +5,12 @@
         rejectLabel="Hủy bỏ"
         key="changeTime"
 ></p-confirmDialog>
+<p-confirmDialog
+        [style]="{width: '50vw'}"
+        acceptLabel="Xác nhận"
+        rejectLabel="Hủy bỏ"
+        key="update"
+></p-confirmDialog>
 <p-dialog
         header="Xem tài liệu"
         [(visible)]="pdfPreviewVisibility"
@@ -283,6 +289,7 @@
             </div>
             <div class="col-md-4 d-flex align-items-start">
                 <app-inspection-plan-inspector-list class="w-100 h-100"
+                                                    [screen]="'update'"
                                                     [createButton]="true"
                                                     (toggleIssueListPopup)="changeInspectorVisible()"
                                                     [listEditable]="true"

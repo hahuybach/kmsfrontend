@@ -249,6 +249,7 @@
                 action === 'update' &&
                 hasAuthority('canModifyFolderAsmMetaData')
               "
+
               [min]="minDate"
               [max]="maxDate"
               class="tui-date"
@@ -570,6 +571,7 @@
                       text="{{ getAvatar(item.creator.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
+                      [size]="'s'"
                     >
                     </tui-avatar>
                   </div>
@@ -606,6 +608,7 @@
                       text="{{ getAvatar(item.actionCreator.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
+                      [size]="'s'"
                     >
                     </tui-avatar>
                   </div>
@@ -638,6 +641,7 @@
                   }}"
                   [rounded]="true"
                   [autoColor]="true"
+                  [size]="'s'"
                 >
                 </tui-avatar>
               </div>
@@ -671,6 +675,7 @@
                       text="{{ getAvatar(selectedAssignee?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
+                      [size]="'s'"
                     >
                     </tui-avatar>
                   </div>
@@ -693,6 +698,7 @@
                       text="{{ getAvatar(option?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
+                      [size]="'s'"
                     >
                     </tui-avatar>
                   </div>
@@ -700,14 +706,18 @@
                     <div>
                       <span class="font-weight-bold">{{
                         option?.user.fullName
-                        }}</span
+                      }}</span
                       >&nbsp;
                       <br />
                       <br />
-                      <span class="text-black-50 font-size-14" pTooltip="{{option?.email}}" tooltipPosition="top">
-                                          {{ option?.email }}</span>
+                      <span
+                        class="text-black-50 font-size-14"
+                        pTooltip="{{ option?.email }}"
+                        tooltipPosition="top"
+                      >
+                        {{ option?.email }}</span
+                      >
                     </div>
-
                   </div>
                 </div>
               </ng-template>
@@ -728,6 +738,7 @@
                     }}"
                     [rounded]="true"
                     [autoColor]="true"
+                    [size]="'s'"
                   >
                   </tui-avatar>
                 </div>
@@ -755,7 +766,7 @@
 
             <!-- </form> -->
           </div>
-          <div class="height-100">
+          <div *ngIf="action === 'info'" class="height-100">
             <span class="span-heading-color">Ngày tạo</span>
             <br />
             <span class="fw-medium mt-1">{{
@@ -846,6 +857,7 @@
       [draggable]="false"
       [resizable]="false"
       (onHide)="assignmentPopuptHideEvent()"
+      [modal]="true"
     >
       <div *ngIf="selectedAssignment" class="row assignment-container">
         <div class="col-md-8 left-box">
@@ -954,6 +966,7 @@
                       text="{{ getAvatar(option?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
+                      [size]="'s'"
                     >
                     </tui-avatar>
                   </div>
@@ -973,22 +986,26 @@
                       text="{{ getAvatar(option?.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
+                      [size]="'s'"
                     >
                     </tui-avatar>
                   </div>
-                  <div class="col-md-10 d-flex align-items-center" >
+                  <div class="col-md-10 d-flex align-items-center">
                     <div>
                       <span class="font-weight-bold">{{
                         option?.user.fullName
-                        }}</span
+                      }}</span
                       >&nbsp;
                       <br />
                       <br />
-                      <span class="text-black-50 font-size-14" pTooltip="{{option?.email}}" tooltipPosition="top">
-                      {{ option?.email }}</span
+                      <span
+                        class="text-black-50 font-size-14"
+                        pTooltip="{{ option?.email }}"
+                        tooltipPosition="top"
+                      >
+                        {{ option?.email }}</span
                       >
                     </div>
-
                   </div>
                 </div>
               </ng-template>
@@ -1007,9 +1024,11 @@
         </div>
       </div>
       <ng-template pTemplate="footer">
-        <button *ngIf="action == 'addchild'" pButton (click)="add()">
-          Tạo mới
-        </button>
+        <div class="d-flex justify-content-center align-items-center">
+          <button *ngIf="action == 'addchild'" pButton (click)="add()">
+            Tạo mới
+          </button>
+        </div>
       </ng-template>
     </p-dialog>
   </form>
@@ -1042,15 +1061,15 @@
         <tr>
           <th class="width-30">Công việc</th>
           <!-- <th>Người giao</th> -->
-          <th>Người làm</th>
-          <th>Hạn nộp</th>
-          <th>Trạng thái</th>
+          <th class="width-20">Người làm</th>
+          <th class="width-10">Hạn nộp</th>
+          <th class="width-15">Trạng thái</th>
           <th class="width-200"></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-rowNode>
         <tr [ttRow]="rowNode">
-          <td class="folder width-30">
+          <td class="folder width-30 td-content">
             <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
             <ng-container *ngIf="rowData.node.task">
               <i class="bi bi-file-earmark-check-fill file-icon"></i>
@@ -1063,7 +1082,7 @@
             </span>
           </td>
           <!-- <td>{{ rowData.node.assigner?.user.fullName }}</td>   -->
-          <td>
+          <td class="width-20">
             <div
               *ngIf="rowData.node.assignee?.user.fullName; else noAssignee"
               class="row"
@@ -1089,15 +1108,19 @@
               <span class="font-weight-bold">Chưa có người làm</span>
             </ng-template>
           </td>
-          <td>
+          <td class="width-10">
             <ng-container *ngIf="rowData.node?.deadline; else noDeadline">
               {{ rowData.node.deadline | date : "dd/MM/yyyy" }}
             </ng-container>
             <ng-template #noDeadline>
-              <span class="font-weight-bold">Chưa có hạn nộp</span>
+              <ng-container *ngIf="rowData.node?.parentId">
+                <span class="font-weight-bold">Chưa có</span>
+              </ng-container>
             </ng-template>
           </td>
-          <td>
+          <td class="width-15">
+<!--            <div class="status-item" [ngClass]="getStatusSeverityClass(rowData.node?.status.statusId)?getStatusSeverityClass(rowData.node?.status.statusId):'info'">-->
+<!--            </div>-->
             <p-tag
               [rounded]="true"
               [severity]="getStatusSeverity(rowData.node?.status.statusId)"

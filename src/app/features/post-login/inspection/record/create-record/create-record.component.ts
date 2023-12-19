@@ -4,11 +4,11 @@ import {AccountResponse} from "../../../../../models/account-response";
 import {inspectionPlanService} from "../../../../../services/inspectionplan.service";
 import {RecordService} from "../../../../../services/record.service";
 import {Subscription} from "rxjs";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 import {ToastService} from "../../../../../shared/toast/toast.service";
 import {TuiDay} from "@taiga-ui/cdk";
 import {dateToTuiDay, tuiDayToDate} from "../../../../../shared/util/util";
 import {NoWhitespaceValidator} from "../../../../../shared/validators/no-white-space.validator";
+import {ConfirmationService, ConfirmEventType} from "primeng/api";
 
 @Component({
   selector: 'app-create-record',
@@ -37,7 +37,8 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly recordService: RecordService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly confirmationService: ConfirmationService,
   ) {
   }
 
@@ -95,36 +96,48 @@ export class CreateRecordComponent implements OnInit, OnDestroy {
       this.recordForm.markAllAsTouched();
       return;
     }
-    const deadline = tuiDayToDate(this.recordForm.get('deadline')?.value);
-    deadline.setUTCHours(0);
-    const record = {
-      inspectionPlanId: this.inspectionPlanId,
-      taskName: this.recordForm.get('recordName')?.value,
-      description: this.recordForm.get('recordDescription')?.value,
-      deadline: deadline.toISOString(),
-      assigneeId: this.recordForm.get('assigneeId')?.value,
-    }
-    this.formSubmitted = true;
-    const saveTask = this.recordService.saveTask(record).subscribe({
-      next: (response) => {
-        this.formCompleted = true;
-        setTimeout(() =>{
-          this.resetForm();
-          this.createRecordPopupVisible = false;
-          this.initInspectionPlan();
-        },1000)
+
+    this.confirmationService.confirm({
+      message: "Bạn có tạo mục kiểm tra này?",
+      header: "Xác nhận tạo mục kiểm tra",
+      key: "createTask",
+      icon: 'bi bi-info-circle',
+      accept: () => {
+        const deadline = tuiDayToDate(this.recordForm.get('deadline')?.value);
+        deadline.setUTCHours(0);
+        const record = {
+          inspectionPlanId: this.inspectionPlanId,
+          taskName: this.recordForm.get('recordName')?.value,
+          description: this.recordForm.get('recordDescription')?.value,
+          deadline: deadline.toISOString(),
+          assigneeId: this.recordForm.get('assigneeId')?.value,
+        }
+        this.formSubmitted = true;
+        const saveTask = this.recordService.saveTask(record).subscribe({
+          next: (response) => {
+            this.formCompleted = true;
+            setTimeout(() =>{
+              this.resetForm();
+              this.createRecordPopupVisible = false;
+              this.initInspectionPlan();
+            },1000)
+          },
+          error: (error) => {
+            this.formFailed = true;
+            this.toastService.showError('createRecordError', "Tạo mục kiểm tra không thành công", error.error.message);
+            setTimeout(() => {
+              this.formSubmitted = false;
+              this.formFailed = false;
+              this.resetForm();
+            }, 1000);
+          }
+        });
+        this.subscriptions.push(saveTask);
       },
-      error: (error) => {
-        this.formFailed = true;
-        this.toastService.showError('createRecordError', "Tạo mục kiểm tra không thành công", error.error.message);
-        setTimeout(() => {
-          this.formSubmitted = false;
-          this.formFailed = false;
-          this.resetForm();
-        }, 1000);
+      reject: (type: ConfirmEventType) => {
+        return;
       }
-    });
-    this.subscriptions.push(saveTask);
+    })
   }
 
   private unsubscribeAll(): void {

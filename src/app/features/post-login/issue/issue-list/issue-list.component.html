@@ -92,9 +92,6 @@
                   </ng-template>
                 </p-columnFilter>
               </div>
-
-
-
             </div>
           </div>
           <div>
@@ -159,14 +156,6 @@
               </div>
             </div>
           </th>
-          <!-- <th class="th-small" pSortableColumn="createdDate">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                Ngày đăng
-                <p-sortIcon field="createdDate"></p-sortIcon>
-              </div>
-            </div>
-          </th> -->
           <th pSortableColumn="inspectorGroupSize">
             <div class="d-flex justify-content-between align-items-center">
               <div>
@@ -183,8 +172,6 @@
               </div>
             </div>
           </th>
-
-
           <th class="th-small"></th>
         </tr>
       </ng-template>
@@ -257,7 +244,9 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">Không tìm thấy kế hoạch nào</td>
+          <td colspan="6">
+            <p class="w-100 text-center mt-4 fw-medium fs-4">Không tìm thấy kế hoạch kiểm tra phù hợp</p>
+          </td>
         </tr>
       </ng-template>
     </p-table>

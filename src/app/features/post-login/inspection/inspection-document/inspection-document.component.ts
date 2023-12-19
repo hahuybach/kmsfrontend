@@ -69,8 +69,6 @@ export class InspectionDocumentComponent implements OnInit {
     this.changeDetailRecordVisible();
   }
 
-
-
   handleOnClickDeleteRecord(recordId: number) {
     this.confirmationService.confirm({
       message: 'Bạn có chắc muốn xóa mục kiểm tra này?',
@@ -85,8 +83,6 @@ export class InspectionDocumentComponent implements OnInit {
       },
     } )
   }
-
-
 
   deleteRecord(recordId: number) {
     const deleteRecord = this.recordService
@@ -110,14 +106,21 @@ export class InspectionDocumentComponent implements OnInit {
       });
   }
 
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      22: 'warning',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info';
+  }
+
   initInspectionData() {
     this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
       next: (data) => {
         this.inspectionDocument = data;
-        console.log(data)
       },
       error: (error) => {
-        console.log(error);
+        this.toastService.showError('inspection-document', "Lỗi", error.error.message)
       },
     });
   }

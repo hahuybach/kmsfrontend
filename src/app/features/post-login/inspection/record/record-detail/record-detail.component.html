@@ -46,13 +46,20 @@
         <label class="span-heading-color mb-1">Chi tiết</label>
         <p class="fw-medium">{{task.description}}</p>
       </div>
-      <div class="record-deadline col-md-12 mb-2">
+      <div class="record-deadline col-md-4 mb-2">
         <label class="span-heading-color mb-1">Hạn nộp</label>
         <p class="fw-medium"> {{task.deadline | date: "dd/MM/yyyy"}}</p>
       </div>
-      <div class="record-assignee col-md-12 mb-2">
+      <div class="record-assignee col-md-4 mb-2">
         <label class="span-heading-color mb-1">Người thực hiện</label>
         <p class="fw-medium">{{task.assignee.user.fullName}}</p>
+      </div>
+      <div class="record-assignee col-md-4 mb-2">
+        <label class="span-heading-color mb-1 w-100">Trạng thái</label>
+        <p-tag
+          [severity]="getStatusSeverity(task.status.statusId)"
+          [value]="task.status.statusName"
+        ></p-tag>
       </div>
       <form class="record-document col-md-12 mt-1" [formGroup]="documentForm" (ngSubmit)="onSubmit()">
         <h6 class="mat-headline-6 mb-1">Tài liệu</h6>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { SchoolResponse } from '../../../../models/school-response';
 import { SchoolService } from '../../../../services/school.service';
 import { Table } from 'primeng/table';
@@ -27,6 +27,18 @@ export class SchoolListComponent implements OnInit {
   isLoading = false;
   submitCompleted = false;
   filterVisible: Boolean = false;
+
+  @ViewChild('fileInput')
+  myInputVariable: ElementRef;
+
+
+  resetExcelFile() {
+    console.log(this.myInputVariable.nativeElement.files);
+    this.myInputVariable.nativeElement.value = "";
+    console.log(this.myInputVariable.nativeElement.files);
+  }
+
+
   constructor(
     private schoolService: SchoolService,
     private config: PrimeNGConfig,
@@ -159,7 +171,7 @@ export class SchoolListComponent implements OnInit {
     } else {
       // Handle error or provide feedback to the user
       this.toastService.showWarn(
-        'error',
+        'school-list',
         'Lỗi',
         'File tải lên phải ở dưới dạng excel (.xls)'
       );
@@ -168,9 +180,6 @@ export class SchoolListComponent implements OnInit {
   }
 
   onCreateSchoolByFile() {
-    if (!this.excelFile) {
-      this.toastService.showError('error', 'Thông báo', 'Vui lòng chọn 1 file');
-    }
     if (this.excelFile) {
       this.isLoading = true;
       this.schoolService.uploadFileExcel(this.excelFile).subscribe({
@@ -178,7 +187,7 @@ export class SchoolListComponent implements OnInit {
           this.submitCompleted = true;
           setTimeout(() => {
             this.toastService.showSuccess(
-              'error',
+              'school-list',
               'Thông báo',
               'Tạo ' + data.length + ' trường thành công'
             );
@@ -190,14 +199,21 @@ export class SchoolListComponent implements OnInit {
             });
           }, 1500);
           this.isLoading = false;
+          this.resetExcelFile();
         },
         error: (error) => {
-          this.toastService.showWarn('error', 'Lỗi', error.error.message);
+          this.isLoading = false;
+          this.toastService.showWarn('school-list', 'Lỗi', error.error.message);
+          this.resetExcelFile();
         },
       });
     }
   }
   confirm() {
+    if (!this.excelFile) {
+      this.toastService.showWarn('school-list', 'Thông báo', 'Vui lòng chọn 1 file');
+      return
+    }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận việc tạo trường bằng file excel này không?',
       header: 'Xác nhận',
@@ -206,24 +222,6 @@ export class SchoolListComponent implements OnInit {
       rejectLabel: 'Không',
       accept: () => {
         this.onCreateSchoolByFile();
-      },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toastService.showError(
-              'error',
-              'Hủy bỏ',
-              'Bạn đã hủy việc tạo trường'
-            );
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toastService.showWarn(
-              'error',
-              'Hủy bỏ',
-              'Bạn đã hủy việc tạo trường'
-            );
-            break;
-        }
       },
       key: 'createSchoolByExcel',
     });

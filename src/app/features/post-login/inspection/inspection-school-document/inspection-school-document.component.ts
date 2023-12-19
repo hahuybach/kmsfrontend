@@ -63,7 +63,6 @@ export class InspectionSchoolDocumentComponent implements OnInit {
         },
         error: (error) => {
           this.toastService.showError('error', 'Lỗi', error.error.message);
-          this.router.navigate(['/listAssignment']);
         },
       });
     // this.schoolService.findSchoolById(this.schoolId).subscribe({

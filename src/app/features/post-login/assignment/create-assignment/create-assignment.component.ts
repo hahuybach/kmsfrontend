@@ -51,6 +51,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
   issueId: number;
   data: any;
   sub: any[];
+  issueNotFound: any = false;
   constructor(
     private toastService: ToastService,
     private fb: FormBuilder,
@@ -96,10 +97,12 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.messageService.add({
-          severity: 'error',
-          summary: 'Lỗi',
-          detail: error.error.message,
+          severity: 'warn',
+          summary: 'Thông báo',
+          detail: 'Bạn chưa tạo kế hoạch kiểm tra',
+          life: 3000
         });
+        this.issueNotFound = true;
       },
     });
     // this.sub.push(method);

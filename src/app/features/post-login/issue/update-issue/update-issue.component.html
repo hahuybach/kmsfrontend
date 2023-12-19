@@ -44,9 +44,12 @@
           [rows]="5"
           [showCurrentPageReport]="true"
           [paginator]="true"
-          currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
           [filterDelay]="0"
-          [globalFilterFields]="['user.fullName ', 'roleName', 'school.schoolName']"
+          [globalFilterFields]="[
+        'user.fullName',
+        'roleName',
+        'school.schoolName'
+      ]"
         >
           <ng-template pTemplate="caption">
             <div
@@ -127,12 +130,12 @@
                 </div>
               </th>
               <th
-                pSortField="roles[0].roleName"
-                pSortableColumn="roles[0].roleName"
+                pSortField="roleName"
+                pSortableColumn="roleName"
               >
                 <div>
                   Chức vụ
-                  <p-sortIcon field="roles[0].roleName"></p-sortIcon>
+                  <p-sortIcon field="roleName"></p-sortIcon>
                 </div>
               </th>
               <th pSortableColumn="school.schoolName">

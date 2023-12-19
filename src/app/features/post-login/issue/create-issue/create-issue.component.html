@@ -89,7 +89,7 @@
           </div>
         </div>
         <div class="col-md-6 mb-2">
-          <label class="fw-medium mb-1">Hạn nộp<span class="p-error">*</span></label>
+          <label class="fw-medium mb-1">Hạn nộp kế hoạch thực hiện<span class="p-error">*</span></label>
           <tui-input-date
             tuiUnfinishedValidator="Vui lòng chọn hạn nộp"
             [min]="tomorrow"
@@ -336,7 +336,7 @@
               </div>
             </div>
           </div>
-          <div class="row document-item mb-4 border-top rounded py-2 mx-0" formGroupName="issueDoc_3">
+          <div class="row document-item border-top rounded py-2 mx-0" formGroupName="issueDoc_3">
             <div class="col-md-12 d-flex flex-row">
               <div class="col-md-6 pe-3">
                 <label class="fw-medium mb-1">Tên tài liệu<span class="p-error">*</span></label>
@@ -458,7 +458,7 @@
       </div>
       <div class="col-md-4 d-flex justify-content-start flex-column align-items-center">
         <app-issue-inspector-list
-          class="w-100"
+          class="w-100 h-100"
           [listEditable]="true"
           [selectedInspectors]="selectedInspectors"
           (toggleIssueListPopup)="changeInspectorVisible()"
@@ -479,7 +479,7 @@
           </span>
         </div>
       </div>
-      <div class="col-md-12 text-center save-button w-100 mb-3">
+      <div class="col-md-12 mt-2 text-center save-button w-100 mb-3">
         <button class="btn text-white">Lưu kế hoạch</button>
       </div>
     </form>

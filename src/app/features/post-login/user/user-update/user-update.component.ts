@@ -185,7 +185,7 @@ export class UserUpdateComponent implements OnInit, OnDestroy {
   confirm() {
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận muốn cập nhật người dùng này không?',
-      header: 'Xác nhân',
+      header: 'Xác nhận',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Có',
       rejectLabel: 'Không',

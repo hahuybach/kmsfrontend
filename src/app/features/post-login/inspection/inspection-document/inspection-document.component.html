@@ -30,7 +30,7 @@
   <div class="row">
     <h5 class="mat-headline-5 fw-medium mb-3">Chi tiết quyết định kiểm tra</h5>
     <div class="row">
-      <div class="col-md-12 d-flex flex-row mb-2 report-button">
+      <div class="col-md-6 d-flex flex-row mb-2 report-button">
         <button
           type="button"
           class="me-2"
@@ -47,6 +47,27 @@
           Kết luận
         </button>
       </div>
+      <div class="col-md-6 information-icon d-flex flex-row justify-content-end align-items-center">
+        <i class="bi bi-question-circle"
+           tuiDropdownHover
+           [tuiDropdown]="content"
+        ></i>
+        <ng-template #content>
+          <div class="container-fluid px-4 py-3 information-container">
+            <ul>
+              <li class="tui-list__item">
+                Biên bản chỉ được nộp sau khi phiên thanh tra bắt đầu
+              </li>
+              <li class="tui-list__item">
+                Báo cáo và kết luận chỉ được nộp sau khi hoàn thành các mục kiểm tra
+              </li>
+              <li class="tui-list__item">
+                Phiên kiểm tra chỉ hoàn thành khi báo cáo và kết luận được nộp
+              </li>
+            </ul>
+          </div>
+        </ng-template>
+      </div>
       <div class="form-content col-md-12 h-100">
         <div class="card">
           <p-table
@@ -58,7 +79,6 @@
             [rows]="5"
             [showCurrentPageReport]="true"
             [paginator]="true"
-            currentPageReportTemplate="Hiển thị từ {first} tới {last} trên tổng {totalRecords} bản ghi"
             [filterDelay]="0"
             [globalFilterFields]="['taskName', 'assigneeName']"
           >
@@ -162,6 +182,12 @@
                     <p-sortIcon field="deadline"></p-sortIcon>
                   </div>
                 </th>
+                <th pSortableColumn="status.statusId">
+                  <div>
+                    Trạng thái
+                    <p-sortIcon field="status.statusId"></p-sortIcon>
+                  </div>
+                </th>
                 <th *ngIf="inspectionDocument.isChief" class="th-small"></th>
               </tr>
             </ng-template>
@@ -182,6 +208,13 @@
                 <td>
                   <span class="p-column-title">Ngày nộp</span>
                   {{ taskList.deadline | date : "dd/MM/yyyy" }}
+                </td>
+                <td>
+                  <span class="p-column-title">Trạng thái</span>
+                  <p-tag
+                    [severity]="getStatusSeverity(taskList?.status?.statusId)"
+                    [value]="taskList?.status?.statusName"
+                  ></p-tag>
                 </td>
                 <td
                   style="text-align: center"
@@ -247,6 +280,7 @@
       class="mb-1 complete-button"
       pButton
       *ngIf="inspectionDocument && inspectionDocument.isChief"
+      [disabled]="inspectionDocument.isChief && !inspectionDocument.canFinish"
       [class.disabled-action-button]="
         inspectionDocument.isChief && !inspectionDocument.canFinish
       "

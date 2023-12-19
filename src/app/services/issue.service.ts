@@ -46,7 +46,7 @@ export class IssueService {
     const url = `${this.issueApiUrl}/`;
     return this.http.put(url, formData, {headers});
   }
-
+// lấy ra issue gần nhất
   public getCurrentActiveIssue(): Observable<any> {
     let headers = new HttpHeaders();
     const url = `${this.issueApiUrl}/current`;

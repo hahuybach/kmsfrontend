@@ -21,10 +21,10 @@ export class InspectionMytaskComponent implements OnInit {
     private readonly taskService: RecordService,
     private readonly route: ActivatedRoute,
     private readonly toastService: ToastService,
-    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   changeDetailRecordVisible() {
+    this.initTaskData();
     this.detailRecordPopupVisible = !this.detailRecordPopupVisible;
   }
 
@@ -33,10 +33,22 @@ export class InspectionMytaskComponent implements OnInit {
     this.changeDetailRecordVisible();
   }
 
+  getStatusSeverity(statusId: any): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      22: 'warning',
+      23: 'success',
+    };
+    return statusSeverityMap[statusId] || 'info';
+  }
+
   ngOnInit(): void {
     this.route.parent?.params.subscribe((parentParams) => {
       this.inspectionId = parentParams['id'];
     });
+    this.initTaskData();
+  }
+
+  initTaskData(){
     this.taskService.getInspectionMyTask(this.inspectionId).subscribe({
       next: (data) => {
         console.log(data)

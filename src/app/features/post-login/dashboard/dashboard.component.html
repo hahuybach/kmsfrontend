@@ -3,11 +3,13 @@
   <!-- DIRECTOR -->
   <ng-container *ngIf="isDirector || isViceDirector">
     <div class="row">
-      <div  class="col-md-4" *ngIf="isDirector">
+      <div class="col-md-4" *ngIf="isDirector">
         <div class="card mb-0 p-4">
           <div class="row">
             <div class="col-md-10">
               <h6 class="mat-headline-6 fs-18 mb-2">Số trường chưa kiểm tra</h6>
+              <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
+
               <label class="fs-24 fw-medium mb-2">{{
                 numberOfInspectedSchool
               }}</label>
@@ -33,13 +35,14 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4" >
+      <div class="col-md-4">
         <div class="card mb-0 p-4">
           <div class="row">
             <div class="col-md-10">
               <h6 class="mat-headline-6 fs-18 mb-2">
                 Kế hoạch thực hiện cần duyệt
               </h6>
+              <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
               <label class="fs-24 fw-medium mb-2">{{
                 numberOfIniPlanWait
               }}</label>
@@ -70,6 +73,7 @@
           <div class="row">
             <div class="col-md-10">
               <h6 class="mat-headline-6 fs-18 mb-2">Số trường đã nộp hồ sơ</h6>
+              <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
               <label class="fs-24 fw-medium mb-2">{{
                 numberOfSchoolCompletedAssignment
               }}</label>
@@ -99,11 +103,21 @@
       </div>
     </div>
     <div class="row mt-4 height-row-director">
-      <div class="col-md-4" *ngIf="isDirector" >
-        <p *ngIf="issueNotFound">
-          Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng
-          kế hoạch thanh tra
-        </p>
+      <div class="col-md-4" *ngIf="isDirector">
+        <ng-container *ngIf="issueNotFound">
+          <div class="card p-3 h-100">
+            <label class="fw-medium mb-3">
+              Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực
+              trạng kế hoạch thanh tra
+            </label>
+            <div
+              class="d-flex justify-content-center align-items-center no-img"
+            >
+              <img src="../../../../assets/img/not-found-data.svg" alt="" />
+            </div>
+          </div>
+        </ng-container>
+
         <div class="card p-3 h-100" *ngIf="inspectionPlanDataChart">
           <h6 class="mat-headline-6">Thực trạng kế hoạch thanh tra</h6>
           <div class="row">
@@ -145,10 +159,17 @@
           ></p-chart> -->
         </div>
       </div>
-      <p *ngIf="issueNotFound">
-        Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực trạng
-        kế hoạch thực hiện nhiệm vụ
-      </p>
+      <div class="col-md-4" *ngIf="issueNotFound">
+        <div class="card p-3 h-100">
+          <label class="fw-medium mb-3"
+            >Chưa có kế hoạch kiểm tra được khởi tạo, không thể thống kê thực
+            trạng kế hoạch thực hiện nhiệm vụ</label
+          >
+          <div class="d-flex justify-content-center align-items-center no-img">
+            <img src="../../../../assets/img/not-found-data.svg" alt="" />
+          </div>
+        </div>
+      </div>
       <div class="col-md-4" *ngIf="initiationPlanDataChart">
         <div class="card p-3 h-100">
           <h6 class="mat-headline-6">Thực trạng kế hoạch thực hiện</h6>
@@ -215,7 +236,11 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="isDirector" class="card mb-2 shortcut-item" (click)="viewTreeList()">
+            <div
+              *ngIf="isDirector"
+              class="card mb-2 shortcut-item"
+              (click)="viewTreeList()"
+            >
               <div
                 class="p-3 d-flex justify-content-between align-items-center"
               >
@@ -227,7 +252,11 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="isDirector" class="card mb-2 shortcut-item" (click)="viewTemplate()">
+            <div
+              *ngIf="isDirector"
+              class="card mb-2 shortcut-item"
+              (click)="viewTemplate()"
+            >
               <div
                 class="p-3 d-flex justify-content-between align-items-center"
               >
@@ -255,7 +284,7 @@
               <label class="fw-medium fs-18">Phiên thanh tra của bạn</label>
             </div>
             <div class="col-md-6 mb-2">
-<!--              <label class="fw-medium">Trạng thái</label>-->
+              <!--              <label class="fw-medium">Trạng thái</label>-->
               <p-dropdown
                 placeholder="Chọn 1 trạng thái"
                 [options]="inspectionPlanStatuses"
@@ -359,7 +388,7 @@
               <label class="fw-medium fs-18">Phiên thanh tra của bạn</label>
             </div>
             <div class="col-md-6 mb-2">
-<!--              <label class="fw-medium">Trạng thái</label>-->
+              <!--              <label class="fw-medium">Trạng thái</label>-->
               <p-dropdown
                 placeholder="Chọn 1 trạng thái"
                 [options]="inspectionPlanStatuses"
@@ -439,7 +468,7 @@
               <label class="fw-medium fs-18">Công việc hiện tại</label>
             </div>
             <div class="col-md-6 mb-2">
-<!--              <label class="fw-medium">Trạng thái</label>-->
+              <!--              <label class="fw-medium">Trạng thái</label>-->
               <p-dropdown
                 placeholder="Chọn 1 trạng thái"
                 [options]="statuses"
@@ -557,10 +586,12 @@
         </div>
       </div>
     </div>
-    <div class="row mt-3 height-row-principal" >
+    <div class="row mt-3 height-row-principal">
       <div class="col-md-4" *ngIf="isPrincipal">
         <div class="card p-3 h-100">
-          <label class="fw-medium fs-18 mb-3">Thống kê công việc toàn trường</label>
+          <label class="fw-medium fs-18 mb-3"
+            >Thống kê công việc toàn trường</label
+          >
           <div class="row" *ngIf="asmChartData">
             <div class="col-md-6">
               <tui-ring-chart
@@ -634,7 +665,7 @@
                   <i class="bi bi-file-earmark-fill"></i>
                 </div>
                 <div
-                  class="col-md-9  d-flex align-items-center"
+                  class="col-md-9 d-flex align-items-center"
                   pTooltip="{{ doc.guidanceDocumentName }}"
                   tooltipPosition="top"
                 >

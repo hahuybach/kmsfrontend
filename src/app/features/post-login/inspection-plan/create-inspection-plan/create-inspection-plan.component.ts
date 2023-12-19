@@ -313,29 +313,39 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     const file = this.inspectionPlanForm.get('documentInspectionPlanDto.documentFile')?.value
     formData.append(`file`, file, file.name);
 
-    this.createLoadingVisibility = true;
+    this.confirmationService.confirm({
+      message: 'Xác nhận tạo quyết định kiểm tra này?',
+      header: 'Xác nhận tạo',
+      key: 'changeTime',
+      icon: 'bi bi-info-circle',
+      accept: () => {
+        this.createLoadingVisibility = true;
 
-    const saveInspectionPlan = this.inspectionPlanService.saveInspectionPlan(formData).subscribe({
-      next: (response) => {
-        this.createComplete = true;
-        setTimeout(() => {
-          this.router.navigateByUrl("inspection-plan/" + response.inspectionPlan.inspectionPlanId);
-        }, 1000);
+        const saveInspectionPlan = this.inspectionPlanService.saveInspectionPlan(formData).subscribe({
+          next: (response) => {
+            this.createComplete = true;
+            setTimeout(() => {
+              this.router.navigateByUrl("inspection-plan/" + response.inspectionPlan.inspectionPlanId);
+            }, 1000);
+          },
+          error: (error) => {
+            this.createFailed = true;
+            this.toastService.showError('deleteInComplete', "Tạo kế hoạch không thành công", error.error.message);
+            if (error.error.message == "Mã văn bản trùng lặp") {
+              this.duplicateDocumentCode = true;
+            }
+            setTimeout(() => {
+              this.createLoadingVisibility = false;
+              this.createFailed = false;
+            }, 1000)
+          }
+        })
+        this.subscriptions.push(saveInspectionPlan);
       },
-      error: (error) => {
-        this.createFailed = true;
-        this.toastService.showError('deleteInComplete', "Tạo kế hoạch không thành công", error.error.message);
-        if (error.error.message == "Mã văn bản trùng lặp") {
-          this.duplicateDocumentCode = true;
-        }
-        setTimeout(() => {
-          this.createLoadingVisibility = false;
-          this.createFailed = false;
-        }, 1000)
+      reject: (type: ConfirmEventType) => {
+        return;
       }
-    })
-
-    this.subscriptions.push(saveInspectionPlan);
+    });
   }
 
   private unsubscribeAll(): void {

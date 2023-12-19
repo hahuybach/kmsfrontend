@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UserResponseForUserList} from "../../../../models/user-response-for-user-list";
 import {SchoolResponse} from "../../../../models/school-response";
 import {RoleResponse} from "../../../../models/role-response";
@@ -54,6 +54,16 @@ export class UserListComponent implements OnInit, OnDestroy {
   isLoading = false;
   submitCompleted = false;
   sub: any[] = []
+
+  @ViewChild('fileInput')
+  myInputVariable: ElementRef;
+
+
+  resetExcelFile() {
+    console.log(this.myInputVariable.nativeElement.files);
+    this.myInputVariable.nativeElement.value = "";
+    console.log(this.myInputVariable.nativeElement.files);
+  }
 
   setAuthority() {
     for (const argument of this.auth.getRoleFromJwt()) {
@@ -178,6 +188,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         }
         if (value['pageSize']) {
           this.pageSize = value['pageSize'];
+          if (this.pageSize != 5 && this.pageSize != 10 && this.pageSize != 15) {
+            this.toastService.showWarn('paging', 'Cảnh báo', 'Vui lòng không nhập số bản ghi sai với quy định')
+            this.pageSize = 5;
+          }
         }
         if (value['sortBy']) {
           this.sortBy = value['sortBy'];
@@ -367,7 +381,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     const file = event.target.files[0];
     if (file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
       this.excelFile = file;
-      console.log(this.excelFile);
 
     } else {
       // Handle error or provide feedback to the user
@@ -375,6 +388,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       event.target.value = null;
 
     }
+
   }
 
   onCreateUserByFile() {
@@ -392,13 +406,14 @@ export class UserListComponent implements OnInit, OnDestroy {
           }, 1500)
           this.isLoading = false;
           this.excelFile = null;
-
-
+          this.resetExcelFile();
         },
         error: (error) => {
+          this.submitCompleted = false;
           this.isLoading = false;
           this.toastService.showWarn('userListError', "Lỗi", error.error.message)
           this.excelFile = null;
+          this.resetExcelFile();
 
         }
       });
@@ -428,6 +443,10 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   confirm() {
+    if (!this.excelFile) {
+      this.toastService.showWarn('userListError', 'Thông báo', 'Vui lòng chọn 1 file');
+      return
+    }
     this.confirmationService.confirm({
       message: 'Bạn có xác nhận việc tạo người dùng bằng file excel này không?',
       header: 'Xác nhận',
@@ -438,16 +457,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.onCreateUserByFile()
 
       },
-      reject: (type: ConfirmEventType) => {
-        switch (type) {
-          case ConfirmEventType.REJECT:
-            this.toastService.showError('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
-            break;
-          case ConfirmEventType.CANCEL:
-            this.toastService.showWarn('userListError', 'Hủy bỏ', 'Bạn đã hủy việc tạo người dùng');
-            break;
-        }
-      }, key: 'createUserByExcel'
+      key: 'createUserByExcel'
     });
   }
 

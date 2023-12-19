@@ -1,6 +1,6 @@
 <form [formGroup]="assignmentForm">
   <p-dialog
-    header="Chi tiết công việc"
+    [header]="action === 'update' ? 'Cập nhật công việc' : 'Tạo mới công việc'"
     [(visible)]="assignmentVisible"
     [style]="{ width: '1400px' }"
     [draggable]="false"
@@ -108,7 +108,7 @@
           </div>
           <div>
             <button
-              [disabled]="assignments.length != 0"
+              [disabled]="assignments.length != 0 || issueNotFound"
               pButton
               (click)="openDetail(null, 'addroot')"
             >
@@ -169,7 +169,7 @@
       </ng-template>
       <ng-template pTemplate="footer">
         <div class="p-2">
-          <button pButton (click)="sendToSchools()">Gửi template</button>
+          <button [disabled]="assignments.length != 0 || issueNotFound" pButton (click)="sendToSchools()">Gửi template</button>
         </div>
       </ng-template>
     </p-treeTable>
