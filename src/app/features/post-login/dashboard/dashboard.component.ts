@@ -290,7 +290,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
           .getNumberOfInspectedSchool(this.issue?.issueId)
           .subscribe({
             next: (data) => {
-              this.numberOfInspectedSchool = data;
+              if (data) {
+                this.numberOfInspectedSchool = data;
+
+              }
+
               console.log(this.numberOfInspectedSchool);
             },
             error: (error) => {
@@ -301,7 +305,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
           .getDashBoardInitiationPlanResponse(this.issue?.issueId)
           .subscribe({
             next: (data) => {
-              this.numberOfIniPlanInProgress = data.numberOfIniPlanInProgress;
+
+              this.numberOfIniPlanInProgress = data.numberOfIniPlanInProgress ;
               this.numberOfIniPlanWait = data.numberOfIniPlanWait;
               this.numberOfIniPlanApprove = data.numberOfIniPlanApprove;
               this.numberOfIniPlanNotApprove = data.numberOfIniPlanNotApprove;

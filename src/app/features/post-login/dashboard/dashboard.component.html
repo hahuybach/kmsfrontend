@@ -8,6 +8,8 @@
           <div class="row">
             <div class="col-md-10">
               <h6 class="mat-headline-6 fs-18 mb-2">Số trường chưa kiểm tra</h6>
+              <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
+
               <label class="fs-24 fw-medium mb-2">{{
                 numberOfInspectedSchool
               }}</label>
@@ -40,6 +42,7 @@
               <h6 class="mat-headline-6 fs-18 mb-2">
                 Kế hoạch thực hiện cần duyệt
               </h6>
+              <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
               <label class="fs-24 fw-medium mb-2">{{
                 numberOfIniPlanWait
               }}</label>
@@ -70,6 +73,7 @@
           <div class="row">
             <div class="col-md-10">
               <h6 class="mat-headline-6 fs-18 mb-2">Số trường đã nộp hồ sơ</h6>
+              <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
               <label class="fs-24 fw-medium mb-2">{{
                 numberOfSchoolCompletedAssignment
               }}</label>
