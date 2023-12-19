@@ -131,7 +131,6 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     formData.append(`file`, file, file.name);
 
     this.updateDocumentSubmitted = true;
-    console.log("document " + document.documentTaskDto?.documentName);
     const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
       next: (response) => {
         this.updateDocumentCompleted = true;
@@ -142,8 +141,10 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         }, 1000);
       },
       error: (error) => {
-        console.log(error)
         this.updateDocumentFailed = true;
+        this.toastService.showError('deleteInComplete', "Lỗi cập nhật", error.error.message);
+        if (error.error.message === "Mã văn bản trùng lặp"){
+        }
         setTimeout(() => {
           this.updateDocumentSubmitted = false;
           this.updateDocumentFailed = false;
