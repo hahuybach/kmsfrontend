@@ -286,6 +286,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.issue = data.issueDto;
         console.log(this.issue);
+        if (!this.issue?.issueId){
+          this.issueNotFound = true;
+          return
+        }
         const sub3 = this.inspectionPlanService
           .getNumberOfInspectedSchool(this.issue?.issueId)
           .subscribe({
