@@ -282,7 +282,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         );
       },
     });
-    const sub2 = this.issueService.getCurrentActiveIssue().subscribe({
+    const sub2 = this.issueService.getLastestIssue().subscribe({
       next: (data) => {
         this.issue = data.issueDto;
         console.log(this.issue);
@@ -380,7 +380,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   setInitDataForSpecialist() {
-    const sub = this.issueService.getCurrentActiveIssue().subscribe({
+    const sub = this.issueService.getLastestIssue().subscribe({
       next: (data) => {
         this.issue = data.issueDto;
         const sub2 = this.inspectionPlanService
@@ -425,7 +425,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   setInitDataForPrincipal() {
-    this.issueService.getCurrentActiveIssue().subscribe({
+    this.issueService.getLastestIssue().subscribe({
       next: (data) => {
         this.issue = data.issueDto;
         this.inspectionPlanService

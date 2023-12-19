@@ -9,8 +9,8 @@
     </div>
     <div>
       <ul>
-        <li class="p-2 rounded" routerLinkActive="active">
-          <a routerLink="" [routerLink]="['/dashboard']" *ngIf="!isAdmin">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="!isAdmin">
+          <a routerLink="" [routerLink]="['/dashboard']" >
             <div>
               <i class="bi bi-bar-chart"></i>
               &nbsp; Trang chủ
@@ -37,16 +37,16 @@
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active">
-          <a class="" [routerLink]="['/inspection-plan']" *ngIf="!isAdmin">
+        <li class="p-2 rounded" routerLinkActive="active"  *ngIf="!isAdmin">
+          <a class="" [routerLink]="['/inspection-plan']">
             <div>
               <i class="bi bi-file-earmark-person"></i>
               &nbsp; Thanh tra
             </div>
           </a>
         </li>
-        <li class="p-2 rounded" routerLinkActive="active">
-          <a class="" [routerLink]="['/guidance-document']" *ngIf="!isAdmin">
+        <li class="p-2 rounded" routerLinkActive="active" *ngIf="!isAdmin">
+          <a class="" [routerLink]="['/guidance-document']" >
             <div>
               <i class="bi bi-clipboard2-check"></i>
               &nbsp; Văn bản bổ sung

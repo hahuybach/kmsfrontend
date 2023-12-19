@@ -169,7 +169,7 @@
       </ng-template>
       <ng-template pTemplate="footer">
         <div class="p-2">
-          <button [disabled]="assignments.length != 0 || issueNotFound" pButton (click)="sendToSchools()">Gửi template</button>
+          <button [disabled]="assignments.length == 0 || issueNotFound" pButton (click)="sendToSchools()">Gửi template</button>
         </div>
       </ng-template>
     </p-treeTable>

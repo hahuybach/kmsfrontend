@@ -51,7 +51,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
   issueId: number;
   data: any;
   sub: any[];
-  issueNotFound: any = false;
+  issueNotFound: boolean = false;
   constructor(
     private toastService: ToastService,
     private fb: FormBuilder,
@@ -94,6 +94,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
         this.data = data;
         this.assignments = [data.assignmentListDto];
         console.log(this.assignments);
+        console.log("OKKKK " +this.issueNotFound)
       },
       error: (error) => {
         this.messageService.add({
@@ -103,6 +104,8 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
           life: 3000
         });
         this.issueNotFound = true;
+        console.log("OKKKK " +this.issueNotFound)
+
       },
     });
     // this.sub.push(method);
