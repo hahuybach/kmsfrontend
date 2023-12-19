@@ -33,12 +33,12 @@ import {
   TuiAvatarModule,
 } from '@taiga-ui/kit';
 import { DataNotExistComponent } from '../components/data-not-exist/data-not-exist.component';
-import {CheckboxModule} from "primeng/checkbox";
-import {TuiRingChartModule} from '@taiga-ui/addon-charts';
-import {TuiMoneyModule} from '@taiga-ui/addon-commerce';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TuiRingChartModule } from '@taiga-ui/addon-charts';
+import { TuiMoneyModule } from '@taiga-ui/addon-commerce';
 import { StepsModule } from 'primeng/steps';
 import { EllipsisPipe } from './pipes/ellipsis.pipe';
-import {TuiDropdownModule} from '@taiga-ui/core';
+import { TuiCalendarModule, TuiDropdownModule } from '@taiga-ui/core';
 
 @NgModule({
   imports: [
@@ -90,7 +90,8 @@ export class MyModule {}
     TuiAvatarModule,
     TuiAvatarModule,
     StepsModule,
-    TuiDropdownModule
+    TuiDropdownModule,
+    TuiCalendarModule,
   ],
   exports: [
     InputTextModule,
@@ -130,7 +131,8 @@ export class MyModule {}
     TuiAvatarModule,
     StepsModule,
     EllipsisPipe,
-    TuiDropdownModule
+    TuiDropdownModule,
+    TuiCalendarModule,
   ],
 })
 export class SharedModule {

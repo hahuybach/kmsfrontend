@@ -15,6 +15,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
 import { AuthService } from '../../../../services/auth.service';
 import { ToastService } from '../../../../shared/toast/toast.service';
+import { TuiDay } from '@taiga-ui/cdk';
+import {
+  dateToTuiDay,
+  tuiDayCalendarToDate,
+  tuiDayToDate,
+} from 'src/app/shared/util/util';
 @Component({
   selector: 'app-school-initiation-plan-detail',
   templateUrl: './school-initiation-plan-detail.component.html',
@@ -30,7 +36,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   fileStatus = false;
   iconStatus = true;
   buttonApproveStatus = false;
-  minDate: Date;
+  minDate: TuiDay;
   today: Date = new Date();
   pdfUrl: string | undefined;
   pdfLoaded: boolean = false;
@@ -42,7 +48,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
   submitCompleted = false;
   isFileLoading = false;
   pdfPreviewVisibility: boolean = false;
-
+  newDeadlineValue: TuiDay = dateToTuiDay(new Date());
   breadCrumb = [
     {
       caption: 'Trang chủ',
@@ -53,13 +59,13 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       routerLink: '/school-initiation-plan/list',
     },
     {
-      caption: 'Chi tiết kế hoạch thực hiện'
+      caption: 'Chi tiết kế hoạch thực hiện',
     },
   ];
 
   ngOnInit(): void {
     console.log('on init ' + this.auth.getJwtFromCookie());
-    this.minDate = new Date();
+    this.minDate = dateToTuiDay(new Date());
     this.route.params
       .pipe(
         switchMap((params) => {
@@ -257,7 +263,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     let newDeadline = this.inputFileForm.get('deadline')?.value;
     let formattedDeadline = this.datePipe.transform(newDeadline, 'dd/MM/yyyy');
 
-    console.log()
+    console.log();
     this.confirmationService.confirm({
       message:
         'Bạn có chắc chắn không phê duyệt kế hoạch này và thay đổi lịch sang ngày ' +
@@ -267,8 +273,8 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmSchoolInitiationplan',
       accept: () => {
-        newDeadline?.setDate(newDeadline?.getDate())
-        console.log(this.setDateTimeToISO(newDeadline))
+        newDeadline?.setDate(newDeadline?.getDate());
+        console.log(this.setDateTimeToISO(newDeadline));
         this.uploadFileVisible = false;
         this.resetDeadlineVisible = false;
         this.isLoading = true;
@@ -309,7 +315,6 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
             console.log(error);
           },
         });
-
       },
       reject: (type: any) => {},
     });
@@ -345,20 +350,25 @@ export class SchoolInitiationPlanDetailComponent implements OnInit {
     this.safePdfUrl = '';
     this.pdfLoaded = false;
   }
-   setDateTimeToISO(date:Date|null|undefined) {
-    if(date){
+  setDateTimeToISO(date: Date | null | undefined) {
+    if (date) {
       // Set the time to 23:59:59
       date.setHours(23);
       date.setMinutes(59);
       date.setSeconds(59);
 
       // Convert the date to local ISO string format (Vietnam time zone)
-      const options = { timeZone: "Asia/Ho_Chi_Minh" };
-      const isoString = date.toLocaleString("en-US", options);
+      // const options = { timeZone: 'Asia/Ho_Chi_Minh' };
+      const isoString = date.toISOString();
 
       return isoString;
     }
     // Set the time to 23:59:59
-    return ''
+    return '';
+  }
+  onDayClick(day: TuiDay): void {
+    this.newDeadlineValue = day;
+    console.log(tuiDayCalendarToDate(day));
+    this.inputFileForm.get('deadline')?.setValue(tuiDayCalendarToDate(day));
   }
 }
