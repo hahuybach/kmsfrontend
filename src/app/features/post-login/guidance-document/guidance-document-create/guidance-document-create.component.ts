@@ -209,7 +209,7 @@ export class GuidanceDocumentCreateComponent implements OnInit, OnDestroy {
             this.toast.showWarn(
                 'toastGuidanceDocumentCreate',
                 'Lỗi',
-                'Văn bản chỉ đạo phải ở dưới định dạng pdf'
+                'Văn bản chỉ đạo phải ở dưới định dạng PDF'
             );
             event.target.value = null;
         }
@@ -257,11 +257,11 @@ export class GuidanceDocumentCreateComponent implements OnInit, OnDestroy {
 
     confirm() {
         this.confirmationService.confirm({
-            message: 'Bạn có xác nhận yêu cầu này không?',
-            header: 'Xác nhận',
+            message: 'Xác nhận tạo mới văn bản chỉ đạo?',
+            header: 'Xác nhận tạo mới',
             icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Có',
-            rejectLabel: 'Không',
+            acceptLabel: 'Xác nhận',
+            rejectLabel: 'Hủy bỏ',
             key: 'confirmGuidanceDocumentCreate',
             accept: () => {
                 this.onSubmit();

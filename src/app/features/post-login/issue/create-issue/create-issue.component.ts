@@ -241,19 +241,7 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
     return (this.issueForm.get('issueDocList.issueDoc_3') as FormGroup).controls['documentFile'];
   }
 
-  public findInvalidControls() {
-    const invalid = [];
-    const controls = this.issueForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    return invalid;
-  }
-
   onSubmit() {
-    console.log(this.findInvalidControls());
     if (this.issueForm.invalid) {
       this.issueForm.markAllAsTouched();
       return;

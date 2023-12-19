@@ -1,5 +1,23 @@
-$primary: #4253F0;
+@import "../../../../assets/scss/base";
 $base: #C8C8D0;
+
+.p-inputtext,
+.p-inputtextarea {
+  border-radius: 8px;
+}
+
+:host ::ng-deep {
+  .p-button {
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+}
 
 .login-form {
   div {
@@ -13,6 +31,9 @@ $base: #C8C8D0;
   a {
     text-decoration: none;
     color: $primary;
+    &:hover{
+      text-decoration: underline;
+    }
   }
 
   input {
