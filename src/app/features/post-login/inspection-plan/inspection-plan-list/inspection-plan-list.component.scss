@@ -362,3 +362,10 @@
 .search-with-icon{
   font-size: 16px;
 }
+
+.table-header-sort{
+  color: $primary;
+  i{
+    margin-top: 0.3rem;
+  }
+}
