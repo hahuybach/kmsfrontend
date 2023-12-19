@@ -325,6 +325,8 @@
                 class="d-flex justify-content-evenly flex-row align-items-center"
               >
                 <button
+                  pTooltip="Chi tiết"
+                  tooltipPosition="top"
                   type="button"
                   (click)="onDetail(user.userId)"
                   class="action-button"
@@ -332,6 +334,8 @@
                   <i class="bi bi-info-circle-fill"></i>
                 </button>
                 <button
+                  pTooltip="Chỉnh sửa"
+                  tooltipPosition="top "
                   type="button"
                   class="action-button"
                   (click)="onUpdate(user.userId)"
