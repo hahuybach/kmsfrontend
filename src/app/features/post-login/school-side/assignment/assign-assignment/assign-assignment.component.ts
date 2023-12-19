@@ -205,7 +205,10 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         console.log('run here');
         const id = params['id'];
         console.log('****ID:' + id + '*****');
-        if (id > 0) this.openDetailRowNode({ assignmentId: id }, 'info');
+        if (id > 0){
+          this.openDetailRowNode({ assignmentId: id }, 'info');
+
+        } ;
       }
     });
   }
@@ -503,6 +506,18 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     };
 
     return statusSeverityMap[statusId] || 'info';
+  }
+  getStatusSeverityClass(statusId: number): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      13: 'warning',
+      14: 'info',
+      15: 'success',
+      16: 'warning',
+      17: 'success',
+      18: 'danger',
+    };
+    console.log(statusSeverityMap[statusId])
+    return 'p-tag p-tag-' + statusSeverityMap[statusId] ;
   }
 
   // PREVIEW PDF
@@ -990,8 +1005,6 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         this.restoreNodeState(node.children);
       }
     });
-    console.log('restore');
-    console.log(this.nodeStateMap);
   }
   expandNodesByIds(nodeIds: number[]) {
     for (let i = 0; i < nodeIds.length; i++) {
