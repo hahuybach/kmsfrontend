@@ -960,13 +960,13 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         url = '../../../../../assets/img/pdf_logo.svg';
         break;
       case 'application/msword':
-        url = '../../../../../assets/img/doc.svg';
+        url = '../../../../../assets/img/doc_logo.svg';
         break;
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        url = '../../../../../assets/img/doc.svg';
+        url = '../../../../../assets/img/doc_logo.svg';
         break;
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        url = '../../../../../assets/img/xls.svg';
+        url = '../../../../../assets/img/xls_logo.svg';
         break;
     }
     return url;
