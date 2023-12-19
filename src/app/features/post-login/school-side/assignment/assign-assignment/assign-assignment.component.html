@@ -249,7 +249,6 @@
                 action === 'update' &&
                 hasAuthority('canModifyFolderAsmMetaData')
               "
-
               [min]="minDate"
               [max]="maxDate"
               class="tui-date"
@@ -318,7 +317,11 @@
                       <div
                         class="file-item col-md-11 py-1 d-flex"
                         (click)="
-                          openNewTab(item.documentLink, item.fileExtension)
+                          openNewTab(
+                            item.documentLink,
+                            item.fileExtension,
+                            item.documentName
+                          )
                         "
                         pTooltip="{{ item.documentName }}..{{
                           getFileExtension(item.fileExtension)
@@ -414,7 +417,11 @@
                       <div
                         class="file-item py-1 d-flex"
                         (click)="
-                          openNewTab(item.documentLink, item.fileExtension)
+                          openNewTab(
+                            item.documentLink,
+                            item.fileExtension,
+                            item.documentName
+                          )
                         "
                         pTooltip="{{ item.documentName }}..{{
                           getFileExtension(item.fileExtension)
@@ -1110,7 +1117,9 @@
           </td>
           <td class="width-10">
             <ng-container *ngIf="rowData.node?.deadline; else noDeadline">
-              {{ rowData.node.deadline | date : "dd/MM/yyyy" }}
+              <div [ngClass]="rowData.node.late ? 'ass-late' : ''">
+                {{ rowData.node.deadline | date : "dd/MM/yyyy" }}
+              </div>
             </ng-container>
             <ng-template #noDeadline>
               <ng-container *ngIf="rowData.node?.parentId">
@@ -1119,8 +1128,8 @@
             </ng-template>
           </td>
           <td class="width-15">
-<!--            <div class="status-item" [ngClass]="getStatusSeverityClass(rowData.node?.status.statusId)?getStatusSeverityClass(rowData.node?.status.statusId):'info'">-->
-<!--            </div>-->
+            <!--            <div class="status-item" [ngClass]="getStatusSeverityClass(rowData.node?.status.statusId)?getStatusSeverityClass(rowData.node?.status.statusId):'info'">-->
+            <!--            </div>-->
             <p-tag
               [rounded]="true"
               [severity]="getStatusSeverity(rowData.node?.status.statusId)"
