@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {NoWhitespaceValidator} from "../../../../shared/validators/no-white-space.validator";
 import {dateToTuiDay, tuiDayToDate} from "../../../../shared/util/util";
 import {TuiDay} from "@taiga-ui/cdk";
-import {SelectItem} from "primeng/api";
+import {ConfirmationService, ConfirmEventType, SelectItem} from "primeng/api";
 import {InspectionplanInspectorlistService} from "../../../../services/inspectionplan-inspectorlist.service";
 import {InspectorService} from "../../../../services/inspector.service";
 import {UserResponseForUserList} from "../../../../models/user-response-for-user-list";
@@ -56,7 +56,8 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
     private readonly inspectorService: InspectorService,
     private readonly issueService: IssueService,
     private readonly router: Router,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly confirmationService: ConfirmationService,
   ) {
   }
 
@@ -247,61 +248,69 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const endDate = tuiDayToDate(this.issueForm.get('endDate')?.value);
-    endDate.setUTCHours(0);
+    this.confirmationService.confirm({
+      message: 'Xác nhận tạo kế hoạch kiểm tra năm học?',
+      header: 'Xác nhận tạo',
+      key: 'createIssue',
+      icon: 'bi bi-exclamation-triangle',
+      accept: () => {
+        const endDate = tuiDayToDate(this.issueForm.get('endDate')?.value);
+        endDate.setUTCHours(0);
 
-    const formData = new FormData();
-    const issue = {
-      issueName: this.issueForm.get('issueName')?.value,
-      inspectorId: this.issueForm.get('inspectorId')?.value,
-      description: this.issueForm.get('issueDetail')?.value,
-      initiationPlanDeadline: endDate.toISOString(),
-      documentIssues: [],
-    }
+        const formData = new FormData();
+        const issue = {
+          issueName: this.issueForm.get('issueName')?.value,
+          inspectorId: this.issueForm.get('inspectorId')?.value,
+          description: this.issueForm.get('issueDetail')?.value,
+          initiationPlanDeadline: endDate.toISOString(),
+          documentIssues: [],
+        }
 
-    for (let i = 1; i <= 3; i++) {
-      const docFileControl = this.issueForm.get(`issueDocList.issueDoc_${i}.documentFile`);
-      console.log(docFileControl?.value.name);
-      if (docFileControl?.value) {
-        const docFile = docFileControl.value;
-        formData.append(`files`, docFile, docFile.name);
+        for (let i = 1; i <= 3; i++) {
+          const docFileControl = this.issueForm.get(`issueDocList.issueDoc_${i}.documentFile`);
+          console.log(docFileControl?.value.name);
+          if (docFileControl?.value) {
+            const docFile = docFileControl.value;
+            formData.append(`files`, docFile, docFile.name);
 
-        const documentName = this.issueForm.get(`issueDocList.issueDoc_${i}.documentName`)?.value;
-        const documentTypeId = this.issueForm.get(`issueDocList.issueDoc_${i}.documentTypeId`)?.value;
-        const documentCode = this.issueForm.get(`issueDocList.issueDoc_${i}.documentCode`)?.value;
+            const documentName = this.issueForm.get(`issueDocList.issueDoc_${i}.documentName`)?.value;
+            const documentTypeId = this.issueForm.get(`issueDocList.issueDoc_${i}.documentTypeId`)?.value;
+            const documentCode = this.issueForm.get(`issueDocList.issueDoc_${i}.documentCode`)?.value;
 
-        console.log(documentName, documentTypeId, documentCode)
+            console.log(documentName, documentTypeId, documentCode)
 
-        // @ts-ignore
-        issue.documentIssues.push({
-          documentName,
-          documentTypeId,
-          documentCode,
-        });
-      }
-    }
-
-    formData.append("issue", new Blob([JSON.stringify(issue)], {type: "application/json"}));
-
-    this.formSubmitted = true;
-    const saveIssue = this.issueService.saveIssue(formData).subscribe({
-      next: (response) => {
-        this.formCompleted = true;
-        setTimeout(() => {
-          this.router.navigateByUrl("issue/" + response.issue.issueId);
-        }, 1000);
+            // @ts-ignore
+            issue.documentIssues.push({
+              documentName,
+              documentTypeId,
+              documentCode,
+            });
+          }
+        }
+        formData.append("issue", new Blob([JSON.stringify(issue)], {type: "application/json"}));
+        this.formSubmitted = true;
+        const saveIssue = this.issueService.saveIssue(formData).subscribe({
+          next: (response) => {
+            this.formCompleted = true;
+            setTimeout(() => {
+              this.router.navigateByUrl("issue/" + response.issue.issueId);
+            }, 1000);
+          },
+          error: (err) => {
+            this.formFailed = true;
+            this.toastService.showError('createIssue', "Lỗi tạo kế hoạch triển khai", err.error.message);
+            setTimeout(() => {
+              this.formSubmitted = false;
+              this.formFailed = false;
+            }, 1000);
+          }
+        })
+        this.subscriptions.push(saveIssue);
       },
-      error: (err) => {
-        this.formFailed = true;
-        this.toastService.showError('deleteInComplete', "Lỗi tạo kế hoạch triển khai", err.error.message);
-        setTimeout(() => {
-          this.formSubmitted = false;
-          this.formFailed = false;
-        }, 1000);
+      reject: (type: ConfirmEventType) => {
+        return;
       }
-    })
-
-    this.subscriptions.push(saveIssue);
+    });
   }
 
   private unsubscribeAll(): void {
