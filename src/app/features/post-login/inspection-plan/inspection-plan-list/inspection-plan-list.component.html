@@ -303,7 +303,7 @@
             </button>
 
             <button
-              *ngIf="plan.status.statusId === 19"
+              *ngIf="plan.status.statusId === 19 && isDirector"
               class="action-button"
               type="button"
               (click)="onUpdate(plan.inspectionPlanId)"
