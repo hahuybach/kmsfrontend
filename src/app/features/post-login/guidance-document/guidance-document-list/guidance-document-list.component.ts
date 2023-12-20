@@ -11,6 +11,7 @@ import {dateToTuiDay, toIsoStringUrl, tuiDayToDate, unSub} from "../../../../sha
 import {DatePipe} from "@angular/common";
 import {attrToNumber} from "ag-grid-community/dist/lib/utils/generic";
 import {TuiDayRange} from "@taiga-ui/cdk";
+import {IssueResponse} from "../../../../models/issue-response";
 
 @Component({
     selector: 'app-guidance-document-list',
@@ -51,7 +52,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
         Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY,   Role.CHIEF_NUTRITION, Role.NUTRITION_EMP];
     sub: any[] = []
     createDateRange: any;
-
+    issue: IssueResponse
     setAuth() {
         if (this.auth.getRolesFromCookie()) {
             for (const argument of this.auth.getRoleFromJwt()) {
@@ -149,7 +150,7 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
         return new Promise<boolean>((resolve, reject) => {
             this.issueService.getLastestIssue().subscribe({
                 next: (result) => {
-                    if (result.issueDto.status.statusId == 2){
+                    if (result.issueDto.status.statusId == 4){
                       this.showError('Kế hoạch kiểm tra đã kết thúc');
                     }
                     this.issueId = result.issueDto.issueId;
@@ -164,6 +165,13 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        const sub3 = this.issueService.getLastestIssue().subscribe({
+          next: (data) => {
+            this.issue = data.issueDto;
+          },error : (error) => {
+
+          }
+        })
         this.setAuth()
         const sub = this.issueService.getIssueDropDownResponse()
             .subscribe({

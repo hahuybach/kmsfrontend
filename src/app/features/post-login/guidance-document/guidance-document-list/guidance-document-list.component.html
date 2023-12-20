@@ -95,6 +95,7 @@
         pButton
         (click)="onCreateGuidanceDocument()"
         *ngIf="isDirector || isViceDirector"
+        [disabled]="!issue || issue.status?.statusId == 4 "
       >
         Tạo mới
       </button>
