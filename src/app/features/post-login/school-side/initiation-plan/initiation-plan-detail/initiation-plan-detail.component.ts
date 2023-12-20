@@ -261,6 +261,7 @@ export class InitiationPlanDetailComponent implements OnInit {
                   'Lỗi',
                   error.error.message
                 );
+                this.isFileLoading = false;
               },
             });
         } else {
