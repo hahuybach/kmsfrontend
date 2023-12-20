@@ -2,10 +2,9 @@
   [style]="{width: '50%'}"
   acceptLabel="Xác nhận"
   rejectLabel="Hủy bỏ"
-  key="deleteDocument"
+  key="recordDetail"
 ></p-confirmDialog>
-<p-toast position="top-right" key="deleteComplete"></p-toast>
-<p-toast position="top-right" key="deleteInComplete"></p-toast>
+<p-toast position="top-right" key="recordDetail"></p-toast>
 <p-dialog header="Chi tiết mục kiểm tra"
           [(visible)]="detailRecordPopupVisible"
           [modal]="true"
@@ -32,7 +31,7 @@
     [visible]="deleteDocumentSubmitted"
     [completed]="deleteDocumentCompleted"
     [header]="'Xóa tài liệu'"
-    [progress]="'Đang đang xóa tài liệu'"
+    [progress]="'Đang xóa tài liệu'"
     [complete]="'Xóa tài liệu thành công'"
   >
   </app-loading-complete-dialog>
@@ -147,6 +146,5 @@
         </div>
       </form>
     </div>
-
   </div>
 </p-dialog>
