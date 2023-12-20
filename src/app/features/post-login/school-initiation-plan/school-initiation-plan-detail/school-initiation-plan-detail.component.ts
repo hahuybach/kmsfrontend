@@ -221,7 +221,11 @@ export class SchoolInitiationPlanDetailComponent implements OnInit, OnDestroy {
                 this.uploadFileVisible = false;
               },
               error: (error) => {
-                console.log(error);
+                this.toastService.showError(
+                  'toastSchoolIni',
+                  'Có lỗi xảy ra',
+                  error.error.message
+                );
               },
             });
           this.sub.push(method);
@@ -321,7 +325,12 @@ export class SchoolInitiationPlanDetailComponent implements OnInit, OnDestroy {
               }, 1500);
             },
             error: (error) => {
-              console.log(error);
+              this.toastService.showError(
+                'toastSchoolIni',
+                'Có lỗi xảy ra',
+                error.error.message
+              );
+              this.isLoading = false;
             },
           });
         this.sub.push(method);

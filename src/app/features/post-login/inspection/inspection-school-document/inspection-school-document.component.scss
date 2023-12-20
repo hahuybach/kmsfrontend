@@ -7,7 +7,7 @@
         font-size: 20px;
         color: rgb(255, 196, 0);
     }
-    .file-icon {
+    .task-icon {
         color: $primary;
     }
 }
@@ -81,4 +81,34 @@
     img {
         width: 400px;
     }
+}
+.empty-assignment-img {
+    width: 200px;
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+.search-item {
+    height: 40px;
+}
+.search-result {
+    max-height: 350px;
+    overflow-y: auto;
+}
+.p-button {
+    font-size: 16px;
+    background-color: $primary;
+    border-radius: 8px;
+    border: solid 1px $primary;
+    transition: all 0.5s ease;
+    // margin-right: 20px;
+    &:hover {
+        background-color: $primary-hover;
+        border-color: $primary-hover;
+    }
+}
+.search {
+    width: 100%;
+    border-radius: 8px;
 }
