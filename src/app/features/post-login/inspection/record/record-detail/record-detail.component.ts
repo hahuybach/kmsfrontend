@@ -171,7 +171,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
             }, 1000);
           },
           error: (error) => {
-            console.log(error)
+            this.toastService.showError('deleteInComplete', "Lỗi cập nhật", error.error.message);
             this.updateDocumentFailed = true;
             setTimeout(() => {
               this.updateDocumentSubmitted = false;

@@ -13,6 +13,9 @@ import {ToastService} from "../../../shared/toast/toast.service";
 export class LoginFormComponent implements OnInit {
   signInForm: FormGroup;
 
+  loading: boolean = false;
+
+
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -21,13 +24,18 @@ export class LoginFormComponent implements OnInit {
   ) {}
 
   login() {
+    this.loading = true
+
     const val = this.signInForm.value;
     if (val.email && val.password) {
       this.auth.login(val.email, val.password).subscribe({
         next: (response) => {
           this.auth.setJwtInCookie(response.token);
           this.auth.setTokenTimeOut();
-          this.router.navigateByUrl('/dashboard');
+          setTimeout(() => {
+            this.router.navigateByUrl('/dashboard');
+            this.loading = false;
+          } ,1000);
         },
         error: (err) => {
           this.toastService.showError('center', 'Thông báo', err.error.message);
