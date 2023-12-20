@@ -79,7 +79,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     this.confirmationService.confirm({
       message: "Bạn có chắc muốn xóa mục kiểm tra này?",
       header: "Xác nhận xóa mục kiểm tra",
-      key: "deleteDocument",
+      key: "recordDetail",
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.deleteDocument();
@@ -102,7 +102,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         }, 1000);
       },
       error: (error) => {
-        this.toastService.showError('deleteInComplete', "Xóa không thành công", error.error.message);
+        this.toastService.showError('recordDetail', "Xóa không thành công", error.error.message);
       }
     })
     this.subscriptions.push(deleteDocument);
@@ -121,7 +121,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         this.task = data.taskDetailDto;
       },
       error: (error) => {
-        this.toastService.showError('deleteInComplete', "Không tìm thấy mục kiểm tra", error.error.message);
+        this.toastService.showError('recordDetail', "Không tìm thấy mục kiểm tra", error.error.message);
       }
     })
     this.subscriptions.push(initRecordData)
@@ -171,7 +171,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
             }, 1000);
           },
           error: (error) => {
-            this.toastService.showError('deleteInComplete', "Lỗi cập nhật", error.error.message);
+            this.toastService.showError('recordDetail', "Lỗi cập nhật", error.error.message);
             if (error.error.message == "Mã văn bản trùng lặp"){
               console.log('fwfw')
               this.documentForm.get('documentCode')?.setErrors({duplicateCode: true});

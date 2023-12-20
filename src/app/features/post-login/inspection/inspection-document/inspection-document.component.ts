@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { InspectionDocument } from '../../../../models/inspection';
-import { InspectionService } from '../../../../services/inspection.service';
+import {Component, OnInit} from '@angular/core';
+import {InspectionDocument} from '../../../../models/inspection';
+import {InspectionService} from '../../../../services/inspection.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import { ConfirmationService, ConfirmEventType } from 'primeng/api';
-import { RecordService } from '../../../../services/record.service';
-import { ToastService } from '../../../../shared/toast/toast.service';
+import {ConfirmationService, ConfirmEventType} from 'primeng/api';
+import {RecordService} from '../../../../services/record.service';
+import {ToastService} from '../../../../shared/toast/toast.service';
 import {inspectionPlanService} from "../../../../services/inspectionplan.service";
 
 @Component({
@@ -21,6 +21,7 @@ export class InspectionDocumentComponent implements OnInit {
   detailRecordPopupVisible: boolean = false;
   canUploadDocument: boolean = false;
   filterVisible: Boolean = false;
+
   constructor(
     private readonly inspectionService: InspectionService,
     private readonly route: ActivatedRoute,
@@ -29,7 +30,8 @@ export class InspectionDocumentComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly inspectionPlanService: inspectionPlanService,
     private readonly router: Router
-  ) {}
+  ) {
+  }
 
   changeCreateRecordVisible() {
     this.initAfterChange();
@@ -46,7 +48,7 @@ export class InspectionDocumentComponent implements OnInit {
     this.changeUpdateRecordVisible();
   }
 
-  initAfterChange(){
+  initAfterChange() {
     this.initInspectionData();
   }
 
@@ -77,11 +79,11 @@ export class InspectionDocumentComponent implements OnInit {
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.deleteRecord(recordId);
-      } ,
-      reject: (type: ConfirmEventType) => {
-
       },
-    } )
+      reject: (type: ConfirmEventType) => {
+        return;
+      },
+    })
   }
 
   deleteRecord(recordId: number) {
@@ -95,6 +97,7 @@ export class InspectionDocumentComponent implements OnInit {
             'Mục kiểm tra đã được xóa thành công'
           );
           this.initInspectionData();
+          return;
         },
         error: (error) => {
           this.toastService.showError(
@@ -102,6 +105,7 @@ export class InspectionDocumentComponent implements OnInit {
             'Xóa không thành công',
             error.error.message
           );
+          return;
         },
       });
   }
@@ -131,12 +135,10 @@ export class InspectionDocumentComponent implements OnInit {
     });
     this.initInspectionData();
   }
+
   changeFilterVisible(status: Boolean) {
     this.filterVisible = status;
   }
-
-
-
 
 
   onFinish() {
@@ -148,11 +150,11 @@ export class InspectionDocumentComponent implements OnInit {
       rejectLabel: 'Không',
       accept: () => {
 
-        if (this.inspectionDocument.canFinish){
+        if (this.inspectionDocument.canFinish) {
           this.inspectionPlanService.finishInspectionPlan(this.inspectionId).subscribe({
             next: (data) => {
               this.toastService.showSuccess('inspection-document', "Thành công", "Kết thúc phiên kiểm tra thành công")
-                this.router.navigate(['inspection/' + this.inspectionId +'/information'])
+              this.router.navigate(['inspection/' + this.inspectionId + '/information'])
             }, error: (error) => {
               this.toastService.showError('inspection-document', "Lỗi", error.error.message)
             }
