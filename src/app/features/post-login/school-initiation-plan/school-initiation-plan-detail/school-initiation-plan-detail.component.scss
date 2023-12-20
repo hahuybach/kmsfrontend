@@ -264,3 +264,8 @@ input {
         color: $primary;
     }
 }
+:host ::ng-deep {
+    .p-confirm-dialog-accept {
+        margin-left: 20px;
+    }
+}

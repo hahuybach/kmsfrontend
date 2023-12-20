@@ -3,8 +3,6 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AccountResponse} from "../../../../../models/account-response";
 import {RecordService} from "../../../../../services/record.service";
 import {inspectionPlanService} from "../../../../../services/inspectionplan.service";
-import {error} from "@angular/compiler-cli/src/transformers/util";
-import {TaskListDto} from "../../../../../models/inspection";
 import {TaskDetailDto} from "../../../../../models/task";
 import {Subscription} from "rxjs";
 import {ToastService} from "../../../../../shared/toast/toast.service";
