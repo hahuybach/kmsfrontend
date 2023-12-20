@@ -23,6 +23,7 @@ interface Role {
 
 // Define the Inspector interface
 interface Inspector {
+  email: string;
   accountId: number;
   user: User;
   school: School;

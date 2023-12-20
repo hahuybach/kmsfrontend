@@ -10,12 +10,13 @@ import {AuthService} from "../../../services/auth.service";
   templateUrl: './inspection.component.html',
   styleUrls: ['./inspection.component.scss']
 })
-export class InspectionComponent implements OnInit{
+export class InspectionComponent implements OnInit {
   sub: string | null;
   inspectionId: number;
   inspection: Inspection;
   tabs: MenuItem[] | undefined;
   activeTab: MenuItem | undefined;
+  isInspector: boolean = false
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -30,6 +31,25 @@ export class InspectionComponent implements OnInit{
       this.inspectionService.getInspectionInformation(this.inspectionId).subscribe({
         next: (data) => {
           this.inspection = data;
+          console.log(this.inspection.inspectorDtos)
+          this.tabs = [
+            {label: 'Thông tin', routerLink: `information`},
+            {label: 'Văn bản của trường', routerLink: `school-document`},
+            {label: 'Công việc của tôi', routerLink: `my-task`},
+            {label: 'Văn bản kiểm tra', routerLink: `document`},
+          ];
+          console.log(this.inspection.inspectorDtos);
+          for (const i of this.inspection.inspectorDtos) {
+            if (i.email === this.sub) {
+              this.isInspector = true;
+              break
+            }
+          }
+          if (!this.isInspector){
+            this.tabs.splice(1,2);
+          }
+
+          this.activeTab = this.tabs[0];
         },
         error: (error) => {
           console.log(error)
@@ -38,12 +58,7 @@ export class InspectionComponent implements OnInit{
       this.sub = this.authService.getSubFromCookie();
     })
 
-    this.tabs = [
-      { label: 'Thông tin', routerLink:`information`},
-      { label: 'Văn bản của trường', routerLink:`school-document`},
-      { label: 'Công việc của tôi', routerLink:`my-task`},
-      { label: 'Văn bản kiểm tra', routerLink:`document`},
-    ];
-    this.activeTab = this.tabs[0];
+
+
   }
 }
