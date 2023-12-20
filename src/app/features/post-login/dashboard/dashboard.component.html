@@ -11,7 +11,7 @@
               <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
 
               <label class="fs-24 fw-medium mb-2">{{
-                numberOfInspectedSchool
+                numberOfNonInspectedSchool
               }}</label>
               <br />
             </div>
@@ -57,7 +57,7 @@
             </div>
             <div class="col-md-7">
               <span class="color-gray"
-                >trên tổng số {{ totalSchool }} kế hoạch</span
+                >trên tổng số {{ numberOfIniPlanWait ? numberOfIniPlanWait : 0 }} kế hoạch</span
               >
             </div>
             <div class="col-md-5 d-flex justify-content-end">

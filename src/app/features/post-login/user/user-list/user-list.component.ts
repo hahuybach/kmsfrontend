@@ -54,7 +54,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   isLoading = false;
   submitCompleted = false;
   sub: any[] = []
-
+  sortByCriteria: string[] = ['user.userId', 'user.fullName','user.account.email','user.phoneNumber','user.account.school','user.account.school.schoolName','user.account.accountRoles.role.roleName','user.account.isActive']
   @ViewChild('fileInput')
   myInputVariable: ElementRef;
 
@@ -185,19 +185,33 @@ export class UserListComponent implements OnInit, OnDestroy {
       value => {
         if (value['pageNo']) {
           this.pageNo = value['pageNo'];
+          if (isNaN(this.pageSize)){
+            this.pageNo = 1
+          }
         }
         if (value['pageSize']) {
           this.pageSize = value['pageSize'];
-          if (this.pageSize != 5 && this.pageSize != 10 && this.pageSize != 15) {
-            this.toastService.showWarn('paging', 'Cảnh báo', 'Vui lòng không nhập số bản ghi sai với quy định')
+          if (isNaN(this.pageSize)){
+            this.pageSize = 5
+          }
+          if (this.pageSize > 25) {
             this.pageSize = 5;
           }
         }
         if (value['sortBy']) {
           this.sortBy = value['sortBy'];
+          console.log("test "+ this.sortByCriteria.some(str => str == this.sortBy));
+          if (!this.sortByCriteria.some(str => str == this.sortBy)){
+            this.sortBy = 'user.userId';
+          }else {
+            this.sortBy = value['sortBy'];
+          }
         }
         if (value['sortDirection']) {
           this.sortDirection = value['sortDirection'];
+          if (this.sortDirection != 'desc' && this.sortDirection != 'asc'){
+            this.sortDirection = 'desc'
+          }
         }
         if (value['phoneNumber']) {
           this.phoneNumber = value['phoneNumber'];
@@ -271,6 +285,8 @@ export class UserListComponent implements OnInit, OnDestroy {
           });
           this.onChangePageSize()
 
+        },error: (error) => {
+          console.log(error);
         }
       })
     this.sub.push(usersLoadSub);

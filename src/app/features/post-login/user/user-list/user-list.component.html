@@ -201,19 +201,19 @@
               ></i>
             </div>
           </th>
-          <th (click)="onSort('user.account.school')">
+          <th (click)="onSort('user.account.school.schoolName')">
             <div class="header-container">
               <span class="icon-text">Đơn vị</span>
               <i
                 class="bi bi-sort-up"
                 *ngIf="
-                  sortBy === 'user.account.school' && sortDirection === 'asc'
+                  sortBy === 'user.account.school.schoolName' && sortDirection === 'asc'
                 "
               ></i>
               <i
                 class="bi bi-sort-down"
                 *ngIf="
-                  sortBy === 'user.account.school' && sortDirection === 'desc'
+                  sortBy === 'user.account.school.schoolName' && sortDirection === 'desc'
                 "
               ></i>
             </div>
@@ -263,7 +263,7 @@
         </tr>
       </thead>
       <ng-container *ngIf="users">
-        <tbody *ngIf="users.length > 0">
+        <tbody *ngIf="users && users.length > 0">
           <tr
             *ngFor="
               let user of users
@@ -346,7 +346,7 @@
       </ng-container>
     </table>
   </div>
-  <div class="d-flex justify-content-center table-footer" *ngIf="users.length > 0">
+  <div class="d-flex justify-content-center table-footer" *ngIf="users && users.length > 0">
     <div class="me-3 mt-3" *ngIf="users">
       <pagination-controls
         previousLabel=""
@@ -357,7 +357,7 @@
     </div>
     <div
       class="d-flex justify-content-center align-items-center"
-      *ngIf="users.length > 0"
+      *ngIf="users && users.length > 0"
     >
       <select
         (change)="[loadUsers()]"

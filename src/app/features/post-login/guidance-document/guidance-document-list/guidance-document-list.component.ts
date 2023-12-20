@@ -147,8 +147,11 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
 
     loadIssueIdForCreate(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.issueService.getCurrentActiveIssue().subscribe({
+            this.issueService.getLastestIssue().subscribe({
                 next: (result) => {
+                    if (result.issueDto.status.statusId == 2){
+                      this.showError('Kế hoạch kiểm tra đã kết thúc');
+                    }
                     this.issueId = result.issueDto.issueId;
                     resolve(true);
                 },

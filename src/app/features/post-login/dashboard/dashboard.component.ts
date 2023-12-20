@@ -28,7 +28,7 @@ import {tuiSum} from '@taiga-ui/cdk';
 export class DashboardComponent implements OnInit, OnDestroy {
   subs: any[] = [];
   totalSchool: any;
-  numberOfInspectedSchool: any;
+  numberOfNonInspectedSchool: any;
   issue: IssueResponse;
   numberOfIniPlanInProgress: any;
   numberOfIniPlanWait: any;
@@ -282,20 +282,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
         );
       },
     });
-    const sub2 = this.issueService.getCurrentActiveIssue().subscribe({
+    const sub2 = this.issueService.getLastestIssue().subscribe({
       next: (data) => {
         this.issue = data.issueDto;
         console.log(this.issue);
+        if (!this.issue?.issueId){
+          this.issueNotFound = true;
+          return
+        }
         const sub3 = this.inspectionPlanService
           .getNumberOfInspectedSchool(this.issue?.issueId)
           .subscribe({
             next: (data) => {
               if (data) {
-                this.numberOfInspectedSchool = data;
-
+                this.numberOfNonInspectedSchool = data;
               }
 
-              console.log(this.numberOfInspectedSchool);
+              console.log(this.numberOfNonInspectedSchool);
             },
             error: (error) => {
               this.issueNotFound = true;
@@ -376,7 +379,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   setInitDataForSpecialist() {
-    const sub = this.issueService.getCurrentActiveIssue().subscribe({
+    const sub = this.issueService.getLastestIssue().subscribe({
       next: (data) => {
         this.issue = data.issueDto;
         const sub2 = this.inspectionPlanService
@@ -421,7 +424,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   setInitDataForPrincipal() {
-    this.issueService.getCurrentActiveIssue().subscribe({
+    this.issueService.getLastestIssue().subscribe({
       next: (data) => {
         this.issue = data.issueDto;
         this.inspectionPlanService

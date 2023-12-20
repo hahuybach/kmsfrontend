@@ -334,21 +334,21 @@ export class CreateIssueComponent implements OnInit, OnDestroy {
     {label: 'Chọn loại tài liệu', value: null},
     {label: 'Kế hoạch công tác kiểm tra năm học', value: 1},
     {label: 'Hướng dẫn công tác KTNB', value: 2},
-    {label: 'Quyết định thành lập BKTB', value: 3}
+    {label: 'Quyết định thành lập BKTNB', value: 3}
   ];
 
   docTypes_select_2: SelectItem[] = [
     {label: 'Chọn loại tài liệu', value: null},
     {label: 'Kế hoạch công tác kiểm tra năm học', value: 1},
     {label: 'Hướng dẫn công tác KTNB', value: 2},
-    {label: 'Quyết định thành lập BKTB', value: 3}
+    {label: 'Quyết định thành lập BKTNB', value: 3}
   ];
 
   docTypes_select_3: SelectItem[] = [
     {label: 'Chọn loại tài liệu', value: null},
     {label: 'Kế hoạch công tác kiểm tra năm học', value: 1},
     {label: 'Hướng dẫn công tác KTNB', value: 2},
-    {label: 'Quyết định thành lập BKTB', value: 3}
+    {label: 'Quyết định thành lập BKTNB', value: 3}
   ];
 
   selectedValue_1: any;
