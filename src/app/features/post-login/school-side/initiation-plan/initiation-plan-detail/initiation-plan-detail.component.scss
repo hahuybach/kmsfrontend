@@ -73,18 +73,18 @@
     .file-item-content {
         //height: 100%;
         //margin: 0;
-      p {
-        white-space: nowrap;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        .span-doc-name {
-          flex-shrink: 1;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+        p {
+            white-space: nowrap;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            .span-doc-name {
+                flex-shrink: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
-      }
     }
 
     &:hover {
@@ -267,5 +267,10 @@ input {
             background-color: $primary-hover;
             border-color: $primary-hover;
         }
+    }
+}
+:host ::ng-deep {
+    .p-confirm-dialog-accept {
+        margin-left: 20px;
     }
 }
