@@ -315,7 +315,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               this.initData();
               this.toastService.showSuccess(
                 'toastAssignAssignment',
-                'Thêm mới thành công',
+                'Thông báo',
                 'Thêm mới thành công'
               );
               this.assignmentVisible = false;
@@ -323,7 +323,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
             error: (error) => {
               this.toastService.showError(
                 'toastAssignAssignment',
-                'Thêm mới thất bại',
+                'Thông báo',
                 error.error.message
               );
             },
@@ -355,7 +355,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               this.initData();
               this.toastService.showSuccess(
                 'toastAssignAssignment',
-                'Xóa thành công',
+                'Thông báo',
                 'Xóa thành công'
               );
             },
@@ -479,7 +479,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
             this.initData();
             this.toastService.showSuccess(
               'toastAssignAssignment',
-              'Cập nhật thành công',
+              'Thông báo',
               'Cập nhật thành công'
             );
           },
@@ -650,14 +650,14 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
 
         this.toastService.showSuccess(
           'toastAssignAssignment',
-          'Đổi thành công',
+          'Thông báo',
           'Đổi người làm thành công'
         );
       },
       error: (error) => {
         this.toastService.showError(
           'toastAssignAssignment',
-          'Đổi thất bại',
+          'Thông báo',
           'Đổi người làm thất bại'
         );
       },
@@ -741,7 +741,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               this.isFileLoading = false;
               this.toastService.showSuccess(
                 'toastAssignAssignment',
-                'Xóa thành công',
+                'Thông báo',
                 'Xóa tài liệu thành công'
               );
             },
@@ -775,7 +775,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               this.initData();
               this.toastService.showSuccess(
                 'toastAssignAssignment',
-                'Nộp thành công',
+                'Thông báo',
                 'Nộp thành công'
               );
             },
@@ -813,7 +813,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               this.initData();
               this.toastService.showSuccess(
                 'toastAssignAssignment',
-                'Hủy nộp thành công',
+                'Thông báo',
                 'Hủy nộp thành công'
               );
             },
@@ -876,7 +876,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
       next: () => {
         this.toastService.showSuccess(
           'toastAssignAssignment',
-          'Bình luận thành công',
+          'Thông báo',
           'Bình luận thành công'
         );
         this.refreshSelectedAssignment();
@@ -950,7 +950,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
             next: () => {
               this.toastService.showSuccess(
                 'toastAssignAssignment',
-                'Xóa bình luận',
+                'Thông báo',
                 'Xóa bình luận thành công'
               );
               this.refreshSelectedAssignment();
