@@ -35,6 +35,9 @@ export class NotificationListUnseenComponent implements OnChanges{
     });
     let link: string = this.unseenNotificationDtos[index].link;
     this.router.navigateByUrl(link.toString());
+    if(this.unseenNotificationDtos.length <= 10){
+      this.allNotificationLoaded = true;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

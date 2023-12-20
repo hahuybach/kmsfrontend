@@ -34,5 +34,8 @@ export class NotificationListAllComponent {
     });
     let link: string = this.notificationListDtos[index].link;
     this.router.navigateByUrl(link.toString());
+    if(this.notificationListDtos.length <= 10){
+      this.allNotificationLoaded = true;
+    }
   }
 }

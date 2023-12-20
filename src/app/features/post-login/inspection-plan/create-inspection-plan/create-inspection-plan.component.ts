@@ -314,7 +314,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     formData.append(`file`, file, file.name);
 
     this.confirmationService.confirm({
-      message: 'Xác nhận tạo quyết định kiểm tra này?',
+      message: 'Xác nhận tạo quyết định kiểm tra?',
       header: 'Xác nhận tạo',
       key: 'changeTime',
       icon: 'bi bi-info-circle',
