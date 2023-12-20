@@ -39,7 +39,6 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   deleteDocumentCompleted: boolean = false;
   private subscriptions: Subscription[] = [];
 
-
   constructor(
     private readonly recordService: RecordService,
     private fb: FormBuilder,
@@ -103,6 +102,10 @@ export class RecordDetailComponent implements OnChanges, OnInit {
       },
       error: (error) => {
         this.toastService.showError('recordDetail', "Xóa không thành công", error.error.message);
+        setTimeout(() => {
+          this.deleteDocumentSubmitted  = false;
+          this.deleteDocumentCompleted = false;
+        }, 1000);
       }
     })
     this.subscriptions.push(deleteDocument);

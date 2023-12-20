@@ -66,7 +66,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
         this.endDate = dateToTuiDay(new Date(data.inspectionPlan.endDate));
       },
       error: (error) => {
-        this.toastService.showError('updateRecordFail', "Không tìm thấy dữ liệu", error.error.message);
+        this.toastService.showError('updateRecord', "Không tìm thấy dữ liệu", error.error.message);
       }
     })
     this.subscriptions.push(initInspectionPlan);
@@ -126,7 +126,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
           },
           error: (error) => {
             this.formFailed = true;
-            this.toastService.showError('updateRecordFail', "Cập nhật mục kiểm tra không thành công", error.error.message);
+            this.toastService.showError('updateRecord', "Cập nhật mục kiểm tra không thành công", error.error.message);
             setTimeout(() =>{
               this.updateRecordPopupVisible = false;
               this.formFailed = false;
@@ -160,7 +160,7 @@ export class UpdateRecordComponent implements OnInit, OnChanges {
       },
       error: (error) => {
         this.formFailed = true;
-        this.toastService.showError('updateRecordFail', "Không tìm thấy dữ liệu mục kiểm tra", error.error.message);
+        this.toastService.showError('updateRecord', "Không tìm thấy dữ liệu mục kiểm tra", error.error.message);
       }
     })
     this.subscriptions.push(getRecordData);

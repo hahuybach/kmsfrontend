@@ -19,6 +19,7 @@ export class InspectionDocumentComponent implements OnInit {
   createRecordPopupVisible: boolean = false;
   updateRecordPopupVisible: boolean = false;
   detailRecordPopupVisible: boolean = false;
+  canDeleteDocument: boolean = false;
   canUploadDocument: boolean = false;
   filterVisible: Boolean = false;
 
@@ -64,9 +65,11 @@ export class InspectionDocumentComponent implements OnInit {
         recordId === this.inspectionDocument.conclusionId) &&
       this.inspectionDocument.canUploadFinalDoc
     ) {
+      this.canDeleteDocument = true;
       this.canUploadDocument = true;
     } else {
       this.canUploadDocument = false;
+      this.canDeleteDocument = false;
     }
     this.changeDetailRecordVisible();
   }
@@ -122,6 +125,7 @@ export class InspectionDocumentComponent implements OnInit {
     this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
       next: (data) => {
         this.inspectionDocument = data;
+        this.canDeleteDocument= data.canAlterDoc;
       },
       error: (error) => {
         this.toastService.showError('inspection-document', "Lỗi", error.error.message)
