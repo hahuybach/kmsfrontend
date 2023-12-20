@@ -39,7 +39,6 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   deleteDocumentCompleted: boolean = false;
   private subscriptions: Subscription[] = [];
 
-
   constructor(
     private readonly recordService: RecordService,
     private fb: FormBuilder,
@@ -79,7 +78,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     this.confirmationService.confirm({
       message: "Bạn có chắc muốn xóa mục kiểm tra này?",
       header: "Xác nhận xóa mục kiểm tra",
-      key: "deleteDocument",
+      key: "recordDetail",
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         this.deleteDocument();
@@ -91,18 +90,20 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   }
 
   deleteDocument() {
-    console.log('delete')
     this.deleteDocumentSubmitted = true;
     const deleteDocument = this.recordService.deleteDocumentById(this.recordId).subscribe({
       next: (response) => {
         this.deleteDocumentCompleted = true;
         setTimeout(() => {
-          this.initRecordData();
           this.detailRecordPopupVisible = false;
         }, 1000);
       },
       error: (error) => {
-        this.toastService.showError('deleteInComplete', "Xóa không thành công", error.error.message);
+        this.toastService.showError('recordDetail', "Xóa không thành công", error.error.message);
+        setTimeout(() => {
+          this.deleteDocumentSubmitted  = false;
+          this.deleteDocumentCompleted = false;
+        }, 1000);
       }
     })
     this.subscriptions.push(deleteDocument);
@@ -121,13 +122,15 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         this.task = data.taskDetailDto;
       },
       error: (error) => {
-        this.toastService.showError('deleteInComplete', "Không tìm thấy mục kiểm tra", error.error.message);
+        this.toastService.showError('recordDetail', "Không tìm thấy mục kiểm tra", error.error.message);
       }
     })
     this.subscriptions.push(initRecordData)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+
     if (changes['recordId'] && changes['recordId'].isFirstChange()) {
       return;
     }
@@ -143,7 +146,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     this.confirmationService.confirm({
       message: "Bạn có muốn tải lên tài liệu này?",
       header: "Xác nhận tải tài liệu",
-      key: "deleteDocument",
+      key: "recordDetail",
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         const formData = new FormData();
@@ -158,7 +161,6 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         formData.append("request", new Blob([JSON.stringify(document)], {type: "application/json"}))
         const file = this.documentForm.get('documentFile')?.value
         formData.append(`file`, file, file.name);
-
         this.updateDocumentSubmitted = true;
         const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
           next: (response) => {
@@ -170,9 +172,8 @@ export class RecordDetailComponent implements OnChanges, OnInit {
             }, 1000);
           },
           error: (error) => {
-            this.toastService.showError('deleteInComplete', "Lỗi cập nhật", error.error.message);
+            this.toastService.showError('recordDetail', "Lỗi cập nhật", error.error.message);
             if (error.error.message == "Mã văn bản trùng lặp"){
-              console.log('fwfw')
               this.documentForm.get('documentCode')?.setErrors({duplicateCode: true});
             }
             this.updateDocumentFailed = true;

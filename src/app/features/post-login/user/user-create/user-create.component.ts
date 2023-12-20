@@ -67,6 +67,8 @@ export class UserCreateComponent implements OnInit {
               private schoolService: SchoolService) {
   }
 
+
+
   ngOnInit(): void {
     for (const argument of this.auth.getRoleFromJwt()) {
       if (argument.authority === Role.DIRECTOR) {
@@ -76,7 +78,6 @@ export class UserCreateComponent implements OnInit {
             this.createUserForm.patchValue({
               schoolId: this.auth.getSchoolFromJwt().schoolId
             })
-
           },
           error: (err) => {
             this.toast.showWarn('error', "Lỗi", err.error.message)
@@ -93,6 +94,7 @@ export class UserCreateComponent implements OnInit {
               this.createUserForm.patchValue({
                 schoolId: this.auth.getSchoolFromJwt().schoolId
               })
+
             },
             error: (err) => {
               this.toast.showWarn('error', "Lỗi", err.error.message)
@@ -129,6 +131,7 @@ export class UserCreateComponent implements OnInit {
     }
 
     this.today = dateToTuiDay(new Date());
+
   }
 
   setRole(schoolId: number, roleName: string, isActive: boolean) {

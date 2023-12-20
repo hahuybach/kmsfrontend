@@ -5,7 +5,7 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {IssueService} from '../../../../services/issue.service';
 import {switchMap} from 'rxjs';
 import {FileService} from 'src/app/services/file.service';
@@ -14,6 +14,7 @@ import {getFirstAndLastName, unSub} from 'src/app/shared/util/util';
 import {Dialog} from 'primeng/dialog';
 import {TuiPdfViewerOptions, TuiPdfViewerService} from '@taiga-ui/kit';
 import {ToastService} from "../../../../shared/toast/toast.service";
+import {ConfirmationService} from "primeng/api";
 
 @Component({
   selector: 'app-issue-detail',
@@ -55,7 +56,9 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
     private fileService: FileService,
     private sanitizer: DomSanitizer,
     private readonly pdfService: TuiPdfViewerService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService,
+    private router: Router
   ) {
   }
 
@@ -119,19 +122,42 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
     return getFirstAndLastName(fullName);
   }
 
+
+
   finishIssue() {
     if (this.canFinish){
       this.isLoading = true;
       this.issueService.finishIssue(this.issueId).subscribe({
         next: (data) => {
+          setTimeout(() => {
+            this.ngOnInit()
+            this.isLoading = false;
+          }, 1500)
           this.submitCompleted = true;
+
         },
         error: (error) => {
           this.isLoading = false;
+          this.submitCompleted = false
           this.toastService.showError('issue-detail', 'Lỗi', error.error.message)
         }
       })
     }
 
+  }
+
+  confirm() {
+
+    this.confirmationService.confirm({
+      message: 'Bạn có xác nhận muốn kết thúc kế hoạch kiểm tra không?',
+      header: 'Xác nhận',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Có',
+      rejectLabel: 'Không',
+      accept: () => {
+        this.finishIssue()
+
+      }, key: 'issue-detail-confirm'
+    });
   }
 }

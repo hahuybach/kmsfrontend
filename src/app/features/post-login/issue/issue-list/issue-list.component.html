@@ -127,6 +127,7 @@
                 (click)="navigateToCreateIssue()"
                 *ngIf="isDirector"
                 class="top-button"
+                [disabled]="issue && issue.status?.statusId == 3"
               >
                 Tạo mới
               </button>
@@ -232,12 +233,14 @@
               pTooltip="Chỉnh sửa"
               tooltipPosition="top"
               class="action-item d-flex justify-content-center align-items-center mx-2"
-              (click)="navigateToUpdate(issue.issueId)"
-
-              *ngIf="isDirector"
+              (click)="navigateToUpdate(issue.issueId, issue.isActive)"
+              *ngIf="isDirector && issue.isActive"
 
             >
-              <i class="bi bi-pencil-fill"></i>
+              <i class="bi bi-pencil-fill"
+
+
+              ></i>
             </div>
           </td>
         </tr>
