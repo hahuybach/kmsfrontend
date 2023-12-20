@@ -1059,7 +1059,7 @@
             <h6 class="mat-headline-6">Chi tiết danh sách công việc</h6>
           </div>
           <div class="search-button">
-            <button pButton (click)="searchDialogVisible = true">
+            <button *ngIf="iniApproved" pButton (click)="searchDialogVisible = true">
               Tìm kiếm
             </button>
           </div>
@@ -1207,6 +1207,14 @@
             >
               <i class="bi bi-x-circle-fill"></i>
             </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center fw-medium fs-4">
+            Kế hoạch thực hiện chưa hoàn thành. Vui lòng hoàn thành kế hoạch
+            thực hiện
           </td>
         </tr>
       </ng-template>
