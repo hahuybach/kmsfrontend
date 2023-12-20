@@ -84,6 +84,7 @@
             <div class="record-assignee col-md-6" *ngIf="inspectionPlan">
                 <label class="fw-medium mb-1">Người thực hiện<span class="p-error">*</span></label>
                 <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors"
+                            appendTo="body"
                             formControlName="assigneeId"
                             optionLabel="user.fullName"
                             [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"

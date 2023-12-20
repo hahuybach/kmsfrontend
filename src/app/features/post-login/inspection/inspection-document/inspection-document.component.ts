@@ -54,6 +54,7 @@ export class InspectionDocumentComponent implements OnInit {
   }
 
   changeDetailRecordVisible() {
+    this.initAfterChange();
     this.detailRecordPopupVisible = !this.detailRecordPopupVisible;
   }
 

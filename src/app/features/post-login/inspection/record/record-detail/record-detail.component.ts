@@ -146,7 +146,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
     this.confirmationService.confirm({
       message: "Bạn có muốn tải lên tài liệu này?",
       header: "Xác nhận tải tài liệu",
-      key: "deleteDocument",
+      key: "recordDetail",
       icon: 'bi bi-exclamation-triangle',
       accept: () => {
         const formData = new FormData();
@@ -161,9 +161,7 @@ export class RecordDetailComponent implements OnChanges, OnInit {
         formData.append("request", new Blob([JSON.stringify(document)], {type: "application/json"}))
         const file = this.documentForm.get('documentFile')?.value
         formData.append(`file`, file, file.name);
-
         this.updateDocumentSubmitted = true;
-        console.log("document " + document.documentTaskDto?.documentName);
         const documentUpdate = this.recordService.updateTaskDocument(formData).subscribe({
           next: (response) => {
             this.updateDocumentCompleted = true;
@@ -176,7 +174,6 @@ export class RecordDetailComponent implements OnChanges, OnInit {
           error: (error) => {
             this.toastService.showError('recordDetail', "Lỗi cập nhật", error.error.message);
             if (error.error.message == "Mã văn bản trùng lặp"){
-              console.log('fwfw')
               this.documentForm.get('documentCode')?.setErrors({duplicateCode: true});
             }
             this.updateDocumentFailed = true;
