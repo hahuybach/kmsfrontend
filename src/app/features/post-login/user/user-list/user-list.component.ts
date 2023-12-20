@@ -200,7 +200,6 @@ export class UserListComponent implements OnInit, OnDestroy {
         }
         if (value['sortBy']) {
           this.sortBy = value['sortBy'];
-          console.log("test "+ this.sortByCriteria.some(str => str == this.sortBy));
           if (!this.sortByCriteria.some(str => str == this.sortBy)){
             this.sortBy = 'user.userId';
           }else {

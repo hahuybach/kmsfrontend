@@ -52,7 +52,8 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
         Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY,   Role.CHIEF_NUTRITION, Role.NUTRITION_EMP];
     sub: any[] = []
     createDateRange: any;
-    issue: IssueResponse
+    issue: IssueResponse;
+    sortByCriteria: string[] = ['guidanceDocumentId','guidanceDocumentName','issue.createdDate','createdDate','account.user.fullName']
     setAuth() {
         if (this.auth.getRolesFromCookie()) {
             for (const argument of this.auth.getRoleFromJwt()) {
@@ -184,15 +185,31 @@ export class GuidanceDocumentListComponent implements OnInit, OnDestroy {
             value => {
                 if (value['pageNo']) {
                     this.pageNo = value['pageNo'];
+                  if (isNaN(this.pageSize)){
+                    this.pageNo = 1
+                  }
                 }
                 if (value['pageSize']) {
                     this.pageSize = value['pageSize'];
+                  if (isNaN(this.pageSize)){
+                    this.pageSize = 5
+                  }
+                  if (this.pageSize > 25) {
+                    this.pageSize = 5;
+                  }
                 }
                 if (value['sortBy']) {
                     this.sortBy = value['sortBy'];
+                  if (!this.sortByCriteria.some(str => str == this.sortBy)){
+                    this.sortBy = 'guidanceDocumentId';
+                  }
                 }
+
                 if (value['sortDirection']) {
                     this.sortDirection = value['sortDirection'];
+                  if (this.sortDirection != 'desc' && this.sortDirection != 'asc'){
+                    this.sortDirection = 'desc'
+                  }
                 }
                 if (value['guidanceDocumentName']) {
                     this.guidanceDocumentName = value['guidanceDocumentName'];
