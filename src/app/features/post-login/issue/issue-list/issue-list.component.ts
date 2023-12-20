@@ -10,6 +10,7 @@ import { error } from '@angular/compiler-cli/src/transformers/util';
 import { FilterMatchMode } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { Table } from 'primeng/table';
+import {IssueResponse} from "../../../../models/issue-response";
 
 @Component({
   selector: 'app-issue-list',
@@ -43,6 +44,7 @@ export class IssueListComponent implements OnInit, OnDestroy {
   @ViewChild('dt') dt: Table;
   filterVisible: Boolean = false;
   statuses: any;
+  issue: IssueResponse
   constructor(
     private issueService: IssueService,
     private router: Router,
@@ -52,7 +54,16 @@ export class IssueListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+
     this.setAuth();
+    this.issueService.getLastestIssue().subscribe({
+      next: (data) =>{
+        this.issue = data.issueDto;
+      },
+      error: (error) => {
+
+      }
+    })
     this.statuses = [
       { label: 'Đang tiến hành', value: true },
       { label: 'Kết thúc', value: false },
@@ -108,8 +119,13 @@ export class IssueListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/issue', issueId]);
   }
 
-  navigateToUpdate(issueId: number) {
-    this.router.navigate(['/issue/update', issueId]);
+  navigateToUpdate(issueId: number, isActive: any) {
+if (isActive){
+  this.router.navigate(['/issue/update', issueId]);
+
+}else {
+  return
+}
   }
 
   ngOnDestroy(): void {

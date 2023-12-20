@@ -237,7 +237,7 @@
     <div
       class="col-md-12 d-flex justify-content-center align-items-center mt-2"
     >
-      <button pButton [disabled]="!canFinish" (click)="finishIssue()">
+      <button pButton [disabled]="!canFinish || issue.status.statusId == 4"  (click)="confirm()">
         Hoàn thành
       </button>
     </div>
@@ -246,8 +246,9 @@
 <app-loading-complete-dialog
   [visible]="isLoading"
   [completed]="submitCompleted"
-  [header]="'Tạo mới người dùng'"
-  [progress]="'Đang tạo mới người dùng'"
-  [complete]="'Tạo mới người dùng thành công'"
+  [header]="'Kết thúc kế hoạch kiểm tra'"
+  [progress]="'Đang kết thúc kế hoạch kiểm tra'"
+  [complete]="'Kết thúc kế hoạch kiểm tra thành công'"
 ></app-loading-complete-dialog>
 <p-toast key="issue-detail" position="top-right"></p-toast>
+<p-confirmDialog key="issue-detail-confirm" [style]="{width: '50vw'}"></p-confirmDialog>
