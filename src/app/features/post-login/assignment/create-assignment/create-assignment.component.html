@@ -2,15 +2,18 @@
   <p-dialog
     [header]="action === 'update' ? 'Cập nhật công việc' : 'Tạo mới công việc'"
     [(visible)]="assignmentVisible"
-    [style]="{ width: '1400px' }"
+    [style]="{ width: '40vw' }"
     [draggable]="false"
     [resizable]="false"
+    [modal]="true"
     (onHide)="assignmentPopuptHideEvent()"
   >
     <div *ngIf="selectedAssignment && action == 'addchild'" class="mb-2">
       <label class="mb-1 fw-medium">Thuộc</label>
       <br />
-      <span class="text-black-50">{{ selectedAssignment.assignmentName }}</span>
+      <span class="span-heading-color">{{
+        selectedAssignment.assignmentName
+      }}</span>
     </div>
     <div class="mb-2">
       <label class="mb-1 fw-medium"
@@ -72,16 +75,18 @@
       <span class="mb-1">Hạn nộp</span><br />
       <input pInputText type="date" formControlName="deadline" />
     </div> -->
-    <button *ngIf="action == 'update'" pButton (click)="update()">
-      Cập nhật
-    </button>
-    <button
-      *ngIf="action == 'addroot' || action == 'addchild'"
-      pButton
-      (click)="add()"
-    >
-      Thêm mới
-    </button>
+    <div class="d-flex justify-content-center align-items-center">
+      <button *ngIf="action == 'update'" pButton (click)="update()">
+        Cập nhật
+      </button>
+      <button
+        *ngIf="action == 'addroot' || action == 'addchild'"
+        pButton
+        (click)="add()"
+      >
+        Thêm mới
+      </button>
+    </div>
   </p-dialog>
   <p-toast></p-toast>
   <p-confirmDialog
@@ -107,13 +112,13 @@
             <h6 class="mat-headline-6">Danh sách công việc</h6>
           </div>
           <div>
-<!--            <button-->
-<!--              [disabled]="assignments.length != 0 || issueNotFound"-->
-<!--              pButton-->
-<!--              (click)="openDetail(null, 'addroot')"-->
-<!--            >-->
-<!--              Tạo mới-->
-<!--            </button>-->
+            <!--            <button-->
+            <!--              [disabled]="assignments.length != 0 || issueNotFound"-->
+            <!--              pButton-->
+            <!--              (click)="openDetail(null, 'addroot')"-->
+            <!--            >-->
+            <!--              Tạo mới-->
+            <!--            </button>-->
           </div>
         </div>
       </ng-template>
@@ -169,7 +174,13 @@
       </ng-template>
       <ng-template pTemplate="footer">
         <div class="p-2">
-          <button [disabled]="assignments.length == 0 || issueNotFound" pButton (click)="sendToSchools()">Gửi template</button>
+          <button
+            [disabled]="assignments.length == 0 || issueNotFound"
+            pButton
+            (click)="sendToSchools()"
+          >
+            Gửi template
+          </button>
         </div>
       </ng-template>
     </p-treeTable>
