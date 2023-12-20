@@ -476,8 +476,11 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
               this.isLoading = false;
             }, 1500);
             setTimeout(() => {
-              this.router.navigate(['issue/' + this.issueId]);
+              this.submitCompleted = true;
             }, 1500);
+            setTimeout(() => {
+              this.router.navigate(['issue/' + this.issueId]);
+            }, 3000);
           },
           error: (error) => {
             this.isLoading = false;
