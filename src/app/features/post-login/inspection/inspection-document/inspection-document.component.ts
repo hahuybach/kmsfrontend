@@ -72,6 +72,7 @@ export class InspectionDocumentComponent implements OnInit {
       this.canUploadDocument = false;
       this.canDeleteDocument = false;
     }
+    console.log(this.canDeleteDocument)
     this.changeDetailRecordVisible();
   }
 
@@ -126,7 +127,6 @@ export class InspectionDocumentComponent implements OnInit {
     this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
       next: (data) => {
         this.inspectionDocument = data;
-        this.canDeleteDocument= data.canAlterDoc;
       },
       error: (error) => {
         this.toastService.showError('inspection-document', "Lỗi", error.error.message)

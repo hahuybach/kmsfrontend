@@ -90,13 +90,11 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   }
 
   deleteDocument() {
-    console.log('delete')
     this.deleteDocumentSubmitted = true;
     const deleteDocument = this.recordService.deleteDocumentById(this.recordId).subscribe({
       next: (response) => {
         this.deleteDocumentCompleted = true;
         setTimeout(() => {
-          this.initRecordData();
           this.detailRecordPopupVisible = false;
         }, 1000);
       },
@@ -131,6 +129,8 @@ export class RecordDetailComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+
     if (changes['recordId'] && changes['recordId'].isFirstChange()) {
       return;
     }

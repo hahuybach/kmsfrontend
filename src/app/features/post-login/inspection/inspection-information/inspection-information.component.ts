@@ -44,7 +44,7 @@ export class InspectionInformationComponent implements OnInit {
     const statusSeverityMap: { [key: string]: string } = {
       "Chưa bắt đầu": 'warning',
       "Đang tiến hành": 'info',
-      "Đã hoàn thành": 'success',
+      "Hoàn thành": 'success',
     };
     return statusSeverityMap[status] || 'info'; // Default to ' info' if statusId is not in the map
   }
@@ -56,7 +56,6 @@ export class InspectionInformationComponent implements OnInit {
     this.inspectionService.getInspectionInformation(this.inspectionId).subscribe({
       next: (data) => {
         this.inspection = data;
-        console.log(this.inspection)
       },
       error: (error) => {
         console.log(error)
