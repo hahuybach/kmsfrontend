@@ -206,7 +206,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
               'Xóa thành công',
               'Đã xóa ' + inspector.user.fullName + ' khỏi danh sách'
             );
-            this.toggleStore();
+            // this.toggleStore();
           }
         },
       });
@@ -227,7 +227,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
 
   //click plus icon event scrollview
   addInspector() {
-    this.isChanged = false;
+    // this.isChanged = false;
     this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
     this.inspectorLeftList = this.inspectorLeftList.filter(
       (val) => !this.selectedInspectors?.includes(val)
@@ -415,73 +415,81 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    this.isLoading = true;
-    const inspectorFormAttr = this.issueForm.get('inspectorId');
-    if (inspectorFormAttr !== null) {
-      inspectorFormAttr.patchValue(
-        this.issue.inspectors.map((item: any) => item.accountId)
-      );
-    }
-    console.log(this.addedDocumentIssues);
+    this.confirmationService.confirm({
+      message: 'Bạn có muốn cập nhật kế hoạch kiểm tra không',
+      header: 'Xác nhận cập nhật',
+      key: 'confirmUpdateIssue',
+      accept: () => {
+        this.isLoading = true;
+        const inspectorFormAttr = this.issueForm.get('inspectorId');
+        if (inspectorFormAttr !== null) {
+          inspectorFormAttr.patchValue(
+            this.issue.inspectors.map((item: any) => item.accountId)
+          );
+        }
+        console.log(this.addedDocumentIssues);
 
-    const addedDocumentIssues: DocumentIssue[] = Array.from(
-      this.addedDocumentIssues.entries()
-    ).map(([key, value]: [number, Record<string, any>]) => {
-      return {
-        documentName: value['documentName'],
-        documentCode: value['documentCode'],
-        documentTypeId: key,
-        file: value['file'],
-      };
-    });
-    addedDocumentIssues.sort(
-      (a: any, b: any) => a.documentTypeId - b.documentTypeId
-    );
-    console.log(addedDocumentIssues);
-    const files = addedDocumentIssues.map((item) => item.file);
-    console.log(files);
-    const addedDocumentIssuesFinal = addedDocumentIssues.map(
-      ({ file, ...rest }) => rest
-    );
-    const formData = new FormData();
-    const issue = {
-      issueId: this.issue.issueId,
-      issueName: this.issueForm.get('issueName')?.value,
-      description: this.issueForm.get('description')?.value,
-      inspectorId: this.issueForm.get('inspectorId')?.value,
-      addedDocumentIssues: addedDocumentIssuesFinal,
-      inEffectiveDocumentIds: this.inEffectiveDocumentIds,
-      status: this.issue.status,
-    };
-    console.log(issue);
-    formData.append(
-      'issue',
-      new Blob([JSON.stringify(issue)], { type: 'application/json' })
-    );
-    files.forEach((item) => {
-      const file: File = item; // Assuming the file property is of type File
-      console.log(file);
-      // Append each file to the FormData object
-      formData.append('files', file, file['name']);
-    });
-    this.issueService.updateIssue(formData).subscribe({
-      next: (response) => {
-        this.submitCompleted = true;
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1500);
-
-        this.router.navigate(['issue/' + this.issueId]);
-      },
-      error: (error) => {
-        this.isLoading = false;
-
-        this.toastService.showError(
-          'toastUpdateIssue',
-          'Cập nhật thất bại',
-          error.error.message
+        const addedDocumentIssues: DocumentIssue[] = Array.from(
+          this.addedDocumentIssues.entries()
+        ).map(([key, value]: [number, Record<string, any>]) => {
+          return {
+            documentName: value['documentName'],
+            documentCode: value['documentCode'],
+            documentTypeId: key,
+            file: value['file'],
+          };
+        });
+        addedDocumentIssues.sort(
+          (a: any, b: any) => a.documentTypeId - b.documentTypeId
         );
-        this.ngOnInit();
+        console.log(addedDocumentIssues);
+        const files = addedDocumentIssues.map((item) => item.file);
+        console.log(files);
+        const addedDocumentIssuesFinal = addedDocumentIssues.map(
+          ({ file, ...rest }) => rest
+        );
+        const formData = new FormData();
+        const issue = {
+          issueId: this.issue.issueId,
+          issueName: this.issueForm.get('issueName')?.value,
+          description: this.issueForm.get('description')?.value,
+          inspectorId: this.issueForm.get('inspectorId')?.value,
+          addedDocumentIssues: addedDocumentIssuesFinal,
+          inEffectiveDocumentIds: this.inEffectiveDocumentIds,
+          status: this.issue.status,
+        };
+        console.log(issue);
+        formData.append(
+          'issue',
+          new Blob([JSON.stringify(issue)], { type: 'application/json' })
+        );
+        files.forEach((item) => {
+          const file: File = item; // Assuming the file property is of type File
+          console.log(file);
+          // Append each file to the FormData object
+          formData.append('files', file, file['name']);
+        });
+        this.issueService.updateIssue(formData).subscribe({
+          next: (response) => {
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 1500);
+            setTimeout(() => {
+              this.router.navigate(['issue/' + this.issueId]);
+            }, 1500);
+          },
+          error: (error) => {
+            this.isLoading = false;
+
+            this.toastService.showError(
+              'toastUpdateIssue',
+              'Cập nhật thất bại',
+              error.error.message
+            );
+            this.ngOnInit();
+          },
+        });
       },
     });
   }
