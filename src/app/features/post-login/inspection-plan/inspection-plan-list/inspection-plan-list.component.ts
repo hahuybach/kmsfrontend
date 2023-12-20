@@ -12,6 +12,7 @@ import {Role} from "../../../../shared/enum/role";
 import {dateToTuiDay, toIsoStringUrl, tuiDayToDate, unSub} from "../../../../shared/util/util";
 import {TuiDayRange} from "@taiga-ui/cdk";
 import {FormControl, FormGroup} from "@angular/forms";
+import {IssueResponse} from "../../../../models/issue-response";
 
 @Component({
   selector: 'app-inspection-plan-list',
@@ -78,7 +79,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
     {label: 'Bao gồm tôi', value: true},
     {label: 'Không bao gồm tôi', value: false},
   ];
-
+  issue: IssueResponse
   setAuth() {
     if (this.auth.getRolesFromCookie()) {
       for (const argument of this.auth.getRoleFromJwt()) {
@@ -195,7 +196,12 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setAuth()
+    this.issueService.getLastestIssue().subscribe({
+      next: (data) => {
+        this.issue = data.issueDto;
 
+      }
+    })
     if (this.isDirector) {
       const sub = this.schoolService.findAllSchools().subscribe({
           next: (data) => {

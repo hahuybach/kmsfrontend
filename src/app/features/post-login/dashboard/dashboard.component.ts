@@ -28,7 +28,7 @@ import {tuiSum} from '@taiga-ui/cdk';
 export class DashboardComponent implements OnInit, OnDestroy {
   subs: any[] = [];
   totalSchool: any;
-  numberOfInspectedSchool: any;
+  numberOfNonInspectedSchool: any;
   issue: IssueResponse;
   numberOfIniPlanInProgress: any;
   numberOfIniPlanWait: any;
@@ -295,11 +295,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           .subscribe({
             next: (data) => {
               if (data) {
-                this.numberOfInspectedSchool = data;
-
+                this.numberOfNonInspectedSchool = data;
               }
 
-              console.log(this.numberOfInspectedSchool);
+              console.log(this.numberOfNonInspectedSchool);
             },
             error: (error) => {
               this.issueNotFound = true;

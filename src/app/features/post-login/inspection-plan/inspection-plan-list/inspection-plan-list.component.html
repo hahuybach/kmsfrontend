@@ -140,6 +140,7 @@
     >
       <button pButton (click)="onCreateInspectionPlan()"
               *ngIf="isDirector"
+              [disabled]="!issue || issue.status?.statusId == 2"
       >Tạo mới
       </button>
     </div>
