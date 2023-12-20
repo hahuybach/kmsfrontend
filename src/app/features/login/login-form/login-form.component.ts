@@ -39,6 +39,7 @@ export class LoginFormComponent implements OnInit {
         },
         error: (err) => {
           this.toastService.showError('center', 'Thông báo', err.error.message);
+          this.loading = false;
         },
       });
     }

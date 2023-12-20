@@ -11,12 +11,12 @@
     <div class="spinner-border text-center" role="status"></div>
     <p class="mt-4 fw-medium">{{progress}}</p>
   </div>
-  <div *ngIf="completed" class="d-flex flex-column justify-content-center align-items-center mt-5">
+  <div *ngIf="completed" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
     <i class="bi bi-check-circle-fill icon"></i>
-    <p class="mt-4 icon-text fw-medium mt-3">{{complete}}</p>
+    <p class="mt-4 icon-text fw-medium">{{complete}}</p>
   </div>
-  <div *ngIf="failed" class="d-flex flex-column justify-content-center align-items-center mt-5">
+  <div *ngIf="failed" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
     <i class="bi bi-x-circle-fill icon"></i>
-    <p class="mt-4 icon-text fw-medium mt-3">{{fail}}</p>
+    <p class="mt-4 icon-text fw-medium">{{fail}}</p>
   </div>
 </p-dialog>

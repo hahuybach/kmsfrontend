@@ -172,11 +172,14 @@ export class RecordDetailComponent implements OnChanges, OnInit {
           },
           error: (error) => {
             this.toastService.showError('deleteInComplete', "Lỗi cập nhật", error.error.message);
+            if (error.error.message == "Mã văn bản trùng lặp"){
+              console.log('fwfw')
+              this.documentForm.get('documentCode')?.setErrors({duplicateCode: true});
+            }
             this.updateDocumentFailed = true;
             setTimeout(() => {
               this.updateDocumentSubmitted = false;
               this.updateDocumentFailed = false;
-              this.resetForm();
               this.initRecordData();
             }, 1000);
           }

@@ -44,7 +44,7 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
     Role.ACCOUNTANT, Role.MEDIC, Role.CLERICAL_ASSISTANT, Role.SECURITY,   Role.CHIEF_NUTRITION, Role.NUTRITION_EMP]
 
   isMine: any;
-
+  sortByCriteria: string[] = ['inspectionPlanName','issue.createdDate','school.schoolName','startDate','endDate','status']
   constructor(
     private readonly router: Router,
     private readonly inspectionPlanService: inspectionPlanService,
@@ -118,15 +118,30 @@ export class InspectionPlanListComponent implements OnInit, OnDestroy {
       value => {
         if (value['pageNo']) {
           this.pageNo = value['pageNo'];
+          if (isNaN(this.pageSize)){
+            this.pageNo = 1
+          }
         }
         if (value['pageSize']) {
           this.pageSize = value['pageSize'];
+          if (isNaN(this.pageSize)){
+            this.pageSize = 5
+          }
+          if (this.pageSize > 25) {
+            this.pageSize = 5;
+          }
         }
         if (value['sortBy']) {
           this.sortBy = value['sortBy'];
+          if (!this.sortByCriteria.some(str => str == this.sortBy)){
+            this.sortBy = 'issue.createdDate';
+          }
         }
         if (value['sortDirection']) {
           this.sortDirection = value['sortDirection'];
+          if (this.sortDirection != 'desc' && this.sortDirection != 'asc'){
+            this.sortDirection = 'desc'
+          }
         }
         if (value['planName']) {
           this.planName = value['planName'];
