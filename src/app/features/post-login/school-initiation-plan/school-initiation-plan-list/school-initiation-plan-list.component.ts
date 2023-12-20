@@ -50,7 +50,7 @@ export class SchoolInitiationPlanListComponent implements OnInit {
   maxPage: any;
   recordPerPageOption: number[] = [5, 15, 25];
   isPrincipal: boolean;
-
+  sortByCriteria: string[] = ['initiationPlanName','issue.createdDate','school.schoolName','createdDate','deadline','status']
   constructor(
     private initiationplanService: InitiationplanService,
     private schoolService: SchoolService,
@@ -66,18 +66,30 @@ export class SchoolInitiationPlanListComponent implements OnInit {
     this.activateRouter.queryParams.subscribe((value) => {
       if (value['pageNo']) {
         this.pageNo = value['pageNo'];
+        if (isNaN(this.pageSize)){
+          this.pageNo = 1
+        }
       }
       if (value['pageSize']) {
         this.pageSize = value['pageSize'];
+        if (isNaN(this.pageSize)){
+          this.pageSize = 5
+        }
         if (this.pageSize > 25) {
           this.pageSize = 5;
         }
       }
       if (value['sortBy']) {
         this.sortBy = value['sortBy'];
+        if (!this.sortByCriteria.some(str => str == this.sortBy)){
+          this.sortBy = 'createdDate';
+        }
       }
       if (value['sortDirection']) {
         this.sortDirection = value['sortDirection'];
+        if (this.sortDirection != 'desc' && this.sortDirection != 'asc'){
+          this.sortDirection = 'desc'
+        }
       }
       if (value['planName']) {
         this.planName = value['planName'];
