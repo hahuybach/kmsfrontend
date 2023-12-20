@@ -23,8 +23,8 @@
   ></app-file-loading>
   <p-confirmDialog
     [style]="{ width: '50vw' }"
-    acceptLabel="Đồng ý"
-    rejectLabel="Hủy"
+    acceptLabel="Xác nhận"
+    rejectLabel="Hủy bỏ"
     key="confirmSchoolInitiationplan"
   ></p-confirmDialog>
   <!-- file preview -->
@@ -217,19 +217,24 @@
       header="Chỉnh sửa hạn nộp"
       [(visible)]="resetDeadlineVisible"
       [modal]="true"
-      [style]="{ width: '60vw', height: '820px' }"
+      [style]="{ width: '20vw' }"
       [draggable]="false"
       [resizable]="false"
     >
-      <div>
-        <p-calendar
+      <div class="d-flex justify-content-center align-items-center">
+        <!-- <p-calendar
           formControlName="deadline"
           [minDate]="minDate"
           [inline]="true"
           [style]="{ width: '100%' }"
-        ></p-calendar>
+        ></p-calendar> -->
+        <tui-calendar
+          [min]="minDate"
+          [value]="newDeadlineValue"
+          (dayClick)="onDayClick($event)"
+        ></tui-calendar>
       </div>
-      <div class="mt-5 d-flex justify-content-center align-items-center">
+      <div class="mt-3 d-flex justify-content-center align-items-center">
         <button pButton (click)="resetDeadline()">Thay đổi hạn nộp</button>
       </div>
     </p-dialog>
@@ -475,11 +480,14 @@
             >
               <img src="assets/img/pdf_logo.svg" alt="" />
             </div>
-            <div class="row col-md-10 d-flex align-items-center mb-3 file-item-content">
+            <div
+              class="row col-md-10 d-flex align-items-center mb-3 file-item-content"
+            >
               <div class="col-md-8">
                 <p class="mb-0">
-                  <span class="fw-medium span-doc-name"
-                    >{{ lastDocs.schoolDocument.documentName }}</span
+                  <span class="fw-medium span-doc-name">{{
+                    lastDocs.schoolDocument.documentName
+                  }}</span
                   ><span class="fw-medium">.pdf</span>
                 </p>
                 <p class="mb-0">
@@ -621,11 +629,14 @@
               >
                 <img src="assets/img/pdf_logo.svg" alt="" />
               </div>
-              <div class="row col-md-10 d-flex align-items-center mb-3 file-item-content">
+              <div
+                class="row col-md-10 d-flex align-items-center mb-3 file-item-content"
+              >
                 <div class="col-md-8">
                   <p class="mb-0">
-                    <span class="fw-medium span-doc-name"
-                      >{{ lastDocs.departmentDocument.documentName }}</span
+                    <span class="fw-medium span-doc-name">{{
+                      lastDocs.departmentDocument.documentName
+                    }}</span
                     ><span class="fw-medium">.pdf</span>
                   </p>
                   <p class="mb-0">

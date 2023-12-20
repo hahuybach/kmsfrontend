@@ -95,11 +95,11 @@ export class ChangePasswordComponent implements OnDestroy {
       this.isSubmitted = true;
         if (!this.form.invalid) {
           this.confirmationService.confirm({
-            message: 'Bạn có xác nhận việc thay đổi này không?',
-            header: 'Xác nhận',
+            message: 'Xác nhận thay đổi mật khẩu?',
+            header: 'Thay đổi mật khẩu',
             icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Có',
-            rejectLabel: 'Không',
+            acceptLabel: 'Xác nhận',
+            rejectLabel: 'Hủy bọ',
             accept: () => {
               this.onSubmit()
 

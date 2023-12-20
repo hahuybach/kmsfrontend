@@ -102,8 +102,8 @@
       <thead>
       <tr>
         <th (click)="onSort('assignmentName')">
-          <div class="header-container">
-            <span class="icon-text">Tên công việc tổng</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'assignmentName'">
+            <label class="icon-text me-1">Tên công việc tổng</label>
             <i
               class="bi bi-sort-up"
               *ngIf="sortBy === 'assignmentName' && sortDirection === 'asc'"
@@ -115,8 +115,8 @@
           </div>
         </th>
         <th (click)="onSort('issue.createdDate')">
-          <div class="header-container">
-            <span class="icon-text">Kế hoạch kiểm tra</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'issue.createdDate'">
+            <label class="icon-text me-1">Kế hoạch kiểm tra</label>
             <i
               class="bi bi-sort-up"
               *ngIf="
@@ -131,10 +131,9 @@
             ></i>
           </div>
         </th>
-
         <th (click)="onSort('school.schoolName')">
-          <div class="header-container">
-            <span class="icon-text">Trường</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'school.schoolName'">
+            <label class="icon-text me-1">Trường</label>
             <i
               class="bi bi-sort-up"
               *ngIf="
@@ -150,8 +149,8 @@
           </div>
         </th>
         <th (click)="onSort('status')">
-          <div class="header-container">
-            <span class="icon-text">Trạng thái</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'status'">
+            <label class="icon-text me-1">Trạng thái</label>
             <i
               class="bi bi-sort-up"
               *ngIf="sortBy === 'status' && sortDirection === 'asc'"
@@ -216,6 +215,8 @@
           <button
             class="action-button"
             type="button"
+            pTooltip="Chi tiết"
+            tooltipPosition="top"
             (click)="
                 onDetail(
                   task.school?.schoolId,

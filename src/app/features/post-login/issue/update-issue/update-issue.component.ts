@@ -5,25 +5,25 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {IssueService} from '../../../../services/issue.service';
-import {switchMap} from 'rxjs';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IssueService } from '../../../../services/issue.service';
+import { switchMap } from 'rxjs';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import {
   ConfirmationService,
   MessageService,
   ConfirmEventType,
 } from 'primeng/api';
-import {InspectorService} from 'src/app/services/inspector.service';
-import {FormBuilder, Validators} from '@angular/forms';
-import {NoWhitespaceValidator} from 'src/app/shared/validators/no-white-space.validator';
-import {AuthService} from 'src/app/services/auth.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {FileService} from 'src/app/services/file.service';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {ToastService} from 'src/app/shared/toast/toast.service';
-import {Dialog} from 'primeng/dialog';
-import {getFirstAndLastName} from "../../../../shared/util/util";
+import { InspectorService } from 'src/app/services/inspector.service';
+import { FormBuilder, Validators } from '@angular/forms';
+import { NoWhitespaceValidator } from 'src/app/shared/validators/no-white-space.validator';
+import { AuthService } from 'src/app/services/auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FileService } from 'src/app/services/file.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ToastService } from 'src/app/shared/toast/toast.service';
+import { Dialog } from 'primeng/dialog';
+import { getFirstAndLastName } from '../../../../shared/util/util';
 
 interface DocumentIssue {
   documentName: string;
@@ -37,7 +37,7 @@ interface DocumentIssue {
   styleUrls: ['./update-issue.component.scss'],
 })
 export class UpdateIssueComponent implements OnInit, AfterViewInit {
-  @ViewChild('fileInput', {static: false}) fileInputRef!: ElementRef;
+  @ViewChild('fileInput', { static: false }) fileInputRef!: ElementRef;
   addedDocumentIssues = new Map<number, object>();
   file: File;
   fileInputPlaceholders: string;
@@ -103,7 +103,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
       routerLink: '/issue/list',
     },
     {
-      caption: 'Cập nhật kế hoạch kiểm tra'
+      caption: 'Cập nhật kế hoạch kiểm tra',
     },
   ];
 
@@ -120,7 +120,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     private router: Router,
     protected http: HttpClient,
     private fileService: FileService,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer
   ) {
     this.issueId = null;
   }
@@ -187,14 +187,27 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
           this.issue.inspectors = this.issue.inspectors.filter(
             (item: any) => item.accountId != inspector.accountId
           );
-          // add lại vào danh sách trong popup
-          this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
-          this.inspectorLeftList.push(inspector);
-          this.toastService.showSuccess(
-            'toastUpdateIssue',
-            'Xóa thành công',
-            'Đã xóa ' + inspector.user.fullName + ' khỏi danh sách'
-          );
+          console.log(this.isEligibleInspectorExist(this.issue.inspectors));
+
+          if (!this.isEligibleInspectorExist(this.issue.inspectors)) {
+            this.issue.inspectors = this.inspectorBeforeList;
+            this.toastService.showWarn(
+              'toastUpdateIssue',
+              'Cảnh báo',
+              'Danh sách phải có ít nhất 1 trưởng phòng'
+            );
+            this.toggleStore();
+          } else {
+            // add lại vào danh sách trong popup
+            this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
+            this.inspectorLeftList.push(inspector);
+            this.toastService.showSuccess(
+              'toastUpdateIssue',
+              'Xóa thành công',
+              'Đã xóa ' + inspector.user.fullName + ' khỏi danh sách'
+            );
+            // this.toggleStore();
+          }
         },
       });
     }
@@ -214,7 +227,7 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
 
   //click plus icon event scrollview
   addInspector() {
-    this.isChanged = false;
+    // this.isChanged = false;
     this.inspectorLeftBeforeList = this.inspectorLeftList.slice();
     this.inspectorLeftList = this.inspectorLeftList.filter(
       (val) => !this.selectedInspectors?.includes(val)
@@ -402,78 +415,81 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    this.isLoading = true;
-    const inspectorFormAttr = this.issueForm.get('inspectorId');
-    if (inspectorFormAttr !== null) {
-      inspectorFormAttr.patchValue(
-        this.issue.inspectors.map((item: any) => item.accountId)
-      );
-    }
-    console.log(this.addedDocumentIssues);
+    this.confirmationService.confirm({
+      message: 'Bạn có muốn cập nhật kế hoạch kiểm tra không',
+      header: 'Xác nhận cập nhật',
+      key: 'confirmUpdateIssue',
+      accept: () => {
+        this.isLoading = true;
+        const inspectorFormAttr = this.issueForm.get('inspectorId');
+        if (inspectorFormAttr !== null) {
+          inspectorFormAttr.patchValue(
+            this.issue.inspectors.map((item: any) => item.accountId)
+          );
+        }
+        console.log(this.addedDocumentIssues);
 
-    const addedDocumentIssues: DocumentIssue[] = Array.from(
-      this.addedDocumentIssues.entries()
-    ).map(([key, value]: [number, Record<string, any>]) => {
-      return {
-        documentName: value['documentName'],
-        documentCode: value['documentCode'],
-        documentTypeId: key,
-        file: value['file'],
-      };
-    });
-    addedDocumentIssues.sort(
-      (a: any, b: any) => a.documentTypeId - b.documentTypeId
-    );
-    console.log(addedDocumentIssues);
-    const files = addedDocumentIssues.map((item) => item.file);
-    console.log(files);
-    const addedDocumentIssuesFinal = addedDocumentIssues.map(
-      ({file, ...rest}) => rest
-    );
-    const formData = new FormData();
-    const issue = {
-      issueId: this.issue.issueId,
-      issueName: this.issueForm.get('issueName')?.value,
-      description: this.issueForm.get('description')?.value,
-      inspectorId: this.issueForm.get('inspectorId')?.value,
-      addedDocumentIssues: addedDocumentIssuesFinal,
-      inEffectiveDocumentIds: this.inEffectiveDocumentIds,
-      status: this.issue.status,
-    };
-    console.log(issue);
-    formData.append(
-      'issue',
-      new Blob([JSON.stringify(issue)], {type: 'application/json'})
-    );
-    files.forEach((item) => {
-      const file: File = item; // Assuming the file property is of type File
-      console.log(file);
-      // Append each file to the FormData object
-      formData.append('files', file, file['name']);
-    });
-    this.issueService.updateIssue(formData).subscribe({
-      next: (response) => {
-        this.submitCompleted = true;
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 1500);
-        // this.uploadFileVisible = false;
-        // this.toastService.showSuccess(
-        //   'toastUpdateIssue',
-        //   'Cập nhật thành công',
-        //   'Cập nhật kế hoạch kiểm tra thành công'
-        // );
-        this.router.navigate(['issue/' + this.issueId])
-      },
-      error: (error) => {
-        this.isLoading = false;
-
-        this.toastService.showError(
-          'toastUpdateIssue',
-          'Cập nhật thất bại',
-          error.error.message
+        const addedDocumentIssues: DocumentIssue[] = Array.from(
+          this.addedDocumentIssues.entries()
+        ).map(([key, value]: [number, Record<string, any>]) => {
+          return {
+            documentName: value['documentName'],
+            documentCode: value['documentCode'],
+            documentTypeId: key,
+            file: value['file'],
+          };
+        });
+        addedDocumentIssues.sort(
+          (a: any, b: any) => a.documentTypeId - b.documentTypeId
         );
-        this.ngOnInit()
+        console.log(addedDocumentIssues);
+        const files = addedDocumentIssues.map((item) => item.file);
+        console.log(files);
+        const addedDocumentIssuesFinal = addedDocumentIssues.map(
+          ({ file, ...rest }) => rest
+        );
+        const formData = new FormData();
+        const issue = {
+          issueId: this.issue.issueId,
+          issueName: this.issueForm.get('issueName')?.value,
+          description: this.issueForm.get('description')?.value,
+          inspectorId: this.issueForm.get('inspectorId')?.value,
+          addedDocumentIssues: addedDocumentIssuesFinal,
+          inEffectiveDocumentIds: this.inEffectiveDocumentIds,
+          status: this.issue.status,
+        };
+        console.log(issue);
+        formData.append(
+          'issue',
+          new Blob([JSON.stringify(issue)], { type: 'application/json' })
+        );
+        files.forEach((item) => {
+          const file: File = item; // Assuming the file property is of type File
+          console.log(file);
+          // Append each file to the FormData object
+          formData.append('files', file, file['name']);
+        });
+        this.issueService.updateIssue(formData).subscribe({
+          next: (response) => {
+            this.submitCompleted = true;
+            setTimeout(() => {
+              this.isLoading = false;
+            }, 1500);
+            setTimeout(() => {
+              this.router.navigate(['issue/' + this.issueId]);
+            }, 1500);
+          },
+          error: (error) => {
+            this.isLoading = false;
+
+            this.toastService.showError(
+              'toastUpdateIssue',
+              'Cập nhật thất bại',
+              error.error.message
+            );
+            this.ngOnInit();
+          },
+        });
       },
     });
   }
@@ -506,7 +522,19 @@ export class UpdateIssueComponent implements OnInit, AfterViewInit {
     );
   }
 
-  getAvatar(fullName: string):string{
+  getAvatar(fullName: string): string {
     return getFirstAndLastName(fullName);
+  }
+  isEligibleInspectorExist(selectedInspectors: any[]): boolean {
+    console.log(selectedInspectors);
+    return selectedInspectors.some(
+      (inspector: any) =>
+        inspector.roles &&
+        inspector.roles.some(
+          (role: { roleName: string }): boolean =>
+            role.roleName === 'Trưởng Phòng'
+          // role.roleName === 'Trưởng Phòng' || role.roleName === 'Phó Phòng'
+        )
+    );
   }
 }

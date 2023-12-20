@@ -119,15 +119,15 @@
     }
 
     th:nth-child(2), td:nth-child(2) {
-      width: 18%;
-    }
-
-    th:nth-child(3), td:nth-child(3) {
       width: 17%;
     }
 
+    th:nth-child(3), td:nth-child(3) {
+      width: 16%;
+    }
+
     th:nth-child(4), td:nth-child(4) {
-      width: 10%;
+      width: 12%;
     }
 
     th:nth-child(5), td:nth-child(5) {
@@ -228,4 +228,11 @@
 
 .search-with-icon{
   font-size: 16px;
+}
+
+.table-header-sort{
+  color: $primary;
+  i{
+    margin-top: 0.3rem;
+  }
 }

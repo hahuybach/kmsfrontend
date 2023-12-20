@@ -130,8 +130,8 @@
       <thead>
       <tr>
         <th (click)="onSort('initiationPlanName')">
-          <div class="header-container">
-            <span class="icon-text">Tên kế hoạch</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'initiationPlanName'">
+            <label class="icon-text me-1">Tên kế hoạch</label>
             <i
               class="bi bi-sort-up"
               *ngIf="
@@ -147,8 +147,8 @@
           </div>
         </th>
         <th (click)="onSort('issue.createdDate')">
-          <div class="header-container">
-            <span class="icon-text">Kế hoạch kiểm tra</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'issue.createdDate'">
+            <label class="icon-text me-1">Kế hoạch kiểm tra</label>
             <i
               class="bi bi-sort-up"
               *ngIf="
@@ -165,8 +165,8 @@
         </th>
 
         <th (click)="onSort('school.schoolName')">
-          <div class="header-container">
-            <span class="icon-text">Trường</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'school.schoolName'">
+            <label class="icon-text me-1">Trường</label>
             <i
               class="bi bi-sort-up"
               *ngIf="
@@ -182,8 +182,8 @@
           </div>
         </th>
         <th (click)="onSort('createdDate')">
-          <div class="header-container">
-            <span class="icon-text">Ngày tạo</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'createdDate'">
+            <label class="icon-text me-1">Ngày tạo</label>
             <i
               class="bi bi-sort-up"
               *ngIf="sortBy === 'createdDate' && sortDirection === 'asc'"
@@ -195,8 +195,8 @@
           </div>
         </th>
         <th (click)="onSort('deadline')">
-          <div class="header-container">
-            <span class="icon-text">Hạn nộp</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'deadline'">
+            <label class="icon-text me-1">Hạn nộp</label>
             <i
               class="bi bi-sort-up"
               *ngIf="sortBy === 'deadline' && sortDirection === 'asc'"
@@ -208,8 +208,8 @@
           </div>
         </th>
         <th (click)="onSort('status')">
-          <div class="header-container">
-            <span class="icon-text">Trạng thái</span>
+          <div class="header-container" [class.table-header-sort]="sortBy == 'status'">
+            <span class="icon-text me-1">Trạng thái</span>
             <i
               class="bi bi-sort-up"
               *ngIf="sortBy === 'status' && sortDirection === 'asc'"
@@ -220,7 +220,6 @@
             ></i>
           </div>
         </th>
-
         <th></th>
       </tr>
       <tr>
@@ -277,6 +276,8 @@
           <button
             class="action-button"
             type="button"
+            pTooltip="Chi tiết"
+            tooltipPosition="top"
             (click)="onDetail(plan.initiationPlanId)"
           >
             <i class="bi bi-info-circle-fill"></i>
