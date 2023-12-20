@@ -57,7 +57,10 @@ export class UserListComponent implements OnInit, OnDestroy {
   sortByCriteria: string[] = ['user.userId', 'user.fullName','user.account.email','user.phoneNumber','user.account.school','user.account.school.schoolName','user.account.accountRoles.role.roleName','user.account.isActive']
   @ViewChild('fileInput')
   myInputVariable: ElementRef;
+    removeChiefInspector(){
+        this.roles = this.roles.filter(value => !(value.roleId == 5))
 
+    }
 
   resetExcelFile() {
     console.log(this.myInputVariable.nativeElement.files);
@@ -117,6 +120,8 @@ export class UserListComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.roles = data.roles;
           console.log(this.roles);
+            this.removeChiefInspector()
+
         },
         error: (err) => {
           this.toastService.showWarn('userListError', "Lỗi", err.error.message)
@@ -147,6 +152,8 @@ export class UserListComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.roles = data.roles;
           console.log(this.roles);
+            this.removeChiefInspector()
+
         },
         error: (err) => {
           this.toastService.showWarn('userListError', "Lỗi", err.error.message)
@@ -160,6 +167,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setAuthority();
+
     const currentUserSub = this.accountService.getCurrentUser().subscribe(
       {
         next: (data) => {
@@ -171,6 +179,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             this.loadSelectionForAdminAndDirector()
           } else {
             this.loadSelectionForPrincipal();
+
           }
 
         },
