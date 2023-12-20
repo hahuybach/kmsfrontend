@@ -140,6 +140,7 @@
     >
       <button pButton (click)="onCreateInspectionPlan()"
               *ngIf="isDirector"
+              [disabled]="!issue || issue.status?.statusId == 2"
       >Tạo mới
       </button>
     </div>
@@ -241,9 +242,11 @@
 
         <th></th>
       </tr>
-      <span *ngIf="totalElements == 0"
-      >Không tìm thấy bản ghi nào phù hợp</span
-      >
+      <tr>
+        <td colspan="6">
+          <p class="w-100 text-center mt-4 fw-medium fs-4" *ngIf="totalElements == 0">Không tìm thấy kế hoạch thanh tra phù hợp</p>
+        </td>
+      </tr>
       </thead>
       <tbody *ngIf="inspectionPlans && inspectionPlans.length > 0">
       <tr

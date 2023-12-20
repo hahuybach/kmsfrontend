@@ -1,13 +1,7 @@
 <div class="container-fluid">
-  <tui-breadcrumbs
-    size="l"
-  >
+  <tui-breadcrumbs size="l">
     <ng-container *ngFor="let item of breadCrumb">
-      <a
-        *tuiItem
-        tuiLink
-        [routerLink]="item.routerLink"
-      >
+      <a *tuiItem tuiLink [routerLink]="item.routerLink">
         {{ item.caption }}
       </a>
     </ng-container>
@@ -102,7 +96,13 @@
       <div class="col-3 mb-2">
         <label class="span-heading-color mb-1">Trạng thái</label>
         <br />
-        <p class="fw-medium p-content-fs">{{ issue.status.statusName }}</p>
+        <p-tag
+          class="status"
+          [severity]="issue.status.statusId == 3 ? 'success' : 'danger'"
+          [rounded]="true"
+        >
+          {{ issue.status.statusName }}
+        </p-tag>
       </div>
 
       <div class="col-6 mb-2">
@@ -120,9 +120,12 @@
       <div class="col-3 mb-2">
         <label class="span-heading-color mb-1">Ngày kết thúc</label>
         <br />
-        <p class="fw-medium p-content-fs" *ngIf="issue.endDate">{{issue.endDate | date : "MM/dd/yyyy"}}</p>
-        <p class="fw-medium p-content-fs" *ngIf="!issue.endDate">Chưa kết thúc</p>
-
+        <p class="fw-medium p-content-fs" *ngIf="issue.endDate">
+          {{ issue.endDate | date : "MM/dd/yyyy" }}
+        </p>
+        <p class="fw-medium p-content-fs" *ngIf="!issue.endDate">
+          Chưa kết thúc
+        </p>
       </div>
       <div>
         <h6 class="mat-headline-6">Tài liệu công văn</h6>
@@ -200,7 +203,7 @@
                     class="scrollview-item-icon d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(item.user.fullName)}}"
+                      text="{{ getAvatar(item.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
@@ -234,9 +237,9 @@
     <div
       class="col-md-12 d-flex justify-content-center align-items-center mt-2"
     >
-      <button pButton
-              [disabled]="!canFinish"
-              (click)="finishIssue()">Hoàn thành</button>
+      <button pButton [disabled]="!canFinish" (click)="finishIssue()">
+        Hoàn thành
+      </button>
     </div>
   </div>
 </div>

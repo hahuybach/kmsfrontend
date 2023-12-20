@@ -78,7 +78,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
     this.setAuth();
 
-    const method = this.issueService.getCurrentActiveIssue().subscribe({
+    const method = this.issueService.getLastestIssue().subscribe({
       next: (data) => {
         console.log("current issue" + data);
         this.issueId = data.issueDto.issueId;

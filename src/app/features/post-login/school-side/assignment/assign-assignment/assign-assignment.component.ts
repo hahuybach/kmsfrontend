@@ -205,7 +205,9 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         console.log('run here');
         const id = params['id'];
         console.log('****ID:' + id + '*****');
-        if (id > 0) this.openDetailRowNode({ assignmentId: id }, 'info');
+        if (id > 0) {
+          this.openDetailRowNode({ assignmentId: id }, 'info');
+        }
       }
     });
   }
@@ -252,8 +254,8 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
               .get('assigneeId')
               ?.setValue(this.listOfPossibleAssignees[0].accountId);
           }
-          this.minDate = dateToTuiDay(new Date ())
-          this.maxDate = dateToTuiDay(new Date(data.maxDate) );
+          this.minDate = dateToTuiDay(new Date());
+          this.maxDate = dateToTuiDay(new Date(data.maxDate));
           // if(data.maxDate){
           //
           // }
@@ -402,10 +404,13 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
           // const temp: Date = new Date(this.selectedAssignment.maxDate);
           // if (temp) temp.setDate(temp.getDate() + 1);
           // // this.maxDate = dateToTuiDay(temp);
-          this.minDate = dateToTuiDay(new Date ())
-          this.maxDate = dateToTuiDay(new Date(data.maxDate) );
-          console.log("maxdate when update: " + data.maxDate)
-          console.log("deadline hien tai: " + dateToTuiDay(new Date(this.selectedAssignment.deadline)))
+          this.minDate = dateToTuiDay(new Date());
+          this.maxDate = dateToTuiDay(new Date(data.maxDate));
+          console.log('maxdate when update: ' + data.maxDate);
+          console.log(
+            'deadline hien tai: ' +
+              dateToTuiDay(new Date(this.selectedAssignment.deadline))
+          );
           this.assignmentForm
             .get('assignmentName')
             ?.setValue(this.selectedAssignment.assignmentName);
@@ -504,22 +509,58 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
 
     return statusSeverityMap[statusId] || 'info';
   }
+  getStatusSeverityClass(statusId: number): string {
+    const statusSeverityMap: { [key: number]: string } = {
+      13: 'warning',
+      14: 'info',
+      15: 'success',
+      16: 'warning',
+      17: 'success',
+      18: 'danger',
+    };
+    console.log(statusSeverityMap[statusId]);
+    return 'p-tag p-tag-' + statusSeverityMap[statusId];
+  }
 
   // PREVIEW PDF
-  openNewTab(documentLink: string, fileExtension: string) {
+  openNewTab(
+    documentLink: string,
+    fileExtension: string,
+    documentName: string
+  ) {
     if (fileExtension === 'application/pdf') {
       this.pdfPreviewVisibility = true;
+      const method = this.fileService
+        .readAssignmentPDF(documentLink)
+        .subscribe((response) => {
+          const blobUrl = window.URL.createObjectURL(response.body as Blob);
+          this.pdfUrl = blobUrl;
+          this.safePdfUrl =
+            this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+          this.pdfLoaded = true;
+        });
+      this.sub.push(method);
+    } else {
+      const method = this.fileService
+        .readAssignmentPDF(documentLink)
+        .subscribe((response) => {
+          const blobUrl = window.URL.createObjectURL(response.body as Blob);
+          const downloadLink = document.createElement('a');
+          downloadLink.href = blobUrl;
+          downloadLink.download = documentName;
+          // Append the link to the document body (this step is important)
+          document.body.appendChild(downloadLink);
+
+          // Trigger a click event on the link
+          downloadLink.click();
+
+          // Remove the link from the DOM
+          document.body.removeChild(downloadLink);
+
+          // Revoke the Blob URL to free up resources
+          window.URL.revokeObjectURL(blobUrl);
+        });
     }
-    const method = this.fileService
-      .readAssignmentPDF(documentLink)
-      .subscribe((response) => {
-        const blobUrl = window.URL.createObjectURL(response.body as Blob);
-        this.pdfUrl = blobUrl;
-        this.safePdfUrl =
-          this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
-        this.pdfLoaded = true;
-      });
-    this.sub.push(method);
   }
   // check authorities
   hasAuthority(authority: string): boolean {
@@ -706,7 +747,6 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({
       message: 'Bạn có muốn nộp công việc này?',
       header: 'Xác nhận nộp',
-      icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmAssignAssignment',
       accept: () => {
         const jsonData = {
@@ -920,13 +960,13 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         url = '../../../../../assets/img/pdf_logo.svg';
         break;
       case 'application/msword':
-        url = '../../../../../assets/img/doc.png';
+        url = '../../../../../assets/img/doc_logo.svg';
         break;
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        url = '../../../../../assets/img/doc.png';
+        url = '../../../../../assets/img/doc_logo.svg';
         break;
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        url = '../../../../../assets/img/xls.png';
+        url = '../../../../../assets/img/xls_logo.svg';
         break;
     }
     return url;
@@ -990,8 +1030,6 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         this.restoreNodeState(node.children);
       }
     });
-    console.log('restore');
-    console.log(this.nodeStateMap);
   }
   expandNodesByIds(nodeIds: number[]) {
     for (let i = 0; i < nodeIds.length; i++) {
@@ -1013,7 +1051,12 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     this.pageNo = 0;
     if (this.searchData) {
       this.assignmentService
-        .filterAsm(this.issueId, this.authService.getSchoolFromJwt().schoolId, this.pageNo, this.searchData)
+        .filterAsm(
+          this.issueId,
+          this.authService.getSchoolFromJwt().schoolId,
+          this.pageNo,
+          this.searchData
+        )
         .subscribe({
           next: (data) => {
             this.searchItem = data;
@@ -1023,7 +1066,12 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         });
     } else {
       this.assignmentService
-        .filterAsm(this.issueId, this.authService.getSchoolFromJwt().schoolId, null, this.searchData)
+        .filterAsm(
+          this.issueId,
+          this.authService.getSchoolFromJwt().schoolId,
+          null,
+          this.searchData
+        )
         .subscribe({
           next: (data) => {
             this.searchItem = data;
@@ -1058,9 +1106,12 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   }
   onResultScroll(e: any) {
     const element = e.target as HTMLElement;
-    if (element.offsetHeight + element.scrollTop + 1 == element.scrollHeight) {
+    if (element.offsetHeight + element.scrollTop + 1 >= element.scrollHeight) {
       this.pageNo++;
+      console.log(this.pageNo);
+
       this.assignmentService
+
         .filterAsm(
           this.issueId,
           this.authService.getSchoolFromJwt().schoolId,

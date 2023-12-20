@@ -120,51 +120,67 @@
   </ng-template>
 </p-dialog>
 <div class="container-fluid">
-  <div class="card">
-    <p-treeTable
-      [value]="assignments"
-      [scrollable]="true"
-      [style]="{ 'min-width': '50rem' }"
-      [scrollable]="true"
-      scrollHeight="600px"
-    >
-      <ng-template pTemplate="caption">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h6 class="mat-headline-6">Chi tiết hồ sơ</h6>
+  <ng-container *ngIf="assignments; else noSchoolAssignments">
+    <div class="card">
+      <p-treeTable
+        [value]="assignments"
+        [scrollable]="true"
+        [style]="{ 'min-width': '50rem' }"
+        [scrollable]="true"
+        scrollHeight="600px"
+      >
+        <ng-template pTemplate="caption">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mat-headline-6">Chi tiết hồ sơ</h6>
+            </div>
           </div>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Hồ sơ</th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-rowNode>
-        <tr [ttRow]="rowNode" class="d-flex justify-content-between">
-          <td class="folder">
-            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-            <i class="bi bi-folder-fill folder-icon"></i>
-            {{ rowData.node.assignmentName }}
-          </td>
-          <ng-container>
-            <td class="d-flex">
-              <div
-                pTooltip="Chi tiết"
-                tooltipPosition="top"
-                class="action-item d-flex justify-content-center align-items-center mx-2"
-                (click)="openDetail(rowData.node?.assignmentId)"
-              >
-                <i class="bi bi-info-circle-fill"></i>
-              </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Hồ sơ</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-rowNode>
+          <tr [ttRow]="rowNode" class="d-flex justify-content-between">
+            <td class="folder">
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              <i class="bi bi-folder-fill folder-icon"></i>
+              {{ rowData.node.assignmentName }}
             </td>
-          </ng-container>
-          <ng-template #td>
-            <td></td>
-          </ng-template>
-        </tr>
-      </ng-template>
-    </p-treeTable>
-  </div>
+            <ng-container>
+              <td class="d-flex">
+                <div
+                  pTooltip="Chi tiết"
+                  tooltipPosition="top"
+                  class="action-item d-flex justify-content-center align-items-center mx-2"
+                  (click)="openDetail(rowData.node?.assignmentId)"
+                >
+                  <i class="bi bi-info-circle-fill"></i>
+                </div>
+              </td>
+            </ng-container>
+            <ng-template #td>
+              <td></td>
+            </ng-template>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+    </div>
+  </ng-container>
+  <ng-template #noSchoolAssignments>
+    <div>
+      <div class="d-flex justify-content-center align-items-center">
+        <h6 class="mat-headline-6 p-content-fs">
+          Hiện tại chưa có hồ sơ phía trường
+        </h6>
+      </div>
+      <div
+        class="d-flex justify-content-center align-items-center img-not-found"
+      >
+        <img src="../../../../../assets/img/not-found-data.svg" alt="" />
+      </div>
+    </div>
+  </ng-template>
 </div>

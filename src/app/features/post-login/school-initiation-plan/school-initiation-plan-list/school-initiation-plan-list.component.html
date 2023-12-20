@@ -1,7 +1,3 @@
-<link
-  rel="stylesheet"
-  href="https://use.fontawesome.com/releases/v5.8.1/css/solid.css"
-/>
 <p-toast key="error" position="top-right"></p-toast>
 <h5 class="mat-headline-5 fw-medium">Danh sách kế hoạch thực hiện</h5>
 <div class="table-container">
@@ -226,9 +222,11 @@
         </th>
         <th></th>
       </tr>
-      <span *ngIf="totalElements == 0"
-      >Không tìm thấy bản ghi nào phù hợp</span
-      >
+      <tr>
+        <td colspan="8">
+          <p class="w-100 text-center mt-4 fw-medium fs-4" *ngIf="totalElements == 0">Không tìm thấy kế hoạch thực hiện phù hợp</p>
+        </td>
+      </tr>
       </thead>
       <tbody *ngIf="schoolInitPlans && schoolInitPlans.length > 0" class="px-2">
       <tr

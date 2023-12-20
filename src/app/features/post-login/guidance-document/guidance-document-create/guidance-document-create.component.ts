@@ -133,8 +133,15 @@ export class GuidanceDocumentCreateComponent implements OnInit, OnDestroy {
                         }, 1500);
                     },
                     error: (error) => {
-                        this.toast.showWarn('toastGuidanceDocumentCreate', 'Lỗi', error.error.message);
-                        this.isLoading = false;
+                      this.isLoading = false;
+                      if (!this.issue?.issueId){
+                        this.toast.showWarn('toastGuidanceDocumentCreate', 'Lỗi', 'Bạn chưa tạo 1 kế hoạch kiểm tra');
+
+                      }else {
+                        this.toast.showWarn('toastGuidanceDocumentCreate', 'Lỗi', error.error?.message);
+
+                      }
+
                         console.log(error);
                     },
                 });

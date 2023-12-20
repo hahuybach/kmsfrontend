@@ -69,6 +69,9 @@ export class SchoolInitiationPlanListComponent implements OnInit {
       }
       if (value['pageSize']) {
         this.pageSize = value['pageSize'];
+        if (this.pageSize > 25) {
+          this.pageSize = 5;
+        }
       }
       if (value['sortBy']) {
         this.sortBy = value['sortBy'];

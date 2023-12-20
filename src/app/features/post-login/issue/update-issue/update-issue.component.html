@@ -1,13 +1,7 @@
 <div class="container-fluid">
-  <tui-breadcrumbs
-    size="l"
-  >
+  <tui-breadcrumbs size="l">
     <ng-container *ngFor="let item of breadCrumb">
-      <a
-        *tuiItem
-        tuiLink
-        [routerLink]="item.routerLink"
-      >
+      <a *tuiItem tuiLink [routerLink]="item.routerLink">
         {{ item.caption }}
       </a>
     </ng-container>
@@ -46,24 +40,26 @@
           [paginator]="true"
           [filterDelay]="0"
           [globalFilterFields]="[
-        'user.fullName',
-        'roleName',
-        'school.schoolName'
-      ]"
+            'user.fullName',
+            'roleName',
+            'school.schoolName'
+          ]"
         >
           <ng-template pTemplate="caption">
             <div
               class="table-header d-flex justify-content-between align-items-center"
             >
-            <span class="p-input-icon-left">
-              <i class="fa-solid fa-search"></i>
-              <input
-                pInputText
-                type="text"
-                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                placeholder="Tra cứu theo tên, chức vụ, trường"
-              />
-            </span>
+              <span class="p-input-icon-left">
+                <i class="fa-solid fa-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  (input)="
+                    dt.filterGlobal($any($event.target).value, 'contains')
+                  "
+                  placeholder="Tra cứu theo tên, chức vụ, trường"
+                />
+              </span>
               <div>
                 <button
                   *ngIf="!filterVisible"
@@ -129,10 +125,7 @@
                   <p-sortIcon field="user.fullName"></p-sortIcon>
                 </div>
               </th>
-              <th
-                pSortField="roleName"
-                pSortableColumn="roleName"
-              >
+              <th pSortField="roleName" pSortableColumn="roleName">
                 <div>
                   Chức vụ
                   <p-sortIcon field="roleName"></p-sortIcon>
@@ -204,7 +197,7 @@
           <div
             class="file-item-icon d-flex justify-content-center align-items-center"
           >
-            <img src="assets/img/pdf_logo.svg" alt=""/>
+            <img src="assets/img/pdf_logo.svg" alt="" />
           </div>
           <div class="row col-md-10 d-flex align-items-end mb-3">
             <div class="col-md-8">
@@ -216,7 +209,7 @@
                 <span>Loại tài liệu: </span>
                 <span class="fw-medium">{{
                   document.documentType.documentTypeName
-                  }}</span>
+                }}</span>
               </p>
               <p class="mb-0">
                 <span>Mã tài liệu: </span>
@@ -228,13 +221,13 @@
                 <span>Kích thước: </span>
                 <span class="fw-medium">{{
                   document.size | fileSizePipe : "MB"
-                  }}</span>
+                }}</span>
               </p>
               <p class="mb-0">
                 <span>Ngày tạo: </span>
                 <span class="fw-medium">{{
                   document.uploadedDate | date : "dd/MM/yyyy"
-                  }}</span>
+                }}</span>
               </p>
             </div>
           </div>
@@ -254,8 +247,8 @@
       <div class="row record-document">
         <div class="col-md-8">
           <label class="fw-medium"
-          >Tên tài liệu<span class="p-error">*</span></label
-          ><br/>
+            >Tên tài liệu<span class="p-error">*</span></label
+          ><br />
           <input
             pInputText
             placeholder="Điền tên tài liệu"
@@ -264,24 +257,24 @@
           <div
             *ngIf="issueForm.controls?.['documentName']?.invalid && (issueForm.controls?.['documentName']?.touched || issueForm.controls?.['documentName']?.dirty)"
           >
-          <span
-            *ngIf="issueForm.controls?.['documentName']?.errors?.['required']"
-            class="p-error"
-          >
-            Vui lòng điền tên tài liệu
-          </span>
+            <span
+              *ngIf="issueForm.controls?.['documentName']?.errors?.['required']"
+              class="p-error"
+            >
+              Vui lòng điền tên tài liệu
+            </span>
             <span
               *ngIf="issueForm.controls?.['documentName']?.errors?.['maxLength']"
               class="p-error"
             >
-            Tên tài liệu quá dài
-          </span>
+              Tên tài liệu quá dài
+            </span>
           </div>
         </div>
         <div class="col-md-4">
           <label class="fw-medium"
-          >Mã tài liệu<span class="p-error">*</span></label
-          ><br/>
+            >Mã tài liệu<span class="p-error">*</span></label
+          ><br />
           <input
             pInputText
             placeholder="Điền mã tài liệu"
@@ -290,23 +283,23 @@
           <div
             *ngIf="issueForm.controls?.['documentCode']?.invalid && (issueForm.controls?.['documentCode']?.touched || issueForm.controls?.['documentCode']?.dirty)"
           >
-          <span
-            *ngIf="issueForm.controls?.['documentCode']?.errors?.['required']"
-            class="p-error"
-          >
-            Vui lòng điền mã tài liệu
-          </span>
+            <span
+              *ngIf="issueForm.controls?.['documentCode']?.errors?.['required']"
+              class="p-error"
+            >
+              Vui lòng điền mã tài liệu
+            </span>
             <span
               *ngIf="issueForm.controls?.['documentCode']?.errors?.['maxLength']"
               class="p-error"
             >
-            Mã tài liệu quá dài
-          </span>
+              Mã tài liệu quá dài
+            </span>
           </div>
         </div>
         <div class="col-md-12">
           <label class="fw-medium">Tài liệu<span class="p-error">*</span></label
-          ><br/>
+          ><br />
           <div class="input-file">
             <input
               type="file"
@@ -319,10 +312,10 @@
               readonly
               class="col-md-9"
               placeholder="{{
-              fileInputPlaceholders
-                ? fileInputPlaceholders
-                : 'Chọn file để tải lên'
-            }}"
+                fileInputPlaceholders
+                  ? fileInputPlaceholders
+                  : 'Chọn file để tải lên'
+              }}"
             />
             <button
               pButton
@@ -335,12 +328,12 @@
           <div
             *ngIf="issueForm.controls?.['file']?.invalid && (issueForm.controls?.['file']?.touched || issueForm.controls?.['file']?.dirty)"
           >
-          <span
-            *ngIf="issueForm.controls?.['file']?.errors?.['required']"
-            class="p-error"
-          >
-            Vui lòng chọn tài liệu
-          </span>
+            <span
+              *ngIf="issueForm.controls?.['file']?.errors?.['required']"
+              class="p-error"
+            >
+              Vui lòng chọn tài liệu
+            </span>
           </div>
         </div>
       </div>
@@ -377,7 +370,9 @@
     ></app-loading-complete-dialog>
     <div class="col-md-8 issue-content">
       <div class="mb-2 issue-name">
-        <label class="fw-medium mb-1">Tên kế hoạch<span class="p-error">*</span></label>
+        <label class="fw-medium mb-1"
+          >Tên kế hoạch<span class="p-error">*</span></label
+        >
         <input
           pInputText
           class="text-black-50 w-100"
@@ -387,12 +382,14 @@
         <span
           *ngIf="issueForm.controls.issueName.errors?.['whitespace']"
           class="p-error"
-        >Vui lòng điền tên kế hoạch</span
+          >Vui lòng điền tên kế hoạch</span
         >
         <!-- <pre>{{ issueForm.controls.name.errors | json }}</pre> -->
       </div>
       <div class="mb-2 issue-description">
-        <label class="fw-medium mb-1">Chi tiết<span class="p-error">*</span></label>
+        <label class="fw-medium mb-1"
+          >Chi tiết<span class="p-error">*</span></label
+        >
         <textarea
           pInputTextarea
           class="text-black-50 w-100"
@@ -403,16 +400,12 @@
         <span
           *ngIf="issueForm.controls.description.errors?.['whitespace']"
           class="p-error"
-        >Vui lòng điền chi tiết kế hoạch</span
+          >Vui lòng điền chi tiết kế hoạch</span
         >
       </div>
       <div class="">
         <h6 class="mb-2 mat-headline-6">Tài liệu công văn</h6>
-        <button
-          type="button"
-          pButton
-          (click)="togglePopupInvalidDoc()"
-        >
+        <button type="button" pButton (click)="togglePopupInvalidDoc()">
           Xem tài liệu không có hiệu lực
         </button>
         <ng-container *ngFor="let document of issue.documentDtos | sortById">
@@ -420,23 +413,23 @@
             *ngIf="document.status.statusId == 1"
             class="file-item py-1 d-flex mt-2"
             (click)="
-            document.documentLink
-              ? openNewTab(document.documentLink)
-              : displayNewFileUpload(document.file)
-          "
+              document.documentLink
+                ? openNewTab(document.documentLink)
+                : displayNewFileUpload(document.file)
+            "
             pTooltip="{{ document.documentName }}"
             tooltipPosition="top"
           >
             <div
               class="file-item-icon d-flex justify-content-center align-items-center"
             >
-              <img src="assets/img/pdf_logo.svg" alt=""/>
+              <img src="assets/img/pdf_logo.svg" alt="" />
             </div>
             <div class="row col-md-10 d-flex align-items-end file-item-content">
               <div class="col-md-7 mb-3">
                 <p class="mb-0 document-name">
-                <span class="fw-medium span-doc-name">{{
-                  document.documentName
+                  <span class="fw-medium span-doc-name">{{
+                    document.documentName
                   }}</span>
                   <span class="fw-medium">.pdf</span>
                 </p>
@@ -444,7 +437,7 @@
                   <span>Loại tài liệu: </span>
                   <span class="fw-medium">{{
                     document.documentType.documentTypeName
-                    }}</span>
+                  }}</span>
                 </p>
                 <p class="mb-0">
                   <span>Mã tài liệu: </span>
@@ -460,7 +453,7 @@
                   <span>Ngày tạo: </span>
                   <span class="fw-medium">{{
                     document.uploadedDate | date : "dd/MM/yyyy"
-                    }}</span>
+                  }}</span>
                 </p>
               </div>
               <div
@@ -469,14 +462,14 @@
                 <i
                   class="bi bi-pencil-square"
                   (click)="
-                  togglePopupFileUpload(
-                    $event,
-                    document.documentType.documentTypeId,
-                    document.documentId,
-                    document.documentName,
-                    document.documentType.documentTypeName
-                  )
-                "
+                    togglePopupFileUpload(
+                      $event,
+                      document.documentType.documentTypeId,
+                      document.documentId,
+                      document.documentName,
+                      document.documentType.documentTypeName
+                    )
+                  "
                 ></i>
               </div>
             </div>
@@ -569,21 +562,21 @@
                     class="scrollview-item-icon d-flex justify-content-center align-items-center"
                   >
                     <tui-avatar
-                      text="{{getAvatar(item.user.fullName)}}"
+                      text="{{ getAvatar(item.user.fullName) }}"
                       [rounded]="true"
                       [autoColor]="true"
                     >
                     </tui-avatar>
                   </div>
                   <div class="scrollview-item-content ms-3">
-                  <span class="font-weight-bold font-size-18">{{
-                    item.user.fullName
+                    <span class="font-weight-bold font-size-18">{{
+                      item.user.fullName
                     }}</span>
-                    <br/>
+                    <br />
                     <span>
-                    {{ item.roles[0].roleName }} -
+                      {{ item.roles[0].roleName }} -
                       {{ item.school.schoolName }}
-                  </span>
+                    </span>
                   </div>
                   <div
                     class="trash-icon d-flex justify-content-center align-items-center"
