@@ -27,6 +27,8 @@ import {
   unSub,
 } from 'src/app/shared/util/util';
 import { TuiDay } from '@taiga-ui/cdk';
+import { InitiationplanService } from 'src/app/services/initiationplan.service';
+import { toJSDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-calendar';
 @Component({
   providers: [ConfirmationService],
   selector: 'app-assign-assignment',
@@ -120,6 +122,7 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   searchItem: any[];
   canChangeDate: boolean = true;
   pageNo: number = 0;
+  iniApproved: boolean;
   ngOnInit(): void {
     let issueId;
     this.user = this.authService.getSubFromCookie();
@@ -161,6 +164,16 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         this.restoreNodeState(this.assignments);
         // this.treeTable.expandAll();
       });
+    const req = {
+      issueId: this.issueId,
+      schoolId: this.authService.getSchoolFromJwt().schoolId,
+    };
+    this.initiationPlanService.isInitiationPlanAprroved(req).subscribe({
+      next: (data) => {
+        this.iniApproved = data;
+      },
+      error: () => {},
+    });
     this.sub.push(method);
     this.minDate = dateToTuiDay(new Date());
     // this.issueService.getCurrentActiveIssue().subscribe({
@@ -222,7 +235,8 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private stompService: StompService,
     private activateRouter: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private initiationPlanService: InitiationplanService
   ) {}
   initData() {
     const method = this.assignmentService

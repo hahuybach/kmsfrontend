@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { LoggerService } from './LoggerService';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {DomainName} from "../shared/enum/domain-name";
-import {toIsoString} from "../shared/util/util";
+import { DomainName } from '../shared/enum/domain-name';
+import { toIsoString } from '../shared/util/util';
 @Injectable()
 export class InitiationplanService {
-  private initiationplanApiUrl =
-   DomainName.URL + 'api/v1/initiation_plan/';
+  private initiationplanApiUrl = DomainName.URL + 'api/v1/initiation_plan/';
 
   constructor(private http: HttpClient) {
     console.log('InitiationplanService constructed');
@@ -39,46 +38,72 @@ export class InitiationplanService {
     return this.http.put(url, formData, { headers });
   }
 
-  filterInitiationPlan(pageNo: number = 0, pageSize: number = 5, sortBy: string = 'createdDate', sortDirection: string = 'asc',
-                       planName: string = '', statusId?: any,issue? : any,school? :any,creationStartDateTime? : any,creationEndDateTime?: any,
-                       deadlineStartDateTime?: any, deadlineEndDateTime? : any) {
-    console.log("status after service " + statusId);
+  filterInitiationPlan(
+    pageNo: number = 0,
+    pageSize: number = 5,
+    sortBy: string = 'createdDate',
+    sortDirection: string = 'asc',
+    planName: string = '',
+    statusId?: any,
+    issue?: any,
+    school?: any,
+    creationStartDateTime?: any,
+    creationEndDateTime?: any,
+    deadlineStartDateTime?: any,
+    deadlineEndDateTime?: any
+  ) {
+    console.log('status after service ' + statusId);
     let headers = new HttpHeaders();
     let params = new HttpParams()
       .set('pageSize', pageSize.toString())
       .set('sortBy', sortBy)
       .set('sortDirection', sortDirection)
-      .set('planName', planName)
+      .set('planName', planName);
     if (pageNo != null && pageNo > 0) {
       pageNo = pageNo - 1;
-      params = params.set('pageNo', pageNo)
+      params = params.set('pageNo', pageNo);
     }
     if (issue) {
-      params = params.set('issueId', issue)
+      params = params.set('issueId', issue);
     }
     if (statusId) {
-      params = params.set('statusId', statusId)
+      params = params.set('statusId', statusId);
     }
     if (school) {
-      params = params.set('schoolId', school)
+      params = params.set('schoolId', school);
     }
     if (creationStartDateTime) {
-      params = params.set('creationStartDateTime', toIsoString(creationStartDateTime));
+      params = params.set(
+        'creationStartDateTime',
+        toIsoString(creationStartDateTime)
+      );
     }
 
     if (creationEndDateTime) {
-      params = params.set('creationEndDateTime', toIsoString(creationEndDateTime));
+      params = params.set(
+        'creationEndDateTime',
+        toIsoString(creationEndDateTime)
+      );
     }
     if (deadlineStartDateTime) {
-      params = params.set('deadlineStartDateTime', toIsoString(deadlineStartDateTime));
+      params = params.set(
+        'deadlineStartDateTime',
+        toIsoString(deadlineStartDateTime)
+      );
     }
     if (deadlineEndDateTime) {
-      params = params.set('deadlineEndDateTime', toIsoString(deadlineEndDateTime));
+      params = params.set(
+        'deadlineEndDateTime',
+        toIsoString(deadlineEndDateTime)
+      );
     }
     console.log(params);
 
     // Make the GET request
-    return this.http.get<any>(this.initiationplanApiUrl + 'list', {params, headers});
+    return this.http.get<any>(this.initiationplanApiUrl + 'list', {
+      params,
+      headers,
+    });
   }
   public deleteDocument(data: object): Observable<any> {
     const headers = new HttpHeaders();
@@ -87,8 +112,18 @@ export class InitiationplanService {
     const url = `${this.initiationplanApiUrl}delete_school_document`;
     return this.http.delete(url, { headers: headers, body: data });
   }
-  getDashBoardInitiationPlanResponse(issueId: any){
-    return this.http.get<any>(this.initiationplanApiUrl + 'getDashBoardInitiationPlanResponse?issueId=' + issueId);
+  getDashBoardInitiationPlanResponse(issueId: any) {
+    return this.http.get<any>(
+      this.initiationplanApiUrl +
+        'getDashBoardInitiationPlanResponse?issueId=' +
+        issueId
+    );
+  }
+  public isInitiationPlanAprroved(data: any): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'json');
 
+    const url = `${this.initiationplanApiUrl}is_initiation_plan_approved`;
+    return this.http.post(url, data);
   }
 }
