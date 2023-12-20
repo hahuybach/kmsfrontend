@@ -97,6 +97,9 @@
                 <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['maxlength']" class="p-error">
                   Mã tài liệu quá dài
                 </span>
+                <span *ngIf="documentForm.controls?.['documentCode']?.errors?.['duplicateCode']" class="p-error">
+                  Mã tài liệu trùng lặp
+                </span>
               </div>
             </div>
             <div class="col-md-12 mb-2">

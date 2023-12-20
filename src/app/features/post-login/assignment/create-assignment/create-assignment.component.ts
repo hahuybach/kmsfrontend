@@ -94,18 +94,17 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
         this.data = data;
         this.assignments = [data.assignmentListDto];
         console.log(this.assignments);
-        console.log("OKKKK " +this.issueNotFound)
+        console.log('OKKKK ' + this.issueNotFound);
       },
       error: (error) => {
         this.messageService.add({
           severity: 'warn',
           summary: 'Thông báo',
           detail: 'Bạn chưa tạo kế hoạch kiểm tra',
-          life: 3000
+          life: 3000,
         });
         this.issueNotFound = true;
-        console.log("OKKKK " +this.issueNotFound)
-
+        console.log('OKKKK ' + this.issueNotFound);
       },
     });
     // this.sub.push(method);
@@ -293,13 +292,13 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'warn',
         summary: 'Không thể gửi',
-        detail: 'Template đã được gửi rồi nên không gửi lại được nữa',
+        detail: 'Mẫu công việc đã được gửi rồi nên không gửi lại được nữa',
       });
     } else {
       this.confirmationService.confirm({
-        message: 'Bạn có muốn gửi template?',
+        message: 'Bạn có muốn gửi mẫu công việc?',
         header: 'Xác nhận gửi',
-        icon: 'bi bi-exclamation-triangle-fill',
+        // icon: 'bi bi-exclamation-triangle-fill',
         key: 'confirm',
         accept: () => {
           const method = this.assignmentService
