@@ -242,9 +242,9 @@
 
         <th></th>
       </tr>
-      <tr>
+      <tr *ngIf="totalElements == 0">
         <td colspan="6">
-          <p class="w-100 text-center mt-4 fw-medium fs-4" *ngIf="totalElements == 0">Không tìm thấy kế hoạch thanh tra phù hợp</p>
+          <p class="w-100 text-center mt-4 fw-medium fs-4" >Không tìm thấy kế hoạch thanh tra phù hợp</p>
         </td>
       </tr>
       </thead>
@@ -291,37 +291,41 @@
           ></p-tag>
         </td>
         <td class="py-3 px-2">
-          <div class="d-flex align-items-center" [class.justify-content-evenly]="plan.status.statusId != 19" [class.justify-content-between]="plan.status.statusId === 19">
-            <button
-              class="action-button"
-              type="button"
-              (click)="onDetail(plan.inspectionPlanId)"
-              pTooltip="Chi tiết"
-              tooltipPosition="top"
-            >
-              <i class="bi bi-info-circle-fill"></i>
-            </button>
-
-            <button
-              *ngIf="plan.status.statusId === 19"
-              class="action-button"
-              type="button"
-              (click)="onUpdate(plan.inspectionPlanId)"
-              pTooltip="Chỉnh sửa"
-              tooltipPosition="top"
-            >
-              <i class="bi bi-pencil-fill"></i>
-            </button>
-
-            <button
-              class="action-button"
-              type="button"
-              (click)="onInspectingDetail(plan.inspectionPlanId)"
-              pTooltip="Phiên thanh tra"
-              tooltipPosition="left"
-            >
-              <i class="bi bi-info-square"></i>
-            </button>
+          <div class="d-flex flex-row align-items-center justify-content-end">
+            <div class="col-md-4">
+              <button
+                *ngIf="plan.status.statusId === 19"
+                class="action-button"
+                type="button"
+                (click)="onUpdate(plan.inspectionPlanId)"
+                pTooltip="Chỉnh sửa"
+                tooltipPosition="top"
+              >
+                <i class="bi bi-pencil-fill"></i>
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button
+                class="action-button"
+                type="button"
+                (click)="onDetail(plan.inspectionPlanId)"
+                pTooltip="Chi tiết"
+                tooltipPosition="top"
+              >
+                <i class="bi bi-info-circle-fill"></i>
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button
+                class="action-button"
+                type="button"
+                (click)="onInspectingDetail(plan.inspectionPlanId)"
+                pTooltip="Phiên thanh tra"
+                tooltipPosition="left"
+              >
+                <i class="bi bi-journal-bookmark-fill"></i>
+              </button>
+            </div>
           </div>
         </td>
       </tr>
