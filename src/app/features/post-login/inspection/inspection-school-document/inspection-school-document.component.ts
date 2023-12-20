@@ -27,6 +27,11 @@ export class InspectionSchoolDocumentComponent implements OnInit {
   safePdfUrl: SafeResourceUrl | undefined;
   sub: any[] = [];
   school: any;
+  searchDialogVisible: boolean;
+  searchData: string;
+  searchItem: any[];
+  pageNo: number = 0;
+  nodeStateMap: { [key: number]: boolean } = {};
   constructor(
     private assignmentService: AssignmentService,
     private route: ActivatedRoute,
@@ -72,6 +77,43 @@ export class InspectionSchoolDocumentComponent implements OnInit {
     //   },
     //   error: (error) => {},
     // });
+  }
+  initData() {
+    this.inspectionPlanService
+      .getInspectionDoctree(this.inspectionId)
+      .pipe(
+        switchMap((data) => {
+          this.issueId = data.issueId;
+          this.schoolId = data.schoolId;
+          return this.documentService.getAssignmentsBySchoolId(
+            this.issueId,
+            this.schoolId
+          );
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.assignments = [data];
+          this.restoreNodeState(this.assignments);
+        },
+        error: (error) => {
+          this.toastService.showError('error', 'Lỗi', error.error.message);
+        },
+      });
+  }
+  restoreNodeState(nodes: any[]) {
+    nodes.forEach((node) => {
+      if (this.nodeStateMap[node.assignmentId] !== undefined) {
+        node.expanded = this.nodeStateMap[node.assignmentId];
+      }
+
+      if (node.children && node.children.length > 0) {
+        this.restoreNodeState(node.children);
+      }
+    });
+    console.log('restore');
+    console.log(this.nodeStateMap);
   }
   openDetail(assignmentId: number) {
     this.detailVisible = true;
@@ -138,5 +180,78 @@ export class InspectionSchoolDocumentComponent implements OnInit {
     this.pdfUrl = '';
     this.safePdfUrl = '';
     this.pdfLoaded = false;
+  }
+  loadAssignment() {
+    this.pageNo = 0;
+    if (this.searchData) {
+      this.assignmentService
+        .filterAsm(this.issueId, this.schoolId, this.pageNo, this.searchData)
+        .subscribe({
+          next: (data) => {
+            this.searchItem = data;
+            console.log(data);
+            console.log(this.searchItem.length);
+          },
+        });
+    } else {
+      this.assignmentService
+        .filterAsm(this.issueId, this.schoolId, null, this.searchData)
+        .subscribe({
+          next: (data) => {
+            this.searchItem = data;
+            console.log(data);
+            console.log(this.searchItem.length);
+          },
+        });
+    }
+  }
+  onResultScroll(e: any) {
+    const element = e.target as HTMLElement;
+    console.log(element);
+    console.log('offsetHeight:' + element.offsetHeight);
+    console.log('scrolltop:' + element.scrollTop);
+    console.log('scrollheight' + element.scrollHeight);
+
+    if (element.offsetHeight + element.scrollTop + 1 == element.scrollHeight) {
+      this.pageNo++;
+      this.assignmentService
+        .filterAsm(this.issueId, this.schoolId, this.pageNo, this.searchData)
+        .subscribe({
+          next: (data) => {
+            this.searchItem.push(...data);
+            console.log(this.searchItem.length);
+          },
+        });
+    }
+  }
+  navigateSearch(assignment: any, ids: number[]) {
+    // this.router.navigate(['/assign-assignment', this.issueId], {
+    //   queryParams: { id: assignmentId },
+    // });
+    this.searchDialogVisible = false;
+    this.openDetail(assignment.assignmentId);
+    this.expandNodesByIds(ids);
+    this.initData();
+  }
+  expandNodesByIds(nodeIds: number[]) {
+    for (let i = 0; i < nodeIds.length; i++) {
+      const nodeId = nodeIds[i];
+      this.nodeStateMap[nodeId] = true;
+      console.log(nodeId + ' ' + this.nodeStateMap[nodeId]);
+    }
+    console.log(this.nodeStateMap);
+  }
+  onNodeExpand(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+
+  onNodeCollapse(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
   }
 }
