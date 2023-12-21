@@ -56,158 +56,173 @@
     [resizable]="false"
   >
     <ng-container *ngIf="schoolinitiationplan?.documents">
-      <p-table
-        #dthistory
-        [value]="schoolinitiationplan.documents"
-        [tableStyle]="{ 'min-width': '50rem' }"
-        [scrollable]="true"
-        scrollHeight="580px"
-        [paginator]="true"
-        [rows]="5"
-        [rowHover]="true"
-        [globalFilterFields]="[
-          'schoolDocument.documentName',
-          'schoolDocument.documentCode',
-          'schoolDocument.uploadedDate',
-          'schoolDocument.createdBy',
-          'schoolDocument.status.statusName',
-          'departmentDocument.uploadedDate',
-          'departmentDocument.account.user.fullName'
-        ]"
-      >
-        <ng-template pTemplate="caption">
-          <input
-            class="history-search-box"
-            type="text"
-            pInputText
-            placeholder="Tìm kiếm"
-            (input)="
-              dthistory.filterGlobal($any($event.target).value, 'contains')
-            "
-          />
-        </ng-template>
-        <ng-template pTemplate="header">
-          <tr>
-            <th>STT</th>
-            <th pSortableColumn="schoolDocument.documentName">
-              <div>
-                Tài liệu<p-sortIcon
-                  field="schoolDocument.documentName"
-                ></p-sortIcon>
-              </div>
-            </th>
-            <th pSortableColumn="schoolDocument.documentCode">
-              <div>
-                Mã tài liệu<p-sortIcon
-                  field="schoolDocument.documentCode"
-                ></p-sortIcon>
-              </div>
-            </th>
-            <th pSortableColumn="schoolDocument.uploadedDate">
-              <div>
-                Ngày tạo<p-sortIcon
-                  field="schoolDocument.uploadedDate"
-                ></p-sortIcon>
-              </div>
-            </th>
-            <th pSortableColumn="schoolDocument.createdBy">
-              <div>
-                Người tạo<p-sortIcon
-                  field="schoolDocument.createdBy"
-                ></p-sortIcon>
-              </div>
-            </th>
-            <th pSortableColumn="schoolDocument.status.statusName">
-              <div>
-                Ngày phê duyệt
-                <p-sortIcon
-                  field="departmentDocument.uploadedDate"
-                ></p-sortIcon>
-              </div>
-            </th>
-            <th pSortableColumn="departmentDocument.uploadedDate">
-              <div>
-                Ngày phê duyệt
-                <p-sortIcon
-                  field="departmentDocument.uploadedDate"
-                ></p-sortIcon>
-              </div>
-            </th>
-            <th pSortableColumn="departmentDocument.account.user.fullName">
-              <div>
-                Người đánh giá
-                <p-sortIcon
-                  field="departmentDocument.account.user.fullName"
-                ></p-sortIcon>
-              </div>
-            </th>
-            <th></th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-plan let-i="rowIndex">
-          <tr>
-            <td>{{ i + 1 }}</td>
-            <td
-              class="his-file-name"
-              (click)="openNewTab(plan.schoolDocument.documentLink)"
-            >
-              {{ plan.schoolDocument.documentName }}
-            </td>
-            <td>{{ plan.schoolDocument.documentCode }}</td>
-            <td>
-              {{ plan.schoolDocument.uploadedDate | date : "dd/MM/yyyy" }}
-            </td>
-            <td>{{ plan.schoolDocument.account.user.fullName }}</td>
-            <td>
-              <p-tag
-                *ngIf="plan.schoolDocument.status.statusId == 10"
-                class="status"
-                [severity]="'warning'"
-                [rounded]="true"
+      <div class="card">
+        <p-table
+          #dthistory
+          [value]="schoolinitiationplan.documents"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          [scrollable]="true"
+          scrollHeight="580px"
+          [paginator]="true"
+          [rows]="5"
+          [rowHover]="true"
+          [globalFilterFields]="[
+            'schoolDocument.documentName',
+            'schoolDocument.documentCode',
+            'schoolDocument.uploadedDate',
+            'schoolDocument.createdBy',
+            'schoolDocument.status.statusName',
+            'departmentDocument.uploadedDate',
+            'departmentDocument.account.user.fullName'
+          ]"
+        >
+          <ng-template pTemplate="caption">
+            <input
+              class="history-search-box"
+              type="text"
+              pInputText
+              placeholder="Tìm kiếm"
+              (input)="
+                dthistory.filterGlobal($any($event.target).value, 'contains')
+              "
+            />
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="th-small">STT</th>
+              <th pSortableColumn="schoolDocument.documentName">
+                <div>
+                  KHTH<p-sortIcon
+                    field="schoolDocument.documentName"
+                  ></p-sortIcon>
+                </div>
+              </th>
+              <th pSortableColumn="schoolDocument.documentCode">
+                <div>
+                  Mã tài liệu<p-sortIcon
+                    field="schoolDocument.documentCode"
+                  ></p-sortIcon>
+                </div>
+              </th>
+              <th pSortableColumn="schoolDocument.uploadedDate">
+                <div>
+                  Ngày tạo<p-sortIcon
+                    field="schoolDocument.uploadedDate"
+                  ></p-sortIcon>
+                </div>
+              </th>
+              <th pSortableColumn="schoolDocument.createdBy">
+                <div>
+                  Người tạo<p-sortIcon
+                    field="schoolDocument.createdBy"
+                  ></p-sortIcon>
+                </div>
+              </th>
+              <th pSortableColumn="schoolDocument.status.statusName">
+                <div>
+                  Trạng thái
+                  <p-sortIcon
+                    field="departmentDocument.uploadedDate"
+                  ></p-sortIcon>
+                </div>
+              </th>
+              <th pSortableColumn="departmentDocument.uploadedDate">
+                <div>
+                  Ngày phê duyệt
+                  <p-sortIcon
+                    field="departmentDocument.uploadedDate"
+                  ></p-sortIcon>
+                </div>
+              </th>
+              <th pSortableColumn="departmentDocument.account.user.fullName">
+                <div>
+                  Người đánh giá
+                  <p-sortIcon
+                    field="departmentDocument.account.user.fullName"
+                  ></p-sortIcon>
+                </div>
+              </th>
+              <th class="th-small"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-plan let-i="rowIndex">
+            <tr>
+              <td class="th-small">{{ i + 1 }}</td>
+              <td
+                class="his-file-name"
+                (click)="openNewTab(plan.schoolDocument.documentLink)"
+                pTooltip="{{ plan.schoolDocument.documentName }}"
+                tooltipPosition="top"
               >
-                {{ plan.schoolDocument.status.statusName }}
-              </p-tag>
-              <p-tag
-                *ngIf="plan.schoolDocument.status.statusId == 11"
-                class="status"
-                [severity]="'success'"
-                [rounded]="true"
-              >
-                {{ plan.schoolDocument.status.statusName }}
-              </p-tag>
-              <p-tag
-                *ngIf="plan.schoolDocument.status.statusId == 12"
-                class="status"
-                [severity]="'danger'"
-                [rounded]="true"
-              >
-                {{ plan.schoolDocument.status.statusName }}
-              </p-tag>
-            </td>
+                <div class="td-content">
+                  {{ plan.schoolDocument.documentName }}
+                </div>
+              </td>
+              <td>{{ plan.schoolDocument.documentCode }}</td>
+              <td>
+                {{ plan.schoolDocument.uploadedDate | date : "dd/MM/yyyy" }}
+              </td>
+              <td>{{ plan.schoolDocument.account.user.fullName }}</td>
+              <td>
+                <p-tag
+                  *ngIf="plan.schoolDocument.status.statusId == 10"
+                  class="status"
+                  [severity]="'warning'"
+                  [rounded]="true"
+                >
+                  {{ plan.schoolDocument.status.statusName }}
+                </p-tag>
+                <p-tag
+                  *ngIf="plan.schoolDocument.status.statusId == 11"
+                  class="status"
+                  [severity]="'success'"
+                  [rounded]="true"
+                >
+                  {{ plan.schoolDocument.status.statusName }}
+                </p-tag>
+                <p-tag
+                  *ngIf="plan.schoolDocument.status.statusId == 12"
+                  class="status"
+                  [severity]="'danger'"
+                  [rounded]="true"
+                >
+                  {{ plan.schoolDocument.status.statusName }}
+                </p-tag>
+              </td>
 
-            <td *ngIf="plan.departmentDocument">
-              {{ plan.departmentDocument.uploadedDate | date : "dd/MM/yyyy" }}
-            </td>
-            <td *ngIf="plan.departmentDocument">
-              {{ plan.departmentDocument.account.user.fullName }}
-            </td>
-            <td>
-              <button
-                pButton
-                *ngIf="plan.departmentDocument"
-                (click)="openNewTab(plan.departmentDocument.documentLink)"
-              >
-                Chi tiết
-              </button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="8">Không có lịch sử phê duyệt</td>
-          </tr>
-        </ng-template>
-      </p-table>
+              <td>
+                <div *ngIf="plan.departmentDocument">
+                  {{
+                    plan.departmentDocument.uploadedDate | date : "dd/MM/yyyy"
+                  }}
+                </div>
+              </td>
+              <td>
+                <div *ngIf="plan.departmentDocument">
+                  {{ plan.departmentDocument.account.user.fullName }}
+                </div>
+              </td>
+              <td class="d-flex justify-content-center align-items-center">
+                <button
+                  class="info-btn d-flex justify-content-center align-items-center th-small"
+                  pButton
+                  *ngIf="plan.departmentDocument"
+                  (click)="openNewTab(plan.departmentDocument.documentLink)"
+                  pTooltip="Xem văn bản đánh giá"
+                  tooltipPosition="top"
+                >
+                  <i class="bi bi-info-circle-fill"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="8">Không có lịch sử phê duyệt</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
     </ng-container>
   </p-dialog>
 

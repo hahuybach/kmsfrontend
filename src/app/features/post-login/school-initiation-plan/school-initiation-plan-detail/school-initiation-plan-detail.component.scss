@@ -269,3 +269,40 @@ input {
         margin-left: 20px;
     }
 }
+.th-small {
+    width: 5%;
+}
+.info-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+:host ::ng-deep {
+    .p-highlight {
+        // color: $primary;
+        .p-sortable-column-icon {
+            color: $primary;
+        }
+    }
+    .p-highlight {
+        div {
+            color: $primary;
+        }
+        .p-dropdown-item {
+            color: white;
+        }
+    }
+    .p-paginator-rpp-options .p-dropdown {
+        .p-dropdown-item.p-highlight {
+            color: white !important;
+            background-color: $primary-hover !important;
+        }
+    }
+    .p-paginator .p-paginator-pages .p-paginator-page {
+        border-radius: 50%;
+        &.p-highlight {
+            background-color: $primary-hover !important;
+            color: #fff !important;
+        }
+    }
+}
