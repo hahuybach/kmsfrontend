@@ -175,7 +175,7 @@
       <ng-template pTemplate="footer">
         <div class="p-2">
           <button
-            [disabled]="assignments.length == 0 || issueNotFound"
+            [disabled]=" assignments.length == 0 || issueNotFound"
             pButton
             (click)="sendToSchools()"
           >

@@ -94,7 +94,6 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
         this.data = data;
         this.assignments = [data.assignmentListDto];
         console.log(this.assignments);
-        console.log('OKKKK ' + this.issueNotFound);
       },
       error: (error) => {
         this.messageService.add({
@@ -319,7 +318,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
                 });
               },
             });
-          this.sub.push(method);
+          // this.sub.push(method);
         },
         reject: (type: any) => {},
       });

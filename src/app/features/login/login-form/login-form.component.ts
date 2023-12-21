@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import {ToastService} from "../../../shared/toast/toast.service";
+import {Role} from "../../../shared/enum/role";
 
 @Component({
   selector: 'app-login-form',
@@ -14,7 +15,7 @@ export class LoginFormComponent implements OnInit {
   signInForm: FormGroup;
 
   loading: boolean = false;
-
+  isAdmin: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -32,10 +33,24 @@ export class LoginFormComponent implements OnInit {
         next: (response) => {
           this.auth.setJwtInCookie(response.token);
           this.auth.setTokenTimeOut();
-          setTimeout(() => {
-            this.router.navigateByUrl('/dashboard');
-            this.loading = false;
-          } ,1000);
+          if (this.auth.getRoleFromJwt()){
+            for (const arg of this.auth.getRoleFromJwt()) {
+              if (arg.authority === Role.ADMIN){
+            this.isAdmin = true
+
+              }
+            }
+          }
+          if (this.isAdmin){
+            this.router.navigateByUrl('/school/list');
+
+          }else {
+            setTimeout(() => {
+              this.router.navigateByUrl('/dashboard');
+              this.loading = false;
+            } ,1000);
+          }
+
         },
         error: (err) => {
           this.toastService.showError('center', 'Thông báo', err.error.message);

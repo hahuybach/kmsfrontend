@@ -1,5 +1,11 @@
 <div class="container-fluid">
-  <span>breadcrumb</span>
+  <tui-breadcrumbs size="l">
+    <ng-container *ngFor="let item of breadCrumb">
+      <a *tuiItem tuiLink [routerLink]="item.routerLink">
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
   <h5 class="mat-headline-5 fw-medium mb-4">
     Kế hoạch thực hiện nhiệm vụ năm học
   </h5>
@@ -84,22 +90,26 @@
           <tr>
             <th>STT</th>
             <th pSortableColumn="schoolDocument.documentName">
-              Tài liệu<p-sortIcon
+              Tài liệu
+              <p-sortIcon
                 field="schoolDocument.documentName"
               ></p-sortIcon>
             </th>
             <th pSortableColumn="schoolDocument.documentCode">
-              Mã tài liệu<p-sortIcon
+              Mã tài liệu
+              <p-sortIcon
                 field="schoolDocument.documentCode"
               ></p-sortIcon>
             </th>
             <th pSortableColumn="schoolDocument.uploadedDate">
-              Ngày tạo<p-sortIcon
+              Ngày tạo
+              <p-sortIcon
                 field="schoolDocument.uploadedDate"
               ></p-sortIcon>
             </th>
             <th pSortableColumn="schoolDocument.createdBy">
-              Người tạo<p-sortIcon
+              Người tạo
+              <p-sortIcon
                 field="schoolDocument.createdBy"
               ></p-sortIcon>
             </th>
@@ -202,9 +212,9 @@
         <div class="col-md-8">
           <div class="mb-2">
             <label class="fw-medium mb-1"
-              >Tên tài liệu<span class="p-error">*</span></label
+            >Tên tài liệu<span class="p-error">*</span></label
             >
-            <br />
+            <br/>
             <input
               class="w-100"
               pInputText
@@ -233,7 +243,7 @@
         <div class="col-md-4">
           <div class="mb-2">
             <label class="mb-1 fw-medium"
-              >Mã tài liệu<span class="p-error">*</span></label
+            >Mã tài liệu<span class="p-error">*</span></label
             >
             <input
               class="w-100"
@@ -263,7 +273,7 @@
         <div class="col-md-12">
           <div class="mb-2">
             <label class="mb-1 fw-medium"
-              >Tài liệu<span class="p-error">*</span></label
+            >Tài liệu<span class="p-error">*</span></label
             >
             <div class="input-file row w-100">
               <div class="col-md-9 padding-none">
@@ -350,7 +360,7 @@
           <div class="col-md-4">
             <div class="mb-1">
               <span class="mb-2 span-heading-color">Trạng thái</span>
-              <br />
+              <br/>
               <p-tag
                 *ngIf="
                   schoolinitiationplan?.status.statusId >= 6 &&
@@ -398,7 +408,7 @@
           </div>
         </div>
 
-        <br />
+        <br/>
 
         <ng-container *ngIf="lastDocs?.departmentDocument; else noDeptFile">
           <div
@@ -409,20 +419,20 @@
             <div
               class="file-item-icon d-flex justify-content-center align-items-center"
             >
-              <img src="assets/img/pdf_logo.svg" alt="" />
+              <img src="assets/img/pdf_logo.svg" alt=""/>
             </div>
             <div class="row col-md-10 d-flex align-items-center mb-3 file-item-content">
               <div class="col-md-8">
                 <p class="mb-0">
                   <span class="fw-medium span-doc-name"
-                    >{{ lastDocs.departmentDocument.documentName }}</span
+                  >{{ lastDocs.departmentDocument.documentName }}</span
                   ><span class="fw-medium">.pdf</span>
                 </p>
                 <p class="mb-0">
                   <span>Mã tài liệu: </span>
                   <span class="fw-medium">{{
                     lastDocs.departmentDocument.documentCode
-                  }}</span>
+                    }}</span>
                 </p>
               </div>
               <div class="col-md-4 text-end">
@@ -430,14 +440,14 @@
                   <!-- <span>Kích thước: </span> -->
                   <span class="fw-medium">{{
                     lastDocs.departmentDocument.sizeFormat
-                  }}</span>
+                    }}</span>
                 </p>
                 <p class="mb-0">
                   <!-- <span>Ngày tạo: </span> -->
                   <span class="fw-medium">{{
                     lastDocs.departmentDocument.uploadedDate
                       | date : "dd/MM/yyyy"
-                  }}</span>
+                    }}</span>
                 </p>
               </div>
             </div>
@@ -469,7 +479,7 @@
             <div
               class="img-upload d-flex justify-content-center align-items-center"
             >
-              <img src="../../../../../../assets/img/add-file.svg" />
+              <img src="../../../../../../assets/img/add-file.svg"/>
             </div>
             <!-- <div class="d-flex justify-content-center">
               <label class="fw-medium fs-18">Nộp tài liệu</label>
@@ -492,13 +502,13 @@
               <div
                 class="file-item-icon d-flex justify-content-center align-items-center"
               >
-                <img src="assets/img/pdf_logo.svg" alt="" />
+                <img src="assets/img/pdf_logo.svg" alt=""/>
               </div>
               <div class="row col-md-10 d-flex align-items-center file-item-content">
                 <div class="col-md-6 mb-3">
                   <p class="mb-0">
                     <span class="fw-medium span-doc-name"
-                      >{{ inputFileForm.get("documentName")?.value }}</span
+                    >{{ inputFileForm.get("documentName")?.value }}</span
                     >
                     <span class="fw-medium">.pdf</span>
                   </p>
@@ -506,7 +516,7 @@
                     <span>Mã tài liệu: </span>
                     <span class="fw-medium">{{
                       inputFileForm.get("documentCode")?.value
-                    }}</span>
+                      }}</span>
                   </p>
                 </div>
                 <div class="col-md-4 mb-3 text-end">
@@ -518,7 +528,7 @@
                     <!-- <span>Ngày tạo: </span> -->
                     <span class="fw-medium">{{
                       today | date : "dd/MM/yyyy"
-                    }}</span>
+                      }}</span>
                   </p>
                 </div>
                 <div
@@ -552,7 +562,7 @@
           <div *ngIf="fileStatus" class="px-4 my-4">
             <div class="d-flex justify-content-center align-items-center mb-2">
               <span *ngIf="!checkCanEdit()" class="p-error"
-                ><span class="font-weight-bold">Thông báo: </span>Hiện tại đã
+              ><span class="font-weight-bold">Thông báo: </span>Hiện tại đã
                 hết hạn nên không thể chỉnh sửa</span
               >
             </div>
@@ -565,32 +575,32 @@
               <div
                 class="file-item-icon d-flex justify-content-center align-items-center"
               >
-                <img src="assets/img/pdf_logo.svg" alt="" />
+                <img src="assets/img/pdf_logo.svg" alt=""/>
               </div>
               <div class="row col-md-10 d-flex align-items-center file-item-content">
                 <div class="col-md-6 mb-3">
                   <p class="mb-0">
                     <span class="fw-medium span-doc-name"
-                      >{{ lastDocs.schoolDocument.documentName }}</span
+                    >{{ lastDocs.schoolDocument.documentName }}</span
                     ><span class="fw-medium">.pdf</span>
                   </p>
                   <p class="mb-0">
                     <span>Mã tài liệu: </span>
                     <span class="fw-medium">{{
                       lastDocs.schoolDocument.documentCode
-                    }}</span>
+                      }}</span>
                   </p>
                 </div>
                 <div class="col-md-4 text-end mb-3">
                   <p class="mb-0">
                     <span class="fw-medium">{{
                       lastDocs.schoolDocument.sizeFormat
-                    }}</span>
+                      }}</span>
                   </p>
                   <p class="mb-0">
                     <span class="fw-medium">{{
                       lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
-                    }}</span>
+                      }}</span>
                   </p>
                 </div>
                 <div
@@ -639,20 +649,20 @@
               <div
                 class="file-item-icon d-flex justify-content-center align-items-center"
               >
-                <img src="assets/img/pdf_logo.svg" alt="" />
+                <img src="assets/img/pdf_logo.svg" alt=""/>
               </div>
               <div class="row col-md-10 d-flex align-items-center mb-3 file-item-content">
                 <div class="col-md-8">
                   <p class="mb-0">
                     <span class="fw-medium span-doc-name"
-                      >{{ lastDocs.schoolDocument.documentName }}</span
+                    >{{ lastDocs.schoolDocument.documentName }}</span
                     ><span class="fw-medium">.pdf</span>
                   </p>
                   <p class="mb-0">
                     <span>Mã tài liệu: </span>
                     <span class="fw-medium">{{
                       lastDocs.schoolDocument.documentCode
-                    }}</span>
+                      }}</span>
                   </p>
                 </div>
                 <div class="col-md-4 text-end">
@@ -660,13 +670,13 @@
                     <!-- <span>Kích thước: </span> -->
                     <span class="fw-medium">{{
                       lastDocs.schoolDocument.sizeFormat
-                    }}</span>
+                      }}</span>
                   </p>
                   <p class="mb-0">
                     <!-- <span>Ngày tạo: </span> -->
                     <span class="fw-medium">{{
                       lastDocs.schoolDocument.uploadedDate | date : "dd/MM/yyyy"
-                    }}</span>
+                      }}</span>
                   </p>
                 </div>
               </div>

@@ -38,6 +38,19 @@ export class InitiationPlanDetailComponent implements OnInit {
   submitCompleted = false;
   isFileLoading = false;
   pdfPreviewVisibility: boolean = false;
+  breadCrumb = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Danh sách kế hoạch thực hiện',
+      routerLink: '/school-initiation-plan/list',
+    },
+    {
+      caption: 'Chi tiết kế hoạch thực hiện',
+    },
+  ];
   @ViewChild('fileInput') fileInput: any;
   ngOnInit(): void {
     console.log('run here');
