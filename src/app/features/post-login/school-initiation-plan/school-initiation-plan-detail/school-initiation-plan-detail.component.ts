@@ -78,15 +78,22 @@ export class SchoolInitiationPlanDetailComponent implements OnInit, OnDestroy {
           );
         })
       )
-      .subscribe((data) => {
-        this.schoolinitiationplan = data;
-        console.log(this.schoolinitiationplan);
-        this.lastDocs =
-          this.schoolinitiationplan?.documents[
+      .subscribe({
+        next: (data) => {
+          this.schoolinitiationplan = data;
+          console.log(this.schoolinitiationplan);
+          this.lastDocs =
+            this.schoolinitiationplan?.documents[
             this.schoolinitiationplan?.documents?.length - 1
-          ];
-        console.log(this.lastDocs);
-      });
+              ];
+          console.log(this.lastDocs);
+        },
+        error: (error) => {
+
+        }
+        }
+
+        );
     this.sub.push(method);
   }
 
@@ -226,6 +233,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit, OnDestroy {
                   'Có lỗi xảy ra',
                   error.error.message
                 );
+                this.isLoading = false;
               },
             });
           this.sub.push(method);
