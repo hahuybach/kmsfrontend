@@ -10,7 +10,7 @@
               <h6 class="mat-headline-6 fs-18 mb-2">Số trường đã kiểm tra</h6>
               <label class="fs-24 fw-medium mb-2" *ngIf="!issue">0</label>
 
-              <label class="fs-24 fw-medium mb-2" *ngIf="issue" >{{
+              <label class="fs-24 fw-medium mb-2" *ngIf="issue">{{
                 numberOfNonInspectedSchool ? numberOfNonInspectedSchool : 0
               }}</label>
               <br />
@@ -57,7 +57,9 @@
             </div>
             <div class="col-md-7">
               <span class="color-gray"
-                >trên tổng số {{ numberOfIniPlanWait ? numberOfIniPlanWait : 0 }} kế hoạch</span
+                >trên tổng số
+                {{ numberOfIniPlanWait ? numberOfIniPlanWait : 0 }} kế
+                hoạch</span
               >
             </div>
             <div class="col-md-5 d-flex justify-content-end">
@@ -324,7 +326,11 @@
                 <ng-container
                   *ngFor="let plan of inspectionPlans; let i = index"
                 >
-                  <div class="col-md-6 td-content">
+                  <div
+                    class="col-md-6 td-content"
+                    pTooltip="{{ plan.inspectionPlanName }}"
+                    tooltipPosition="top"
+                  >
                     <span>{{ plan.inspectionPlanName }}</span>
                   </div>
                   <div class="col-md-4">
@@ -334,12 +340,15 @@
                       [value]="plan.statusName"
                     ></p-tag>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-2 d-flex justify-content-end">
                     <button
                       pButton
                       (click)="viewInspectionDetail(plan.inspectionPlanId)"
+                      pTooltip="Chi tiết"
+                      tooltipPosition="top"
+                      class="action-item d-flex justify-content-center align-items-center"
                     >
-                      Xem chi tiết
+                      <i class="bi bi-info-circle-fill"></i>
                     </button>
                   </div>
                 </ng-container>
@@ -428,7 +437,11 @@
                 <ng-container
                   *ngFor="let plan of inspectionPlans; let i = index"
                 >
-                  <div class="col-md-6 td-content">
+                  <div
+                    class="col-md-6 td-content"
+                    pTooltip="{{ plan.inspectionPlanName }}"
+                    tooltipPosition="top"
+                  >
                     <span>{{ plan.inspectionPlanName }}</span>
                   </div>
                   <div class="col-md-4">
@@ -438,12 +451,15 @@
                       [value]="plan.statusName"
                     ></p-tag>
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-2 d-flex justify-content-end">
                     <button
                       pButton
                       (click)="viewInspectionDetail(plan.inspectionPlanId)"
+                      pTooltip="Chi tiết"
+                      tooltipPosition="top"
+                      class="action-item d-flex justify-content-center align-items-center"
                     >
-                      Xem chi tiết
+                      <i class="bi bi-info-circle-fill"></i>
                     </button>
                   </div>
                 </ng-container>

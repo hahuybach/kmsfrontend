@@ -45,7 +45,9 @@
       </div>
     </div>
     <div class="mb-5">
-      <label class="fw-medium mb-1">Mô tả chi tiết <span class="p-error">*</span></label>
+      <label class="fw-medium mb-1"
+        >Mô tả chi tiết<span class="p-error">*</span></label
+      >
       <br />
       <textarea
         class="mb-1"
@@ -175,7 +177,7 @@
       <ng-template pTemplate="footer">
         <div class="p-2">
           <button
-            [disabled]=" assignments.length == 0 || issueNotFound"
+            [disabled]="assignments.length == 0 || issueNotFound"
             pButton
             (click)="sendToSchools()"
           >

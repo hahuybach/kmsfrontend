@@ -1,6 +1,9 @@
 @import "../../../assets/scss/base";
 .searchbar {
     .search {
+        label {
+            color: $primary;
+        }
         input {
             width: 600px;
             border-radius: 40px;
