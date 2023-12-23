@@ -279,7 +279,7 @@
   <!-- SPECIALIST -->
   <ng-container *ngIf="isSpecialist">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-5">
         <div class="card p-3 h-100">
           <div class="row">
             <div class="col-md-6 mb-2">
@@ -512,7 +512,8 @@
                 >Xem thêm</span
               >
             </div>
-            <ng-container *ngIf="taskTrees && taskTrees.length > 0">
+            <ng-container *ngIf="taskTrees && taskTrees.length > 0; else noTask">
+
               <ng-container *ngFor="let task of taskTrees; let i = index">
                 <div class="row mb-2">
                   <div
@@ -543,7 +544,13 @@
                 </div>
               </ng-container>
             </ng-container>
-
+            <ng-template #noTask>
+              <div class="col-md-12 mt-2">
+                <label class="fw-medium color-gray"
+                >Không có công việc
+                </label>
+              </div>
+            </ng-template>
             <ng-template #noInspecPlan>
               <div class="col-md-12">
                 <label class="fw-medium color-gray"
@@ -673,7 +680,7 @@
             >Văn bản bổ sung vừa đăng tải</label
           >
           <ng-container
-            *ngIf="guidanceDocuments && guidanceDocuments.length > 0"
+            *ngIf="guidanceDocuments && guidanceDocuments.length > 0; else noGuidanceDocument"
           >
             <ng-container *ngFor="let doc of guidanceDocuments; let i = index">
               <div class="row mb-2">
@@ -701,6 +708,13 @@
               </div>
             </ng-container>
           </ng-container>
+          <ng-template #noGuidanceDocument>
+            <div class="col-md-12 mt-2">
+              <label class="fw-medium color-gray"
+              >Không có văn bản bổ sung
+              </label>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>

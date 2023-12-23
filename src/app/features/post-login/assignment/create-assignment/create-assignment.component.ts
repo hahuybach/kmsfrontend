@@ -291,11 +291,11 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'warn',
         summary: 'Không thể gửi',
-        detail: 'Mẫu công việc đã được gửi rồi nên không gửi lại được nữa',
+        detail: 'Mẫu cây công việc đã được gửi',
       });
     } else {
       this.confirmationService.confirm({
-        message: 'Bạn có muốn gửi mẫu công việc?',
+        message: 'Bạn có muốn gửi mẫu cây công việc không?',
         header: 'Xác nhận gửi',
         // icon: 'bi bi-exclamation-triangle-fill',
         key: 'confirm',
@@ -306,8 +306,8 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
               next: () => {
                 this.messageService.add({
                   severity: 'success',
-                  summary: 'Gửi thành công',
-                  detail: 'Gửi template thành công',
+                  summary: 'Thông báo',
+                  detail: 'Gửi mẫu cây công việc thành công',
                 });
               },
               error: (error) => {

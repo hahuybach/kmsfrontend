@@ -531,7 +531,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         sortBy: 'createdDate',
         sortDirection: 'desc',
         isMine: true,
-        status: this.inspectionPlanSelectedStatus,
+        // status: this.inspectionPlanSelectedStatus,
       },
     });
   }
@@ -549,7 +549,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   viewIssueDetail() {
-    this.router.navigate(['issue/' + this.issue?.issueId]);
+    if (this.issue){
+      this.router.navigate(['issue/' + this.issue?.issueId]);
+    }else {
+      this.toastService.showWarn(     'dashboard-toast',
+        'Thông báo',
+        'Chưa có kế hoạch kiểm tra')
+    }
   }
 
   loadInspectionPlan() {

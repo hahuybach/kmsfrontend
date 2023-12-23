@@ -127,8 +127,10 @@ export class InspectionDocumentComponent implements OnInit {
     this.inspectionService.getInspectionDocument(this.inspectionId).subscribe({
       next: (data) => {
         this.inspectionDocument = data;
+        console.log(this.inspectionDocument);
       },
       error: (error) => {
+
         this.toastService.showError('inspection-document', "Lỗi", error.error.message)
       },
     });

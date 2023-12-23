@@ -710,7 +710,11 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
         this.fileVisible = false;
         this.isFileLoading = false;
       },
-      error: (error) => {},
+      error: (error) => {
+        this.fileVisible = false;
+        this.isFileLoading = false;
+        this.toastService.showWarn("toastAssignAssignment", "Thông báo", error.error.message);
+      },
     });
     this.sub.push(method);
     // this.documents.push(data);

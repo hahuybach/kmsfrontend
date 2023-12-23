@@ -177,7 +177,7 @@ export class InitiationPlanDetailComponent implements OnInit {
           // }
         },
         error: (error) => {
-          this.toastService.showError('error', 'Lỗi', error.error.message);
+          this.toastService.showError('toastInitiationPlan', 'Lỗi', error.error.message);
         },
       });
   }
@@ -337,7 +337,7 @@ export class InitiationPlanDetailComponent implements OnInit {
             },
             error: (error) => {
               this.isLoading = false;
-              this.toastService.showError('error', 'Lỗi', error.error.message);
+              this.toastService.showError('toastInitiationPlan', 'Lỗi', error.error.message);
             },
           });
         } else {
