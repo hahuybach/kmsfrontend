@@ -261,6 +261,11 @@
                 [showClear]="true"
                 placeholder="Chọn trưởng đoàn kiểm tra"
               >
+                <ng-template pTemplate="option" let-option>
+                  <label>{{ option.user.fullName }}</label>
+                  <br>
+                  <span class="dropdown-email-span">{{ option.email }}</span>
+                </ng-template>
               </p-dropdown>
               <div
                 *ngIf="inspectionPlanForm.controls?.['chiefId']?.invalid && (inspectionPlanForm.controls?.['chiefId']?.touched ||inspectionPlanForm.controls?.['chiefId']?.dirty)"
