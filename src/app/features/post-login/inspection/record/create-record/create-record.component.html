@@ -83,13 +83,18 @@
             </div>
             <div class="record-assignee col-md-6" *ngIf="inspectionPlan">
                 <label class="fw-medium mb-1">Người thực hiện<span class="p-error">*</span></label>
-                <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors"
-                            appendTo="body"
-                            formControlName="assigneeId"
-                            optionLabel="user.fullName"
-                            [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
-                            placeholder="Chọn người thực hiện">
-                </p-dropdown>
+              <p-dropdown class="full-width-dropdown" [options]="inspectionPlan.inspectors"
+                          appendTo="body"
+                          formControlName="assigneeId"
+                          optionLabel="user.fullName"
+                          [filter]="true" filterBy="user.fullName" optionValue="accountId" [showClear]="true"
+                          placeholder="Chọn người thực hiện">
+                <ng-template pTemplate="option" let-option>
+                  <label>{{ option.user.fullName }}</label>
+                  <br>
+                  <span class="dropdown-email-span">{{ option.email }}</span>
+                </ng-template>
+              </p-dropdown>
                 <div
                         *ngIf="recordForm.controls?.['assigneeId']?.invalid && (recordForm.controls?.['assigneeId']?.touched ||recordForm.controls?.['assigneeId']?.dirty)">
                     <span *ngIf="recordForm.controls?.['assigneeId']?.errors?.['required']" class="p-error">
