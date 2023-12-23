@@ -529,7 +529,10 @@
 
           <!-- comment and history -->
           <ng-container *ngIf="action === 'info'">
-            <p-tabMenu [model]="tabs" [activeItem]="activeTab"></p-tabMenu>
+            <p-tabMenu
+              [model]="tabs"
+              [activeItem]="showComment ? tabs[0] : tabs[1]"
+            ></p-tabMenu>
             <!-- <div class="tab mt-5">
             <button
               pButton
@@ -1059,7 +1062,11 @@
             <h6 class="mat-headline-6">Chi tiết danh sách công việc</h6>
           </div>
           <div class="search-button">
-            <button *ngIf="iniApproved" pButton (click)="searchDialogVisible = true">
+            <button
+              *ngIf="iniApproved"
+              pButton
+              (click)="searchDialogVisible = true"
+            >
               Tìm kiếm
             </button>
           </div>

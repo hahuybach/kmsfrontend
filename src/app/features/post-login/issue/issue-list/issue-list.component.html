@@ -17,7 +17,10 @@
       <ng-template pTemplate="caption">
         <div class="table-header">
           <div>
-            <span class="p-input-icon-left search-with-icon" *ngIf="!filterVisible">
+            <span
+              class="p-input-icon-left search-with-icon"
+              *ngIf="!filterVisible"
+            >
               <i class="bi bi-search"></i>
               <input
                 pInputText
@@ -54,13 +57,13 @@
                     placeholder="Ngày đăng"
                   ></p-columnFilter>
                 </th> -->
-              <div>
+              <!-- <div>
                 <p-columnFilter
                   type="numeric"
                   field="inspectorGroupSize"
                   tooltipPosition="top"
                 ></p-columnFilter>
-              </div>
+              </div> -->
               <div>
                 <p-columnFilter
                   field="isActive"
@@ -76,7 +79,7 @@
                       [ngModel]="value"
                       [options]="statuses"
                       (onChange)="filter($event.value)"
-                      placeholder="Tất cả"
+                      placeholder="Trạng thái"
                       [showClear]="true"
                     >
                       <ng-template let-option pTemplate="item">
@@ -235,12 +238,8 @@
               class="action-item d-flex justify-content-center align-items-center mx-2"
               (click)="navigateToUpdate(issue.issueId, issue.isActive)"
               *ngIf="isDirector && issue.isActive"
-
             >
-              <i class="bi bi-pencil-fill"
-
-
-              ></i>
+              <i class="bi bi-pencil-fill"></i>
             </div>
           </td>
         </tr>
@@ -248,11 +247,12 @@
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="6">
-            <p class="w-100 text-center mt-4 fw-medium fs-4">Không tìm thấy kế hoạch kiểm tra phù hợp</p>
+            <p class="w-100 text-center mt-4 fw-medium fs-4">
+              Không tìm thấy kế hoạch kiểm tra phù hợp
+            </p>
           </td>
         </tr>
       </ng-template>
     </p-table>
   </div>
 </ng-container>
-
