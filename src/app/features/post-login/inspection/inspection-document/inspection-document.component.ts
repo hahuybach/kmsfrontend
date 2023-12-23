@@ -106,7 +106,7 @@ export class InspectionDocumentComponent implements OnInit {
         },
         error: (error) => {
           this.toastService.showError(
-            'deleteInComplete',
+            'deleteComplete',
             'Xóa không thành công',
             error.error.message
           );
