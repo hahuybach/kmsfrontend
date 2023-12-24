@@ -110,6 +110,8 @@
         [style]="{ 'min-width': '50rem' }"
         [scrollable]="true"
         scrollHeight="600px"
+        (onNodeExpand)="onNodeExpand($event)"
+        (onNodeCollapse)="onNodeCollapse($event)"
       >
         <ng-template pTemplate="caption">
           <div class="d-flex justify-content-between align-items-center">
@@ -137,7 +139,11 @@
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-rowNode>
           <tr [ttRow]="rowNode" class="d-flex justify-content-between row-node">
-            <td class="folder">
+            <td
+              class="folder td-content"
+              pTooltip="{{ rowData.node.assignmentName }}"
+              tooltipPosition="top"
+            >
               <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
               <i class="bi bi-folder-fill"></i>
               {{ rowData.node.assignmentName }}

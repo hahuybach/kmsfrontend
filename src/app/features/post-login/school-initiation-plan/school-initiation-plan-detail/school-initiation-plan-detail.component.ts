@@ -84,16 +84,12 @@ export class SchoolInitiationPlanDetailComponent implements OnInit, OnDestroy {
           console.log(this.schoolinitiationplan);
           this.lastDocs =
             this.schoolinitiationplan?.documents[
-            this.schoolinitiationplan?.documents?.length - 1
-              ];
+              this.schoolinitiationplan?.documents?.length - 1
+            ];
           console.log(this.lastDocs);
         },
-        error: (error) => {
-
-        }
-        }
-
-        );
+        error: (error) => {},
+      });
     this.sub.push(method);
   }
 
@@ -289,7 +285,7 @@ export class SchoolInitiationPlanDetailComponent implements OnInit, OnDestroy {
         formattedDeadline +
         '?',
       header: 'Xác nhận không phê duyệt',
-      icon: 'bi bi-exclamation-triangle-fill',
+      // icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmSchoolInitiationplan',
       accept: () => {
         newDeadline?.setDate(newDeadline?.getDate());

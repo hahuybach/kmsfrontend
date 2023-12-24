@@ -57,7 +57,7 @@
           >
           <input
             formControlName="documentName"
-            class="form-control"
+            pInputText
             type="text"
             placeholder="Điền tên tài liệu"
           />
@@ -83,10 +83,20 @@
           <br />
           <input
             formControlName="documentCode"
-            class="form-control"
+            pInputText
             type="text"
             placeholder="Điền mã tài liệu"
           />
+          <div
+            *ngIf="fileInputForm.controls?.['documentCode']?.invalid && (fileInputForm.controls?.['documentCode']?.touched || fileInputForm.controls?.['documentCode']?.dirty)"
+          >
+            <span
+              *ngIf="fileInputForm.controls?.['documentCode']?.errors?.['maxlength']"
+              class="p-error"
+            >
+              Mã tài liệu quá dài
+            </span>
+          </div>
           <br />
         </div>
 
@@ -186,7 +196,7 @@
                   *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
                   class="p-error"
                 >
-                  Mã tài liệu quá dài
+                  Tên công việc quá dài
                 </span>
               </div>
             </div>
