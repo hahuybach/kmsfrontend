@@ -155,6 +155,8 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     this.eligibleChiefList = data.filter((eligibleInspector: {
       accountId: number;
     }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
+    console.log(this.eligibleChiefList);
+    console.log(this.chiefList)
     this.inspectionPlanForm.get('inspectorIds')?.setValue(inspectorListId);
     if (!inspectorListId.includes(this.inspectionPlanForm.get('chiefId')?.value)){
       this.inspectionPlanForm.get('chiefId')?.setValue(null);

@@ -62,7 +62,6 @@ export class InspectionPlanInspectorPopupComponent implements OnChanges, OnInit{
           (inspector) => inspector.accountId === eligibleInspector.accountId
         )
     );
-    console.log(eligibleChiefList);
     return eligibleChiefList.length > 0;
   }
   changeFilterVisible(status: Boolean) {
