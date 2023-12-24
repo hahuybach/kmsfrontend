@@ -133,7 +133,7 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
       next: (data: any) => {
         this.inspectorList = data.inspectorDtos;
         this.chiefList = data.chiefDtos;
-        console.log(this.chiefList[0].email);
+        console.log(this.inspectorList)
         this.inspectionplanInspectorService.setPopupInspectorList(this.inspectorList);
         const setPopUpList = this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectorList = list);
         this.loadingInspector = false;
@@ -155,8 +155,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     this.eligibleChiefList = data.filter((eligibleInspector: {
       accountId: number;
     }) => this.chiefList.some(inspector => inspector.accountId === eligibleInspector.accountId));
-    console.log(this.eligibleChiefList);
-    console.log(this.chiefList)
     this.inspectionPlanForm.get('inspectorIds')?.setValue(inspectorListId);
     if (!inspectorListId.includes(this.inspectionPlanForm.get('chiefId')?.value)){
       this.inspectionPlanForm.get('chiefId')?.setValue(null);
@@ -175,10 +173,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     return (this.inspectionPlanForm.get('documentInspectionPlanDto') as FormGroup).controls['documentFile'];
   }
 
-  // onNextButton(){
-  //   this.initInspectorList()
-  //   this.activeIndex = 1;
-  // }
 
   onNextButton() {
     if (
