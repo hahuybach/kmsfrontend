@@ -1094,7 +1094,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-rowNode>
         <tr [ttRow]="rowNode">
-          <td class="folder width-30 td-content">
+          <td class="folder width-30 td-content" pTooltip="{{ rowData.node.assignmentName }}" tooltipPosition="top">
             <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
             <ng-container *ngIf="rowData.node.task">
               <i class="bi bi-file-earmark-check-fill file-icon"></i>
@@ -1107,7 +1107,9 @@
             </span>
           </td>
           <!-- <td>{{ rowData.node.assigner?.user.fullName }}</td>   -->
-          <td class="width-20">
+          <td class="width-20 td-content" pTooltip="{{
+                  rowData.node.assignee?.user.fullName
+                }}" tooltipPosition="top">
             <div
               *ngIf="rowData.node.assignee?.user.fullName; else noAssignee"
               class="row"
