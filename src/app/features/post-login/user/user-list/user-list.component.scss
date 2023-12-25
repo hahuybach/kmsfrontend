@@ -22,13 +22,12 @@
   border-radius: 8px;
 }
 
-
 .loading {
   z-index: 100;
 }
 
 .fontAwesome {
-  font-family: Arial, 'Font Awesome 5 Free'
+  font-family: Arial, "Font Awesome 5 Free";
 }
 
 .header-container {
@@ -47,7 +46,6 @@
     color: white;
   }
 }
-
 
 ::ng-deep .p-dropdown {
   width: 100%;
@@ -105,7 +103,7 @@
       text-overflow: ellipsis;
       font-size: 15px;
       border: none;
-      div{
+      div {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -114,42 +112,50 @@
       }
     }
 
-    th:first-child, td:first-child {
+    th:first-child,
+    td:first-child {
       width: 5%;
     }
 
-    th:nth-child(2), td:nth-child(2) {
+    th:nth-child(2),
+    td:nth-child(2) {
       width: 17%;
     }
 
-    th:nth-child(3), td:nth-child(3) {
+    th:nth-child(3),
+    td:nth-child(3) {
       width: 16%;
     }
 
-    th:nth-child(4), td:nth-child(4) {
+    th:nth-child(4),
+    td:nth-child(4) {
       width: 12%;
     }
 
-    th:nth-child(5), td:nth-child(5) {
+    th:nth-child(5),
+    td:nth-child(5) {
       width: 15%;
     }
 
-    th:nth-child(6), td:nth-child(6) {
+    th:nth-child(6),
+    td:nth-child(6) {
       width: 12%;
     }
 
-    th:nth-child(7), td:nth-child(7) {
+    th:nth-child(7),
+    td:nth-child(7) {
       width: 13%;
     }
 
-    th:nth-child(8), td:nth-child(8) {
+    th:nth-child(8),
+    td:nth-child(8) {
       width: 10%;
     }
-
   }
 }
 
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
   background-color: #e9ecef;
 }
 
@@ -180,7 +186,8 @@
       display: none;
     }
 
-    .pagination-previous, .pagination-next {
+    .pagination-previous,
+    .pagination-next {
       font-size: 30px;
       display: flex;
       align-items: center;
@@ -226,13 +233,21 @@
   }
 }
 
-.search-with-icon{
+.search-with-icon {
   font-size: 16px;
 }
 
-.table-header-sort{
+.table-header-sort {
   color: $primary;
-  i{
+  i {
     margin-top: 0.3rem;
+  }
+}
+.upload-excel {
+  margin-left: 20px !important;
+  color: $primary !important;
+  background-color: #fff;
+  &:hover {
+    color: #fff !important;
   }
 }

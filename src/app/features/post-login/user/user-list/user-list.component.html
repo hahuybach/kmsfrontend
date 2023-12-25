@@ -444,10 +444,10 @@
           (change)="onSubmitFile($event)"
           type="file"
         />
-        <button class="btn btn-primary mt-3" (click)="confirm()">
+        <button pButton (click)="confirm()">
           Xác nhận
         </button>
-        <button class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
+        <button pButton class="upload-excel mt-3 ml-3" (click)="downloadTemplate()">
           Tải file mẫu
         </button>
       </div>
