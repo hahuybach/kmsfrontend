@@ -44,6 +44,16 @@ export class SchoolDetailComponent implements OnInit, OnDestroy {
     },
   ];
 
+    breadCrumbForSchoolEmployee = [
+    {
+      caption: 'Trang chủ',
+      routerLink: '/',
+    },
+    {
+      caption: 'Đơn vị hiện tại'
+    },
+  ];
+
     constructor(private route: ActivatedRoute,
                 private schoolService: SchoolService,
                 private routeLink: Router,

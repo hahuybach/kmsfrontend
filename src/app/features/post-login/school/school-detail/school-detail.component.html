@@ -1,8 +1,23 @@
 <div class="container-fluid">
   <tui-breadcrumbs
     size="l"
+    *ngIf="!isSchoolNormalEmp"
   >
     <ng-container *ngFor="let item of breadCrumb">
+      <a
+        *tuiItem
+        tuiLink
+        [routerLink]="item.routerLink"
+      >
+        {{ item.caption }}
+      </a>
+    </ng-container>
+  </tui-breadcrumbs>
+  <tui-breadcrumbs
+    size="l"
+    *ngIf="isSchoolNormalEmp"
+  >
+    <ng-container *ngFor="let item of breadCrumbForSchoolEmployee">
       <a
         *tuiItem
         tuiLink
