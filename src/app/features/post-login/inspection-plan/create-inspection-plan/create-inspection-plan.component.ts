@@ -133,7 +133,6 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
       next: (data: any) => {
         this.inspectorList = data.inspectorDtos;
         this.chiefList = data.chiefDtos;
-        console.log(this.inspectorList)
         this.inspectionplanInspectorService.setPopupInspectorList(this.inspectorList);
         const setPopUpList = this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectorList = list);
         this.loadingInspector = false;
