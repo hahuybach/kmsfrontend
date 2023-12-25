@@ -132,6 +132,8 @@ export class CreateInspectionPlanComponent implements OnInit, OnDestroy {
     const getEligibleInspector = this.inspectionPlanService.getEligibleInspectorForCreate(startDate, endDate, schoolId).subscribe({
       next: (data: any) => {
         this.inspectorList = data.inspectorDtos;
+        console.log(this.chiefList)
+        console.log(this.inspectorList)
         this.chiefList = data.chiefDtos;
         this.inspectionplanInspectorService.setPopupInspectorList(this.inspectorList);
         const setPopUpList = this.inspectionplanInspectorService.popupInspectorList$.subscribe(list => this.inspectorList = list);
