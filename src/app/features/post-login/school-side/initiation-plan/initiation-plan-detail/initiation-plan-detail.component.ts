@@ -297,7 +297,7 @@ export class InitiationPlanDetailComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Bạn có chắc chắn nộp tài liệu?',
       header: 'Xác nhận nộp',
-      icon: 'bi bi-exclamation-triangle-fill',
+      // icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirmInitiationplan',
       accept: () => {
         this.isLoading = true;

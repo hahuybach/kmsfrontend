@@ -132,13 +132,13 @@ export class InspectionSchoolDocumentComponent implements OnInit {
         url = '../../../../../assets/img/pdf_logo.svg';
         break;
       case 'application/msword':
-        url = '../../../../../assets/img/doc.png';
+        url = '../../../../../assets/img/doc_logo.svg';
         break;
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        url = '../../../../../assets/img/doc.png';
+        url = '../../../../../assets/img/doc_logo.svg';
         break;
       case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        url = '../../../../../assets/img/xls.png';
+        url = '../../../../../assets/img/xls.svg';
         break;
     }
     return url;

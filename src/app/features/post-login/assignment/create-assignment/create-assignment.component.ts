@@ -52,6 +52,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
   data: any;
   sub: any[];
   issueNotFound: boolean = false;
+  nodeStateMap: { [key: number]: boolean } = {};
   constructor(
     private toastService: ToastService,
     private fb: FormBuilder,
@@ -93,7 +94,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
         console.log(data);
         this.data = data;
         this.assignments = [data.assignmentListDto];
-        console.log(this.assignments);
+        this.restoreNodeState(this.assignments);
       },
       error: (error) => {
         this.messageService.add({
@@ -178,7 +179,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
           this.assignmentVisible = false;
           this.messageService.add({
             severity: 'success',
-            summary: 'Tạo thành công',
+            summary: 'Thông báo',
             detail: 'Tạo thành công',
           });
         },
@@ -187,7 +188,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
           this.assignmentVisible = false;
           this.messageService.add({
             severity: 'error',
-            summary: 'Tạo thất bại',
+            summary: 'Thông báo',
             detail: error.error.message,
           });
         },
@@ -205,32 +206,35 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
       description: this.assignmentForm.get('description')?.value,
     };
     console.log(updateAssignment);
-    this.assignmentService.updateDeptAssignment(updateAssignment).subscribe({
-      next: (response) => {
-        this.initData();
-        this.assignmentVisible = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Cập nhật thành công',
-          detail: 'Cập nhật thành công',
-        });
-      },
-      error: (error) => {
-        this.assignmentVisible = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Lỗi cập nhật',
-          detail: error.error.message,
-        });
-      },
-    });
+    const method = this.assignmentService
+      .updateDeptAssignment(updateAssignment)
+      .subscribe({
+        next: (response) => {
+          this.initData();
+          this.assignmentVisible = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Thông báo',
+            detail: 'Cập nhật thành công',
+          });
+        },
+        error: (error) => {
+          this.assignmentVisible = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Lỗi cập nhật',
+            detail: error.error.message,
+          });
+        },
+      });
     console.log('Update');
     console.log(updateAssignment);
+    this.sub.push(method);
   }
   deleteNode(assignment: any) {
     console.log(assignment);
     this.confirmationService.confirm({
-      message: 'Bạn có muốn xóa công việc này?',
+      message: 'Bạn có muốn xóa công việc ' + assignment.assignmentName + '?',
       header: 'Xác nhận xóa',
       icon: 'bi bi-exclamation-triangle-fill',
       key: 'confirm',
@@ -248,7 +252,7 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
               this.assignmentVisible = false;
               this.messageService.add({
                 severity: 'success',
-                summary: 'Xóa thành công',
+                summary: 'Thông báo',
                 detail: 'Xóa thành công',
               });
             },
@@ -323,6 +327,32 @@ export class CreateAssignmentComponent implements OnInit, OnDestroy {
         reject: (type: any) => {},
       });
     }
+  }
+  restoreNodeState(nodes: any[]) {
+    nodes.forEach((node) => {
+      if (this.nodeStateMap[node.assignmentId] !== undefined) {
+        node.expanded = this.nodeStateMap[node.assignmentId];
+      }
+
+      if (node.children && node.children.length > 0) {
+        this.restoreNodeState(node.children);
+      }
+    });
+    console.log('restore');
+    console.log(this.nodeStateMap);
+  }
+  onNodeExpand(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
+  }
+
+  onNodeCollapse(event: any) {
+    const node = event.node;
+    console.log('Node Toggle Event:', event);
+    this.nodeStateMap[node.assignmentId] = node.expanded;
+    console.log(this.nodeStateMap);
   }
   ngOnDestroy(): void {
     unSub(this.sub);

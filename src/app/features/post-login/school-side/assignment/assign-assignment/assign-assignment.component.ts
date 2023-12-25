@@ -89,7 +89,11 @@ export class AssignAssignmentComponent implements OnInit, OnDestroy {
   fileInputPlaceholders: string;
   @ViewChild('fileInput') fileInput: any;
   fileInputForm = this.fb.group({
-    documentCode: [''],
+    documentCode: ['',Validators.compose([
+      // Validators.required,
+      Validators.maxLength(256),
+      // NoWhitespaceValidator(),
+    ])],
     documentName: [
       '',
       Validators.compose([

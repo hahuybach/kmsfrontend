@@ -1,412 +1,467 @@
-<h5 class="mat-headline-5 fw-medium">Tra cứu người dùng</h5>
-<div class="table-container">
-  <div
-    class="my-4 row advance-search px-3 d-flex flex-row justify-content-between"
-  >
-    <div class="form-group col-md-6" *ngIf="!advanceSearch">
-      <span class="p-input-icon-left search-with-icon w-100">
-        <i class="bi bi-search"></i>
-        <input
-          type="text"
-          name="globalSearch"
-          id="globalSearch"
-          class="w-100 fw-medium"
-          [(ngModel)]="globalSearch"
-          (keyup)="loadUsers()"
-          pInputText
-          placeholder="Tra cứu nhanh theo tên, số điện thoại hoặc email"
-        />
-      </span>
-    </div>
-    <div *ngIf="advanceSearch" class="col-md-10">
-      <div class="row">
-        <div class="col-md-4" *ngIf="!hasPrincipalRow">
-          <label class="fw-medium">Tên trường</label>
-          <p-dropdown class="full-width-dropdown" [options]="schools" dataKey="schoolId"
-                      [(ngModel)]="currentSchool"    optionLabel="schoolName"
-                      [filter]="true" filterBy="schoolName" optionValue="schoolId" [showClear]="true"
-                      (onChange)="loadUsers()"
-                      placeholder="Chọn 1 nơi làm việc"
+<div class="container-fluid">
+  <h5 class="mat-headline-5 fw-medium">Danh sách người dùng</h5>
+  <div class="table-container">
+    <div
+      class="my-4 row advance-search px-3 d-flex flex-row justify-content-between"
+    >
+      <div class="form-group col-md-6" *ngIf="!advanceSearch">
+        <span class="p-input-icon-left search-with-icon w-100">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            name="globalSearch"
+            id="globalSearch"
+            class="w-100 fw-medium"
+            [(ngModel)]="globalSearch"
+            (keyup)="loadUsers()"
+            pInputText
+            placeholder="Tra cứu nhanh theo tên, số điện thoại hoặc email"
+          />
+        </span>
+      </div>
+      <div *ngIf="advanceSearch" class="col-md-10">
+        <div class="row">
+          <div class="col-md-4" *ngIf="!hasPrincipalRow">
+            <label class="fw-medium">Tên trường</label>
+            <p-dropdown
+              class="full-width-dropdown"
+              [options]="schools"
+              dataKey="schoolId"
+              [(ngModel)]="currentSchool"
+              optionLabel="schoolName"
+              [filter]="true"
+              filterBy="schoolName"
+              optionValue="schoolId"
+              [showClear]="true"
+              (onChange)="loadUsers()"
+              placeholder="Chọn 1 nơi làm việc"
+            >
+            </p-dropdown>
+          </div>
+          <div
+            class=""
+            [ngClass]="{
+              'col-md-6': hasPrincipalRow,
+              'col-md-4': !hasPrincipalRow
+            }"
           >
-          </p-dropdown>
-
-        </div>
-        <div
-          class=""
-          [ngClass]="{
-            'col-md-6': hasPrincipalRow,
-            'col-md-4': !hasPrincipalRow
-          }"
-        >
-          <label class="fw-medium">Chức vụ</label>
-          <p-dropdown class="full-width-dropdown" [options]="roles" dataKey="schoolId"
-                      [(ngModel)]="selectedRole"    optionLabel="roleName"
-                      [filter]="true" filterBy="roleName" optionValue="roleId" [showClear]="true"
-                      (onChange)="loadUsers()"
-                      placeholder="Chọn 1 chức vụ"
+            <label class="fw-medium">Chức vụ</label>
+            <p-dropdown
+              class="full-width-dropdown"
+              [options]="roles"
+              dataKey="schoolId"
+              [(ngModel)]="selectedRole"
+              optionLabel="roleName"
+              [filter]="true"
+              filterBy="roleName"
+              optionValue="roleId"
+              [showClear]="true"
+              (onChange)="loadUsers()"
+              placeholder="Chọn 1 chức vụ"
+            >
+            </p-dropdown>
+          </div>
+          <div
+            class=""
+            [ngClass]="{
+              'col-md-6': hasPrincipalRow,
+              'col-md-4': !hasPrincipalRow
+            }"
           >
-          </p-dropdown>
-
-        </div>
-        <div
-          class=""
-          [ngClass]="{
-            'col-md-6': hasPrincipalRow,
-            'col-md-4': !hasPrincipalRow
-          }"
-        >
-          <label class="fw-medium">Trạng thái</label>
-          <p-dropdown
-            placeholder="Chọn 1 trạng thái"
-            [options]="isActives"
-            [(ngModel)]="isActive"
-            [showClear]="true"
-            (onChange)="loadUsers()"
-            (onClear)="removeStatus()"
-          ></p-dropdown>
+            <label class="fw-medium">Trạng thái</label>
+            <p-dropdown
+              placeholder="Chọn 1 trạng thái"
+              [options]="isActives"
+              [(ngModel)]="isActive"
+              [showClear]="true"
+              (onChange)="loadUsers()"
+              (onClear)="removeStatus()"
+            ></p-dropdown>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      class="text-end justify-content-end"
-      [ngClass]="{
-        'col-md-2 d-flex align-items-end': advanceSearch,
-        'col-md-3 ': !advanceSearch
-      }"
-    >
-      <button (click)="onAdvanceSearch()" pButton>
-        {{ advanceSearchButtonText }}
-      </button>
-    </div>
-    <div *ngIf="advanceSearch" class="col-md-10 mt-2">
-      <div class="row">
-        <div class="col-md-4">
-          <label class="fw-medium">Tên</label>
-          <input
-            class="form-control"
-            name="fullName"
-            id="fullName"
-            [(ngModel)]="fullName"
-            (keyup)="loadUsers()"
-            placeholder="(VD): Lê Ngọc Hùng"
-            pInputText
-          />
-        </div>
-        <div class="col-md-4">
-          <label class="fw-medium">Số điện thoại</label>
-          <input
-            class="form-control"
-            type="text"
-            name="phoneNumber"
-            id="phoneNumber"
-            [(ngModel)]="phoneNumber"
-            (keyup)="loadUsers()"
-            pInputText
-            placeholder="(VD): 0394335205"
-          />
-        </div>
-        <div class="col-md-4">
-          <label class="fw-medium">Email</label>
-          <input
-            class="form-control"
-            name="email"
-            id="email"
-            type="text"
-            [(ngModel)]="email"
-            (keyup)="loadUsers()"
-            pInputText
-            placeholder="(VD): hunglengoc@gmail.com"
-          />
-        </div>
-      </div>
-    </div>
-    <div
-      *ngIf="advanceSearch"
-      class="d-flex justify-content-end align-items-end col-md-2"
-    >
-      <button pButton class="reset-button" (click)="reset()">Đặt lại</button>
-    </div>
-    <div
-      class="mt-2 d-flex flex-row justify-content-between align-items-center"
-    >
-      <div>
-        <button (click)="showImportUser()" pButton>
-          Nhập người dùng bằng file excel
+      <div
+        class="text-end justify-content-end"
+        [ngClass]="{
+          'col-md-2 d-flex align-items-end': advanceSearch,
+          'col-md-3 ': !advanceSearch
+        }"
+      >
+        <button (click)="onAdvanceSearch()" pButton>
+          {{ advanceSearchButtonText }}
         </button>
       </div>
-      <div>
-        <button pButton (click)="onCreateUser()">Tạo mới</button>
+      <div *ngIf="advanceSearch" class="col-md-10 mt-2">
+        <div class="row">
+          <div class="col-md-4">
+            <label class="fw-medium">Tên</label>
+            <input
+              class="form-control"
+              name="fullName"
+              id="fullName"
+              [(ngModel)]="fullName"
+              (keyup)="loadUsers()"
+              placeholder="(VD): Lê Ngọc Hùng"
+              pInputText
+            />
+          </div>
+          <div class="col-md-4">
+            <label class="fw-medium">Số điện thoại</label>
+            <input
+              class="form-control"
+              type="text"
+              name="phoneNumber"
+              id="phoneNumber"
+              [(ngModel)]="phoneNumber"
+              (keyup)="loadUsers()"
+              pInputText
+              placeholder="(VD): 0394335205"
+            />
+          </div>
+          <div class="col-md-4">
+            <label class="fw-medium">Email</label>
+            <input
+              class="form-control"
+              name="email"
+              id="email"
+              type="text"
+              [(ngModel)]="email"
+              (keyup)="loadUsers()"
+              pInputText
+              placeholder="(VD): hunglengoc@gmail.com"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="advanceSearch"
+        class="d-flex justify-content-end align-items-end col-md-2"
+      >
+        <button pButton class="reset-button" (click)="reset()">Đặt lại</button>
+      </div>
+      <div
+        class="mt-2 d-flex flex-row justify-content-between align-items-center"
+      >
+        <div>
+          <button (click)="showImportUser()" pButton>
+            Nhập người dùng bằng file excel
+          </button>
+        </div>
+        <div>
+          <button pButton (click)="onCreateUser()">Tạo mới</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="table-content">
-    <table class="table p-2 table-hover align-middle">
-      <thead>
-        <tr>
-          <th (click)="onSort('user.userId')">
-            <div class="header-container" [class.table-header-sort]="sortBy == 'user.userId'">
-              <label class="icon-text me-1">Mã</label>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'user.userId' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="sortBy === 'user.userId' && sortDirection === 'desc'"
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('user.fullName')">
-            <div class="header-container" [class.table-header-sort]="sortBy == 'user.fullName'">
-              <label class="icon-text me-1">Tên</label>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'user.fullName' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="sortBy === 'user.fullName' && sortDirection === 'desc'"
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('user.account.email')">
-            <div class="header-container" [class.table-header-sort]="sortBy == 'user.account.email'">
-              <label class="icon-text me-1">Email</label>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
-                  sortBy === 'user.account.email' && sortDirection === 'asc'
-                "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
-                  sortBy === 'user.account.email' && sortDirection === 'desc'
-                "
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('user.phoneNumber')">
-            <div class="header-container" [class.table-header-sort]="sortBy == 'user.phoneNumber'">
-              <label class="icon-text me-1">Số điện thoại</label>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="sortBy === 'user.phoneNumber' && sortDirection === 'asc'"
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
-                  sortBy === 'user.phoneNumber' && sortDirection === 'desc'
-                "
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('user.account.school.schoolName')">
-            <div class="header-container" [class.table-header-sort]="sortBy == 'user.account.school.schoolName'">
-              <label class="icon-text me-1">Đơn vị</label>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
-                  sortBy === 'user.account.school.schoolName' && sortDirection === 'asc'
-                "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
-                  sortBy === 'user.account.school.schoolName' && sortDirection === 'desc'
-                "
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('user.account.accountRoles.role.roleName')">
-            <div class="header-container" [class.table-header-sort]="sortBy == 'user.account.accountRoles.role.roleName'">
-              <label class="icon-text me-1">Chức vụ</label>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
-                  sortBy === 'user.account.accountRoles.role.roleName' &&
-                  sortDirection === 'asc'
-                "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
-                  sortBy === 'user.account.accountRoles.role.roleName' &&
-                  sortDirection === 'desc'
-                "
-              ></i>
-            </div>
-          </th>
-          <th (click)="onSort('user.account.isActive')">
-            <div class="header-container" [class.table-header-sort]="sortBy == 'user.account.isActive'">
-              <label class="icon-text me-1">Trạng thái</label>
-              <i
-                class="bi bi-sort-up"
-                *ngIf="
-                  sortBy === 'user.account.isActive' && sortDirection === 'asc'
-                "
-              ></i>
-              <i
-                class="bi bi-sort-down"
-                *ngIf="
-                  sortBy === 'user.account.isActive' && sortDirection === 'desc'
-                "
-              ></i>
-            </div>
-          </th>
-          <th></th>
-        </tr>
-        <tr>
-          <td colspan="8">
-            <p class="w-100 text-center mt-4 fw-medium fs-4" *ngIf="totalElements == 0">Không tìm thấy bản ghi nào phù hợp</p>
-          </td>
-        </tr>
-      </thead>
-      <ng-container *ngIf="users">
-        <tbody *ngIf="users && users.length > 0">
-          <tr
-            *ngFor="
-              let user of users
-                | paginate
-                  : {
-                      itemsPerPage: pageSize,
-                      currentPage: pageNo,
-                      totalItems: totalElements
-                    };
-              let i = index
-            "
-          >
-            <td class="py-4 px-2">{{ user.userId }}</td>
-            <td
-              class="py-4 px-2"
-              pTooltip="{{ user.fullName }}"
-              tooltipPosition="top"
-            >
-              {{ user.fullName == null ? "Chưa nhập tên" : user.fullName }}
-            </td>
-            <td
-              class="py-4 px-2"
-              pTooltip="{{ user.email }}"
-              tooltipPosition="top"
-            >
-              {{ user.email }}
-            </td>
-            <td class="py-4 px-2">
-              {{
-                user.phoneNumber == null
-                  ? "Chưa nhập số điện thoại"
-                  : user.phoneNumber
-              }}
-            </td>
-            <td
-              class="py-4 px-2"
-              pTooltip="{{ user.school?.schoolName }}"
-              tooltipPosition="top"
-            >
-              {{ user.school?.schoolName }}
-            </td>
-            <td class="py-4 px-2">
+    <div class="table-content">
+      <table class="table p-2 table-hover align-middle">
+        <thead>
+          <tr>
+            <th (click)="onSort('user.userId')">
               <div
-                *ngFor="let role of user.accountRoles; let last = last"
-                [pTooltip]="role.role?.roleName"
-                [tooltipPosition]="'top'"
+                class="header-container"
+                [class.table-header-sort]="sortBy == 'user.userId'"
               >
-                {{ role.role?.roleName }}{{ last ? "" : ";" }}
+                <label class="icon-text me-1">Mã</label>
+                <i
+                  class="bi bi-sort-up"
+                  *ngIf="sortBy === 'user.userId' && sortDirection === 'asc'"
+                ></i>
+                <i
+                  class="bi bi-sort-down"
+                  *ngIf="sortBy === 'user.userId' && sortDirection === 'desc'"
+                ></i>
               </div>
-            </td>
-            <td class="py-4 px-2">
-              <p-tag
-                [severity]="getStatusSeverity(user.isActive)"
-                [value]="getStatusValue(user.isActive)"
-              ></p-tag>
-            </td>
-            <td>
+            </th>
+            <th (click)="onSort('user.fullName')">
               <div
-                class="d-flex justify-content-evenly flex-row align-items-center"
+                class="header-container"
+                [class.table-header-sort]="sortBy == 'user.fullName'"
               >
-                <button
-                  pTooltip="Chi tiết"
-                  tooltipPosition="top"
-                  type="button"
-                  (click)="onDetail(user.userId)"
-                  class="action-button"
-                >
-                  <i class="bi bi-info-circle-fill"></i>
-                </button>
-                <button
-                  pTooltip="Chỉnh sửa"
-                  tooltipPosition="top "
-                  type="button"
-                  class="action-button"
-                  (click)="onUpdate(user.userId)"
-                  *ngIf="isUpdatable(user)"
-                >
-                  <i class="bi bi-pencil-fill"></i>
-                </button>
+                <label class="icon-text me-1">Tên</label>
+                <i
+                  class="bi bi-sort-up"
+                  *ngIf="sortBy === 'user.fullName' && sortDirection === 'asc'"
+                ></i>
+                <i
+                  class="bi bi-sort-down"
+                  *ngIf="sortBy === 'user.fullName' && sortDirection === 'desc'"
+                ></i>
               </div>
+            </th>
+            <th (click)="onSort('user.account.email')">
+              <div
+                class="header-container"
+                [class.table-header-sort]="sortBy == 'user.account.email'"
+              >
+                <label class="icon-text me-1">Email</label>
+                <i
+                  class="bi bi-sort-up"
+                  *ngIf="
+                    sortBy === 'user.account.email' && sortDirection === 'asc'
+                  "
+                ></i>
+                <i
+                  class="bi bi-sort-down"
+                  *ngIf="
+                    sortBy === 'user.account.email' && sortDirection === 'desc'
+                  "
+                ></i>
+              </div>
+            </th>
+            <th (click)="onSort('user.phoneNumber')">
+              <div
+                class="header-container"
+                [class.table-header-sort]="sortBy == 'user.phoneNumber'"
+              >
+                <label class="icon-text me-1">Số điện thoại</label>
+                <i
+                  class="bi bi-sort-up"
+                  *ngIf="
+                    sortBy === 'user.phoneNumber' && sortDirection === 'asc'
+                  "
+                ></i>
+                <i
+                  class="bi bi-sort-down"
+                  *ngIf="
+                    sortBy === 'user.phoneNumber' && sortDirection === 'desc'
+                  "
+                ></i>
+              </div>
+            </th>
+            <th (click)="onSort('user.account.school.schoolName')">
+              <div
+                class="header-container"
+                [class.table-header-sort]="
+                  sortBy == 'user.account.school.schoolName'
+                "
+              >
+                <label class="icon-text me-1">Đơn vị</label>
+                <i
+                  class="bi bi-sort-up"
+                  *ngIf="
+                    sortBy === 'user.account.school.schoolName' &&
+                    sortDirection === 'asc'
+                  "
+                ></i>
+                <i
+                  class="bi bi-sort-down"
+                  *ngIf="
+                    sortBy === 'user.account.school.schoolName' &&
+                    sortDirection === 'desc'
+                  "
+                ></i>
+              </div>
+            </th>
+            <th (click)="onSort('user.account.accountRoles.role.roleName')">
+              <div
+                class="header-container"
+                [class.table-header-sort]="
+                  sortBy == 'user.account.accountRoles.role.roleName'
+                "
+              >
+                <label class="icon-text me-1">Chức vụ</label>
+                <i
+                  class="bi bi-sort-up"
+                  *ngIf="
+                    sortBy === 'user.account.accountRoles.role.roleName' &&
+                    sortDirection === 'asc'
+                  "
+                ></i>
+                <i
+                  class="bi bi-sort-down"
+                  *ngIf="
+                    sortBy === 'user.account.accountRoles.role.roleName' &&
+                    sortDirection === 'desc'
+                  "
+                ></i>
+              </div>
+            </th>
+            <th (click)="onSort('user.account.isActive')">
+              <div
+                class="header-container"
+                [class.table-header-sort]="sortBy == 'user.account.isActive'"
+              >
+                <label class="icon-text me-1">Trạng thái</label>
+                <i
+                  class="bi bi-sort-up"
+                  *ngIf="
+                    sortBy === 'user.account.isActive' &&
+                    sortDirection === 'asc'
+                  "
+                ></i>
+                <i
+                  class="bi bi-sort-down"
+                  *ngIf="
+                    sortBy === 'user.account.isActive' &&
+                    sortDirection === 'desc'
+                  "
+                ></i>
+              </div>
+            </th>
+            <th></th>
+          </tr>
+          <tr>
+            <td colspan="8">
+              <p
+                class="w-100 text-center mt-4 fw-medium fs-4"
+                *ngIf="totalElements == 0"
+              >
+                Không tìm thấy bản ghi nào phù hợp
+              </p>
             </td>
           </tr>
-        </tbody>
-      </ng-container>
-    </table>
-  </div>
-  <div class="d-flex justify-content-center table-footer" *ngIf="users && users.length > 0">
-    <div class="me-3 mt-3" *ngIf="users">
-      <pagination-controls
-        previousLabel=""
-        nextLabel=""
-        (pageChange)="[onTableDataChange($event), maxPageOnKeyUp()]"
-      >
-      </pagination-controls>
+        </thead>
+        <ng-container *ngIf="users">
+          <tbody *ngIf="users && users.length > 0">
+            <tr
+              *ngFor="
+                let user of users
+                  | paginate
+                    : {
+                        itemsPerPage: pageSize,
+                        currentPage: pageNo,
+                        totalItems: totalElements
+                      };
+                let i = index
+              "
+            >
+              <td class="py-4 px-2">{{ user.userId }}</td>
+              <td
+                class="py-4 px-2"
+                pTooltip="{{ user.fullName }}"
+                tooltipPosition="top"
+              >
+                {{ user.fullName == null ? "Chưa nhập tên" : user.fullName }}
+              </td>
+              <td
+                class="py-4 px-2"
+                pTooltip="{{ user.email }}"
+                tooltipPosition="top"
+              >
+                {{ user.email }}
+              </td>
+              <td class="py-4 px-2">
+                {{
+                  user.phoneNumber == null
+                    ? "Chưa nhập số điện thoại"
+                    : user.phoneNumber
+                }}
+              </td>
+              <td
+                class="py-4 px-2"
+                pTooltip="{{ user.school?.schoolName }}"
+                tooltipPosition="top"
+              >
+                {{ user.school?.schoolName }}
+              </td>
+              <td class="py-4 px-2">
+                <div
+                  *ngFor="let role of user.accountRoles; let last = last"
+                  [pTooltip]="role.role?.roleName"
+                  [tooltipPosition]="'top'"
+                >
+                  {{ role.role?.roleName }}{{ last ? "" : ";" }}
+                </div>
+              </td>
+              <td class="py-4 px-2">
+                <p-tag
+                  [severity]="getStatusSeverity(user.isActive)"
+                  [value]="getStatusValue(user.isActive)"
+                ></p-tag>
+              </td>
+              <td>
+                <div
+                  class="d-flex justify-content-evenly flex-row align-items-center"
+                >
+                  <button
+                    pTooltip="Chi tiết"
+                    tooltipPosition="top"
+                    type="button"
+                    (click)="onDetail(user.userId)"
+                    class="action-button"
+                  >
+                    <i class="bi bi-info-circle-fill"></i>
+                  </button>
+                  <button
+                    pTooltip="Chỉnh sửa"
+                    tooltipPosition="top "
+                    type="button"
+                    class="action-button"
+                    (click)="onUpdate(user.userId)"
+                    *ngIf="isUpdatable(user)"
+                  >
+                    <i class="bi bi-pencil-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </ng-container>
+      </table>
     </div>
     <div
-      class="d-flex justify-content-center align-items-center"
+      class="d-flex justify-content-center table-footer"
       *ngIf="users && users.length > 0"
     >
-      <select
-        (change)="[loadUsers()]"
-        class="form-select ng-untouched ng-pristine ng-valid"
-        [(ngModel)]="pageSize"
+      <div class="me-3 mt-3" *ngIf="users">
+        <pagination-controls
+          previousLabel=""
+          nextLabel=""
+          (pageChange)="[onTableDataChange($event), maxPageOnKeyUp()]"
+        >
+        </pagination-controls>
+      </div>
+      <div
+        class="d-flex justify-content-center align-items-center"
+        *ngIf="users && users.length > 0"
       >
-        <option *ngFor="let option of recordPerPageOption" [value]="option">
-          {{ option }}
-        </option>
-      </select>
+        <select
+          (change)="[loadUsers()]"
+          class="form-select ng-untouched ng-pristine ng-valid"
+          [(ngModel)]="pageSize"
+        >
+          <option *ngFor="let option of recordPerPageOption" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
     </div>
+    <p-toast key="paging" position="bottom-right"></p-toast>
+    <p-toast key="issueId" position="top-right"></p-toast>
+    <p-toast position="top-right" key="userListError" [life]="20000"></p-toast>
+    <p-dialog
+      header="Tạo người dùng bằng file excel"
+      [(visible)]="visible"
+      [modal]="true"
+      [style]="{ width: '50vw' }"
+      [draggable]="false"
+      [resizable]="false"
+    >
+      <div>
+        <input
+          class="form-control"
+          #fileInput
+          (change)="onSubmitFile($event)"
+          type="file"
+        />
+        <button class="btn btn-primary mt-3" (click)="confirm()">
+          Xác nhận
+        </button>
+        <button class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
+          Tải file mẫu
+        </button>
+      </div>
+    </p-dialog>
+    <p-confirmDialog
+      key="createUserByExcel"
+      [style]="{ width: '50vw' }"
+    ></p-confirmDialog>
+    <app-loading-complete-dialog
+      [visible]="isLoading"
+      [completed]="submitCompleted"
+      [header]="'Tạo mới người dùng bằng Excel'"
+      [progress]="'Đang tạo mới người dùng'"
+      [complete]="'Tạo mới người dùng thành công'"
+    ></app-loading-complete-dialog>
   </div>
-  <p-toast key="paging" position="bottom-right"></p-toast>
-  <p-toast key="issueId" position="top-right"></p-toast>
-  <p-toast position="top-right" key="userListError" [life]="20000"></p-toast>
-  <p-dialog
-    header="Tạo người dùng bằng file excel"
-    [(visible)]="visible"
-    [modal]="true"
-    [style]="{ width: '50vw' }"
-    [draggable]="false"
-    [resizable]="false"
-  >
-    <div>
-      <input
-        class="form-control"
-        #fileInput
-        (change)="onSubmitFile($event)"
-        type="file"
-      />
-      <button class="btn btn-primary mt-3" (click)="confirm()">Xác nhận</button>
-      <button class="btn btn-info mt-3 ml-3" (click)="downloadTemplate()">
-        Tải file mẫu
-      </button>
-    </div>
-  </p-dialog>
-  <p-confirmDialog
-    key="createUserByExcel"
-    [style]="{ width: '50vw' }"
-  ></p-confirmDialog>
-  <app-loading-complete-dialog
-    [visible]="isLoading"
-    [completed]="submitCompleted"
-    [header]="'Tạo mới người dùng bằng Excel'"
-    [progress]="'Đang tạo mới người dùng'"
-    [complete]="'Tạo mới người dùng thành công'"
-  ></app-loading-complete-dialog>
 </div>

@@ -258,13 +258,13 @@
             *ngIf="issueForm.controls?.['documentName']?.invalid && (issueForm.controls?.['documentName']?.touched || issueForm.controls?.['documentName']?.dirty)"
           >
             <span
-              *ngIf="issueForm.controls?.['documentName']?.errors?.['required']"
+              *ngIf="issueForm.controls?.['documentName']?.errors?.['required'] || issueForm.controls?.['documentName']?.errors?.['whitespace']"
               class="p-error"
             >
               Vui lòng điền tên tài liệu
             </span>
             <span
-              *ngIf="issueForm.controls?.['documentName']?.errors?.['maxLength']"
+              *ngIf="issueForm.controls?.['documentName']?.errors?.['maxlength']"
               class="p-error"
             >
               Tên tài liệu quá dài
@@ -290,7 +290,7 @@
               Vui lòng điền mã tài liệu
             </span>
             <span
-              *ngIf="issueForm.controls?.['documentCode']?.errors?.['maxLength']"
+              *ngIf="issueForm.controls?.['documentCode']?.errors?.['maxlength']"
               class="p-error"
             >
               Mã tài liệu quá dài
@@ -306,6 +306,7 @@
               #fileInput
               style="display: none"
               (change)="handleFileInputChange(fileInput)"
+              accept="application/pdf"
             />
             <input
               pInputText
@@ -379,11 +380,27 @@
           value="{{ issue.issueName }}"
           formControlName="issueName"
         />
-        <span
+        <div
+          *ngIf="issueForm.controls?.['issueName']?.invalid && (issueForm.controls?.['issueName']?.touched || issueForm.controls?.['issueName']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['issueName']?.errors?.['required'] || issueForm.controls?.['issueName']?.errors?.['whitespace']"
+            class="p-error"
+          >
+            Vui lòng điền tên kế hoạch
+          </span>
+          <span
+            *ngIf="issueForm.controls?.['issueName']?.errors?.['maxlength']"
+            class="p-error"
+          >
+            Tên kế hoạch quá dài
+          </span>
+        </div>
+        <!-- <span
           *ngIf="issueForm.controls.issueName.errors?.['whitespace']"
           class="p-error"
           >Vui lòng điền tên kế hoạch</span
-        >
+        > -->
         <!-- <pre>{{ issueForm.controls.name.errors | json }}</pre> -->
       </div>
       <div class="mb-2 issue-description">
@@ -397,11 +414,27 @@
           rows="3"
           formControlName="description"
         ></textarea>
-        <span
+        <div
+          *ngIf="issueForm.controls?.['description']?.invalid && (issueForm.controls?.['description']?.touched || issueForm.controls?.['description']?.dirty)"
+        >
+          <span
+            *ngIf="issueForm.controls?.['description']?.errors?.['required'] || issueForm.controls?.['description']?.errors?.['whitespace']"
+            class="p-error"
+          >
+            Vui lòng điền chi tiết kế hoạch
+          </span>
+          <span
+            *ngIf="issueForm.controls?.['description']?.errors?.['maxlength']"
+            class="p-error"
+          >
+            Chi tiết kế hoạch quá dài
+          </span>
+        </div>
+        <!-- <span
           *ngIf="issueForm.controls.description.errors?.['whitespace']"
           class="p-error"
           >Vui lòng điền chi tiết kế hoạch</span
-        >
+        > -->
       </div>
       <div class="">
         <h6 class="mb-2 mat-headline-6">Tài liệu công văn</h6>

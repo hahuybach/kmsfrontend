@@ -57,7 +57,7 @@
           >
           <input
             formControlName="documentName"
-            class="form-control"
+            pInputText
             type="text"
             placeholder="Điền tên tài liệu"
           />
@@ -83,10 +83,20 @@
           <br />
           <input
             formControlName="documentCode"
-            class="form-control"
+            pInputText
             type="text"
             placeholder="Điền mã tài liệu"
           />
+          <div
+            *ngIf="fileInputForm.controls?.['documentCode']?.invalid && (fileInputForm.controls?.['documentCode']?.touched || fileInputForm.controls?.['documentCode']?.dirty)"
+          >
+            <span
+              *ngIf="fileInputForm.controls?.['documentCode']?.errors?.['maxlength']"
+              class="p-error"
+            >
+              Mã tài liệu quá dài
+            </span>
+          </div>
           <br />
         </div>
 
@@ -186,7 +196,7 @@
                   *ngIf="assignmentForm.controls?.['assignmentName']?.errors?.['maxlength']"
                   class="p-error"
                 >
-                  Mã tài liệu quá dài
+                  Tên công việc quá dài
                 </span>
               </div>
             </div>
@@ -1084,7 +1094,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-rowNode>
         <tr [ttRow]="rowNode">
-          <td class="folder width-30 td-content">
+          <td class="folder width-30 td-content" pTooltip="{{ rowData.node.assignmentName }}" tooltipPosition="top">
             <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
             <ng-container *ngIf="rowData.node.task">
               <i class="bi bi-file-earmark-check-fill file-icon"></i>
@@ -1097,7 +1107,9 @@
             </span>
           </td>
           <!-- <td>{{ rowData.node.assigner?.user.fullName }}</td>   -->
-          <td class="width-20">
+          <td class="width-20 td-content" pTooltip="{{
+                  rowData.node.assignee?.user.fullName
+                }}" tooltipPosition="top">
             <div
               *ngIf="rowData.node.assignee?.user.fullName; else noAssignee"
               class="row"
